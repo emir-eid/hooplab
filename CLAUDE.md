@@ -4,6 +4,21 @@ HoopLab, sahibinin (profesyonel basketbolcu) yalnızca kendisi için kullanacağ
 
 Yığın: Expo (React Native, TypeScript, Expo Router) · Supabase (Frankfurt) · Google Health API v4 · Claude API (yalnız sunucu tarafında). Gerekçeler: [docs/decisions/](docs/decisions/).
 
+## 0. Belge haritası
+
+| Soru | Dosya |
+|---|---|
+| Şu an neredeyiz, sıradaki iş ne? | [docs/STATE.md](docs/STATE.md) (tek doğruluk kaynağı) |
+| Uygulama ne yapacak, modüller, girdiler, kapsam dışı? | [docs/PRODUCT.md](docs/PRODUCT.md) |
+| Fazlar ve bitiş kriterleri | [docs/ROADMAP.md](docs/ROADMAP.md) |
+| Neden böyle karar verdik? | [docs/decisions/](docs/decisions/README.md) |
+| Bilinen tuzaklar ve dersler | [docs/LESSONS.md](docs/LESSONS.md) |
+| Önceki oturumlarda ne oldu? | [docs/sessions/](docs/sessions/README.md) |
+| Bilimsel kaynaklar ve kurallar | [research/README.md](research/README.md) |
+| Otomatik denetim sonuçları | [docs/audits/](docs/audits/README.md) |
+
+Kapsamla ilgili bir işe (yeni ekran, modül, girdi) başlamadan önce PRODUCT.md'nin ilgili bölümü okunur.
+
 ## 1. Oturum protokolü
 
 - Oturumlar **her zaman `E:\HoopLab\code` klasöründen** açılır. Başka klasörden açılırsa ayarlar, komutlar ve hook'lar yüklenmez.

@@ -2,7 +2,7 @@
 
 Profesyonel bir basketbolcunun kendi kullanımı için geliştirdiği iPhone uygulaması. Fitbit Air / Google Health verisini ve sporcunun kendi girdilerini (antrenman yükü, iyi oluş, kas ağrısı haritası, beslenme, sıvı) birleştirir. Değerleri sedanter popülasyon normlarına göre değil, **sporcunun kendi baseline'ına** göre değerlendirir. Yük, toparlanma, kas ve tendon yorgunluğu, uyku, beslenme ve hidrasyon için **yalnız doğrulanmış bilimsel kaynaklara dayanan** yorumlar üretir.
 
-> Durum: Faz 0 (veri erişimi testi). Canlı durum: [docs/STATE.md](docs/STATE.md) · Yol haritası: [docs/ROADMAP.md](docs/ROADMAP.md)
+> Durum: Faz 0 (veri erişimi testi). Ürün tanımı: [docs/PRODUCT.md](docs/PRODUCT.md) · Canlı durum: [docs/STATE.md](docs/STATE.md) · Yol haritası: [docs/ROADMAP.md](docs/ROADMAP.md)
 
 ## Mimari
 

@@ -12,3 +12,5 @@ Uygulamaya veya altyapıya görünür değişiklikler. Biçim: [Keep a Changelog
 - GitHub Actions `Kontroller` iş akışı (her push ve haftalık).
 - Karar kayıtları 0001-0007, LESSONS, ROADMAP, STATE.
 - Proje düzeyi skill'ler ve plugin tanımları.
+- Ürün tanımı ve kapsam belgesi (`docs/PRODUCT.md`); CLAUDE.md belge haritası.
+- Gizlilik bekçisi: denylist ifadeleri farklı yazım biçimleriyle de yakalanıyor.
