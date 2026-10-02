@@ -19,6 +19,7 @@ Tek doğruluk kaynağı. `/kapat` her oturum sonunda günceller, `/ac` her oturu
 **Kullanıcı işleri:**
 - `../private/guard-denylist.txt` dosyasına kişisel tanımlayıcıları ekle (e-posta, telefon, doğum tarihi). Bekçi bunları repoda görürse commit'i durdurur.
 - Bir sonraki oturumda: plugin onay penceresi çıkarsa onayla (Expo, Supabase).
+- İstersen zamanlanmış görevleri kenar çubuğundaki "Scheduled" bölümünden bir kez "Run now" ile çalıştır; verdiğin araç izinleri sonraki çalışmalarda otomatik uygulanır.
 <!-- ozet:bitti -->
 
 ## Faz durumu
@@ -51,7 +52,9 @@ Ayrıntı: [ROADMAP.md](ROADMAP.md).
 | Ne | Ne zaman | Çıktı |
 |---|---|---|
 | GitHub Actions `Kontroller` | her push + pazartesi 09:00 | GitHub Actions sekmesi (hata olursa e-posta) |
-| Haftalık denetim (zamanlanmış Claude görevi) | pazartesi 10:00 | `docs/audits/<tarih>.md` |
-| Aylık literatür taraması (zamanlanmış Claude görevi) | her ayın 1'i 10:00 | `research/inbox/<tarih>.md` |
+| Haftalık denetim (zamanlanmış Claude görevi `hooplab-haftalik-denetim`) | pazartesi 10:05 | `docs/audits/<tarih>.md` |
+| Aylık literatür taraması (zamanlanmış Claude görevi `hooplab-aylik-literatur`) | her ayın 1'i 10:00 | `research/inbox/<tarih>.md` |
+
+Zamanlanmış görevler masaüstü uygulaması açıkken çalışır; kapalıysa bir sonraki açılışta. Görev talimatları: `C:\Users\user\.claude\scheduled-tasks\<görev>\SKILL.md` (repo dışı).
 | SessionStart hook | her oturum açılışı | bu dosyanın özet bloğu bağlama eklenir |
 | PreCompact / SessionEnd hook | compact öncesi, oturum sonu | `../private/transcripts/` |
