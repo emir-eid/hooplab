@@ -5,7 +5,11 @@ Her faz, bitiş kriteri karşılanınca `/kapat` ile kapanır: faz özeti `docs/
 ## Faz 0: Veri erişimi testi ve altyapı
 
 - [x] Proje yapısı, oturum sistemi (`/ac`, `/kapat`), hook'lar, gizlilik bekçisi, kaynak doğrulayıcı, CI
-- [x] Skill seti (Expo, Supabase, animate-expo, apple-design, review-animations, react-native-best-practices)
+- [x] Gizlilik altyapısı eklemeleri: geçmiş taraması, CI'da denylist desteği, `private` Drive yedeği ([0008](decisions/0008-gizlilik-altyapisi-eklemeleri.md))
+- [x] Ürün tanımı, maliyet/hesaplar, veri envanteri, yeni makine rehberi
+- [ ] Skill seti: kopyalanan skill'ler yüklü; **Expo ve Supabase plugin'lerinin kurulumu ilk yeni oturumda doğrulanacak**
+- [ ] Hook'ların Claude Code tarafından gerçekten tetiklendiği ilk yeni oturumda doğrulanacak
+- [ ] `GUARD_DENYLIST` GitHub secret'ı (kullanıcı)
 - [ ] Google Cloud projesi + Google Health API + OAuth istemcisi (kullanıcı)
 - [ ] Go kurulumu, `ghealth` CLI derleme, giriş
 - [ ] Son 30 günün verisi `../private/data/` klasörüne (HRV, uyku evreleri, dinlenik nabız, nabız, SpO2, solunum, egzersiz)
@@ -33,7 +37,7 @@ Her faz, bitiş kriteri karşılanınca `/kapat` ile kapanır: faz özeti `docs/
 - [ ] Toparlanma ekranı (HRV / dinlenik nabız / uyku, kişisel banda göre)
 - [ ] Demo modu (sentetik "demo sporcu")
 - [ ] Apple Developer Programı, EAS Build, TestFlight
-- [ ] Public'e geçiş öncesi denetim: tüm git geçmişinde gizlilik taraması, README hikayesi, LICENSE (MIT), GitHub secret scanning + push protection
+- [ ] Public'e geçiş öncesi denetim: `npm run guard:history` temiz (denylist dosyası ve secret ile), README hikayesi, LICENSE (MIT), GitHub secret scanning + push protection
 - [ ] Repo public
 
 **Bitiş kriteri:** Uygulama iPhone'da TestFlight'tan kurulu, gerçek veriyle her gün kullanılabiliyor; repo public ve temiz.

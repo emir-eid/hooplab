@@ -9,6 +9,7 @@ fi
 
 node --test "tools/**/*.test.mjs" &&
   node tools/guard/privacy-guard.mjs --all &&
+  node tools/guard/privacy-guard.mjs --history &&
   node tools/research/validate-sources.mjs || {
   echo "[pre-push] Push durduruldu: kontrollerden biri kırmızı." >&2
   exit 1

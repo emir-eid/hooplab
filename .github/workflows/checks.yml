@@ -14,10 +14,12 @@ permissions:
 
 jobs:
   kontrol:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     timeout-minutes: 10
     steps:
       - uses: actions/checkout@v7
+        with:
+          fetch-depth: 0 # geçmiş taraması için tüm commit'ler
 
       - uses: actions/setup-node@v7
         with:
@@ -26,8 +28,17 @@ jobs:
       - name: Araç testleri (bekçinin kendi negatif testleri dahil)
         run: node --test "tools/**/*.test.mjs"
 
+      # Kişisel denylist GitHub secret'ından gelir (GUARD_DENYLIST). Yoksa bu kural atlanır ve
+      # çıktıda "kişisel denylist yok (atlandı)" yazar. Bekçi değerleri asla yazdırmaz.
       - name: Gizlilik taraması (tüm repo)
+        env:
+          HOOPLAB_GUARD_DENYLIST_TEXT: ${{ secrets.GUARD_DENYLIST }}
         run: node tools/guard/privacy-guard.mjs --all
+
+      - name: Gizlilik taraması (tüm git geçmişi)
+        env:
+          HOOPLAB_GUARD_DENYLIST_TEXT: ${{ secrets.GUARD_DENYLIST }}
+        run: node tools/guard/privacy-guard.mjs --history
 
       - name: Kaynak doğrulama (biçim, DOI/PMID, geri çekilme)
         run: node tools/research/validate-sources.mjs --online

@@ -40,3 +40,4 @@ Hangisi seçildi ve tek paragrafta neden.
 | [0005](0005-repo-ve-gizlilik-ayrimi.md) | Repo ve gizlilik: code/private ayrımı, önce private sonra public | Kabul edildi |
 | [0006](0006-calisma-sistemi.md) | Çalışma sistemi: /ac-/kapat, STATE, hook'lar, CI, zamanlanmış görevler | Kabul edildi |
 | [0007](0007-skill-seti.md) | Skill seti | Kabul edildi |
+| [0008](0008-gizlilik-altyapisi-eklemeleri.md) | Gizlilik altyapısı: Drive yedeği, CI'da denylist, geçmiş taraması | Kabul edildi |

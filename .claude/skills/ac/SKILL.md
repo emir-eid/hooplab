@@ -22,7 +22,11 @@ Amaç: Yeni oturum, önceki oturumların bıraktığı yerden **tahmin etmeden**
    - `docs/audits/` içinde son oturum raporundan **daha yeni** bir denetim raporu varsa oku.
    - `research/inbox/` içinde durumu `bekliyor` olan literatür önerisi var mı?
 7. **Dersler ve kapsam:** `docs/LESSONS.md` içinde başlıkları tara; bugünkü olası işle ilgili bölüm varsa onu oku. Önerilecek iş bir modüle, ekrana veya kullanıcı girdisine dokunuyorsa `docs/PRODUCT.md` dosyasının ilgili bölümünü de oku.
-8. **Ortam:** `../private` klasörü var mı (yoksa uyar: kişisel veri yazılacak yer eksik)? Proje fazına göre gerekli araçlar kurulu mu (STATE.md "Ortam" bölümüne bak)?
+8. **Ortam:**
+   - **SessionStart hook'u çalıştı mı?** Bu oturumun bağlamında "HoopLab oturum bağlamı (otomatik, SessionStart hook)" başlıklı bir blok yoksa "Dikkat" altında yaz: hook çalışmadı, `.claude/settings.json` hook tanımı kontrol edilmeli.
+   - **Plugin'ler yüklü mü?** Kullanılabilir skill listesinde Expo (`expo` plugin) ve Supabase (`supabase`, `postgres-best-practices`) skill'leri yoksa "Dikkat" altında yaz.
+   - `../private` klasörü var mı (yoksa uyar: kişisel veri yazılacak yer eksik)?
+   - Proje fazına göre gerekli araçlar kurulu mu (STATE.md "Ortam" bölümüne bak)?
 
 ## Çıktı (Türkçe, kısa)
 

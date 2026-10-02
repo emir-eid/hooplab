@@ -9,7 +9,7 @@ import { mkdtempSync, writeFileSync, mkdirSync, rmSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { scanEntries } from './privacy-guard.mjs';
+import { loadDenylist, scanEntries } from './privacy-guard.mjs';
 
 const GUARD = fileURLToPath(new URL('./privacy-guard.mjs', import.meta.url));
 const fake = {
@@ -115,13 +115,84 @@ function tempRepo() {
   return dir;
 }
 
-function runGuard(cwd, mode) {
+function runGuard(cwd, mode, extraEnv = {}) {
   return spawnSync(process.execPath, [GUARD, mode], {
     cwd,
     encoding: 'utf8',
-    env: { ...process.env, HOOPLAB_GUARD_DENYLIST: path.join(cwd, '__yok__.txt') },
+    env: { ...process.env, HOOPLAB_GUARD_DENYLIST: path.join(cwd, '__yok__.txt'), HOOPLAB_GUARD_DENYLIST_TEXT: '', ...extraEnv },
   });
 }
+
+const commitAll = (dir, msg) => {
+  execFileSync('git', ['add', '-A'], { cwd: dir });
+  execFileSync('git', ['-c', 'user.name=test', '-c', 'user.email=test@example.invalid', '-c', 'core.hooksPath=/dev/null', 'commit', '-q', '-m', msg], { cwd: dir });
+};
+
+test('denylist ortam değişkeninden okunur (CI secret yolu), yorumlar atlanır', () => {
+  const r = loadDenylist(tmpdir(), { HOOPLAB_GUARD_DENYLIST: path.join(tmpdir(), '__yok__.txt'), HOOPLAB_GUARD_DENYLIST_TEXT: '# yorum\nsahte-ifade-1\n\nsahte-ifade-2\n' });
+  assert.deepEqual(r.list, ['sahte-ifade-1', 'sahte-ifade-2']);
+  assert.deepEqual(r.sources, ['ortam değişkeni']);
+});
+
+test('CLI: ortam değişkenindeki denylist ifadesi commit\'i durdurur', () => {
+  const dir = tempRepo();
+  try {
+    writeFileSync(path.join(dir, 'not.md'), 'burada sahte-ifade-9 geçiyor\n');
+    execFileSync('git', ['add', 'not.md'], { cwd: dir });
+    const r = runGuard(dir, '--staged', { HOOPLAB_GUARD_DENYLIST_TEXT: 'sahte-ifade-9' });
+    assert.equal(r.status, 1, r.stderr);
+    assert.match(r.stderr, /kisisel-tanimlayici/);
+    assert.ok(!r.stderr.includes('sahte-ifade-9'), 'değer çıktıda görünmemeli');
+  } finally {
+    rmSync(dir, { recursive: true, force: true });
+  }
+});
+
+test('CLI --history: silinmiş ama geçmişte kalmış sır yakalanır, --all yakalamaz', () => {
+  const dir = tempRepo();
+  try {
+    writeFileSync(path.join(dir, 'config.ts'), `export const k = "${fake.anthropic}";\n`);
+    commitAll(dir, 'sir eklendi');
+    rmSync(path.join(dir, 'config.ts'));
+    writeFileSync(path.join(dir, 'ok.ts'), 'export const ok = true;\n');
+    commitAll(dir, 'sir silindi');
+    assert.equal(runGuard(dir, '--all').status, 0, 'güncel ağaç temiz olmalı');
+    const r = runGuard(dir, '--history');
+    assert.equal(r.status, 1, r.stderr);
+    assert.match(r.stderr, /config\.ts:1\s+anthropic-anahtari/);
+    assert.match(r.stderr, /find-object=[0-9a-f]{7}/);
+  } finally {
+    rmSync(dir, { recursive: true, force: true });
+  }
+});
+
+test('CLI --history: geçmişte private/ altında commit edilmiş dosyanın yolu yakalanır', () => {
+  const dir = tempRepo();
+  try {
+    mkdirSync(path.join(dir, 'private'));
+    writeFileSync(path.join(dir, 'private', 'not.md'), 'kişisel\n');
+    commitAll(dir, 'yanlislikla');
+    rmSync(path.join(dir, 'private'), { recursive: true, force: true });
+    writeFileSync(path.join(dir, 'ok.ts'), 'export {};\n');
+    commitAll(dir, 'duzeltme');
+    const r = runGuard(dir, '--history');
+    assert.equal(r.status, 1, r.stderr);
+    assert.match(r.stderr, /private\/not\.md\s+private-klasoru/);
+  } finally {
+    rmSync(dir, { recursive: true, force: true });
+  }
+});
+
+test('CLI --history: temiz geçmiş geçer', () => {
+  const dir = tempRepo();
+  try {
+    writeFileSync(path.join(dir, 'a.ts'), 'export const a = 1;\n');
+    commitAll(dir, 'ilk');
+    assert.equal(runGuard(dir, '--history').status, 0);
+  } finally {
+    rmSync(dir, { recursive: true, force: true });
+  }
+});
 
 test('CLI --staged: sır içeren stage edilmiş dosya commit\'i durdurur (çıkış 1)', () => {
   const dir = tempRepo();

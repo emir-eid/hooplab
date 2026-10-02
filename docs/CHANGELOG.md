@@ -14,3 +14,7 @@ Uygulamaya veya altyapıya görünür değişiklikler. Biçim: [Keep a Changelog
 - Proje düzeyi skill'ler ve plugin tanımları.
 - Ürün tanımı ve kapsam belgesi (`docs/PRODUCT.md`); CLAUDE.md belge haritası.
 - Gizlilik bekçisi: denylist ifadeleri farklı yazım biçimleriyle de yakalanıyor.
+- Gizlilik bekçisi: `--history` (tüm git geçmişi) ve CI'da GitHub secret'ından denylist.
+- `private` klasörünün Drive'a eklemeli yedeği (`tools/backup`, SessionEnd hook'u, `/kapat`).
+- Belgeler: `COSTS.md`, `DATA-INVENTORY.md`, `SETUP.md`; karar 0008.
+- `/ac` hook ve plugin yüklemesini kendisi denetliyor.

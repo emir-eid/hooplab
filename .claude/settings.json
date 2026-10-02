@@ -46,6 +46,12 @@
             "command": "node \"$CLAUDE_PROJECT_DIR/tools/hooks/archive-transcript.mjs\" sessionend",
             "shell": "bash",
             "timeout": 30
+          },
+          {
+            "type": "command",
+            "command": "node \"$CLAUDE_PROJECT_DIR/tools/backup/backup-private.mjs\" --quiet",
+            "shell": "bash",
+            "timeout": 60
           }
         ]
       }

@@ -28,6 +28,7 @@ Tekrar yaşanabilecek hatalar ve önceden bilinen tuzaklar. Her madde: **ders**,
 ## Windows
 
 - **[ölçüldü] Windows PowerShell 5.1 boruyla native programa veri gönderirken başa BOM ekleyebilir; `JSON.parse` kırılır.** Stdin okuyan script'ler BOM'u atar (`.replace(/^﻿/, '')`). Hata yutan bir hook'ta bu sessiz arızaya dönüşür. Kanıt: 2026-10-03 kurulum oturumu, `tools/hooks/archive-transcript.mjs`. Claude Code hook'ları `bash` ile çalıştırıldığı için asıl yol etkilenmiyordu.
+- **[ölçüldü] Google Drive dosya sistemi zaman damgasının milisaniye altını atıyor** (kaynak ile kopya arasında ~0,76 ms fark). "Hedef daha yeni mi?" karşılaştırması bu yüzden her seferinde yanlış sonuç verip gereksiz kopya yapıyordu. Çözüm: aynı boyut ve 2 saniye tolerans. Bekçi: `tools/backup/backup-private.test.mjs`.
 - **[ölçüldü] Çok uzun geçici yollarda `git clone` başarısız olabilir** (muhtemelen Windows yol uzunluğu sınırı). Klonlar kısa bir yola (ör. `%TEMP%\kisa-ad`) yapılır; hata çıktısı bastırılmaz.
 
 ## Google Health / veri

@@ -4,13 +4,16 @@
 // Kullanım:
 //   node tools/guard/privacy-guard.mjs --staged   commit'e girecek dosyaları tarar (pre-commit)
 //   node tools/guard/privacy-guard.mjs --all      izlenen + eklenmeye aday tüm dosyaları tarar (CI, /kapat)
+//   node tools/guard/privacy-guard.mjs --history  tüm git geçmişindeki her dosya sürümünü tarar (CI, public öncesi)
 //
 // Çıkış kodları: 0 temiz · 1 ihlal bulundu · 2 bekçi hatası.
 // Bekçi kendi hatasında da commit'i DURDURUR (fail-closed): çöken bekçi kapıyı açık bırakmamalı.
 //
-// Kişisel tanımlayıcılar (ad, e-posta, doğum tarihi vb.) bu dosyada TUTULMAZ. Repo dışındaki
-// ../private/guard-denylist.txt dosyasından okunur (her satır bir ifade, # ile başlayan satır yorum).
-// Dosya yoksa (ör. CI) bu kural atlanır.
+// Kişisel tanımlayıcılar (ad, e-posta, doğum tarihi vb.) bu dosyada TUTULMAZ. İki kaynaktan okunur
+// (her satır bir ifade, # ile başlayan satır yorum):
+//   1. repo dışındaki ../private/guard-denylist.txt (yerel makine)
+//   2. HOOPLAB_GUARD_DENYLIST_TEXT ortam değişkeni (CI: GitHub secret GUARD_DENYLIST)
+// İkisi de yoksa bu kural atlanır ve çıktıda "yok (atlandı)" yazar.
 
 import { execFileSync } from 'node:child_process';
 import { existsSync, readFileSync, statSync } from 'node:fs';
@@ -113,14 +116,15 @@ export function expandDenylist(list) {
 }
 
 /**
- * @param {{path: string, content: string|null}[]} entries  content=null: yalnız yol kuralları
+ * @param {{path: string, content: string|null, ref?: string}[]} entries  content=null: yalnız yol kuralları;
+ *   ref: geçmiş taramasında içeriğin blob kimliği (içerik ihlallerine eklenir)
  * @param {{denylist?: string[]}} opts
  */
 export function scanEntries(entries, { denylist = [] } = {}) {
   const violations = [];
   const { literals: deny, digitRuns } = expandDenylist(denylist);
 
-  for (const { path: rawPath, content } of entries) {
+  for (const { path: rawPath, content, ref } of entries) {
     const p = rawPath.replace(/\\/g, '/');
 
     for (const rule of PATH_RULES) {
@@ -133,13 +137,13 @@ export function scanEntries(entries, { denylist = [] } = {}) {
       for (const rule of CONTENT_RULES) {
         if (rule.scope && !rule.scope(p)) continue;
         const m = text.match(rule.re);
-        if (m) violations.push({ path: p, line: i + 1, rule: rule.id, detail: rule.why ?? `eşleşme: ${mask(m[0])}` });
+        if (m) violations.push({ path: p, line: i + 1, rule: rule.id, detail: rule.why ?? `eşleşme: ${mask(m[0])}`, ref });
       }
       if (deny.length) {
         const lower = text.toLowerCase();
         const compact = digitRuns.length ? stripNumberSeparators(text) : '';
         const hit = deny.some((d) => lower.includes(d)) || digitRuns.some((d) => compact.includes(d));
-        if (hit) violations.push({ path: p, line: i + 1, rule: 'kisisel-tanimlayici', detail: 'denylist ifadesi (değer gösterilmez)' });
+        if (hit) violations.push({ path: p, line: i + 1, rule: 'kisisel-tanimlayici', detail: 'denylist ifadesi (değer gösterilmez)', ref });
       }
     });
   }
@@ -162,17 +166,74 @@ function decode(buf) {
   return buf.toString('utf8');
 }
 
-function loadDenylist(root) {
-  const file = process.env.HOOPLAB_GUARD_DENYLIST ?? path.resolve(root, '..', 'private', 'guard-denylist.txt');
-  if (!existsSync(file)) return { list: [], file: null };
-  const list = readFileSync(file, 'utf8')
+const parseDenylist = (text) =>
+  text
     .split(/\r?\n/)
     .map((l) => l.trim())
     .filter((l) => l && !l.startsWith('#'));
-  return { list, file };
+
+export function loadDenylist(root, env = process.env) {
+  const list = [];
+  const sources = [];
+  const file = env.HOOPLAB_GUARD_DENYLIST ?? path.resolve(root, '..', 'private', 'guard-denylist.txt');
+  if (existsSync(file)) {
+    list.push(...parseDenylist(readFileSync(file, 'utf8')));
+    sources.push('dosya');
+  }
+  if (env.HOOPLAB_GUARD_DENYLIST_TEXT) {
+    list.push(...parseDenylist(env.HOOPLAB_GUARD_DENYLIST_TEXT));
+    sources.push('ortam değişkeni');
+  }
+  return { list: [...new Set(list)], sources };
+}
+
+// Tüm dal ve etiketlerden erişilebilen her dosya sürümü (blob) + geçmişte görülmüş her yol.
+function collectHistory(root) {
+  const objects = git(['rev-list', '--all', '--objects'], root).split('\n').filter(Boolean);
+  if (objects.length === 0) return [];
+
+  const pathBySha = new Map();
+  for (const line of objects) {
+    const sp = line.indexOf(' ');
+    if (sp > 0) pathBySha.set(line.slice(0, sp), line.slice(sp + 1));
+  }
+  const check = execFileSync('git', ['cat-file', '--batch-check=%(objectname) %(objecttype) %(objectsize)'], {
+    cwd: root,
+    input: [...pathBySha.keys()].join('\n') + '\n',
+    encoding: 'utf8',
+    maxBuffer: 64 * 1024 * 1024,
+  });
+  const blobs = check
+    .split('\n')
+    .filter(Boolean)
+    .map((l) => l.split(' '))
+    .filter(([, type]) => type === 'blob');
+
+  const entries = [];
+  const readable = blobs.filter(([, , size]) => Number(size) <= MAX_CONTENT_BYTES).map(([sha]) => sha);
+  for (const [sha, , size] of blobs) {
+    if (Number(size) > MAX_CONTENT_BYTES) entries.push({ path: pathBySha.get(sha), content: null, ref: sha.slice(0, 7) });
+  }
+  if (readable.length) {
+    const out = execFileSync('git', ['cat-file', '--batch'], { cwd: root, input: readable.join('\n') + '\n', maxBuffer: 1024 * 1024 * 1024 });
+    let pos = 0;
+    while (pos < out.length) {
+      const nl = out.indexOf(0x0a, pos);
+      const [sha, , size] = out.subarray(pos, nl).toString('utf8').split(' ');
+      const start = nl + 1;
+      const end = start + Number(size);
+      entries.push({ path: pathBySha.get(sha), content: decode(out.subarray(start, end)), ref: sha.slice(0, 7) });
+      pos = end + 1; // içerikten sonraki satır sonu
+    }
+  }
+  // Yol kuralları için: geçmişte herhangi bir commit'te var olmuş her yol
+  const allPaths = new Set(git(['log', '--all', '--name-only', '--format='], root).split('\n').filter(Boolean));
+  for (const p of allPaths) entries.push({ path: p, content: null });
+  return entries;
 }
 
 function collect(mode, root) {
+  if (mode === '--history') return collectHistory(root);
   if (mode === '--staged') {
     const paths = splitZ(git(['diff', '--cached', '--name-only', '-z', '--diff-filter=ACMR'], root));
     return paths.map((p) => ({ path: p, content: decode(gitBuffer(['show', `:${p}`], root)) }));
@@ -192,23 +253,32 @@ function collect(mode, root) {
 
 function main() {
   const mode = process.argv[2];
-  if (mode !== '--staged' && mode !== '--all') {
-    console.error('Kullanım: privacy-guard.mjs --staged | --all');
+  if (!['--staged', '--all', '--history'].includes(mode)) {
+    console.error('Kullanım: privacy-guard.mjs --staged | --all | --history');
     process.exit(2);
   }
   const root = git(['rev-parse', '--show-toplevel'], process.cwd()).trim();
   const entries = collect(mode, root);
-  const { list, file } = loadDenylist(root);
-  const violations = scanEntries(entries, { denylist: list });
+  const { list, sources } = loadDenylist(root);
+  const raw = scanEntries(entries, { denylist: list });
 
-  const scope = `${entries.length} dosya, kişisel denylist ${file ? `${list.length} ifade` : 'yok (atlandı)'}`;
+  // Aynı ihlal (ör. geçmişte hem yol hem içerik girdisinden) bir kez raporlanır
+  const seen = new Set();
+  const violations = raw.filter((v) => {
+    const key = `${v.path}|${v.line}|${v.rule}|${v.ref ?? ''}`;
+    return seen.has(key) ? false : (seen.add(key), true);
+  });
+
+  const unit = mode === '--history' ? 'geçmiş girdisi' : 'dosya';
+  const scope = `${entries.length} ${unit}, kişisel denylist ${sources.length ? `${list.length} ifade (${sources.join(' + ')})` : 'yok (atlandı)'}`;
   if (violations.length === 0) {
     console.log(`[gizlilik-bekcisi] temiz (${scope})`);
     return;
   }
   console.error(`[gizlilik-bekcisi] ${violations.length} ihlal (${scope}):`);
   for (const v of violations) {
-    console.error(`  x ${v.path}${v.line ? `:${v.line}` : ''}  ${v.rule}  ${v.detail ?? ''}`);
+    const where = v.ref ? `  [geçmiş: blob ${v.ref}; commit'i bul: git log --all --find-object=${v.ref}]` : '';
+    console.error(`  x ${v.path}${v.line ? `:${v.line}` : ''}  ${v.rule}  ${v.detail ?? ''}${where}`);
   }
   process.exit(1);
 }
