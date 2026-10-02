@@ -1,0 +1,1 @@
+Boş kütüphane fixture'ı.

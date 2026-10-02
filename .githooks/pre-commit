@@ -1,0 +1,13 @@
+#!/bin/sh
+# HoopLab pre-commit: gizlilik bekçisi commit'e girecek her dosyayı tarar.
+# Bekçi çalışamazsa veya çökerse commit DURUR (fail-closed). --no-verify kullanılmaz.
+
+if ! command -v node >/dev/null 2>&1; then
+  echo "[pre-commit] node bulunamadı; gizlilik bekçisi koşamadı. Commit durduruldu." >&2
+  exit 1
+fi
+
+node tools/guard/privacy-guard.mjs --staged || {
+  echo "[pre-commit] Commit durduruldu. Sebebi yukarıda; --no-verify kullanma, sebebi düzelt." >&2
+  exit 1
+}

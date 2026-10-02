@@ -1,0 +1,7 @@
+{
+  "module": "hatali",
+  "rules": [
+    { "id": "kaynaksiz", "description": "Kaynağı olmayan kural", "sources": [] },
+    { "id": "yanlis-bag", "description": "Olmayan kaynağa bağlı kural", "sources": ["olmayan-kaynak"] }
+  ]
+}

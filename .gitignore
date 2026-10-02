@@ -1,0 +1,60 @@
+# --- Kişisel veri: ASLA repoya girmez (asıl yer: ../private, repo dışı) ---
+/private/
+/data/
+/exports/
+*.jsonl
+*.ndjson
+*.csv
+*.tsv
+*.zip
+*.fit
+*.tcx
+*.gpx
+*.xlsx
+*.xls
+*.sqlite
+*.sqlite3
+!**/fixtures/synthetic/**
+
+# --- Sırlar ve kimlik dosyaları ---
+.env
+.env.*
+!.env.example
+*.pem
+*.p8
+*.p12
+*.pfx
+*.key
+*.keystore
+*.jks
+*.mobileprovision
+credentials.json
+client_secret*.json
+service-account*.json
+token.json
+
+# --- Bağımlılık ve derleme çıktıları ---
+node_modules/
+.expo/
+.expo-shared/
+dist/
+web-build/
+*.tsbuildinfo
+*.ipa
+*.apk
+*.aab
+coverage/
+
+# --- Supabase yerel ---
+supabase/.branches/
+supabase/.temp/
+
+# --- Claude yerel ayarları (makineye özel) ---
+.claude/settings.local.json
+
+# --- İşletim sistemi / editör ---
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/*
+!.vscode/extensions.json

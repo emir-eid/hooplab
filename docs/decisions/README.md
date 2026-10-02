@@ -1,0 +1,42 @@
+# Karar kayıtları
+
+Kod ne yapıldığını gösterir, nedenini göstermez. Bu klasör "neden böyle yaptık" sorusunun cevabıdır. Her mimari, ürün, araç veya süreç kararı bir dosyadır. Kararlar silinmez; değişen karar yeni bir kayıtla yerini alır ve eskisinin durumu güncellenir.
+
+Kayıtları `/kapat` açar. Ad biçimi: `NNNN-kisa-ad.md` (sıradaki numara).
+
+## Şablon
+
+```markdown
+# NNNN. Başlık
+
+- **Durum:** Önerildi | Kabul edildi | Yerini aldı: NNNN | Geri çekildi
+- **Tarih:** YYYY-AA-GG
+- **İlgili:** (diğer kararlar, oturum raporu)
+
+## Bağlam
+Hangi sorun ya da ihtiyaç bu kararı gerektirdi? Hangi kısıtlar vardı?
+
+## Seçenekler
+1. **Seçenek A:** artıları / eksileri
+2. **Seçenek B:** artıları / eksileri
+
+## Karar
+Hangisi seçildi ve tek paragrafta neden.
+
+## Sonuçlar
+- Kabul edilen dezavantajlar
+- Bu kararın açtığı veya kapattığı yollar
+- Yeniden değerlendirme tetikleyicisi (hangi durumda bu karara geri dönülür)
+```
+
+## Dizin
+
+| No | Karar | Durum |
+|---|---|---|
+| [0001](0001-veri-kaynagi-google-health-api.md) | Veri kaynağı: Google Health API v4 | Kabul edildi (Faz 0 doğrulamasına bağlı) |
+| [0002](0002-platform-expo-react-native.md) | Platform: Expo (React Native), PWA değil | Kabul edildi |
+| [0003](0003-backend-supabase.md) | Backend: Supabase (Frankfurt) | Kabul edildi |
+| [0004](0004-mimari-hesap-motoru-kanit-ai.md) | Mimari: deterministik hesap motoru + kanıt tabanı + AI yorum | Kabul edildi |
+| [0005](0005-repo-ve-gizlilik-ayrimi.md) | Repo ve gizlilik: code/private ayrımı, önce private sonra public | Kabul edildi |
+| [0006](0006-calisma-sistemi.md) | Çalışma sistemi: /ac-/kapat, STATE, hook'lar, CI, zamanlanmış görevler | Kabul edildi |
+| [0007](0007-skill-seti.md) | Skill seti | Kabul edildi |

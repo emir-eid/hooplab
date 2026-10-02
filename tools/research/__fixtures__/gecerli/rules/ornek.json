@@ -1,0 +1,11 @@
+{
+  "module": "ornek",
+  "rules": [
+    {
+      "id": "ornek-esik",
+      "description": "Test fixture'ı kuralı",
+      "value": { "min": 1, "max": 2, "unit": "g/kg/gün" },
+      "sources": ["ornek-2020"]
+    }
+  ]
+}

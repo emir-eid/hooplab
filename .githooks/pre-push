@@ -1,0 +1,15 @@
+#!/bin/sh
+# HoopLab pre-push: araç testleri, tüm repo gizlilik taraması ve kaynak doğrulaması geçmeden push yok.
+# Uygulama kodu geldikçe (Faz 1) tip denetimi ve uygulama testleri buraya eklenir.
+
+if ! command -v node >/dev/null 2>&1; then
+  echo "[pre-push] node bulunamadı; kontroller koşamadı. Push durduruldu." >&2
+  exit 1
+fi
+
+node --test "tools/**/*.test.mjs" &&
+  node tools/guard/privacy-guard.mjs --all &&
+  node tools/research/validate-sources.mjs || {
+  echo "[pre-push] Push durduruldu: kontrollerden biri kırmızı." >&2
+  exit 1
+}
