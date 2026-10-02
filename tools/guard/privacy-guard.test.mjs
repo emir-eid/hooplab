@@ -89,6 +89,24 @@ test('kişisel denylist büyük/küçük harf duyarsız yakalar ve değeri göst
   assert.ok(!v[0].detail.toLowerCase().includes('ahmet'));
 });
 
+test('denylist: telefon/kimlik no ayraçlı yazılsa da yakalanır', () => {
+  const deny = ['5551234567', '12345678901']; // sahte değerler
+  const hit = (content) => scanEntries([{ path: 'docs/x.md', content }], { denylist: deny }).length;
+  assert.equal(hit('Tel: 0555 123 45 67'), 1);
+  assert.equal(hit('Tel: +90 (555) 123-45-67'), 1);
+  assert.equal(hit('No: 123 456 789 01'), 1);
+  assert.equal(hit('sürüm 5.55.1234.567'), 0, 'noktalı sürüm numarası telefon sanılmamalı');
+});
+
+test('denylist: tarih farklı biçimlerde yazılsa da yakalanır', () => {
+  const deny = ['31.01.1999']; // sahte değer
+  const hit = (content) => scanEntries([{ path: 'docs/x.md', content }], { denylist: deny }).length;
+  for (const v of ['31.01.1999', '31/01/1999', '31-01-1999', '1999-01-31', '1999.01.31', '19990131', '31011999']) {
+    assert.equal(hit(`tarih ${v}`), 1, `${v} yakalanmadı`);
+  }
+  assert.equal(hit('tarih 1999-02-28'), 0);
+});
+
 // --- Uçtan uca: gerçek git deposunda CLI davranışı ---
 
 function tempRepo() {

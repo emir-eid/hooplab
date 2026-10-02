@@ -76,13 +76,49 @@ export const CONTENT_RULES = [
 
 const mask = (s) => (s.length <= 10 ? '***' : `${s.slice(0, 6)}…${s.slice(-2)} (${s.length} karakter)`);
 
+// Rakam gruplarını ayıran işaretler (boşluk, nokta değil): "0555 123 45 67", "+90 (555) 123-45-67"
+const stripNumberSeparators = (s) => s.replace(/[\s()+-]/g, '');
+
+/**
+ * Denylist ifadelerini biçim varyantlarıyla genişletir:
+ * - Tarih (GG.AA.YYYY, GG/AA/YYYY, GG-AA-YYYY, YYYY-AA-GG): tüm yaygın biçimler.
+ * - Yalnız rakamdan oluşan (7+ hane, ör. telefon, kimlik no): ayrıca ayraçlar atılmış satırda aranır.
+ */
+export function expandDenylist(list) {
+  const literals = new Set();
+  const digitRuns = new Set();
+  for (const raw of list) {
+    const d = raw.trim();
+    if (!d) continue;
+    literals.add(d.toLowerCase());
+
+    let parts = d.match(/^(\d{1,2})[./-](\d{1,2})[./-](\d{4})$/);
+    let day, month, year;
+    if (parts) [, day, month, year] = parts;
+    else if ((parts = d.match(/^(\d{4})[./-](\d{1,2})[./-](\d{1,2})$/))) [, year, month, day] = parts;
+    if (year) {
+      const D = day.padStart(2, '0');
+      const M = month.padStart(2, '0');
+      for (const sep of ['.', '/', '-']) {
+        literals.add(`${D}${sep}${M}${sep}${year}`);
+        literals.add(`${year}${sep}${M}${sep}${D}`);
+      }
+      literals.add(`${D}${M}${year}`);
+      literals.add(`${year}${M}${D}`);
+    }
+
+    if (/^\d{7,}$/.test(d)) digitRuns.add(d);
+  }
+  return { literals: [...literals], digitRuns: [...digitRuns] };
+}
+
 /**
  * @param {{path: string, content: string|null}[]} entries  content=null: yalnız yol kuralları
  * @param {{denylist?: string[]}} opts
  */
 export function scanEntries(entries, { denylist = [] } = {}) {
   const violations = [];
-  const deny = denylist.map((d) => d.trim()).filter(Boolean).map((d) => d.toLowerCase());
+  const { literals: deny, digitRuns } = expandDenylist(denylist);
 
   for (const { path: rawPath, content } of entries) {
     const p = rawPath.replace(/\\/g, '/');
@@ -101,9 +137,9 @@ export function scanEntries(entries, { denylist = [] } = {}) {
       }
       if (deny.length) {
         const lower = text.toLowerCase();
-        for (const d of deny) {
-          if (lower.includes(d)) violations.push({ path: p, line: i + 1, rule: 'kisisel-tanimlayici', detail: 'denylist ifadesi (değer gösterilmez)' });
-        }
+        const compact = digitRuns.length ? stripNumberSeparators(text) : '';
+        const hit = deny.some((d) => lower.includes(d)) || digitRuns.some((d) => compact.includes(d));
+        if (hit) violations.push({ path: p, line: i + 1, rule: 'kisisel-tanimlayici', detail: 'denylist ifadesi (değer gösterilmez)' });
       }
     });
   }

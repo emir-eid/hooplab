@@ -17,7 +17,6 @@ Tek doğruluk kaynağı. `/kapat` her oturum sonunda günceller, `/ac` her oturu
 - Supabase ücretsiz planı 7 gün istek gelmezse projeyi duraklatıyor (Faz 1'de gözlenecek).
 
 **Kullanıcı işleri:**
-- `../private/guard-denylist.txt` dosyasına kişisel tanımlayıcıları ekle (e-posta, telefon, doğum tarihi). Bekçi bunları repoda görürse commit'i durdurur.
 - Bir sonraki oturumda: plugin onay penceresi çıkarsa onayla (Expo, Supabase).
 - İstersen zamanlanmış görevleri kenar çubuğundaki "Scheduled" bölümünden bir kez "Run now" ile çalıştır; verdiğin araç izinleri sonraki çalışmalarda otomatik uygulanır.
 <!-- ozet:bitti -->
