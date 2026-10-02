@@ -9,7 +9,7 @@ Her faz, bitiş kriteri karşılanınca `/kapat` ile kapanır: faz özeti `docs/
 - [x] Ürün tanımı, maliyet/hesaplar, veri envanteri, yeni makine rehberi
 - [ ] Skill seti: kopyalanan skill'ler yüklü; **Expo ve Supabase plugin'lerinin kurulumu ilk yeni oturumda doğrulanacak**
 - [ ] Hook'ların Claude Code tarafından gerçekten tetiklendiği ilk yeni oturumda doğrulanacak
-- [ ] `GUARD_DENYLIST` GitHub secret'ı (kullanıcı)
+- [x] `GUARD_DENYLIST` GitHub secret'ı (kullanıcı ekledi; CI'ın okuduğu doğrulandı)
 - [ ] Google Cloud projesi + Google Health API + OAuth istemcisi (kullanıcı)
 - [ ] Go kurulumu, `ghealth` CLI derleme, giriş
 - [ ] Son 30 günün verisi `../private/data/` klasörüne (HRV, uyku evreleri, dinlenik nabız, nabız, SpO2, solunum, egzersiz)
