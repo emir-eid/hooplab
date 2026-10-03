@@ -1,0 +1,315 @@
+<!doctype html>
+<html lang="tr" data-state="sari">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>HoopLab · Yön A · Parke</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700;800&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="cerceve.css">
+<style>
+:root {
+  --bg: #0B0C0A; --bg2: #121310; --bg3: #1A1B17; --line: #2A2B26; --line2: #3A3B35;
+  --chalk: #EEEBE2; --mute: #8E8B81; --dim: #5C5A52;
+  --g: #3BD483; --y: #FFB21E; --r: #FF5747;
+  --s: var(--y);
+  --page-bg: #1C1D19; --page-ink: #EEEBE2; --sb-bg: #0B0C0A; --sb: #EEEBE2;
+  --disp: 'Barlow Condensed', sans-serif; --body: 'IBM Plex Sans', sans-serif; --mono: 'IBM Plex Mono', monospace;
+}
+[data-state="yesil"] { --s: var(--g); }
+[data-state="kirmizi"] { --s: var(--r); }
+body { font-family: var(--body); }
+.mono { font-family: var(--mono); font-size: 10.5px; letter-spacing: .14em; text-transform: uppercase; }
+
+.device { background: var(--bg); color: var(--chalk); }
+.screen { padding: 54px 0 120px; }
+
+/* ---------- Bugün ---------- */
+.hero { position: relative; z-index: 0; padding: 18px 22px 26px; }
+.hero::before {
+  content: ""; position: absolute; inset: -54px 0 0; z-index: -1;
+  background: radial-gradient(90% 70% at 85% 0%, color-mix(in srgb, var(--s) 30%, transparent), transparent 70%);
+  transition: background .5s;
+}
+.court { position: absolute; z-index: -1; top: -54px; right: -40px; width: 330px; height: 330px; stroke: var(--line2); fill: none; stroke-width: 1.3; opacity: .8; }
+.meta { display: flex; gap: 10px; align-items: center; color: var(--mute); }
+.meta i { width: 4px; height: 4px; background: var(--s); border-radius: 1px; }
+.tag { margin-top: 30px; color: var(--mute); }
+.word {
+  margin: 4px 0 0; font: 800 80px/.86 var(--disp); text-transform: uppercase; letter-spacing: -.012em;
+  color: var(--s); transition: color .4s;
+}
+.reason { margin: 16px 0 0; font-size: 17px; line-height: 1.45; max-width: 31ch; }
+.cite { font: 500 10px var(--mono); color: var(--s); margin-left: 3px; vertical-align: 6px; border: 1px solid currentColor; padding: 0 3px; border-radius: 2px; }
+
+.advice { margin: 0 22px; padding: 14px 16px; background: var(--bg2); border-left: 3px solid var(--s); }
+.advice .mono { color: var(--mute); }
+.advice p { margin: 6px 0 0; font-size: 15px; line-height: 1.45; }
+
+.cta {
+  margin: 14px 22px 0; display: flex; align-items: center; justify-content: space-between;
+  height: 56px; padding: 0 18px; background: var(--chalk); color: var(--bg);
+  font: 700 21px var(--disp); letter-spacing: .04em; text-transform: uppercase;
+}
+.cta small { font: 500 11px var(--mono); letter-spacing: .1em; opacity: .6; margin-left: 10px; }
+.cta .ic { width: 20px; height: 20px; stroke-width: 2.2; }
+
+.sec-h { display: flex; justify-content: space-between; align-items: baseline; margin: 34px 22px 12px; color: var(--mute); }
+.board { display: grid; grid-template-columns: 1fr 1fr; margin: 0 22px; border-top: 1px solid var(--line); border-left: 1px solid var(--line); }
+.cell { padding: 12px 14px 14px; border-right: 1px solid var(--line); border-bottom: 1px solid var(--line); }
+.cell .mono { color: var(--mute); font-size: 10px; }
+.val { margin-top: 6px; font: 700 46px/.9 var(--disp); letter-spacing: -.01em; }
+.val small { font: 500 11px var(--mono); color: var(--mute); margin-left: 4px; letter-spacing: .06em; }
+.note { margin-top: 8px; font-size: 12px; color: var(--mute); display: flex; gap: 5px; align-items: center; white-space: nowrap; }
+.note::before { content: ""; width: 6px; height: 6px; border-radius: 50%; background: var(--dim); }
+.off .val { color: var(--s); }
+.off .note { color: var(--chalk); }
+.off .note::before { background: var(--s); }
+
+.panel { margin: 0 22px; padding: 14px 0 0; border-top: 1px solid var(--line); }
+.chart svg { display: block; width: 100%; height: auto; overflow: visible; }
+.chart .lg { display: flex; gap: 16px; margin-top: 10px; color: var(--mute); font-size: 9.5px; }
+.chart .lg span { display: inline-flex; gap: 6px; align-items: center; }
+.chart .lg b { display: inline-block; width: 14px; height: 2px; background: var(--chalk); }
+.chart .lg b.band { height: 8px; background: repeating-linear-gradient(135deg, var(--line2) 0 1px, transparent 1px 4px); border: 1px dashed var(--dim); }
+
+.est { border: 1px dashed var(--mute); color: var(--chalk); padding: 2px 6px; border-radius: 2px; }
+.tendon { list-style: none; margin: 0; padding: 0; }
+.tendon li { display: grid; grid-template-columns: 1fr 96px 66px; gap: 12px; align-items: center; padding: 11px 0; border-bottom: 1px solid var(--line); font-size: 15px; }
+.bars { display: grid; grid-template-columns: repeat(3, 1fr); gap: 3px; }
+.bars i { height: 8px; background: var(--bg3); }
+.bars i.f { background: var(--chalk); }
+.bars.hi i.f { background: var(--s); }
+.tendon .mono { text-align: right; color: var(--mute); font-size: 10px; }
+.fine { margin: 10px 22px 0; font-size: 12px; line-height: 1.5; color: var(--dim); }
+
+.tabbar {
+  position: absolute; z-index: 30; left: 0; right: 0; bottom: 0; height: 88px; padding: 10px 14px 0;
+  display: grid; grid-template-columns: repeat(5, 1fr); align-items: start;
+  background: color-mix(in srgb, var(--bg) 88%, transparent); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px);
+  border-top: 1px solid var(--line);
+}
+.tab { display: flex; flex-direction: column; align-items: center; gap: 5px; color: var(--dim); font: 500 9.5px var(--mono); letter-spacing: .12em; text-transform: uppercase; }
+.tab.on { color: var(--chalk); }
+.tab .plus { width: 48px; height: 40px; display: grid; place-items: center; background: var(--chalk); color: var(--bg); margin-top: -2px; }
+.tab .plus .ic { stroke-width: 2.4; }
+
+/* ---------- Formlar ---------- */
+.fhead { padding: 18px 22px 8px; display: flex; justify-content: space-between; align-items: start; }
+.fhead .x { width: 40px; height: 40px; display: grid; place-items: center; border: 1px solid var(--line2); color: var(--mute); }
+.fhead .mono { color: var(--mute); }
+.ftitle { margin: 10px 22px 0; font: 700 44px/.95 var(--disp); text-transform: uppercase; letter-spacing: -.005em; }
+.ftitle em { font-style: normal; color: var(--mute); }
+.prog { display: grid; grid-template-columns: repeat(5, 1fr); gap: 4px; margin: 18px 22px 6px; }
+.prog i { height: 3px; background: var(--line2); }
+.prog i.f { background: var(--chalk); }
+
+.q { margin: 0 22px; padding: 18px 0 16px; border-bottom: 1px solid var(--line); }
+.q-l { display: flex; justify-content: space-between; align-items: baseline; font-size: 16px; font-weight: 500; }
+.q-l .num { font: 700 24px var(--disp); }
+.q-l .num.empty { color: var(--dim); }
+.seg { display: grid; grid-template-columns: repeat(5, 1fr); gap: 4px; margin-top: 12px; }
+.seg button { height: 44px; background: var(--bg2); border: 1px solid var(--line); font: 600 20px var(--disp); color: var(--mute); transition: background .15s, color .15s; }
+.seg button.on { background: var(--chalk); color: var(--bg); border-color: var(--chalk); }
+.ends { display: flex; justify-content: space-between; margin-top: 7px; color: var(--dim); font-size: 9.5px; }
+
+.regions { display: grid; grid-template-columns: 1fr 1fr; gap: 4px; margin: 0 22px; }
+.regions button { display: flex; justify-content: space-between; align-items: center; height: 46px; padding: 0 12px; background: var(--bg2); border: 1px solid var(--line); font-size: 14px; color: var(--mute); text-align: left; }
+.regions button b { font: 700 22px var(--disp); color: var(--dim); }
+.regions button.on { color: var(--chalk); border-color: var(--line2); background: var(--bg3); }
+.regions button.on b { color: var(--chalk); }
+
+.dock { position: absolute; z-index: 30; left: 0; right: 0; bottom: 0; padding: 14px 22px 34px; background: linear-gradient(transparent, var(--bg) 30%); }
+.dock .btn { width: 100%; height: 58px; background: var(--chalk); color: var(--bg); font: 700 22px var(--disp); letter-spacing: .06em; text-transform: uppercase; }
+
+.lbl { margin: 26px 22px 10px; color: var(--mute); display: flex; justify-content: space-between; }
+.types { display: grid; grid-template-columns: repeat(3, 1fr); gap: 4px; margin: 0 22px; }
+.types button, .tags button { height: 46px; background: var(--bg2); border: 1px solid var(--line); font-size: 13.5px; color: var(--mute); }
+.types button.on, .tags button.on { background: var(--chalk); color: var(--bg); border-color: var(--chalk); font-weight: 600; }
+.stepper { display: grid; grid-template-columns: 56px 1fr 56px; margin: 0 22px; border: 1px solid var(--line); }
+.stepper button { height: 72px; display: grid; place-items: center; color: var(--chalk); background: var(--bg2); }
+.stepper div { display: grid; place-items: center; border-left: 1px solid var(--line); border-right: 1px solid var(--line); font: 700 56px/1 var(--disp); }
+.stepper div small { font: 500 11px var(--mono); color: var(--mute); letter-spacing: .1em; margin-left: 6px; }
+.stepper div span { display: inline-flex; align-items: baseline; }
+.rpe-top { display: flex; align-items: baseline; gap: 12px; margin: 0 22px 12px; }
+.rpe-top b { font: 800 72px/.8 var(--disp); }
+.rpe-top span { font: 600 22px var(--disp); text-transform: uppercase; letter-spacing: .03em; color: var(--mute); }
+.scale { display: grid; grid-template-columns: repeat(11, 1fr); gap: 3px; margin: 0 22px; }
+.scale button { height: 42px; background: var(--bg2); border: 1px solid var(--line); font: 600 16px var(--disp); color: var(--mute); }
+.scale button.on { background: var(--chalk); color: var(--bg); border-color: var(--chalk); }
+.disabled { margin: 0 22px; height: 46px; display: flex; align-items: center; justify-content: space-between; padding: 0 12px; border: 1px dashed var(--line2); color: var(--dim); font-size: 13.5px; }
+.tags { display: flex; flex-wrap: wrap; gap: 4px; margin: 0 22px; }
+.tags button { padding: 0 14px; }
+.load { margin: 26px 22px 0; padding: 16px; border: 1px solid var(--line2); display: flex; justify-content: space-between; align-items: end; }
+.load .mono { color: var(--mute); }
+.load b { display: block; font: 800 64px/.85 var(--disp); margin-top: 6px; }
+.load b small { font: 500 12px var(--mono); color: var(--mute); margin-left: 6px; letter-spacing: .1em; }
+.load .f { text-align: right; font: 500 11px/1.7 var(--mono); color: var(--mute); letter-spacing: .08em; }
+</style>
+</head>
+<body>
+<header class="chrome">
+  <div>
+    <h1><a href="index.html">← Yönler</a>A · Parke</h1>
+    <p>Gece salonu ve skorbord. Arayüz siyah, beyaz ve tebeşir tonunda; ekrana renk yalnız günün durumuyla gelir. Sayılar dar ve büyük, etiketler sabit genişlikli. Tahminler kesikli çerçeveyle işaretli.</p>
+  </div>
+  <div class="switch"><span>Durum:</span><button data-set-state="yesil">Yeşil</button><button data-set-state="sari">Sarı</button><button data-set-state="kirmizi">Kırmızı</button></div>
+</header>
+
+<main class="stage">
+  <!-- 1 · Bugün -->
+  <figure class="shot">
+    <div class="device">
+      <div class="screen">
+        <section class="hero rv">
+          <svg class="court" viewBox="0 0 330 330" aria-hidden="true">
+            <circle cx="250" cy="20" r="235"/>
+            <rect x="190" y="-10" width="120" height="200"/>
+            <circle cx="250" cy="190" r="60"/>
+            <path d="M190 190 h120" />
+            <circle cx="250" cy="40" r="12"/>
+            <path d="M226 26 h48"/>
+          </svg>
+          <div class="meta mono"><span data-k="dateShort"></span><i></i><span data-k="nextShort"></span></div>
+          <div class="tag mono">Bugünkü durum</div>
+          <h1 class="word" data-k="label"></h1>
+          <p class="reason"><span data-k="reason"></span><sup class="cite">1</sup></p>
+        </section>
+        <section class="advice rv"><div class="mono">Bugün</div><p data-k="advice"></p></section>
+        <a class="cta rv"><span>Sabah check-in<small>30 SN</small></span><span data-icon="chev"></span></a>
+
+        <div class="sec-h mono rv"><span>Gece verisi</span><span>Kişisel bant: 60 gün</span></div>
+        <section class="board rv">
+          <div class="cell" data-off="hrv"><div class="mono">HRV · 7g ort</div><div class="val"><span data-k="hrv"></span><small>MS</small></div><div class="note"><span data-k="hrvNote"></span>·<span data-k="band"></span></div></div>
+          <div class="cell" data-off="rhr"><div class="mono">Dinlenik nabız</div><div class="val"><span data-k="rhr"></span><small>ATIM</small></div><div class="note" data-k="rhrNote"></div></div>
+          <div class="cell" data-off="sleep"><div class="mono">Uyku</div><div class="val"><span data-k="sleep"></span><small>SA</small></div><div class="note" data-k="sleepNote"></div></div>
+          <div class="cell" data-off="resp"><div class="mono">Solunum</div><div class="val"><span data-k="resp"></span><small>/DK</small></div><div class="note" data-k="respNote"></div></div>
+        </section>
+
+        <div class="sec-h mono rv"><span>HRV · son 21 gün</span><span>Bu sabah <span data-k="hrvToday"></span> ms</span></div>
+        <section class="panel chart rv">
+          <svg id="a-chart" viewBox="0 0 346 150" role="img" aria-label="HRV, son 21 gün, kişisel bantla"></svg>
+          <div class="lg mono"><span><b></b>7 günlük ort.</span><span><b class="band"></b>Kişisel bant</span><span>· Günlük</span></div>
+        </section>
+
+        <div class="sec-h mono rv"><span>Kas / tendon yükü</span><span class="est">Tahmin</span></div>
+        <section class="panel rv" style="padding-top:0"><ul class="tendon" id="a-tendon"></ul></section>
+        <p class="fine rv">Ölçüm değil: son 7 günün seans içeriğinden hesaplanan tahmin.</p>
+      </div>
+      <nav class="tabbar">
+        <a class="tab on"><span data-icon="today"></span>Bugün</a>
+        <a class="tab"><span data-icon="trend"></span>Trend</a>
+        <a class="tab"><span class="plus"><span data-icon="plus"></span></span></a>
+        <a class="tab"><span data-icon="coach"></span>Koç</a>
+        <a class="tab"><span data-icon="me"></span>Ben</a>
+      </nav>
+    </div>
+    <figcaption>1 · Bugün. Üstteki düğmelerle yeşil, sarı ve kırmızı günü karşılaştır.</figcaption>
+  </figure>
+
+  <!-- 2 · Sabah check-in -->
+  <figure class="shot">
+    <div class="device">
+      <div class="screen">
+        <div class="fhead rv"><div class="mono">Sabah check-in · 16 Ekim</div><button class="x" aria-label="Kapat"><span data-icon="close"></span></button></div>
+        <h2 class="ftitle rv">Bu sabah<br><em>nasılsın?</em></h2>
+        <div class="prog rv"><i class="f"></i><i class="f"></i><i class="f"></i><i></i><i></i></div>
+
+        <section class="q rv"><div class="q-l"><span>Uyku kalitesi</span><span class="num">4</span></div>
+          <div class="seg" data-pick="q1"><button data-v="1">1</button><button data-v="2">2</button><button data-v="3">3</button><button data-v="4" class="on">4</button><button data-v="5">5</button></div>
+          <div class="ends mono"><span>Çok kötü</span><span>Çok iyi</span></div></section>
+        <section class="q rv"><div class="q-l"><span>Yorgunluk</span><span class="num">3</span></div>
+          <div class="seg" data-pick="q2"><button data-v="1">1</button><button data-v="2">2</button><button data-v="3" class="on">3</button><button data-v="4">4</button><button data-v="5">5</button></div>
+          <div class="ends mono"><span>Yok</span><span>Çok fazla</span></div></section>
+        <section class="q rv"><div class="q-l"><span>Kas ağrısı</span><span class="num">2</span></div>
+          <div class="seg" data-pick="q3"><button data-v="1">1</button><button data-v="2" class="on">2</button><button data-v="3">3</button><button data-v="4">4</button><button data-v="5">5</button></div>
+          <div class="ends mono"><span>Yok</span><span>Çok fazla</span></div></section>
+        <section class="q rv"><div class="q-l"><span>Stres</span><span class="num empty">–</span></div>
+          <div class="seg" data-pick="q4"><button data-v="1">1</button><button data-v="2">2</button><button data-v="3">3</button><button data-v="4">4</button><button data-v="5">5</button></div>
+          <div class="ends mono"><span>Yok</span><span>Çok fazla</span></div></section>
+        <section class="q rv"><div class="q-l"><span>Ruh hali</span><span class="num empty">–</span></div>
+          <div class="seg" data-pick="q5"><button data-v="1">1</button><button data-v="2">2</button><button data-v="3">3</button><button data-v="4">4</button><button data-v="5">5</button></div>
+          <div class="ends mono"><span>Çok kötü</span><span>Çok iyi</span></div></section>
+
+        <div class="lbl mono rv"><span>Ağrı / sertlik</span><span>0–10 · dokun</span></div>
+        <div class="regions rv" data-multi>
+          <button data-v class="on">Patellar tendon<b>3</b></button><button data-v class="on">Aşil<b>2</b></button>
+          <button data-v>Baldır<b>0</b></button><button data-v>Ayak bileği<b>0</b></button>
+          <button data-v>Quadriceps<b>0</b></button><button data-v>Hamstring<b>0</b></button>
+          <button data-v>Adduktor<b>0</b></button><button data-v>Kalça<b>0</b></button>
+          <button data-v>Bel<b>0</b></button><button data-v>Omuz<b>0</b></button>
+        </div>
+        <div style="height:40px"></div>
+      </div>
+      <div class="dock"><button class="btn">Kaydet</button></div>
+    </div>
+    <figcaption>2 · Sabah check-in. 1–5 ölçeği yalnız maket için; ölçek Faz 1'de kesinleşecek.</figcaption>
+  </figure>
+
+  <!-- 3 · Seans kaydı -->
+  <figure class="shot">
+    <div class="device">
+      <div class="screen">
+        <div class="fhead rv"><div class="mono">Seans kaydı · bugün 10:30</div><button class="x" aria-label="Kapat"><span data-icon="close"></span></button></div>
+        <h2 class="ftitle rv">Ne yaptın?</h2>
+
+        <div class="lbl mono rv"><span>Tür</span></div>
+        <div class="types rv" data-pick="type">
+          <button data-v="1" class="on">Takım antr.</button><button data-v="2">Maç</button><button data-v="3">Kuvvet</button>
+          <button data-v="4">Kondisyon</button><button data-v="5">Şut</button><button data-v="6">Rehab</button>
+        </div>
+
+        <div class="lbl mono rv"><span>Süre</span></div>
+        <div class="stepper rv"><button data-step="dur" data-d="-5" aria-label="Azalt"><span data-icon="minus"></span></button><div><span><span data-out="dur"></span><small>DK</small></span></div><button data-step="dur" data-d="5" aria-label="Arttır"><span data-icon="plus"></span></button></div>
+
+        <div class="lbl mono rv"><span>Zorluk · RPE</span><span>0–10</span></div>
+        <div class="rpe-top rv"><b data-out="rpe"></b><span data-out="rpeLabel"></span></div>
+        <div class="scale rv" data-pick="rpe">
+          <button data-v="0">0</button><button data-v="1">1</button><button data-v="2">2</button><button data-v="3">3</button><button data-v="4">4</button><button data-v="5">5</button><button data-v="6">6</button><button data-v="7" class="on">7</button><button data-v="8">8</button><button data-v="9">9</button><button data-v="10">10</button>
+        </div>
+
+        <div class="lbl mono rv"><span>Oynanan dakika</span></div>
+        <div class="disabled rv"><span>Yalnız maç seçilince</span><span class="mono">—</span></div>
+
+        <div class="lbl mono rv"><span>İçerik</span><span>Birden çok</span></div>
+        <div class="tags rv" data-multi>
+          <button data-v class="on">Sıçrama</button><button data-v class="on">Yön değiştirme</button><button data-v>Sprint</button><button data-v class="on">Temas</button><button data-v>Kuvvet</button>
+        </div>
+
+        <div class="load rv">
+          <div><div class="mono">Seans yükü</div><b><span data-out="load"></span><small>AU</small></b></div>
+          <div class="f">RPE <span data-out="rpe"></span><br>× <span data-out="dur"></span> DK</div>
+        </div>
+        <div style="height:40px"></div>
+      </div>
+      <div class="dock"><button class="btn">Kaydet</button></div>
+    </div>
+    <figcaption>3 · Seans kaydı. Süreyi ve RPE'yi değiştir, seans yükü kendisi hesaplanır.</figcaption>
+  </figure>
+</main>
+
+<script src="veri.js"></script>
+<script>
+HL.onApply((d) => {
+  const c = HL.chart(d.state, { w: 346, h: 150, px: 6, py: 12 });
+  const svg = document.getElementById('a-chart');
+  svg.innerHTML = `
+    <defs><pattern id="a-hatch" width="5" height="5" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><path d="M0 0v5" stroke="#3A3B35" stroke-width="1"/></pattern></defs>
+    <rect x="0" y="${c.bandTop}" width="346" height="${c.bandBot - c.bandTop}" fill="url(#a-hatch)"/>
+    <path d="M0 ${c.bandTop}H346M0 ${c.bandBot}H346" stroke="#5C5A52" stroke-dasharray="3 3"/>
+    <text x="346" y="${c.bandTop - 5}" text-anchor="end" fill="#8E8B81" font-family="IBM Plex Mono" font-size="9">76</text>
+    <text x="346" y="${c.bandBot + 12}" text-anchor="end" fill="#8E8B81" font-family="IBM Plex Mono" font-size="9">62</text>
+    ${c.dots.map((p) => `<rect x="${p.x - 1.5}" y="${p.y - 1.5}" width="3" height="3" fill="#5C5A52"/>`).join('')}
+    <path d="${c.avgPath}" fill="none" stroke="#EEEBE2" stroke-width="2.2" stroke-linejoin="round"/>
+    <circle cx="${c.last.x}" cy="${c.last.y}" r="9" fill="var(--s)" opacity=".22"/>
+    <circle cx="${c.last.x}" cy="${c.last.y}" r="4.5" fill="var(--s)"/>
+    <text x="0" y="148" fill="#5C5A52" font-family="IBM Plex Mono" font-size="9" letter-spacing="1">21 GÜN ÖNCE</text>
+    <text x="${c.last.x}" y="148" text-anchor="end" fill="#5C5A52" font-family="IBM Plex Mono" font-size="9" letter-spacing="1">BUGÜN</text>`;
+  document.getElementById('a-tendon').innerHTML = d.tendon.map(([n, lv, t]) =>
+    `<li><span>${n}</span><span class="bars ${lv === 3 ? 'hi' : ''}">${[1, 2, 3].map((i) => `<i class="${i <= lv ? 'f' : ''}"></i>`).join('')}</span><span class="mono">${t}</span></li>`).join('');
+});
+HL.start();
+</script>
+</body>
+</html>

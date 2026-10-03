@@ -42,3 +42,5 @@ Hangisi seçildi ve tek paragrafta neden.
 | [0007](0007-skill-seti.md) | Skill seti | Kabul edildi |
 | [0008](0008-gizlilik-altyapisi-eklemeleri.md) | Gizlilik altyapısı: Drive yedeği, CI'da denylist, geçmiş taraması | Kabul edildi |
 | [0009](0009-herkes-kendi-hesabiyla.md) | Herkes kendi hesabıyla: merkezi servis yok | Kabul edildi |
+| [0010](0010-tasarim-yonu-hale.md) | Tasarım yönü: C · Hale, açık ve koyu tema (Sistem / Açık / Koyu) | Kabul edildi |
+| [0011](0011-hale-efekti-svg.md) | Hale efekti: react-native-svg radyal gradyan + Reanimated transform | Kabul edildi |

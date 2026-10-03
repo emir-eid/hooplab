@@ -1,0 +1,428 @@
+<!doctype html>
+<html lang="tr" data-state="sari" data-tema="acik">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>HoopLab · Yön C · Hale</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,600;12..96,700;12..96,800&family=Figtree:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="cerceve.css">
+<style>
+/* Yerleşim: büyük başlık + hale + beyaz kartlar; yüzen kapsül sekme çubuğu.
+   Her renk bir token. Açık değerler :root'ta, koyu değerler [data-tema="koyu"] altında. */
+:root {
+  --bg: #EFEDE8; --card: #FFFFFF; --card2: #F6F5F1; --ink: #15171A; --ink2: #4A4E56; --mute: #8B8F97; --line: #E5E2DB;
+  --on-ink: #FFFFFF; --strong: #15171A; --on-strong: #FFFFFF; --result: #15171A; --on-result: #FFFFFF;
+  --glass: rgba(255, 255, 255, .72); --glass-edge: rgba(0, 0, 0, .06); --chip: rgba(255, 255, 255, .7);
+  --tab-on: rgba(21, 23, 26, .07); --dot: #CFCBC2; --band: #F1EFE9; --track: rgba(21, 23, 26, .1); --knob: #FFFFFF;
+  --shadow: 0 1px 2px rgba(20, 20, 20, .04), 0 8px 24px -12px rgba(20, 20, 20, .12);
+  --float: 0 0 0 .5px rgba(0, 0, 0, .06), 0 10px 30px -10px rgba(0, 0, 0, .25);
+  --g: #1FA874; --y: #E8930C; --r: #E8492F;
+  --aura-op: .95;
+  --a1: #FFC24D; --a2: #FFE3A3; --a3: #FF9F6B;
+  --s: var(--y);
+  --page-bg: #E2DFD8; --page-ink: #15171A; --sb: #15171A; --sb-bg: #EFEDE8;
+  --disp: 'Bricolage Grotesque', 'Avenir Next', sans-serif; --body: 'Figtree', 'Avenir Next', sans-serif;
+  color-scheme: light;
+}
+:root[data-state="yesil"] { --s: var(--g); --a1: #6EDDB0; --a2: #CBF3E1; --a3: #9BE7C6; }
+:root[data-state="kirmizi"] { --s: var(--r); --a1: #FF7A5E; --a2: #FFD3C7; --a3: #FF9C85; }
+
+:root[data-tema="koyu"] {
+  --bg: #0E0F11; --card: #18191C; --card2: #222327; --ink: #F1F0EC; --ink2: #B3B5BB; --mute: #7C7F87; --line: #2A2B30;
+  --on-ink: #0E0F11; --strong: #F1F0EC; --on-strong: #0E0F11; --result: #222429; --on-result: #F1F0EC;
+  --glass: rgba(36, 37, 41, .72); --glass-edge: rgba(255, 255, 255, .08); --chip: rgba(255, 255, 255, .09);
+  --tab-on: rgba(255, 255, 255, .1); --dot: #4A4C52; --band: #1F2024; --track: rgba(255, 255, 255, .12); --knob: #F1F0EC;
+  --shadow: 0 0 0 1px rgba(255, 255, 255, .035);
+  --float: 0 0 0 .5px rgba(255, 255, 255, .08), 0 10px 30px -10px rgba(0, 0, 0, .7);
+  --g: #3CCB92; --y: #FFAE33; --r: #FF6B52;
+  --aura-op: .5;
+  --a1: #FFA21F; --a2: #C25E00; --a3: #FF6A2B;
+  --page-bg: #08090A; --page-ink: #ECEBE7; --sb: #F1F0EC; --sb-bg: #0E0F11;
+  color-scheme: dark;
+}
+:root[data-tema="koyu"][data-state="yesil"] { --a1: #2EE6A0; --a2: #0B8A5E; --a3: #3FD9C0; }
+:root[data-tema="koyu"][data-state="kirmizi"] { --a1: #FF5A3C; --a2: #B0200F; --a3: #FF4D6D; }
+
+body { font-family: var(--body); transition: background .4s, color .4s; }
+.device { background: var(--bg); color: var(--ink); transition: background .4s, color .4s; }
+.screen { padding: 54px 0 130px; }
+
+/* Hale: SVG radyal gradyan lekeleri, yalnız transform ile hareket (uygulamadaki <Aura> bileşeninin birebir karşılığı). */
+.aura { position: absolute; z-index: 0; top: -150px; left: -90px; right: -90px; height: 600px; pointer-events: none; opacity: var(--aura-op); transition: opacity .6s; }
+.blob { position: absolute; will-change: transform; }
+.blob svg { display: block; width: 100%; height: 100%; overflow: visible; }
+.blob stop { transition: stop-color .8s; }
+.blob.b1 { width: 470px; height: 470px; left: 170px; top: 0; animation: drift1 14s ease-in-out infinite alternate; }
+.blob.b2 { width: 430px; height: 430px; left: 0; top: -40px; animation: drift2 17s ease-in-out infinite alternate; }
+.blob.b3 { width: 320px; height: 320px; left: 300px; top: 210px; animation: drift1 19s ease-in-out infinite alternate-reverse; }
+@keyframes drift1 { to { transform: translate(-26px, 20px) scale(1.06); } }
+@keyframes drift2 { to { transform: translate(20px, 26px) scale(.95); } }
+:root[data-hareket="kapali"] .blob { animation: none; }
+@media (prefers-reduced-motion: reduce) { .blob { animation: none; } }
+.screen > *:not(.aura) { position: relative; z-index: 1; }
+
+/* ---------- Bugün ---------- */
+.top { padding: 10px 20px 0; display: flex; justify-content: space-between; align-items: end; }
+.top small { display: block; font-size: 15px; color: var(--ink2); font-weight: 500; }
+.top h1 { margin: 0; font: 700 34px/1.1 var(--disp); letter-spacing: -.02em; }
+.pill-match { display: inline-flex; align-items: center; gap: 6px; height: 32px; padding: 0 12px; border-radius: 16px; background: var(--chip); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); font-size: 13px; font-weight: 600; margin-bottom: 4px; }
+.pill-match::before { content: ""; width: 7px; height: 7px; border-radius: 50%; background: var(--ink); }
+.state { padding: 54px 20px 0; }
+.state .eyebrow { font-size: 13px; font-weight: 600; color: var(--ink2); letter-spacing: .02em; }
+.state h2 { margin: 2px 0 0; font: 800 64px/.95 var(--disp); letter-spacing: -.035em; font-variation-settings: "opsz" 96; }
+.state p { margin: 12px 0 0; font-size: 17px; line-height: 1.42; max-width: 32ch; }
+.cite { display: inline-grid; place-items: center; width: 18px; height: 18px; border-radius: 50%; background: var(--ink); color: var(--on-ink); font-size: 10.5px; font-weight: 700; vertical-align: 2px; margin-left: 4px; }
+.chips { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 16px; }
+.chips span { height: 30px; padding: 0 12px; border-radius: 15px; display: inline-flex; align-items: center; background: var(--chip); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); font-size: 13px; font-weight: 600; }
+
+.card { margin: 12px 16px 0; padding: 16px; border-radius: 26px; background: var(--card); box-shadow: var(--shadow); transition: background .4s; }
+.advice { display: grid; grid-template-columns: 40px 1fr; gap: 12px; align-items: start; margin-top: 26px; }
+.advice .ico { width: 40px; height: 40px; border-radius: 14px; display: grid; place-items: center; background: color-mix(in srgb, var(--s) 16%, var(--card)); color: var(--s); }
+.advice .ico .ic { width: 22px; height: 22px; stroke-width: 2; }
+.advice b { display: block; font-size: 13px; color: var(--mute); font-weight: 600; margin-bottom: 2px; }
+.advice p { margin: 0; font-size: 15.5px; line-height: 1.42; }
+.cta { margin: 12px 16px 0; height: 56px; border-radius: 28px; padding: 0 8px 0 22px; display: flex; align-items: center; justify-content: space-between; background: var(--strong); color: var(--on-strong); font-size: 16px; font-weight: 600; }
+.cta span:last-child { height: 40px; padding: 0 14px; border-radius: 20px; background: color-mix(in srgb, var(--on-strong) 14%, transparent); display: flex; align-items: center; font-size: 13px; font-weight: 600; }
+
+.sec { margin: 28px 20px 0; display: flex; justify-content: space-between; align-items: baseline; }
+.sec h3 { margin: 0; font: 700 21px var(--disp); letter-spacing: -.015em; }
+.sec small { font-size: 13px; color: var(--mute); font-weight: 500; }
+.grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin: 12px 16px 0; }
+.grid .card { margin: 0; padding: 14px 15px 15px; border-radius: 22px; }
+.m-l { display: flex; align-items: center; gap: 7px; font-size: 13px; font-weight: 600; color: var(--ink2); }
+.m-l::before { content: ""; width: 8px; height: 8px; border-radius: 50%; background: var(--dot); }
+.off .m-l::before { background: var(--s); }
+.m-v { margin-top: 8px; font: 700 34px/1 var(--disp); letter-spacing: -.03em; }
+.m-v small { font: 600 13px var(--body); color: var(--mute); letter-spacing: 0; margin-left: 3px; }
+.m-n { margin-top: 6px; font-size: 12.5px; color: var(--mute); font-weight: 500; }
+.off .m-n { color: var(--s); font-weight: 600; }
+.chartcard { padding: 16px 12px 12px; }
+.chartcard .hd { display: flex; justify-content: space-between; align-items: baseline; padding: 0 4px; }
+.chartcard .hd .m-v { margin: 4px 0 0; }
+.chartcard svg { display: block; width: 100%; height: auto; margin-top: 8px; overflow: visible; }
+.lg { display: flex; gap: 14px; padding: 6px 4px 0; font-size: 12px; color: var(--mute); font-weight: 500; }
+.lg span { display: inline-flex; align-items: center; gap: 6px; }
+.lg b { width: 14px; height: 3px; border-radius: 2px; background: var(--ink); }
+.lg b.band { height: 10px; border-radius: 3px; background: var(--band); box-shadow: inset 0 0 0 1px var(--line); }
+
+.est { display: inline-flex; align-items: center; gap: 5px; height: 26px; padding: 0 10px; border-radius: 13px; border: 1.5px dashed var(--dot); font-size: 12px; font-weight: 600; color: var(--ink2); }
+.tendon { list-style: none; margin: 0; padding: 4px 0; }
+.tendon li { display: grid; grid-template-columns: 1fr 110px; align-items: center; gap: 12px; padding: 9px 0; font-size: 15px; font-weight: 500; }
+.tendon li + li { border-top: 1px solid var(--line); }
+.meter { position: relative; height: 10px; border-radius: 5px; background: var(--card2); overflow: hidden; }
+.meter i { position: absolute; inset: 0 auto 0 0; border-radius: 5px; background: var(--ink); }
+.meter.hi i { background: var(--s); }
+.tendon small { display: block; font-size: 12px; color: var(--mute); font-weight: 500; }
+.fine { margin: 10px 24px 0; font-size: 12.5px; line-height: 1.5; color: var(--mute); }
+
+.tabwrap { position: absolute; z-index: 30; left: 0; right: 0; bottom: 0; height: 110px; padding: 0 16px 30px; display: flex; gap: 10px; align-items: end; background: linear-gradient(transparent, color-mix(in srgb, var(--bg) 90%, transparent) 55%); }
+.tabbar { flex: 1; height: 62px; border-radius: 31px; display: grid; grid-template-columns: repeat(4, 1fr); align-items: center; padding: 0 6px;
+  background: var(--glass); backdrop-filter: blur(20px) saturate(1.6); -webkit-backdrop-filter: blur(20px) saturate(1.6); box-shadow: var(--float); }
+.tab { height: 52px; border-radius: 26px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px; font-size: 10.5px; font-weight: 600; color: var(--ink2); }
+.tab .ic { width: 23px; height: 23px; stroke-width: 1.9; }
+.tab.on { background: var(--tab-on); color: var(--ink); }
+.fab { width: 62px; height: 62px; border-radius: 50%; display: grid; place-items: center; background: var(--strong); color: var(--on-strong); box-shadow: var(--float); }
+.fab .ic { stroke-width: 2.2; }
+
+/* ---------- Formlar ---------- */
+.grab { width: 38px; height: 5px; border-radius: 3px; background: var(--dot); margin: 8px auto 0; }
+.fhead { padding: 18px 20px 0; display: flex; justify-content: space-between; align-items: center; }
+.fhead h2 { margin: 0; font: 700 28px var(--disp); letter-spacing: -.02em; }
+.fhead button { width: 36px; height: 36px; border-radius: 50%; background: var(--chip); display: grid; place-items: center; color: var(--ink2); }
+.fhead button .ic { width: 18px; height: 18px; stroke-width: 2.2; }
+.fsub { margin: 4px 20px 0; font-size: 15px; color: var(--ink2); font-weight: 500; }
+.dots { display: flex; gap: 6px; margin: 14px 20px 0; }
+.dots i { height: 6px; flex: 1; border-radius: 3px; background: var(--track); }
+.dots i.f { background: var(--ink); }
+.q { margin: 10px 16px 0; padding: 14px 14px 12px; border-radius: 22px; background: var(--card); box-shadow: var(--shadow); }
+.q .l { display: flex; justify-content: space-between; align-items: baseline; padding: 0 2px; font-size: 16px; font-weight: 600; }
+.q .l span:last-child { font-size: 13px; color: var(--mute); font-weight: 500; }
+.seg { display: grid; grid-template-columns: repeat(5, 1fr); gap: 2px; margin-top: 10px; padding: 3px; border-radius: 14px; background: var(--card2); }
+.seg button { height: 40px; border-radius: 11px; font: 700 17px var(--disp); color: var(--mute); transition: background .2s, color .2s, box-shadow .2s; }
+.seg button.on { background: var(--strong); color: var(--on-strong); box-shadow: 0 4px 10px -4px rgba(0, 0, 0, .4); }
+.ends { display: flex; justify-content: space-between; margin-top: 6px; padding: 0 4px; font-size: 11.5px; color: var(--mute); font-weight: 500; }
+.chipset { display: flex; flex-wrap: wrap; gap: 6px; }
+.chipset button { height: 38px; padding: 0 14px; border-radius: 19px; background: var(--card2); font-size: 14px; font-weight: 600; color: var(--ink2); display: inline-flex; align-items: center; gap: 8px; transition: background .2s, color .2s; }
+.chipset button b { min-width: 22px; height: 22px; padding: 0 6px; border-radius: 11px; background: var(--track); font-size: 12px; display: grid; place-items: center; }
+.chipset button.on { background: var(--strong); color: var(--on-strong); }
+.chipset button.on b { background: color-mix(in srgb, var(--on-strong) 20%, transparent); }
+.dock { position: absolute; z-index: 30; left: 0; right: 0; bottom: 0; padding: 16px 16px 34px; background: linear-gradient(transparent, var(--bg) 40%); }
+.dock .btn { width: 100%; height: 58px; border-radius: 29px; background: var(--strong); color: var(--on-strong); font-size: 17px; font-weight: 600; }
+
+.blk { margin: 10px 16px 0; padding: 16px; border-radius: 24px; background: var(--card); box-shadow: var(--shadow); }
+.blk > .t { font-size: 13px; font-weight: 600; color: var(--mute); margin-bottom: 12px; display: flex; justify-content: space-between; }
+.dur { display: flex; align-items: center; justify-content: space-between; }
+.dur button { width: 52px; height: 52px; border-radius: 50%; background: var(--card2); display: grid; place-items: center; color: var(--ink); }
+.dur div { text-align: center; font: 800 60px/1 var(--disp); letter-spacing: -.04em; }
+.dur div small { display: block; font: 600 13px var(--body); color: var(--mute); letter-spacing: 0; margin-top: 2px; }
+.rpe-h { display: flex; align-items: baseline; gap: 10px; }
+.rpe-h b { font: 800 52px/1 var(--disp); letter-spacing: -.04em; }
+.rpe-h span { font: 700 19px var(--disp); color: var(--ink2); }
+.track { position: relative; margin-top: 14px; height: 44px; }
+.track::before { content: ""; position: absolute; left: 0; right: 0; top: 17px; height: 10px; border-radius: 5px; background: var(--card2); }
+.track .fill { position: absolute; left: 0; top: 17px; height: 10px; border-radius: 5px; width: calc(var(--p, .7) * (100% - 22px) + 11px); background: linear-gradient(90deg, var(--dot), var(--ink)); transition: width .25s cubic-bezier(.2, .8, .2, 1); }
+.track .knob { position: absolute; top: 11px; left: calc(var(--p, .7) * (100% - 22px)); width: 22px; height: 22px; border-radius: 50%; background: var(--knob); box-shadow: 0 0 0 .5px rgba(0, 0, 0, .1), 0 3px 8px rgba(0, 0, 0, .3); transition: left .25s cubic-bezier(.2, .8, .2, 1); }
+.track .hit { position: absolute; inset: 0; display: grid; grid-template-columns: repeat(11, 1fr); }
+.track .hit button { height: 44px; }
+.track-l { display: flex; justify-content: space-between; font-size: 11.5px; color: var(--mute); font-weight: 500; }
+.na { font-size: 14.5px; color: var(--mute); font-weight: 500; }
+.result { margin: 10px 16px 0; padding: 18px; border-radius: 24px; background: var(--result); color: var(--on-result); display: flex; justify-content: space-between; align-items: end; }
+.result .t { font-size: 13px; font-weight: 600; opacity: .6; }
+.result b { display: block; margin-top: 4px; font: 800 54px/1 var(--disp); letter-spacing: -.04em; }
+.result b small { font: 600 14px var(--body); opacity: .6; letter-spacing: 0; margin-left: 4px; }
+.result .f { text-align: right; font-size: 13px; line-height: 1.5; opacity: .7; font-weight: 500; }
+
+/* ---------- Ayarlar · Görünüm ---------- */
+.navbar { padding: 8px 12px 0; height: 44px; display: flex; align-items: center; }
+.back { display: inline-flex; align-items: center; gap: 2px; font-size: 17px; font-weight: 500; color: var(--ink); }
+.back .ic { width: 22px; height: 22px; stroke-width: 2.2; transform: scaleX(-1); }
+.ptitle { margin: 6px 20px 0; font: 700 34px/1.1 var(--disp); letter-spacing: -.02em; }
+.glabel { margin: 26px 32px 8px; font-size: 13px; font-weight: 600; color: var(--mute); }
+.themes { margin: 0 16px; padding: 18px 10px 14px; border-radius: 24px; background: var(--card); box-shadow: var(--shadow); display: grid; grid-template-columns: repeat(3, 1fr); }
+.themes button { display: flex; flex-direction: column; align-items: center; gap: 10px; font-size: 14px; font-weight: 600; color: var(--ink); }
+.mini { position: relative; width: 70px; height: 116px; border-radius: 14px; overflow: hidden; box-shadow: 0 0 0 1px var(--line); transition: box-shadow .2s; }
+.themes button[aria-pressed="true"] .mini { box-shadow: 0 0 0 2.5px var(--ink); }
+.mini i { position: absolute; display: block; }
+.mini .orb { width: 90px; height: 90px; left: 10px; top: -36px; border-radius: 50%; }
+.mini .ttl { left: 8px; top: 34px; width: 34px; height: 7px; border-radius: 3px; }
+.mini .c1 { left: 6px; right: 6px; top: 50px; height: 26px; border-radius: 7px; }
+.mini .c2 { left: 6px; width: 27px; top: 80px; height: 22px; border-radius: 7px; }
+.mini .c3 { right: 6px; width: 27px; top: 80px; height: 22px; border-radius: 7px; }
+.mini.light { background: #EFEDE8; }
+.mini.light .orb { background: radial-gradient(closest-side, #FFC24D, rgba(255, 194, 77, 0)); }
+.mini.light .ttl { background: #15171A; } .mini.light .c1, .mini.light .c2, .mini.light .c3 { background: #FFFFFF; }
+.mini.dark { background: #0E0F11; }
+.mini.dark .orb { background: radial-gradient(closest-side, rgba(255, 162, 31, .55), rgba(255, 162, 31, 0)); }
+.mini.dark .ttl { background: #F1F0EC; } .mini.dark .c1, .mini.dark .c2, .mini.dark .c3 { background: #18191C; }
+.mini.sys .half { position: absolute; inset: 0; clip-path: polygon(100% 0, 100% 100%, 0 100%); }
+.radio { width: 22px; height: 22px; border-radius: 50%; border: 1.5px solid var(--dot); display: grid; place-items: center; }
+.themes button[aria-pressed="true"] .radio { border-color: var(--ink); background: var(--ink); }
+.themes button[aria-pressed="true"] .radio::after { content: ""; width: 10px; height: 6px; margin-top: -2px; border-left: 2px solid var(--on-ink); border-bottom: 2px solid var(--on-ink); transform: rotate(-45deg); }
+.foot { margin: 8px 32px 0; font-size: 13px; line-height: 1.45; color: var(--mute); }
+.list { margin: 0 16px; border-radius: 22px; background: var(--card); box-shadow: var(--shadow); }
+.row { min-height: 54px; padding: 0 16px; display: flex; justify-content: space-between; align-items: center; font-size: 16px; font-weight: 500; }
+.row + .row { border-top: 1px solid var(--line); }
+.row .val { color: var(--mute); display: inline-flex; align-items: center; gap: 4px; font-size: 15px; }
+.row .val .ic { width: 16px; height: 16px; stroke-width: 2.2; }
+.toggle { width: 51px; height: 31px; border-radius: 16px; background: var(--track); position: relative; transition: background .2s; }
+.toggle::after { content: ""; position: absolute; top: 2px; left: 2px; width: 27px; height: 27px; border-radius: 50%; background: #FFFFFF; box-shadow: 0 2px 6px rgba(0, 0, 0, .25); transition: transform .25s cubic-bezier(.2, .8, .2, 1); }
+.toggle[aria-checked="true"] { background: var(--g); }
+.toggle[aria-checked="true"]::after { transform: translateX(20px); }
+</style>
+</head>
+<body>
+<header class="chrome">
+  <div>
+    <h1><a href="index.html">← Yönler</a>C · Hale</h1>
+    <p>Seçilen yön. Günün durumu, ekranın üstünde yavaşça nefes alan bir renk halesi; geri kalan her şey sakin kartlar. Hale, uygulamadaki gibi SVG radyal gradyanlarla çiziliyor. Tema: Sistem, Açık veya Koyu; dördüncü ekrandan da seçilebilir.</p>
+  </div>
+  <div style="display:flex;flex-direction:column;gap:8px;align-items:flex-end">
+    <div class="switch"><span>Durum:</span><button data-set-state="yesil">Yeşil</button><button data-set-state="sari">Sarı</button><button data-set-state="kirmizi">Kırmızı</button></div>
+    <div class="switch"><span>Tema:</span><button data-set-theme="sistem">Sistem</button><button data-set-theme="acik">Açık</button><button data-set-theme="koyu">Koyu</button></div>
+  </div>
+</header>
+
+<main class="stage">
+  <!-- 1 · Bugün -->
+  <figure class="shot">
+    <div class="device">
+      <div class="screen">
+        <div class="aura" aria-hidden="true"></div>
+        <div class="top rv"><div><small data-k="date"></small><h1>Bugün</h1></div><span class="pill-match">Yarın maç · 19:00</span></div>
+        <section class="state rv">
+          <div class="eyebrow">Bugünün durumu</div>
+          <h2 data-k="label"></h2>
+          <p><span data-k="reason"></span><span class="cite">1</span></p>
+          <div class="chips" id="c-chips"></div>
+        </section>
+        <section class="card advice rv"><span class="ico"><span data-icon="today"></span></span><div><b>Bugün için</b><p data-k="advice"></p></div></section>
+        <a class="cta rv"><span>Sabah check-in</span><span>30 sn</span></a>
+
+        <div class="sec rv"><h3>Gece verisi</h3><small>kişisel bant · 60 gün</small></div>
+        <section class="card chartcard rv" data-off="hrv">
+          <div class="hd"><div><div class="m-l">HRV · 7 günlük ort.</div><div class="m-v"><span data-k="hrv"></span><small>ms</small></div></div><div class="m-n" style="text-align:right"><span data-k="hrvNote"></span><br>bant <span data-k="band"></span></div></div>
+          <svg id="c-chart" viewBox="0 0 334 130" role="img" aria-label="HRV, son 21 gün, kişisel bantla"></svg>
+          <div class="lg"><span><b></b>7 günlük ort.</span><span><b class="band"></b>Kişisel bant</span><span>21 gün</span></div>
+        </section>
+        <div class="grid rv">
+          <div class="card" data-off="rhr"><div class="m-l">Dinlenik nabız</div><div class="m-v"><span data-k="rhr"></span><small>atım</small></div><div class="m-n" data-k="rhrNote"></div></div>
+          <div class="card" data-off="sleep"><div class="m-l">Uyku</div><div class="m-v"><span data-k="sleep"></span><small>sa</small></div><div class="m-n" data-k="sleepNote"></div></div>
+          <div class="card" data-off="resp"><div class="m-l">Solunum</div><div class="m-v"><span data-k="resp"></span><small>/dk</small></div><div class="m-n" data-k="respNote"></div></div>
+          <div class="card"><div class="m-l">Bu sabah HRV</div><div class="m-v"><span data-k="hrvToday"></span><small>ms</small></div><div class="m-n">tek gece, gürültülü</div></div>
+        </div>
+
+        <div class="sec rv"><h3>Kas ve tendon</h3><span class="est">≈ Tahmin</span></div>
+        <section class="card rv"><ul class="tendon" id="c-tendon"></ul></section>
+        <p class="fine rv">Ölçüm değil: son 7 günün seans içeriğinden hesaplanan tahmin.</p>
+      </div>
+      <div class="tabwrap">
+        <nav class="tabbar">
+          <a class="tab on"><span data-icon="today"></span>Bugün</a>
+          <a class="tab"><span data-icon="trend"></span>Trend</a>
+          <a class="tab"><span data-icon="coach"></span>Koç</a>
+          <a class="tab"><span data-icon="me"></span>Ben</a>
+        </nav>
+        <button class="fab" aria-label="Kayıt ekle"><span data-icon="plus"></span></button>
+      </div>
+    </div>
+    <figcaption>1 · Bugün. Üstteki düğmelerle durum ve tema değiştir.</figcaption>
+  </figure>
+
+  <!-- 2 · Sabah check-in -->
+  <figure class="shot">
+    <div class="device">
+      <div class="screen">
+        <div class="aura" aria-hidden="true" style="opacity:calc(var(--aura-op) * .45)"></div>
+        <div class="grab"></div>
+        <div class="fhead rv"><h2>Sabah check-in</h2><button aria-label="Kapat"><span data-icon="close"></span></button></div>
+        <p class="fsub rv">Beş soru, yaklaşık 30 saniye.</p>
+        <div class="dots rv"><i class="f"></i><i class="f"></i><i class="f"></i><i></i><i></i></div>
+
+        <section class="q rv"><div class="l"><span>Uyku kalitesi</span><span>4 / 5</span></div>
+          <div class="seg" data-pick="q1"><button data-v="1">1</button><button data-v="2">2</button><button data-v="3">3</button><button data-v="4" class="on">4</button><button data-v="5">5</button></div>
+          <div class="ends"><span>Çok kötü</span><span>Çok iyi</span></div></section>
+        <section class="q rv"><div class="l"><span>Yorgunluk</span><span>3 / 5</span></div>
+          <div class="seg" data-pick="q2"><button data-v="1">1</button><button data-v="2">2</button><button data-v="3" class="on">3</button><button data-v="4">4</button><button data-v="5">5</button></div>
+          <div class="ends"><span>Yok</span><span>Çok fazla</span></div></section>
+        <section class="q rv"><div class="l"><span>Kas ağrısı</span><span>2 / 5</span></div>
+          <div class="seg" data-pick="q3"><button data-v="1">1</button><button data-v="2" class="on">2</button><button data-v="3">3</button><button data-v="4">4</button><button data-v="5">5</button></div>
+          <div class="ends"><span>Yok</span><span>Çok fazla</span></div></section>
+        <section class="q rv"><div class="l"><span>Stres</span><span>–</span></div>
+          <div class="seg" data-pick="q4"><button data-v="1">1</button><button data-v="2">2</button><button data-v="3">3</button><button data-v="4">4</button><button data-v="5">5</button></div>
+          <div class="ends"><span>Yok</span><span>Çok fazla</span></div></section>
+        <section class="q rv"><div class="l"><span>Ruh hali</span><span>–</span></div>
+          <div class="seg" data-pick="q5"><button data-v="1">1</button><button data-v="2">2</button><button data-v="3">3</button><button data-v="4">4</button><button data-v="5">5</button></div>
+          <div class="ends"><span>Çok kötü</span><span>Çok iyi</span></div></section>
+
+        <section class="blk rv"><div class="t"><span>Ağrı ve sertlik</span><span>0–10</span></div>
+          <div class="chipset" data-multi>
+            <button data-v class="on">Patellar tendon<b>3</b></button><button data-v class="on">Aşil<b>2</b></button><button data-v>Baldır</button><button data-v>Ayak bileği</button><button data-v>Quadriceps</button><button data-v>Hamstring</button><button data-v>Adduktor</button><button data-v>Kalça</button><button data-v>Bel</button><button data-v>Omuz</button>
+          </div></section>
+        <div style="height:40px"></div>
+      </div>
+      <div class="dock"><button class="btn">Kaydet</button></div>
+    </div>
+    <figcaption>2 · Sabah check-in. 1–5 ölçeği yalnız maket için; ölçek Faz 1'de kesinleşecek.</figcaption>
+  </figure>
+
+  <!-- 3 · Seans kaydı -->
+  <figure class="shot">
+    <div class="device">
+      <div class="screen">
+        <div class="grab"></div>
+        <div class="fhead rv"><h2>Seans kaydı</h2><button aria-label="Kapat"><span data-icon="close"></span></button></div>
+        <p class="fsub rv">Bugün, 10:30</p>
+
+        <section class="blk rv"><div class="t"><span>Tür</span></div>
+          <div class="chipset" data-pick="type">
+            <button data-v="1" class="on">Takım antrenmanı</button><button data-v="2">Maç</button><button data-v="3">Kuvvet</button><button data-v="4">Kondisyon</button><button data-v="5">Şut</button><button data-v="6">Rehabilitasyon</button>
+          </div></section>
+
+        <section class="blk rv"><div class="t"><span>Süre</span></div>
+          <div class="dur"><button data-step="dur" data-d="-5" aria-label="Azalt"><span data-icon="minus"></span></button><div><span data-out="dur"></span><small>dakika</small></div><button data-step="dur" data-d="5" aria-label="Arttır"><span data-icon="plus"></span></button></div></section>
+
+        <section class="blk rv"><div class="t"><span>Zorluk · RPE</span><span>0–10</span></div>
+          <div class="rpe-h"><b data-out="rpe"></b><span data-out="rpeLabel"></span></div>
+          <div class="track" data-fill="rpe"><div class="fill"></div><div class="knob"></div>
+            <div class="hit" data-pick="rpe"><button data-v="0" aria-label="0"></button><button data-v="1" aria-label="1"></button><button data-v="2" aria-label="2"></button><button data-v="3" aria-label="3"></button><button data-v="4" aria-label="4"></button><button data-v="5" aria-label="5"></button><button data-v="6" aria-label="6"></button><button data-v="7" aria-label="7" class="on"></button><button data-v="8" aria-label="8"></button><button data-v="9" aria-label="9"></button><button data-v="10" aria-label="10"></button></div></div>
+          <div class="track-l"><span>Dinlenme</span><span>Maksimal</span></div></section>
+
+        <section class="blk rv"><div class="t"><span>Oynanan dakika</span></div><div class="na">Yalnız maç seçilince sorulur.</div></section>
+
+        <section class="blk rv"><div class="t"><span>İçerik</span><span>birden çok</span></div>
+          <div class="chipset" data-multi>
+            <button data-v class="on">Sıçrama</button><button data-v class="on">Yön değiştirme</button><button data-v>Sprint</button><button data-v class="on">Temas</button><button data-v>Kuvvet</button>
+          </div></section>
+
+        <section class="result rv"><div><div class="t">Seans yükü</div><b><span data-out="load"></span><small>AU</small></b></div><div class="f">RPE <span data-out="rpe"></span><br>× <span data-out="dur"></span> dk</div></section>
+        <div style="height:40px"></div>
+      </div>
+      <div class="dock"><button class="btn">Kaydet</button></div>
+    </div>
+    <figcaption>3 · Seans kaydı. Süreyi ve RPE'yi değiştir, seans yükü kendisi hesaplanır.</figcaption>
+  </figure>
+
+  <!-- 4 · Ben → Ayarlar → Görünüm -->
+  <figure class="shot">
+    <div class="device">
+      <div class="screen">
+        <div class="navbar rv"><a class="back"><span data-icon="chev"></span>Ayarlar</a></div>
+        <h2 class="ptitle rv">Görünüm</h2>
+
+        <div class="glabel rv">Tema</div>
+        <section class="themes rv">
+          <button data-set-theme="sistem"><span class="mini sys"><span class="mini light" style="position:absolute;inset:0;border-radius:0;box-shadow:none"><i class="orb"></i><i class="ttl"></i><i class="c1"></i><i class="c2"></i><i class="c3"></i></span><span class="half"><span class="mini dark" style="position:absolute;inset:0;border-radius:0;box-shadow:none"><i class="orb"></i><i class="ttl"></i><i class="c1"></i><i class="c2"></i><i class="c3"></i></span></span></span>Sistem<span class="radio"></span></button>
+          <button data-set-theme="acik"><span class="mini light"><i class="orb"></i><i class="ttl"></i><i class="c1"></i><i class="c2"></i><i class="c3"></i></span>Açık<span class="radio"></span></button>
+          <button data-set-theme="koyu"><span class="mini dark"><i class="orb"></i><i class="ttl"></i><i class="c1"></i><i class="c2"></i><i class="c3"></i></span>Koyu<span class="radio"></span></button>
+        </section>
+        <p class="foot rv">Sistem, iPhone'un Ekran ve Parlaklık ayarını izler; akşam koyuya, sabah açığa kendisi geçer.</p>
+
+        <div class="glabel rv">Hareket</div>
+        <section class="list rv">
+          <div class="row"><span>Haleyi canlandır</span><button class="toggle" id="t-hareket" role="switch" aria-checked="true" aria-label="Haleyi canlandır"></button></div>
+        </section>
+        <p class="foot rv">iPhone'da Hareketi Azalt açıksa hale her zaman durur.</p>
+
+        <div class="glabel rv">Diğer</div>
+        <section class="list rv">
+          <div class="row"><span>Uygulama simgesi</span><span class="val">Varsayılan<span data-icon="chev"></span></span></div>
+          <div class="row"><span>Sayı biçimi</span><span class="val">14,8 · 6:05<span data-icon="chev"></span></span></div>
+        </section>
+      </div>
+      <div class="tabwrap">
+        <nav class="tabbar">
+          <a class="tab"><span data-icon="today"></span>Bugün</a>
+          <a class="tab"><span data-icon="trend"></span>Trend</a>
+          <a class="tab"><span data-icon="coach"></span>Koç</a>
+          <a class="tab on"><span data-icon="me"></span>Ben</a>
+        </nav>
+        <button class="fab" aria-label="Kayıt ekle"><span data-icon="plus"></span></button>
+      </div>
+    </div>
+    <figcaption>4 · Ben → Ayarlar → Görünüm. Buradaki seçim bütün maketlerin temasını değiştirir.</figcaption>
+  </figure>
+</main>
+
+<script src="veri.js"></script>
+<script>
+// Hale lekeleri: her biri merkezden kenara saydamlaşan bir radyal gradyan.
+// Durak dizisi Gauss benzeri bir düşüş verir; uygulamada react-native-svg RadialGradient ile aynı duraklar kullanılır.
+const STOPS = [[0, 1], [0.2, 0.86], [0.4, 0.58], [0.6, 0.3], [0.8, 0.1], [1, 0]];
+let auraId = 0;
+document.querySelectorAll('.aura').forEach((aura) => {
+  aura.innerHTML = ['a1', 'a2', 'a3'].map((tok, i) => {
+    const id = 'hale-' + (auraId++);
+    return `<div class="blob b${i + 1}"><svg viewBox="0 0 100 100"><defs><radialGradient id="${id}" cx="50" cy="50" r="50" gradientUnits="userSpaceOnUse">` +
+      STOPS.map(([o, a]) => `<stop offset="${o}" style="stop-color:var(--${tok});stop-opacity:${a}"/>`).join('') +
+      `</radialGradient></defs><circle cx="50" cy="50" r="50" fill="url(#${id})"/></svg></div>`;
+  }).join('');
+});
+
+const toggle = document.getElementById('t-hareket');
+toggle.addEventListener('click', () => {
+  const on = toggle.getAttribute('aria-checked') !== 'true';
+  toggle.setAttribute('aria-checked', String(on));
+  document.documentElement.dataset.hareket = on ? 'acik' : 'kapali';
+});
+
+HL.onApply((d) => {
+  document.getElementById('c-chips').innerHTML = d.chips.map((c) => `<span>${c}</span>`).join('');
+  const c = HL.chart(d.state, { w: 334, h: 130, px: 6, py: 10 });
+  document.getElementById('c-chart').innerHTML = `
+    <defs><linearGradient id="c-grad" x1="0" y1="0" x2="0" y2="1"><stop offset="0" style="stop-color:var(--s);stop-opacity:.28"/><stop offset="1" style="stop-color:var(--s);stop-opacity:0"/></linearGradient></defs>
+    <rect x="0" y="${c.bandTop}" width="334" height="${c.bandBot - c.bandTop}" rx="8" style="fill:var(--band)"/>
+    <path d="${c.areaPath}" fill="url(#c-grad)"/>
+    ${c.dots.map((p) => `<circle cx="${p.x}" cy="${p.y}" r="2.3" style="fill:var(--dot)"/>`).join('')}
+    <path d="${c.avgPath}" fill="none" style="stroke:var(--ink)" stroke-width="2.6" stroke-linejoin="round" stroke-linecap="round"/>
+    <circle cx="${c.last.x}" cy="${c.last.y}" r="7" style="fill:var(--card);stroke:var(--s)" stroke-width="3.5"/>
+    <text x="330" y="${c.bandTop - 5}" text-anchor="end" style="fill:var(--mute)" font-family="Figtree" font-weight="600" font-size="10">76</text>
+    <text x="330" y="${c.bandBot + 13}" text-anchor="end" style="fill:var(--mute)" font-family="Figtree" font-weight="600" font-size="10">62</text>`;
+  document.getElementById('c-tendon').innerHTML = d.tendon.map(([n, lv, t]) =>
+    `<li><span>${n}<small>${t}</small></span><span class="meter ${lv === 3 ? 'hi' : ''}"><i style="width:${[12, 38, 66, 92][lv]}%"></i></span></li>`).join('');
+});
+HL.start();
+</script>
+</body>
+</html>

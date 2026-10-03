@@ -31,6 +31,11 @@ Tekrar yaşanabilecek hatalar ve önceden bilinen tuzaklar. Her madde: **ders**,
 - **[ölçüldü] Google Drive dosya sistemi zaman damgasının milisaniye altını atıyor** (kaynak ile kopya arasında ~0,76 ms fark). "Hedef daha yeni mi?" karşılaştırması bu yüzden her seferinde yanlış sonuç verip gereksiz kopya yapıyordu. Çözüm: aynı boyut ve 2 saniye tolerans. Bekçi: `tools/backup/backup-private.test.mjs`.
 - **[ölçüldü] Çok uzun geçici yollarda `git clone` başarısız olabilir** (muhtemelen Windows yol uzunluğu sınırı). Klonlar kısa bir yola (ör. `%TEMP%\kisa-ad`) yapılır; hata çıktısı bastırılmaz.
 
+## Önizleme ve maketler
+
+- **[ölçüldü] Tarayıcı paneli `file://` ile açılan HTML'i statik kopya olarak gösterir; bağlı CSS ve JS dosyaları yüklenmez.** Maketler yerel sunucuyla açılır: `.claude/launch.json` içindeki `maketler` yapılandırması (`python -m http.server 4173`). Kanıt: 2026-10-03 Faz 0.5 oturumu. Bekçi: yok (launch.json kayıtlı).
+- **[ölçüldü] Tarayıcı panelinin ekran görüntüsü bazen eksik veya tekrarlı çizilir** (boş alan, aynı ekranın karolar halinde tekrarı). Hata sanmadan önce DOM ölçümüyle (`getBoundingClientRect`, `scrollHeight`) içeriğin yerinde olduğu doğrulanır ve görüntü yeniden çekilir. Kanıt: 2026-10-03 Faz 0.5 oturumu.
+
 ## Google Health / veri
 
 - **[kaynaklı] Fitbit Web API 30 Ekim 2026'da kapanıyor** ([Google Health API bülteni](https://developers.google.com/health/newsletters)). Kullanılmaz. Yerine Google Health API v4.

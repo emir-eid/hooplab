@@ -3,23 +3,25 @@
 Tek doğruluk kaynağı. `/kapat` her oturum sonunda günceller, `/ac` her oturum başında okur. 150 satırı geçince eski bölümler `docs/archive/` klasörüne taşınır.
 
 <!-- ozet:basla -->
-**Faz:** 0.5, tasarım yönü. Faz 0 tamamlandı ([özet](phases/faz-0.md)): Google Health API erişimi kişisel projeyle çalışıyor, B planına gerek yok.
-**Son oturum:** [2026-10-03 21:56 Faz 0 veri testi](sessions/2026-10-03-2156-faz0-veri-testi.md)
+**Faz:** 0.5, tasarım yönü. Yön seçildi: **C · Hale**, açık ve koyu tema, Sistem / Açık / Koyu ([0010](decisions/0010-tasarim-yonu-hale.md)); hale `react-native-svg` ile ([0011](decisions/0011-hale-efekti-svg.md)). Maketler: [design/maketler/](../design/maketler/index.html).
+**Son oturum:** [2026-10-03 22:36 Faz 0.5 tasarım yönü](sessions/2026-10-03-2236-faz05-tasarim-yonu.md)
 
 **Sıradaki işler (sıralı):**
-1. **Faz 0.5:** 2-3 görsel yön maketi (HTML, telefon boyutu 390×844, sentetik veri), kullanıcı seçimi. Önerilen: Opus + yüksek efor.
-2. Seçilen yönden tasarım token'ları (renk, tipografi, boşluk, köşe, hareket).
+1. **Faz 0.5 son iş:** `design/maketler/c-hale.html` içinden tasarım token'ları (renk açık + koyu, tipografi, boşluk, köşe, hareket, hale renkleri ve gradyan durakları) → TypeScript tema dosyası (hex). Bitince Faz 0.5 özeti ve `faz-0.5-tamam` etiketi. Önerilen: Opus + orta.
+2. **Faz 1 başı:** Expo ve Supabase plugin'leri, `apps/mobile` iskeleti.
 3. **Takip (2026-10-10 civarı):** yenileme token'ı 7. günde düştü mü? `GHEALTH_CONFIG_DIR` = `E:\HoopLab\private\ghealth` ile `C:\gh\ghealth-src\ghealth.exe user paired-devices list`; sonucu LESSONS'taki [kaynaklı] maddeye [ölçüldü] olarak işle.
 
 **Açık riskler:**
 - Testing modundaki OAuth'ta yenileme token'ı 7 günde düşer; uygulamada haftalık yeniden bağlanma akışı şart ([0009](decisions/0009-herkes-kendi-hesabiyla.md)).
 - Google kişisel projelere erişimi kapatabilir (doküman "yeni proje kabul etmiyoruz" diyor; şu an çalışıyor).
 - Supabase ücretsiz planı 7 gün istek gelmezse projeyi duraklatıyor (Faz 1'de gözlenecek).
-- SessionEnd / PreCompact arşiv hook'u henüz döküm yazmadı (`private/transcripts` boş); doğrulanacak.
+- Arşiv hook'u: SessionEnd döküm yazıyor (2026-10-03'te görüldü); PreCompact henüz doğrulanmadı.
+- Hale `react-native-svg` gradyanlarıyla cihazda kademelenme (banding) gösterebilir; görülürse yalnız `<Aura>` Skia'ya taşınır ([0011](decisions/0011-hale-efekti-svg.md)).
 
 **Kullanıcı işleri:**
 - Faz 1 öncesi: Expo ve Supabase plugin'leri yüklü değil; onay penceresi çıkarsa onayla.
 - İstersen zamanlanmış görevleri kenar çubuğundaki "Scheduled" bölümünden bir kez "Run now" ile çalıştır.
+- C maketi telefonda: https://claude.ai/artifact/GWScS6NjHsxUphrHSFLo7J (özel; güncellemek için bu URL'ye yayınlanır). Görünüm ekranındaki "Haleyi canlandır" ve "Diğer" satırlarını isteyip istemediğini söyle.
 <!-- ozet:bitti -->
 
 ## Faz durumu
@@ -27,7 +29,7 @@ Tek doğruluk kaynağı. `/kapat` her oturum sonunda günceller, `/ac` her oturu
 | Faz | Durum |
 |---|---|
 | 0 Veri erişimi testi + altyapı | Tamamlandı (2026-10-03, `faz-0-tamam`) |
-| 0.5 Tasarım yönü | Başlamadı |
+| 0.5 Tasarım yönü | Sürüyor: yön seçildi, token'lar kaldı |
 | 1 Temel uygulama (MVP) | Başlamadı |
 | 2 Hesap motoru | Başlamadı |
 | 3 AI koç | Başlamadı |

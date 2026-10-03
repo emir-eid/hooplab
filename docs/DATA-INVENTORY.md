@@ -27,6 +27,8 @@ Hangi veri nerede durur, hangi servise ne gider, ne kadar saklanır, nasıl sili
 | Anthropic API (Faz 3) | Hesaplanmış özet sayılar, ilgili kanıt metinleri, kullanıcının sorusu | Ad, e-posta, doğum tarihi, kimlik bilgileri, ham zaman serileri |
 | GitHub | Kod ve belgeler; denylist (şifreli secret olarak) | Sağlık verisi, `private` klasörü |
 | Google Drive | `private` klasörünün kopyası | — |
+| claude.ai Artifacts | Tasarım maketleri (yalnız sentetik veri), sahibine özel bağlantı | Gerçek sağlık verisi, kişisel bilgi |
+| Google Fonts | Maket sayfalarının font istekleri (tarayıcıdan) | Veri |
 | Anthropic (Claude Code, geliştirme) | **Geliştirme sohbetlerine yazılan her şey** ve Claude'un okuduğu dosyalar | — |
 
 Son satıra dikkat: geliştirme sırasında sohbete yazılan veya Claude'a okutulan sağlık değerleri de Anthropic'e gider. Kişisel değerleri sohbette paylaşmak bu yüzden bilinçli bir tercih olmalıdır. Test ve geliştirme sentetik veriyle yapılır.

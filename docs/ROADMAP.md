@@ -22,8 +22,8 @@ Her faz, bitiş kriteri karşılanınca `/kapat` ile kapanır: faz özeti `docs/
 
 ## Faz 0.5: Tasarım yönü
 
-- [ ] 2-3 farklı görsel yön, telefon boyutunda HTML maket (`frontend-design`)
-- [ ] Kullanıcı seçimi
+- [x] 2-3 farklı görsel yön, telefon boyutunda HTML maket (`frontend-design`): [design/maketler/](../design/maketler/index.html)
+- [x] Kullanıcı seçimi: C · Hale, açık ve koyu tema ([0010](decisions/0010-tasarim-yonu-hale.md)); hale aracı [0011](decisions/0011-hale-efekti-svg.md)
 - [ ] Tasarım sistemi: renk, tipografi, boşluk, köşe, hareket token'ları (`design:design-system`, `apple-design`)
 
 **Bitiş kriteri:** Seçilmiş yön ve TypeScript tema dosyasına çevrilebilir token seti.

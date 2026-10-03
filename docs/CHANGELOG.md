@@ -19,3 +19,4 @@ Uygulamaya veya altyapıya görünür değişiklikler. Biçim: [Keep a Changelog
 - Belgeler: `COSTS.md`, `DATA-INVENTORY.md`, `SETUP.md`; karar 0008.
 - `/ac` hook ve plugin yüklemesini kendisi denetliyor.
 - Faz 0 veri testi: Google Health API erişimi doğrulandı; karar 0009 (herkes kendi hesabıyla), Google Health bağlantısı rehberi, Faz 0 özeti.
+- Faz 0.5 tasarım maketleri (`design/maketler/`): üç görsel yön; seçilen C · Hale için koyu tema ve Görünüm ekranı; kararlar 0010 ve 0011; maket önizleme sunucusu (`.claude/launch.json`).

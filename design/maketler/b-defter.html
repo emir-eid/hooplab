@@ -1,0 +1,312 @@
+<!doctype html>
+<html lang="tr" data-state="sari">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>HoopLab · Yön B · Defter</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;0,6..72,600;1,6..72,400;1,6..72,500&family=Instrument+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="cerceve.css">
+<style>
+:root {
+  --paper: #F3EEE3; --paper2: #E9E2D1; --card: #F8F5EE; --ink: #1D1B17; --ink2: #47433A; --mute: #7A7466;
+  --rule: #D6CDB9; --rule2: #B9AE95; --cite: #2B43A6;
+  --g: #2E7A4B; --y: #A86F00; --r: #B5381F;
+  --s: var(--y);
+  --page-bg: #DCD6C8; --page-ink: #1D1B17; --sb-bg: #F3EEE3; --sb: #1D1B17;
+  --serif: 'Newsreader', Georgia, serif; --sans: 'Instrument Sans', sans-serif;
+}
+[data-state="yesil"] { --s: var(--g); }
+[data-state="kirmizi"] { --s: var(--r); }
+body { font-family: var(--sans); }
+.device { background: var(--paper); color: var(--ink); }
+.device::after { /* kağıt dokusu */
+  content: ""; position: absolute; inset: 0; z-index: 20; pointer-events: none; opacity: .5; mix-blend-mode: multiply;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 .45 0 0 0 0 .4 0 0 0 0 .3 0 0 0 .09 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+.screen { padding: 56px 0 120px; }
+.tnum { font-variant-numeric: tabular-nums lining-nums; }
+sup.c { font: 600 10.5px var(--sans); color: var(--cite); margin-left: 1px; vertical-align: 7px; line-height: 0; }
+
+/* ---------- Bugün ---------- */
+.mast { margin: 6px 24px 0; padding-bottom: 8px; display: flex; justify-content: space-between; align-items: baseline; border-bottom: 3px double var(--ink); }
+.mast .logo { font: italic 500 22px var(--serif); letter-spacing: -.01em; }
+.mast .d { font-size: 12px; color: var(--ink2); text-align: right; line-height: 1.35; }
+.mast .d b { font-weight: 600; color: var(--ink); }
+.kicker { margin: 22px 24px 0; display: flex; align-items: center; gap: 8px; font-size: 11.5px; font-weight: 600; letter-spacing: .14em; text-transform: uppercase; color: var(--s); transition: color .4s; }
+.kicker i { width: 9px; height: 9px; border-radius: 50%; background: var(--s); box-shadow: 0 0 0 3px color-mix(in srgb, var(--s) 20%, transparent); }
+.kicker span.sep { color: var(--rule2); }
+.head { margin: 10px 24px 0; font: 500 41px/1.02 var(--serif); letter-spacing: -.022em; font-variation-settings: "opsz" 72; }
+.lede { margin: 14px 24px 0; font: 400 19px/1.45 var(--serif); color: var(--ink2); }
+.note { margin: 18px 24px 0; padding: 2px 0 2px 14px; border-left: 2px solid var(--s); font-size: 15px; line-height: 1.5; }
+.note b { font-weight: 600; }
+.cta { margin: 20px 24px 0; height: 54px; padding: 0 18px; border-radius: 6px; display: flex; align-items: center; justify-content: space-between; background: var(--ink); color: var(--paper); font-size: 16px; font-weight: 500; }
+.cta span:last-child { font: italic 15px var(--serif); opacity: .7; display: flex; align-items: center; gap: 6px; }
+.cta .ic { width: 18px; height: 18px; }
+
+.sh { margin: 34px 24px 6px; display: flex; justify-content: space-between; align-items: baseline; border-top: 1px solid var(--ink); padding-top: 10px; }
+.sh h3 { margin: 0; font: italic 500 22px var(--serif); letter-spacing: -.01em; }
+.sh small { font-size: 11.5px; color: var(--mute); }
+.tbl { width: calc(100% - 48px); margin: 0 24px; border-collapse: collapse; font-size: 14px; }
+.tbl th { font-size: 10.5px; font-weight: 600; letter-spacing: .1em; text-transform: uppercase; color: var(--mute); text-align: left; padding: 8px 0 6px; border-bottom: 1px solid var(--rule2); }
+.tbl th:not(:first-child), .tbl td:not(:first-child) { text-align: right; }
+.tbl td { padding: 11px 0; border-bottom: 1px solid var(--rule); color: var(--ink2); }
+.tbl td:first-child { color: var(--ink); }
+.tbl td.v { font: 500 20px var(--serif); color: var(--ink); }
+.tbl td.v small { font: 12px var(--sans); color: var(--mute); margin-left: 3px; }
+.tbl tr.off td.v, .tbl tr.off td.m { color: var(--s); }
+.tbl td.m { width: 22px; font-weight: 600; }
+
+.fig { margin: 0 24px; }
+.fig svg { display: block; width: 100%; height: auto; overflow: visible; }
+.fig figcaption { margin-top: 8px; font: 13px/1.45 var(--serif); color: var(--ink2); }
+.fig figcaption b { font-weight: 600; font-style: normal; }
+.fig figcaption i { font-style: italic; }
+
+.est { font: italic 14px var(--serif); color: var(--ink2); border-bottom: 1px dotted var(--ink2); }
+.tendon { list-style: none; margin: 0 24px; padding: 0; }
+.tendon li { display: flex; align-items: baseline; gap: 8px; padding: 9px 0; font-size: 15px; }
+.tendon li .lead { flex: 1; border-bottom: 1.5px dotted var(--rule2); transform: translateY(-4px); }
+.tendon li .lv { font: italic 15px var(--serif); color: var(--ink2); }
+.tendon li .dots { letter-spacing: 1px; font-size: 13px; color: var(--ink); }
+.tendon li.hi .lv, .tendon li.hi .dots { color: var(--s); }
+
+.fn { margin: 26px 24px 0; padding-top: 10px; border-top: 1px solid var(--rule2); font-size: 11.5px; line-height: 1.5; color: var(--mute); }
+.fn p { margin: 0 0 5px; }
+.fn sup { color: var(--cite); font-weight: 600; margin-right: 3px; }
+
+.tabbar {
+  position: absolute; z-index: 30; left: 0; right: 0; bottom: 0; height: 86px; padding: 9px 12px 0;
+  display: grid; grid-template-columns: repeat(5, 1fr); align-items: start;
+  background: color-mix(in srgb, var(--paper) 92%, transparent); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+  border-top: 1px solid var(--rule2);
+}
+.tab { display: flex; flex-direction: column; align-items: center; gap: 3px; color: var(--mute); font-size: 10.5px; font-weight: 500; }
+.tab .ic { stroke-width: 1.5; }
+.tab.on { color: var(--ink); }
+.tab .plus { width: 46px; height: 46px; border-radius: 50%; display: grid; place-items: center; background: var(--ink); color: var(--paper); margin-top: -4px; }
+
+/* ---------- Formlar ---------- */
+.fbar { margin: 8px 24px 0; display: flex; justify-content: space-between; align-items: center; font-size: 15px; }
+.fbar a { color: var(--ink2); }
+.fbar span { font: italic 14px var(--serif); color: var(--mute); }
+.ftitle { margin: 22px 24px 0; font: 500 38px/1.05 var(--serif); letter-spacing: -.02em; }
+.fsub { margin: 8px 24px 4px; font: italic 15px var(--serif); color: var(--ink2); }
+.q { margin: 0 24px; padding: 16px 0 14px; border-bottom: 1px solid var(--rule); display: grid; grid-template-columns: 22px 1fr; column-gap: 4px; }
+.q .n { font: 500 16px var(--serif); color: var(--mute); padding-top: 1px; }
+.q .l { font-size: 16px; font-weight: 500; }
+.bub { grid-column: 2; display: flex; justify-content: space-between; margin-top: 12px; }
+.bub button { width: 44px; height: 44px; border-radius: 50%; border: 1.5px solid var(--rule2); font: 500 17px var(--serif); color: var(--ink2); transition: background .15s, color .15s, border-color .15s; }
+.bub button.on { background: var(--ink); border-color: var(--ink); color: var(--paper); }
+.ends { grid-column: 2; display: flex; justify-content: space-between; margin-top: 6px; font: italic 12.5px var(--serif); color: var(--mute); }
+
+.regions { margin: 0 24px; display: grid; grid-template-columns: 1fr 1fr; column-gap: 20px; }
+.regions button { display: flex; justify-content: space-between; align-items: center; padding: 11px 0; border-bottom: 1px solid var(--rule); font-size: 14.5px; color: var(--mute); text-align: left; }
+.regions button b { min-width: 26px; height: 26px; border-radius: 50%; display: grid; place-items: center; font: 500 14px var(--serif); border: 1px solid var(--rule2); color: var(--mute); }
+.regions button.on { color: var(--ink); font-weight: 500; }
+.regions button.on b { background: var(--ink); border-color: var(--ink); color: var(--paper); }
+
+.dock { position: absolute; z-index: 30; left: 0; right: 0; bottom: 0; padding: 16px 24px 34px; background: linear-gradient(transparent, var(--paper) 35%); }
+.dock .btn { width: 100%; height: 54px; border-radius: 6px; background: var(--ink); color: var(--paper); font-size: 16px; font-weight: 500; }
+
+.lbl { margin: 26px 24px 10px; display: flex; justify-content: space-between; align-items: baseline; font-size: 10.5px; font-weight: 600; letter-spacing: .12em; text-transform: uppercase; color: var(--mute); }
+.lbl i { font: italic 13px var(--serif); letter-spacing: 0; text-transform: none; font-weight: 400; }
+.radios { margin: 0 24px; display: grid; grid-template-columns: 1fr 1fr; column-gap: 20px; }
+.radios button { display: flex; align-items: center; gap: 10px; padding: 9px 0; font-size: 15px; color: var(--ink2); text-align: left; }
+.radios button::before { content: ""; width: 18px; height: 18px; border-radius: 50%; border: 1.5px solid var(--rule2); box-sizing: border-box; flex: none; }
+.radios button.on { color: var(--ink); font-weight: 500; }
+.radios button.on::before { border: 5.5px solid var(--ink); }
+.dur { margin: 0 24px; display: flex; align-items: center; justify-content: space-between; border-top: 1px solid var(--rule); border-bottom: 1px solid var(--rule); padding: 10px 0; }
+.dur button { width: 48px; height: 48px; border-radius: 50%; border: 1.5px solid var(--rule2); display: grid; place-items: center; color: var(--ink); }
+.dur div { font: 400 56px/1 var(--serif); letter-spacing: -.02em; font-variation-settings: "opsz" 72; }
+.dur div i { font: italic 18px var(--serif); color: var(--mute); margin-left: 6px; letter-spacing: 0; }
+.ruler { margin: 0 24px; position: relative; display: grid; grid-template-columns: repeat(11, 1fr); border-top: 1.5px solid var(--ink); }
+.ruler button { position: relative; height: 46px; padding-top: 12px; font: 500 15px var(--serif); color: var(--mute); }
+.ruler button::before { content: ""; position: absolute; top: 0; left: 50%; width: 1.5px; height: 7px; background: var(--ink); }
+.ruler button.on { color: var(--paper); }
+.ruler button.on::after { content: ""; position: absolute; z-index: -1; top: 8px; left: 50%; transform: translateX(-50%); width: 30px; height: 30px; border-radius: 50%; background: var(--ink); }
+.ruler-cap { margin: 6px 24px 0; font: italic 17px var(--serif); color: var(--ink2); }
+.ruler-cap b { font-style: normal; font-weight: 500; color: var(--ink); }
+.muted { margin: 0 24px; padding: 10px 0; border-bottom: 1px solid var(--rule); font: italic 15px var(--serif); color: var(--mute); }
+.checks { margin: 0 24px; display: flex; flex-wrap: wrap; gap: 8px 18px; }
+.checks button { display: flex; align-items: center; gap: 8px; padding: 6px 0; font-size: 15px; color: var(--ink2); }
+.checks button::before { content: ""; width: 17px; height: 17px; border: 1.5px solid var(--rule2); border-radius: 3px; box-sizing: border-box; }
+.checks button.on { color: var(--ink); font-weight: 500; }
+.checks button.on::before { background: var(--ink) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath d='M3.5 8.5l3 3 6-7' fill='none' stroke='%23F3EEE3' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") center/13px no-repeat; border-color: var(--ink); }
+.eq { margin: 28px 24px 0; padding: 14px 0 0; border-top: 3px double var(--ink); }
+.eq .lbl2 { font-size: 10.5px; font-weight: 600; letter-spacing: .12em; text-transform: uppercase; color: var(--mute); }
+.eq .f { margin-top: 6px; font: 400 32px/1.1 var(--serif); letter-spacing: -.01em; color: var(--ink2); }
+.eq .f b { font-weight: 600; color: var(--ink); }
+.eq .f small { font: 13px var(--sans); color: var(--mute); margin-left: 4px; }
+</style>
+</head>
+<body>
+<header class="chrome">
+  <div>
+    <h1><a href="index.html">← Yönler</a>B · Defter</h1>
+    <p>Bilim insanının saha defteri. Krem kağıt, dergi başlığı, tablolar ve şekil altyazıları. Her cümle numaralı bir dipnota bağlanır, böylece "her iddia kaynaklı" ilkesi tasarımın kendisi olur. Tahminler italik ve noktalı altı çizili.</p>
+  </div>
+  <div class="switch"><span>Durum:</span><button data-set-state="yesil">Yeşil</button><button data-set-state="sari">Sarı</button><button data-set-state="kirmizi">Kırmızı</button></div>
+</header>
+
+<main class="stage">
+  <!-- 1 · Bugün -->
+  <figure class="shot">
+    <div class="device">
+      <div class="screen">
+        <div class="mast rv"><span class="logo">HoopLab</span><span class="d"><b data-k="date"></b><br><span data-k="next"></span></span></div>
+        <div class="kicker rv"><i></i><span>Bugünün durumu</span><span class="sep">/</span><span data-k="label"></span></div>
+        <h1 class="head rv" data-k="headline"></h1>
+        <p class="lede rv"><span data-k="reason"></span><sup class="c">1</sup></p>
+        <p class="note rv"><b>Bugün için.</b> <span data-k="advice"></span><sup class="c">2</sup></p>
+        <a class="cta rv"><span>Sabah check-in'i doldur</span><span>30 saniye <span data-icon="chev"></span></span></a>
+
+        <div class="sh rv"><h3>Gece verisi</h3><small>kişisel bant · 60 gün</small></div>
+        <table class="tbl tnum rv"><thead><tr><th>Ölçüm</th><th>Bu gece</th><th>Bant</th><th></th></tr></thead><tbody id="b-rows"></tbody></table>
+
+        <div class="sh rv"><h3>Şekil 1</h3><small>HRV · 21 gün</small></div>
+        <figure class="fig rv">
+          <svg id="b-chart" viewBox="0 0 342 170" role="img" aria-label="HRV, son 21 gün, kişisel bantla"></svg>
+          <figcaption><b>HRV, son 21 gün.</b> <i>Çizgi:</i> 7 günlük ortalama. <i>Taralı alan:</i> kişisel 60 günlük bant. <i>Noktalar:</i> günlük değer.<sup class="c">1</sup></figcaption>
+        </figure>
+
+        <div class="sh rv"><h3>Kas ve tendon yükü</h3><span><span class="est">tahmin</span><sup class="c">3</sup></span></div>
+        <ul class="tendon rv" id="b-tendon"></ul>
+
+        <div class="fn rv">
+          <p><sup>1</sup>Kişisel bant: son 60 günün dağılımı. Kaynak bağlantısı burada görünür (maket: kaynak Faz 2'de doğrulanacak).</p>
+          <p><sup>2</sup>Öneri, research/rules içindeki kaynaklı bir kurala dayanır. Dokununca kural ve kaynağı açılır.</p>
+          <p><sup>3</sup>Kas ve tendon yükü ölçüm değildir; seans içeriğinden hesaplanan tahmindir.</p>
+        </div>
+      </div>
+      <nav class="tabbar">
+        <a class="tab on"><span data-icon="today"></span>Bugün</a>
+        <a class="tab"><span data-icon="trend"></span>Trend</a>
+        <a class="tab"><span class="plus"><span data-icon="plus"></span></span></a>
+        <a class="tab"><span data-icon="coach"></span>Koç</a>
+        <a class="tab"><span data-icon="me"></span>Ben</a>
+      </nav>
+    </div>
+    <figcaption>1 · Bugün. Üstteki düğmelerle yeşil, sarı ve kırmızı günü karşılaştır.</figcaption>
+  </figure>
+
+  <!-- 2 · Sabah check-in -->
+  <figure class="shot">
+    <div class="device">
+      <div class="screen">
+        <div class="fbar rv"><a>Vazgeç</a><span>3 / 5 yanıtlandı</span></div>
+        <h2 class="ftitle rv">Bu sabah nasılsın?</h2>
+        <p class="fsub rv">Öz değerlendirme · yaklaşık 30 saniye</p>
+
+        <section class="q rv"><span class="n">1.</span><span class="l">Uyku kalitesi</span>
+          <div class="bub" data-pick="q1"><button data-v="1">1</button><button data-v="2">2</button><button data-v="3">3</button><button data-v="4" class="on">4</button><button data-v="5">5</button></div>
+          <div class="ends"><span>çok kötü</span><span>çok iyi</span></div></section>
+        <section class="q rv"><span class="n">2.</span><span class="l">Yorgunluk</span>
+          <div class="bub" data-pick="q2"><button data-v="1">1</button><button data-v="2">2</button><button data-v="3" class="on">3</button><button data-v="4">4</button><button data-v="5">5</button></div>
+          <div class="ends"><span>yok</span><span>çok fazla</span></div></section>
+        <section class="q rv"><span class="n">3.</span><span class="l">Kas ağrısı</span>
+          <div class="bub" data-pick="q3"><button data-v="1">1</button><button data-v="2" class="on">2</button><button data-v="3">3</button><button data-v="4">4</button><button data-v="5">5</button></div>
+          <div class="ends"><span>yok</span><span>çok fazla</span></div></section>
+        <section class="q rv"><span class="n">4.</span><span class="l">Stres</span>
+          <div class="bub" data-pick="q4"><button data-v="1">1</button><button data-v="2">2</button><button data-v="3">3</button><button data-v="4">4</button><button data-v="5">5</button></div>
+          <div class="ends"><span>yok</span><span>çok fazla</span></div></section>
+        <section class="q rv"><span class="n">5.</span><span class="l">Ruh hali</span>
+          <div class="bub" data-pick="q5"><button data-v="1">1</button><button data-v="2">2</button><button data-v="3">3</button><button data-v="4">4</button><button data-v="5">5</button></div>
+          <div class="ends"><span>çok kötü</span><span>çok iyi</span></div></section>
+
+        <div class="lbl rv"><span>Ağrı ve sertlik</span><i>0–10, bölgeye dokun</i></div>
+        <div class="regions rv" data-multi>
+          <button data-v class="on">Patellar tendon<b>3</b></button><button data-v class="on">Aşil<b>2</b></button>
+          <button data-v>Baldır<b>0</b></button><button data-v>Ayak bileği<b>0</b></button>
+          <button data-v>Quadriceps<b>0</b></button><button data-v>Hamstring<b>0</b></button>
+          <button data-v>Adduktor<b>0</b></button><button data-v>Kalça<b>0</b></button>
+          <button data-v>Bel<b>0</b></button><button data-v>Omuz<b>0</b></button>
+        </div>
+        <div style="height:40px"></div>
+      </div>
+      <div class="dock"><button class="btn">Kaydet</button></div>
+    </div>
+    <figcaption>2 · Sabah check-in. 1–5 ölçeği yalnız maket için; ölçek Faz 1'de kesinleşecek.</figcaption>
+  </figure>
+
+  <!-- 3 · Seans kaydı -->
+  <figure class="shot">
+    <div class="device">
+      <div class="screen">
+        <div class="fbar rv"><a>Vazgeç</a><span>Bugün, 10:30</span></div>
+        <h2 class="ftitle rv">Seans kaydı</h2>
+
+        <div class="lbl rv"><span>Tür</span></div>
+        <div class="radios rv" data-pick="type">
+          <button data-v="1" class="on">Takım antrenmanı</button><button data-v="2">Maç</button>
+          <button data-v="3">Kuvvet</button><button data-v="4">Kondisyon</button>
+          <button data-v="5">Şut</button><button data-v="6">Rehabilitasyon</button>
+        </div>
+
+        <div class="lbl rv"><span>Süre</span></div>
+        <div class="dur rv"><button data-step="dur" data-d="-5" aria-label="Azalt"><span data-icon="minus"></span></button><div class="tnum"><span data-out="dur"></span><i>dakika</i></div><button data-step="dur" data-d="5" aria-label="Arttır"><span data-icon="plus"></span></button></div>
+
+        <div class="lbl rv"><span>Zorluk · RPE</span><i>0 dinlenme, 10 maksimal</i></div>
+        <div class="ruler rv" data-pick="rpe">
+          <button data-v="0">0</button><button data-v="1">1</button><button data-v="2">2</button><button data-v="3">3</button><button data-v="4">4</button><button data-v="5">5</button><button data-v="6">6</button><button data-v="7" class="on">7</button><button data-v="8">8</button><button data-v="9">9</button><button data-v="10">10</button>
+        </div>
+        <p class="ruler-cap rv"><b data-out="rpe"></b>, <span data-out="rpeLabel"></span></p>
+
+        <div class="lbl rv"><span>Oynanan dakika</span></div>
+        <p class="muted rv">Yalnız maç seçilince sorulur.</p>
+
+        <div class="lbl rv"><span>İçerik</span><i>birden çok seçilebilir</i></div>
+        <div class="checks rv" data-multi>
+          <button data-v class="on">Sıçrama</button><button data-v class="on">Yön değiştirme</button><button data-v>Sprint</button><button data-v class="on">Temas</button><button data-v>Kuvvet</button>
+        </div>
+
+        <div class="eq rv">
+          <div class="lbl2">Seans yükü<sup class="c">4</sup></div>
+          <div class="f tnum"><span data-out="rpe"></span> × <span data-out="dur"></span> = <b data-out="load"></b><small>AU</small></div>
+        </div>
+        <div style="height:40px"></div>
+      </div>
+      <div class="dock"><button class="btn">Kaydet</button></div>
+    </div>
+    <figcaption>3 · Seans kaydı. Süreyi ve RPE'yi değiştir, seans yükü kendisi hesaplanır.</figcaption>
+  </figure>
+</main>
+
+<script src="veri.js"></script>
+<script>
+const BANDS = { rhr: '46–52', sleep: '7:10–8:20', resp: '13,8–15,4' };
+const arrow = (note) => (note.includes('altında') ? '↓' : note.includes('üstünde') ? '↑' : '');
+HL.onApply((d) => {
+  const sleepArrow = d.off.sleep ? '↓' : '';
+  const rows = [
+    ['HRV, 7 g ort.', d.hrv, 'ms', d.band, d.off.hrv, arrow(d.hrvNote)],
+    ['Dinlenik nabız', d.rhr, 'atım', BANDS.rhr, d.off.rhr, arrow(d.rhrNote)],
+    ['Uyku', d.sleep, 'sa', BANDS.sleep, d.off.sleep, sleepArrow],
+    ['Solunum hızı', d.resp, '/dk', BANDS.resp, d.off.resp, arrow(d.respNote)],
+  ];
+  document.getElementById('b-rows').innerHTML = rows.map(([n, v, u, b, off, a]) =>
+    `<tr class="${off ? 'off' : ''}"><td>${n}</td><td class="v">${v}<small>${u}</small></td><td>${b}</td><td class="m">${a}</td></tr>`).join('');
+
+  const c = HL.chart(d.state, { w: 342, h: 150, px: 4, py: 10 });
+  const ticks = [[0, '26 Eyl'], [10, '6 Eki'], [20, '16 Eki']];
+  document.getElementById('b-chart').innerHTML = `
+    <defs><pattern id="b-hatch" width="6" height="6" patternUnits="userSpaceOnUse" patternTransform="rotate(-45)"><path d="M0 0v6" stroke="#C9BFA8" stroke-width="1.2"/></pattern></defs>
+    <rect x="0" y="${c.bandTop}" width="342" height="${c.bandBot - c.bandTop}" fill="url(#b-hatch)"/>
+    <path d="M0 ${c.bandTop}H342M0 ${c.bandBot}H342" stroke="#B9AE95" stroke-width="1"/>
+    <text x="-2" y="${c.bandTop - 5}" fill="#7A7466" font-family="Instrument Sans" font-size="10">76 ms</text>
+    <text x="-2" y="${c.bandBot + 14}" fill="#7A7466" font-family="Instrument Sans" font-size="10">62</text>
+    ${c.dots.map((p) => `<circle cx="${p.x}" cy="${p.y}" r="2.4" fill="#F3EEE3" stroke="#47433A" stroke-width="1.1"/>`).join('')}
+    <path d="${c.avgPath}" fill="none" stroke="#1D1B17" stroke-width="1.8" stroke-linejoin="round" stroke-linecap="round"/>
+    <circle cx="${c.last.x}" cy="${c.last.y}" r="5" fill="var(--s)" stroke="#F3EEE3" stroke-width="2"/>
+    <text x="${c.last.x - 10}" y="${c.last.y + (c.last.y > c.bandBot ? 22 : -12)}" text-anchor="end" fill="var(--s)" font-family="Newsreader" font-style="italic" font-size="15">${d.hrv} ms</text>
+    <path d="M0 150.5H342" stroke="#1D1B17"/>
+    ${ticks.map(([i, t]) => `<path d="M${c.x(i)} 150v5" stroke="#1D1B17"/><text x="${c.x(i)}" y="168" text-anchor="${i === 0 ? 'start' : i === 20 ? 'end' : 'middle'}" fill="#7A7466" font-family="Instrument Sans" font-size="10">${t}</text>`).join('')}`;
+
+  document.getElementById('b-tendon').innerHTML = d.tendon.map(([n, lv, t]) =>
+    `<li class="${lv === 3 ? 'hi' : ''}"><span>${n}</span><span class="lead"></span><span class="dots">${'●'.repeat(lv)}${'○'.repeat(3 - lv)}</span><span class="lv">≈ ${t.toLowerCase()}</span></li>`).join('');
+});
+HL.start();
+</script>
+</body>
+</html>
