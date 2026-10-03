@@ -20,3 +20,5 @@ Uygulamaya veya altyapıya görünür değişiklikler. Biçim: [Keep a Changelog
 - `/ac` hook ve plugin yüklemesini kendisi denetliyor.
 - Faz 0 veri testi: Google Health API erişimi doğrulandı; karar 0009 (herkes kendi hesabıyla), Google Health bağlantısı rehberi, Faz 0 özeti.
 - Faz 0.5 tasarım maketleri (`design/maketler/`): üç görsel yön; seçilen C · Hale için koyu tema ve Görünüm ekranı; kararlar 0010 ve 0011; maket önizleme sunucusu (`.claude/launch.json`).
+- Expo ve Supabase plugin'leri proje kapsamında yüklendi; kurulum komutları SETUP'ta.
+- `/rep` ara rapor komutu: oturum içinde kayıt + push, oturum başına tek bloklu rapor; `/ac` ve `/kapat` buna göre güncellendi; karar 0012.

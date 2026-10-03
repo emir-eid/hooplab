@@ -2,7 +2,7 @@
 
 Kod ne yapıldığını gösterir, nedenini göstermez. Bu klasör "neden böyle yaptık" sorusunun cevabıdır. Her mimari, ürün, araç veya süreç kararı bir dosyadır. Kararlar silinmez; değişen karar yeni bir kayıtla yerini alır ve eskisinin durumu güncellenir.
 
-Kayıtları `/kapat` açar. Ad biçimi: `NNNN-kisa-ad.md` (sıradaki numara).
+Kayıtları `/rep` veya `/kapat` açar. Ad biçimi: `NNNN-kisa-ad.md` (sıradaki numara).
 
 ## Şablon
 
@@ -44,3 +44,4 @@ Hangisi seçildi ve tek paragrafta neden.
 | [0009](0009-herkes-kendi-hesabiyla.md) | Herkes kendi hesabıyla: merkezi servis yok | Kabul edildi |
 | [0010](0010-tasarim-yonu-hale.md) | Tasarım yönü: C · Hale, açık ve koyu tema (Sistem / Açık / Koyu) | Kabul edildi |
 | [0011](0011-hale-efekti-svg.md) | Hale efekti: react-native-svg radyal gradyan + Reanimated transform | Kabul edildi |
+| [0012](0012-ara-rapor-rep.md) | Ara rapor: /rep (oturum içinde kayıt + push, oturum açık kalır) | Kabul edildi |

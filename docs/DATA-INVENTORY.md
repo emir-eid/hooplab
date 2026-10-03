@@ -29,6 +29,9 @@ Hangi veri nerede durur, hangi servise ne gider, ne kadar saklanır, nasıl sili
 | Google Drive | `private` klasörünün kopyası | — |
 | claude.ai Artifacts | Tasarım maketleri (yalnız sentetik veri), sahibine özel bağlantı | Gerçek sağlık verisi, kişisel bilgi |
 | Google Fonts | Maket sayfalarının font istekleri (tarayıcıdan) | Veri |
+| Expo MCP (`mcp.expo.dev`, Expo plugin'i; geliştirme) | Claude'un Expo dokümanı ve EAS sorguları; Expo hesabıyla giriş gerekir (henüz yetkilendirilmedi) | Sağlık verisi, kişisel bilgi |
+| Supabase doküman MCP'si (`mcp.supabase.com`, `features=docs`; geliştirme) | Claude'un doküman arama sorguları | Proje verisi (bu yapılandırma yalnız dokümana erişir) |
+| Expo plugin telemetrisi (PostHog) | Hiçbir şey: varsayılan kapalı, opt-in dosyası yok (2026-10-03'te kaynak kodundan doğrulandı) | — |
 | Anthropic (Claude Code, geliştirme) | **Geliştirme sohbetlerine yazılan her şey** ve Claude'un okuduğu dosyalar | — |
 
 Son satıra dikkat: geliştirme sırasında sohbete yazılan veya Claude'a okutulan sağlık değerleri de Anthropic'e gider. Kişisel değerleri sohbette paylaşmak bu yüzden bilinçli bir tercih olmalıdır. Test ve geliştirme sentetik veriyle yapılır.

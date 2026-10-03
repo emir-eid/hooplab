@@ -25,7 +25,8 @@ Kapsamla ilgili bir işe (yeni ekran, modül, girdi) başlamadan önce PRODUCT.m
 ## 1. Oturum protokolü
 
 - Oturumlar **her zaman `E:\HoopLab\code` klasöründen** açılır. Başka klasörden açılırsa ayarlar, komutlar ve hook'lar yüklenmez.
-- Başta `/ac`, sonda `/kapat`. Token uyarısı gelirse ya da compact yaklaşırsa: `/kapat`, yeni oturum, `/ac`. Sonsuz compact zinciri kurulmaz.
+- Başta `/ac`, sonda `/kapat`. Arada her iş bitince `/rep`: işi oturum raporuna blok olarak yazar, STATE'i günceller, commit + push yapar, sıradaki işi önerir; oturum açık kalır ([0012](docs/decisions/0012-ara-rapor-rep.md)).
+- Bağlam dolunca (token/compact uyarısı, 3+ blok, büyük ve bağımsız yeni iş): `/kapat`, `/clear`, `/ac`. Sonsuz compact zinciri kurulmaz.
 - Tek doğruluk kaynağı [docs/STATE.md](docs/STATE.md). Bir şey orada yazmıyorsa yapılmamış sayılır.
 - İş seçilince, başlamadan önce o işe uygun model ve efor tek satır gerekçeyle önerilir. Ayarı kullanıcı yapar.
 - Kullanıcının yapması gereken manuel adımlar (konsol tıklamaları, hesap açma, cihazda test) numaralı, net talimatla verilir.

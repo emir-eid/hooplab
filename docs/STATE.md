@@ -1,14 +1,14 @@
 # HoopLab — canlı durum
 
-Tek doğruluk kaynağı. `/kapat` her oturum sonunda günceller, `/ac` her oturum başında okur. 150 satırı geçince eski bölümler `docs/archive/` klasörüne taşınır.
+Tek doğruluk kaynağı. `/rep` her iş sonunda, `/kapat` her oturum sonunda günceller; `/ac` her oturum başında okur. 150 satırı geçince eski bölümler `docs/archive/` klasörüne taşınır.
 
 <!-- ozet:basla -->
 **Faz:** 0.5, tasarım yönü. Yön seçildi: **C · Hale**, açık ve koyu tema, Sistem / Açık / Koyu ([0010](decisions/0010-tasarim-yonu-hale.md)); hale `react-native-svg` ile ([0011](decisions/0011-hale-efekti-svg.md)). Maketler: [design/maketler/](../design/maketler/index.html).
-**Son oturum:** [2026-10-03 22:36 Faz 0.5 tasarım yönü](sessions/2026-10-03-2236-faz05-tasarim-yonu.md)
+**Son oturum:** [2026-10-03 22:52 Faz 0.5: plugin kurulumu ve /rep](sessions/2026-10-03-2252-faz05-plugin-ve-rep.md) (açık; `/rep` ile sürüyor)
 
 **Sıradaki işler (sıralı):**
 1. **Faz 0.5 son iş:** `design/maketler/c-hale.html` içinden tasarım token'ları (renk açık + koyu, tipografi, boşluk, köşe, hareket, hale renkleri ve gradyan durakları) → TypeScript tema dosyası (hex). Bitince Faz 0.5 özeti ve `faz-0.5-tamam` etiketi. Önerilen: Opus + orta.
-2. **Faz 1 başı:** Expo ve Supabase plugin'leri, `apps/mobile` iskeleti.
+2. **Faz 1 başı:** `apps/mobile` iskeleti (Expo ve Supabase plugin'leri yüklü).
 3. **Takip (2026-10-10 civarı):** yenileme token'ı 7. günde düştü mü? `GHEALTH_CONFIG_DIR` = `E:\HoopLab\private\ghealth` ile `C:\gh\ghealth-src\ghealth.exe user paired-devices list`; sonucu LESSONS'taki [kaynaklı] maddeye [ölçüldü] olarak işle.
 
 **Açık riskler:**
@@ -19,7 +19,7 @@ Tek doğruluk kaynağı. `/kapat` her oturum sonunda günceller, `/ac` her oturu
 - Hale `react-native-svg` gradyanlarıyla cihazda kademelenme (banding) gösterebilir; görülürse yalnız `<Aura>` Skia'ya taşınır ([0011](decisions/0011-hale-efekti-svg.md)).
 
 **Kullanıcı işleri:**
-- Faz 1 öncesi: Expo ve Supabase plugin'leri yüklü değil; onay penceresi çıkarsa onayla.
+- Expo MCP (plugin'le geldi) Expo hesabıyla yetkilendirilmedi; Faz 1'de EAS gerekince `/mcp` üzerinden.
 - İstersen zamanlanmış görevleri kenar çubuğundaki "Scheduled" bölümünden bir kez "Run now" ile çalıştır.
 - C maketi telefonda: https://claude.ai/artifact/GWScS6NjHsxUphrHSFLo7J (özel; güncellemek için bu URL'ye yayınlanır). Görünüm ekranındaki "Haleyi canlandır" ve "Diğer" satırlarını isteyip istemediğini söyle.
 <!-- ozet:bitti -->
@@ -46,6 +46,7 @@ Ayrıntı: [ROADMAP.md](ROADMAP.md).
 | git | 2.52 (`core.hooksPath=.githooks` bu klonda ayarlı; yeni klonda `npm run hooks:install`) |
 | GitHub CLI | var, `emir-eid` hesabı |
 | Go | 1.27.0 (winget); `ghealth` kaynağı ve derlemesi `C:\gh\ghealth-src`, ayarları `../private/ghealth` |
+| Claude Code plugin'leri | `expo` 1.13.9, `supabase`, `postgres-best-practices` (proje kapsamı; kurulum [SETUP.md](SETUP.md) §5) |
 | Expo Go (iPhone) | kullanıcı Faz 1 öncesi kurar |
 | Mac | yok (iOS derlemeleri EAS bulutunda) |
 

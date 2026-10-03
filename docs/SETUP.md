@@ -46,7 +46,12 @@ Yedek yoksa klasörleri boş oluştur (`data`, `journal`, `transcripts`). `guard
 ## 5. İlk oturum
 
 1. Claude Code'da klasör olarak `E:\HoopLab\code` seç.
-2. Plugin onay penceresi çıkarsa onayla (Expo, Supabase).
+2. Plugin'ler (Expo, Supabase) masaüstü uygulamasında kendiliğinden yüklenmez. Bir kez yükle (Claude Code CLI'si PATH'te değilse masaüstü uygulamasının paketlediği `%APPDATA%\Claude\claude-code\<sürüm>\<hash>\claude.exe` kullanılır), sonra yeni oturum aç:
+   ```bash
+   claude plugin install expo@expo-plugins -s project
+   claude plugin install supabase@supabase-agent-skills -s project
+   claude plugin install postgres-best-practices@supabase-agent-skills -s project
+   ```
 3. `/ac` yaz. "Dikkat" bölümünde hook veya plugin uyarısı olmamalı.
 
 ## 6. Zamanlanmış görevler

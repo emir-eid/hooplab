@@ -23,6 +23,7 @@ Tekrar yaşanabilecek hatalar ve önceden bilinen tuzaklar. Her madde: **ders**,
 - **[ölçüldü] Zaman damgaları `date` komutundan alınır, asla tahmin edilmez.**
 - **[ölçüldü] Çöken bekçi, hiçbir şey bulamayan bekçiden kötüdür: kapıyı açık bırakır.** Bekçiler fail-closed yazılır ve negatif testle kanıtlanır. `git ls-files` silinmiş ama stage'lenmemiş dosyayı da listeler; diskte olmayan yol atlanır. Bekçi: `tools/guard/privacy-guard.test.mjs`.
 - **[ölçüldü] Görsel iş gözle doğrulanmadan bitmiş sayılmaz.** Rasterleştirip bakmak, kod okurken görünmeyen hataları yakalar. Dosya biçimi iddiaları (ör. "arka plan şeffaf") ölçülür, göz kararına güvenilmez.
+- **[ölçüldü] Masaüstü uygulaması, `.claude/settings.json` içindeki `enabledPlugins` / `extraKnownMarketplaces` tanımına rağmen proje plugin'lerini kendiliğinden yüklemiyor; onay penceresi de çıkmıyor.** `/ac` plugin skill'lerinin listede olup olmadığına bakar. Kurulum: masaüstünün paketlediği `%APPDATA%\Claude\claude-code\<sürüm>\<hash>\claude.exe` ile `plugin install <ad> -s project` ([SETUP.md](SETUP.md) §5). CLI `settings.json`'u yeniden biçimlendirir; içerik aynıysa geri alınır. Kanıt: 2026-10-03 22:52 oturumu. Bekçi: `/ac` adım 8.
 - **[ölçüldü] Atlanan doğrulama token tasarrufu değil gizli borçtur.** Tip denetimi ve testler commit/push öncesi yerelde koşar, CI'a devredilmez.
 
 ## Windows

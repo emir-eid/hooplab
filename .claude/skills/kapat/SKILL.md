@@ -13,14 +13,17 @@ Amaç: Bu oturumda olan her şey, bir sonraki oturumun `/ac` ile eksiksiz devral
 1. **Zaman damgası:** `date '+%Y-%m-%d-%H%M'` (dosya adı için) ve `date '+%Y-%m-%d %H:%M'` (metin için). Asla tahmin etme.
 2. **Topla:**
    - `git status`, `git diff --stat`
-   - Bu oturumun commit'leri: son oturum raporundaki son commit'ten `HEAD`'e kadar (`git log --oneline <son>..HEAD`).
+   - Bu oturumun commit'leri: önceki oturum raporundaki son commit'ten `HEAD`'e kadar (`git log --oneline <son>..HEAD`); `/rep` commit'leri dahil.
    - Konuşmadaki kararlar, sorunlar, kullanıcı talimatları.
 3. **Kişisel veriyi ayır (önce bu):** Oturumda kullanıcının sağlık değerleri, vücut ölçüleri, sakatlıkları veya başka kişisel bilgisi konuşulduysa bunları **yalnız** `../private/journal/<YYYY-MM-DD-HHMM>-<konu>.md` dosyasına yaz. Repo içindeki hiçbir dosyaya bu değerleri yazma. Repo raporunda gerekiyorsa "kişisel gözlem private/journal'a kaydedildi" de, değer verme.
-4. **Oturum raporu:** `docs/sessions/<YYYY-MM-DD-HHMM>-<kisa-konu>.md` dosyasını [docs/sessions/README.md](../../../docs/sessions/README.md) şablonuyla yaz.
+4. **Oturum raporu:**
+   - Bu oturumda `/rep` bir rapor açtıysa **yeni dosya açma**, o dosyayı kapat: son `/rep`'ten sonra iş olduysa yeni bir `## Blok N` ekle; "Commit'ler", "Açık kalanlar" ve "Sıradaki adım" bölümlerini oturumun tamamına göre yaz; başlıktaki durumu **kapandı** yap.
+   - `/rep` kullanılmadıysa `docs/sessions/<YYYY-MM-DD-HHMM>-<kisa-konu>.md` dosyasını [docs/sessions/README.md](../../../docs/sessions/README.md) şablonuyla yaz (tek blok, durum **kapandı**).
+   - Adım 5-10 yalnız `/rep`'lerin kayda geçirmediği konular için yapılır; yazılmış kararı veya dersi tekrarlama.
 5. **Karar kaydı:** Oturumda mimari, ürün, araç veya süreç kararı verildiyse `docs/decisions/NNNN-<kisa-ad>.md` dosyasını [docs/decisions/README.md](../../../docs/decisions/README.md) şablonuyla aç. Sıradaki numarayı mevcut dosyalardan bul. Mevcut bir kararı değiştiriyorsa eski dosyanın durumunu "Yerini aldı: NNNN" olarak güncelle; eskiyi silme.
 6. **Ders:** Tekrar yaşanabilecek bir hata veya tuzak öğrenildiyse `docs/LESSONS.md` dosyasına ilgili bölüme tek madde ekle: tarih, ders, kanıt (dosya/commit), bekçiye çevrildi mi.
 7. **Literatür önerileri:** `research/inbox/` önerilerinden bu oturumda onaylanan veya reddedilen varsa öneri dosyasında durumunu güncelle (`onaylandı → sources/<id>.md` veya `reddedildi: <gerekçe>`).
-8. **STATE.md:** Faz durumu, "Sıradaki işler" (en fazla 3, sıralı), açık riskler, kullanıcı işleri ve "Son oturum" satırını güncelle. Dosya 150 satırı geçerse tamamlanmış eski bölümleri `docs/archive/STATE-<YYYY-MM-DD>.md` dosyasına taşı ve STATE.md'de bağlantı bırak.
+8. **STATE.md:** Faz durumu, "Sıradaki işler" (en fazla 3, sıralı), açık riskler, kullanıcı işleri ve "Son oturum" satırını güncelle ("açık" notu varsa kaldır). Dosya 150 satırı geçerse tamamlanmış eski bölümleri `docs/archive/STATE-<YYYY-MM-DD>.md` dosyasına taşı ve STATE.md'de bağlantı bırak.
 9. **CHANGELOG.md:** Uygulamaya veya altyapıya görünür bir değişiklik olduysa `## [Yayınlanmamış]` altına ekle. Yeni bir veri türü, servis veya sır eklendiyse `docs/DATA-INVENTORY.md` ve `docs/COSTS.md` güncel mi kontrol et.
 10. **Faz bittiyse:** `docs/phases/faz-<N>.md` faz özetini yaz (hedef, sonuç, kararlar, ölçülen her şey, dersler, sonraki faz). ROADMAP.md'de fazı tamamlandı işaretle. Commit'ten sonra `git tag faz-<N>-tamam` at.
 11. **Doğrula:** `npm run check` (araç testleri, gizlilik taraması: güncel ağaç ve tüm geçmiş, kaynak doğrulama) ve projede tanımlıysa tip denetimi ve testler. Bir şey kırmızıysa commit atma; kullanıcıya neyin kırıldığını söyle ve birlikte karar verin.

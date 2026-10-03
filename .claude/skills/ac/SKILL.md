@@ -12,7 +12,7 @@ Amaç: Yeni oturum, önceki oturumların bıraktığı yerden **tahmin etmeden**
 
 1. **Zaman:** `date '+%Y-%m-%d %H:%M %Z'` komutunu çalıştır. Bugünün tarihini buradan al.
 2. **Durum:** `docs/STATE.md` dosyasını baştan sona oku.
-3. **Son oturumlar:** `docs/sessions/` klasöründeki en yeni iki raporu oku (`README.md` hariç; ada göre sırala, ad zaman damgasıyla başlar).
+3. **Son oturumlar:** `docs/sessions/` klasöründeki en yeni iki raporu oku (`README.md` hariç; ada göre sırala, ad zaman damgasıyla başlar). En yeni raporun başlığında **Durum: açık** yazıyorsa önceki oturum `/rep` ile kayda geçmiş ama `/kapat`'sız bitmiştir: "Dikkat" altında yaz; son bloktan sonraki commit'leri (adım 4) ve Drive yedeğini kontrol et.
 4. **Git:**
    - `git status -sb`: commit edilmemiş değişiklik var mı, push edilmemiş commit var mı (`ahead`)?
    - `git log --oneline -10`
