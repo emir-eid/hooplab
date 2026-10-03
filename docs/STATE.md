@@ -4,7 +4,7 @@ Tek doğruluk kaynağı. `/rep` her iş sonunda, `/kapat` her oturum sonunda gü
 
 <!-- ozet:basla -->
 **Faz:** 1 sürüyor: uygulama iskeleti hazır (`apps/mobile`, Expo SDK 57, iPhone'da Expo Go ile doğrulandı; [0014](decisions/0014-uygulama-iskeleti.md)). Tasarım: **C · Hale** ([0010](decisions/0010-tasarim-yonu-hale.md)); token'lar [packages/theme](../packages/theme/README.md) ([0013](decisions/0013-tasarim-tokenlari.md)).
-**Son oturum:** [2026-10-04 00:23 Faz 1: uygulama iskeleti](sessions/2026-10-04-0023-faz1-uygulama-iskeleti.md) (açık)
+**Son oturum:** [2026-10-04 00:23 Faz 1: uygulama iskeleti](sessions/2026-10-04-0023-faz1-uygulama-iskeleti.md)
 
 **Sıradaki işler (sıralı):**
 1. **Faz 1:** Supabase projesi (Frankfurt), şema, RLS, tek kullanıcı girişi; oturum için SecureStore parçalama adaptörü (testli, LESSONS "Expo / React Native") ([ROADMAP](ROADMAP.md) Faz 1). Önce `supabase` + `postgres-best-practices` skill'leri, PRODUCT §4 (girdiler) ve LESSONS "Supabase". Önerilen: Opus + yüksek (şema ve RLS sonradan değiştirmesi pahalı).

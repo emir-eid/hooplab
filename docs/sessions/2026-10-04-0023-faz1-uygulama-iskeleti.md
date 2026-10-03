@@ -1,9 +1,9 @@
 # 2026-10-04 00:23 — Faz 1: uygulama iskeleti
 
 - **Faz:** 1
-- **Durum:** açık (/rep)
+- **Durum:** kapandı (/kapat, 00:28)
 - **Model / efor:** Opus 5.5
-- **Commit'ler:** bu bloğun `/rep` commit'i
+- **Commit'ler:** `b10fbc0` (Blok 1; CI yeşil), bu raporun kapanış commit'i
 
 ## Blok 1 — apps/mobile iskeleti (00:23)
 
