@@ -4,7 +4,7 @@ Tek doğruluk kaynağı. `/rep` her iş sonunda, `/kapat` her oturum sonunda gü
 
 <!-- ozet:basla -->
 **Faz:** 1 başlamadı; Faz 0.5 tamamlandı (2026-10-03, `faz-0.5-tamam`). Tasarım: **C · Hale**, açık ve koyu tema ([0010](decisions/0010-tasarim-yonu-hale.md)); token'lar [packages/theme](../packages/theme/README.md) ([0013](decisions/0013-tasarim-tokenlari.md)); hale `react-native-svg` ile ([0011](decisions/0011-hale-efekti-svg.md)).
-**Son oturum:** [2026-10-03 22:52 Faz 0.5: plugin kurulumu, /rep ve tasarım token'ları](sessions/2026-10-03-2252-faz05-plugin-ve-rep.md) (açık; `/rep` ile sürüyor)
+**Son oturum:** [2026-10-03 22:52 Faz 0.5: plugin kurulumu, /rep ve tasarım token'ları](sessions/2026-10-03-2252-faz05-plugin-ve-rep.md)
 
 **Sıradaki işler (sıralı):**
 1. **Faz 1 başı:** `apps/mobile` iskeleti: Expo SDK 57, TypeScript strict, Expo Router; npm workspace'e ekle, `@hooplab/theme`'i bağla (Metro'nun workspace paketini ve `.ts` importlarını çözdüğünü doğrula), fontları alt yol importuyla yükle, tema context'i (Sistem / Açık / Koyu). Önce PRODUCT.md ve LESSONS "Expo / React Native". Önerilen: Opus + yüksek (ilk iskelet, sürüm ve yapı kararları).
