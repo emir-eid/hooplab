@@ -33,8 +33,8 @@ Her faz, bitiş kriteri karşılanınca `/kapat` ile kapanır: faz özeti `docs/
 - [x] Expo ve Supabase plugin'lerinin kurulumu (Faz 0'dan devir; 2026-10-03)
 - [ ] SessionEnd / PreCompact arşiv hook'unun doğrulanması
 - [x] Expo projesi (`apps/mobile`), TypeScript strict, Expo Router (2026-10-04, [0014](decisions/0014-uygulama-iskeleti.md))
-- [ ] Supabase projesi (Frankfurt), şema, RLS, tek kullanıcı girişi
-- [ ] Supabase oturumu için SecureStore parçalama adaptörü (bkz. LESSONS)
+- [x] Supabase projesi (Frankfurt), şema, RLS, tek kullanıcı girişi (2026-10-04, [0015](decisions/0015-veritabani-tek-sahip-rls.md); şema ilk tabloyla, diğer tablolar formlarla)
+- [x] Supabase oturumu için SecureStore parçalama adaptörü (2026-10-04, testli)
 - [ ] Google Health senkronu (Edge Function + zamanlayıcı); gün içi nabız sunucuda özetlenir, ham saklanmaz; adım/mesafe kaynağa göre tekilleştirilir; `swim-lengths-data` yok sayılır
 - [ ] Kurulum sihirbazı (kullanıcının kendi Google Cloud / Supabase değerleri, [0009](decisions/0009-herkes-kendi-hesabiyla.md)) ve haftalık "yeniden bağlan" akışı
 - [ ] Seans etiketleme: basketbol API'de `SPORT` olarak geliyor; maç / antrenman / şut kullanıcıdan

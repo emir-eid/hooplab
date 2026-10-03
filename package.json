@@ -19,7 +19,11 @@
     "typecheck": "tsc -p packages/theme && tsc -p packages/theme/tsconfig.test.json && tsc -p apps/mobile && tsc -p apps/mobile/tsconfig.test.json",
     "test:packages": "node --test \"packages/**/*.test.ts\"",
     "test:apps": "node --test \"apps/mobile/src/**/*.test.ts\"",
-    "mobile": "npm run start -w @hooplab/mobile"
+    "mobile": "npm run start -w @hooplab/mobile",
+    "db:start": "supabase start -x studio,imgproxy,realtime,storage-api,edge-runtime,logflare,vector,supavisor,mailpit,postgres-meta",
+    "db:stop": "supabase stop",
+    "db:reset": "supabase db reset",
+    "test:db": "supabase test db"
   },
   "workspaces": [
     "packages/*",
@@ -27,6 +31,7 @@
   ],
   "devDependencies": {
     "@types/node": "~24.19.1",
+    "supabase": "2.119.0",
     "typescript": "~6.0.3"
   }
 }

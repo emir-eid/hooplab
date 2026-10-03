@@ -1,4 +1,5 @@
-// Kök düzen: görünüm tercihi ve fontlar yüklenene kadar açılış ekranı açık kalır, sonra tema ve gezinme kurulur.
+// Kök düzen: görünüm tercihi, fontlar ve saklanan oturum okunana kadar açılış ekranı açık kalır;
+// sonra tema ve gezinme kurulur. Oturum yoksa yalnız giriş ekranına gidilebilir.
 
 import { DarkTheme, DefaultTheme, ThemeProvider, type Theme } from 'expo-router';
 import { Stack } from 'expo-router/stack';
@@ -7,6 +8,7 @@ import * as SplashScreen from 'expo-splash-screen';
 import { StatusBar } from 'expo-status-bar';
 import { useEffect } from 'react';
 
+import { SessionProvider, useSession } from '@/auth/session';
 import { AppearanceProvider, useAppearance } from '@/theme/appearance';
 import { fontMap } from '@/theme/fonts';
 
@@ -15,16 +17,19 @@ SplashScreen.preventAutoHideAsync().catch(() => {});
 export default function RootLayout() {
   return (
     <AppearanceProvider>
-      <RootNavigator />
+      <SessionProvider>
+        <RootNavigator />
+      </SessionProvider>
     </AppearanceProvider>
   );
 }
 
 function RootNavigator() {
   const { palette, ready } = useAppearance();
+  const { session, ready: sessionReady } = useSession();
   const [fontsLoaded, fontError] = useFonts(fontMap);
   // Font yüklenemezse uygulama sistem fontuyla açılır; hata geliştirmede görünsün.
-  const loaded = ready && (fontsLoaded || fontError !== null);
+  const loaded = ready && sessionReady && (fontsLoaded || fontError !== null);
 
   useEffect(() => {
     if (fontError) console.warn('Fontlar yüklenemedi:', fontError);
@@ -52,7 +57,14 @@ function RootNavigator() {
   return (
     <ThemeProvider value={navigationTheme}>
       <StatusBar style={palette.statusBar} />
-      <Stack screenOptions={{ headerShown: false, contentStyle: { backgroundColor: palette.bg } }} />
+      <Stack screenOptions={{ headerShown: false, contentStyle: { backgroundColor: palette.bg } }}>
+        <Stack.Protected guard={session !== null}>
+          <Stack.Screen name="(tabs)" />
+        </Stack.Protected>
+        <Stack.Protected guard={session === null}>
+          <Stack.Screen name="sign-in" />
+        </Stack.Protected>
+      </Stack>
     </ThemeProvider>
   );
 }

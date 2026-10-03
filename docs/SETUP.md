@@ -76,3 +76,13 @@ Araç testleri, tip denetimi (tema paketi ve uygulama), paket ve uygulama testle
 4. Bağlanmazsa: Windows Güvenlik Duvarı Node.js'e özel ağda izin vermeli (ilk çalıştırmada sorar). Olmazsa `npm run mobile -- --tunnel`.
 
 Ayrıntı: [apps/mobile/README.md](../apps/mobile/README.md).
+
+## 9. Supabase
+
+Proje kullanıcının kendi Supabase hesabındadır (0009). Bu makinede bir kez:
+
+1. Kullanıcı: `npx.cmd supabase login` (tarayıcıda HoopLab'e ayrılmış hesapla).
+2. Claude yürütür (CLAUDE.md §7): `npx supabase link --project-ref <ref>`, `apps/mobile/.env.local` dosyasını `supabase projects api-keys` çıktısından yazar ([.env.example](../apps/mobile/.env.example)), `npx supabase db push`.
+3. Yerel test için Docker Desktop açık olmalı: `npm run db:start`, `npm run test:db`, `npm run db:stop`.
+
+Yeni projede panodan: kullanıcıyı ekle (**Auto Confirm User**), **Allow new users to sign up** kapalı. Ayrıntı: [0015](decisions/0015-veritabani-tek-sahip-rls.md).

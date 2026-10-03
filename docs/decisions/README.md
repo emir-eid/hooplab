@@ -47,3 +47,5 @@ Hangisi seçildi ve tek paragrafta neden.
 | [0012](0012-ara-rapor-rep.md) | Ara rapor: /rep (oturum içinde kayıt + push, oturum açık kalır) | Kabul edildi |
 | [0013](0013-tasarim-tokenlari.md) | Tasarım token'ları: @hooplab/theme, maketle birebir test, erişilebilir renkler, opsz 96 kesimi | Kabul edildi |
 | [0014](0014-uygulama-iskeleti.md) | Uygulama iskeleti: apps/mobile (SDK 57), özel cam sekme çubuğu, cihazda saklanan görünüm tercihi | Kabul edildi |
+| [0015](0015-veritabani-tek-sahip-rls.md) | Veritabanı: tek sahip RLS, açık GRANT, migration'lar repoda, oturum Keychain'de parçalı | Kabul edildi |
+| [0016](0016-dis-servisleri-claude-yurutur.md) | Dış servis işlemlerini Claude yürütür (CLAUDE.md §7) | Kabul edildi |

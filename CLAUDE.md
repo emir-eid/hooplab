@@ -29,7 +29,7 @@ Kapsamla ilgili bir işe (yeni ekran, modül, girdi) başlamadan önce PRODUCT.m
 - Bağlam dolunca (token/compact uyarısı, 3+ blok, büyük ve bağımsız yeni iş): `/kapat`, `/clear`, `/ac`. Sonsuz compact zinciri kurulmaz.
 - Tek doğruluk kaynağı [docs/STATE.md](docs/STATE.md). Bir şey orada yazmıyorsa yapılmamış sayılır.
 - İş seçilince, başlamadan önce o işe uygun model ve efor tek satır gerekçeyle önerilir. Ayarı kullanıcı yapar.
-- Kullanıcının yapması gereken manuel adımlar (konsol tıklamaları, hesap açma, cihazda test) numaralı, net talimatla verilir.
+- Kullanıcının yapması gereken manuel adımlar (konsol tıklamaları, hesap açma, cihazda test) numaralı, net talimatla verilir. CLI ile yapılabilen işler kullanıcıya bırakılmaz (§7).
 
 ## 2. Gizlilik — kırmızı çizgiler
 
@@ -81,3 +81,14 @@ Repo ileride **public** olacak. Bu yüzden:
 
 - Arayüz ve belgeler Türkçe. Türkçe metinlerde **"â" kullanılmaz** (zeka, hala, kar).
 - Kod tanımlayıcıları İngilizce, yorumlar ve kullanıcıya görünen metinler Türkçe.
+
+## 7. Dış servis işlemleri: Claude yürütür (katı kural)
+
+Supabase, Expo / EAS, GitHub (`gh`), Google Cloud (`gcloud`) ve ileride eklenecek her servis (ör. Vercel) için **CLI veya API ile yapılabilen işi Claude kendisi çalıştırır**. Kullanıcıya "şu komutu çalıştır" denmez. Gerekçe: [0016](docs/decisions/0016-dis-servisleri-claude-yurutur.md).
+
+- **Kapsam:** migration (`db push`), denetçi (`db advisors`), şema ve yetki sorguları, Edge Function dağıtımı, Supabase secrets, auth ve proje ayarları, EAS build / update / env, GitHub Actions ve secret'lar, servislerin ortam değişkenleri.
+- **Sıra:** önce yerel (tip denetimi, testler, `npm run test:db`), sonra `--dry-run` veya eşdeğeri, sonra uzak işlem, sonra doğrulama (`migration list --linked`, `db advisors --linked`, `curl` ile erişim denemesi). Sonuç oturum raporuna yazılır.
+- **Kullanıcıya kalanlar, yalnız bunlar:** tarayıcıda ilk hesap girişi (`supabase login`, `eas login`, `gh auth login`, `vercel login`), hesap açma, şifre ve ödeme bilgisi, yalnız konsoldan yapılabilen ayarlar, cihazda test. Numaralı verilir. PowerShell'de `npx.cmd` / `npm.cmd` yazılır.
+- **Önce tek satır onay:** geri alınamayan veya veri silen işler (uzak `db reset`, tablo / kolon / veri düşüren migration, proje veya servis silme, secret silme), ücret doğuran işler (plan yükseltme, ücretli derleme veya kota aşımı), mağazaya gönderim (TestFlight / App Store), herkese açık yayın (repo public, herkese açık URL). Onay o işe özgüdür, sonrakine taşınmaz.
+- **Sırlar:** komut çıktısında gösterilmez (`--reveal` yok, çıktı süzülür). Sır gerekiyorsa CLI'dan doğrudan gitignore'lu dosyaya veya Supabase secrets'a yazılır ya da kullanıcı kendi terminalinde girer. Sohbete yazılmaz.
+- **Hesap:** işlemden önce doğru hesap ve projeye bağlı olunduğu doğrulanır (ör. `supabase projects list`, `eas whoami`). CLI girişleri HoopLab'e ayrılmış hesaplarla yapılır ([COSTS](docs/COSTS.md)).
