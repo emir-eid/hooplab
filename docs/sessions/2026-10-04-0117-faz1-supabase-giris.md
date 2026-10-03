@@ -1,9 +1,9 @@
 # 2026-10-04 01:17 — Faz 1: Supabase, RLS ve tek kullanıcı girişi
 
 - **Faz:** 1
-- **Durum:** açık (/rep)
+- **Durum:** kapandı (/kapat, 01:20)
 - **Model / efor:** Opus 5.5
-- **Commit'ler:** bu bloğun `/rep` commit'i
+- **Commit'ler:** `622f6d5` (Blok 1; CI yeşil), bu raporun kapanış commit'i
 
 ## Blok 1 — Supabase projesi, şema, RLS, giriş ve SecureStore parçalama adaptörü (01:17)
 

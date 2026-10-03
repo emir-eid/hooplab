@@ -4,7 +4,7 @@ Tek doğruluk kaynağı. `/rep` her iş sonunda, `/kapat` her oturum sonunda gü
 
 <!-- ozet:basla -->
 **Faz:** 1 sürüyor: uygulama iskeleti ([0014](decisions/0014-uygulama-iskeleti.md)) ve Supabase temeli hazır: proje (Frankfurt, ayrı hesap), `training_sessions` + RLS (pgTAP), e-posta + şifre girişi, oturum Keychain'de parçalı; iPhone'da doğrulandı ([0015](decisions/0015-veritabani-tek-sahip-rls.md)). Dış servis işlerini Claude yürütür ([CLAUDE.md §7](../CLAUDE.md), [0016](decisions/0016-dis-servisleri-claude-yurutur.md)). Tasarım: **C · Hale** ([0010](decisions/0010-tasarim-yonu-hale.md)); token'lar [packages/theme](../packages/theme/README.md) ([0013](decisions/0013-tasarim-tokenlari.md)).
-**Son oturum:** [2026-10-04 01:17 Faz 1: Supabase, RLS ve giriş](sessions/2026-10-04-0117-faz1-supabase-giris.md) (açık)
+**Son oturum:** [2026-10-04 01:17 Faz 1: Supabase, RLS ve giriş](sessions/2026-10-04-0117-faz1-supabase-giris.md)
 
 **Sıradaki işler (sıralı):**
 1. **Faz 1:** Sabah check-in ve seans kaydı formları; sekme çubuğuna artı düğmesi bunlarla gelir. Önce check-in ölçeği (PRODUCT §10): Hooper 1995 / McLean 2010 DOI/PMID ile doğrulanıp `research/sources`'a, sonra `daily_checkins` (+ ağrı haritası) migration'ı 0015 desenine göre; `training_sessions` hazır. PRODUCT §4, LESSONS "Supabase", maketteki form ekranları. Önerilen: Opus + yüksek (kaynak doğrulama + şema + form arayüzü).
