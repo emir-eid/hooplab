@@ -32,7 +32,7 @@ Her faz, bitiş kriteri karşılanınca `/kapat` ile kapanır: faz özeti `docs/
 
 - [x] Expo ve Supabase plugin'lerinin kurulumu (Faz 0'dan devir; 2026-10-03)
 - [ ] SessionEnd / PreCompact arşiv hook'unun doğrulanması
-- [ ] Expo projesi (`apps/mobile`), TypeScript strict, Expo Router
+- [x] Expo projesi (`apps/mobile`), TypeScript strict, Expo Router (2026-10-04, [0014](decisions/0014-uygulama-iskeleti.md))
 - [ ] Supabase projesi (Frankfurt), şema, RLS, tek kullanıcı girişi
 - [ ] Supabase oturumu için SecureStore parçalama adaptörü (bkz. LESSONS)
 - [ ] Google Health senkronu (Edge Function + zamanlayıcı); gün içi nabız sunucuda özetlenir, ham saklanmaz; adım/mesafe kaynağa göre tekilleştirilir; `swim-lengths-data` yok sayılır

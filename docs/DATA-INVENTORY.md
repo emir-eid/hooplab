@@ -16,6 +16,7 @@ Hangi veri nerede durur, hangi servise ne gider, ne kadar saklanır, nasıl sili
 | Claude Code oturum dökümleri | Hook'lar | `private/transcripts` + Drive yedeği | Sahibi |
 | Google OAuth istemci sırrı ve token'ları (Faz 0) | `ghealth` setup | `private/ghealth` + Drive yedeği | `ghealth` CLI |
 | Kişisel denylist | Sahibi | `private/guard-denylist.txt` + Drive yedeği + GitHub Actions secret | Gizlilik bekçisi (değerleri hiçbir yere yazdırmaz) |
+| Görünüm tercihi: tema (Sistem / Açık / Koyu), haleyi canlandır | Uygulama | Cihazda AsyncStorage (`hooplab.appearance.v1`); web önizlemesinde tarayıcının localStorage'ı | Yalnız uygulama; hiçbir servise gitmez |
 | Kod, belgeler, sentetik demo verisi | Geliştirme | GitHub (ileride public) | Herkes |
 
 ## Üçüncü taraflara ne gider
@@ -28,7 +29,7 @@ Hangi veri nerede durur, hangi servise ne gider, ne kadar saklanır, nasıl sili
 | GitHub | Kod ve belgeler; denylist (şifreli secret olarak) | Sağlık verisi, `private` klasörü |
 | Google Drive | `private` klasörünün kopyası | — |
 | claude.ai Artifacts | Tasarım maketleri (yalnız sentetik veri), sahibine özel bağlantı | Gerçek sağlık verisi, kişisel bilgi |
-| Google Fonts | Maket sayfalarının font istekleri (tarayıcıdan) | Veri |
+| Google Fonts | Maket sayfalarının font istekleri (tarayıcıdan) | Veri. Uygulama Google Fonts'a istek atmaz: fontlar pakete gömülü (`@expo-google-fonts/*`, `packages/theme/fonts`) |
 | Expo MCP (`mcp.expo.dev`, Expo plugin'i; geliştirme) | Claude'un Expo dokümanı ve EAS sorguları; Expo hesabıyla giriş gerekir (henüz yetkilendirilmedi) | Sağlık verisi, kişisel bilgi |
 | Supabase doküman MCP'si (`mcp.supabase.com`, `features=docs`; geliştirme) | Claude'un doküman arama sorguları | Proje verisi (bu yapılandırma yalnız dokümana erişir) |
 | Expo plugin telemetrisi (PostHog) | Hiçbir şey: varsayılan kapalı, opt-in dosyası yok (2026-10-03'te kaynak kodundan doğrulandı) | — |

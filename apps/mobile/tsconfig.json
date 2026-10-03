@@ -1,0 +1,20 @@
+{
+  // Uygulama tip denetimi: npm run typecheck (apps/mobile içinde) veya kökte npm run typecheck.
+  "extends": "expo/tsconfig.base",
+  "compilerOptions": {
+    "strict": true,
+    "noUncheckedIndexedAccess": true,
+    "noImplicitOverride": true,
+    // Node tipleri otomatik eklenmesin: RN'de fs/Buffer yok (LESSONS). Testler tsconfig.test.json ile.
+    "types": [],
+    // @hooplab/theme kaynağını doğrudan .ts uzantılı importlarla dışa aktarır (Metro ve Babel bunu çözer).
+    "allowImportingTsExtensions": true,
+    "paths": {
+      "@/*": ["./src/*"],
+      "@/assets/*": ["./assets/*"]
+    }
+  },
+  "include": ["**/*.ts", "**/*.tsx", ".expo/types/**/*.ts", "expo-env.d.ts"],
+  // Testler Node ile koşar; Node tipleri uygulama koduna sızmasın diye ayrı denetlenir (tsconfig.test.json, LESSONS).
+  "exclude": ["node_modules", "**/*.test.ts"]
+}

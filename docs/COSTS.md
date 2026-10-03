@@ -8,7 +8,7 @@ Projenin dayandığı hesaplar, ne zaman açılacakları, maliyetleri ve sırlar
 |---|---|---|---|---|
 | GitHub (`emir-eid`) | Repo, Actions kontrolleri, secret'lar | var | Ücretsiz plan; private repoda Actions'ın aylık ücretsiz dakika kotası var, iş akışımız çalışma başına ~10 saniye | açık |
 | Google Cloud | Google Health API, OAuth istemcisi (Testing modu) | Faz 0 | Faturalandırma hesabı bağlı değil, bu yüzden ücret çıkamaz. Google Health API'nin fiyatlandırması **[doğrulanacak]** | açık (2026-10-03) |
-| Expo | EAS Build (bulutta iOS derleme), EAS Update, Expo MCP | Faz 1 başı | Ücretsiz plan; aylık derleme kotası sınırlı **[doğrulanacak]** | açılmadı |
+| Expo | EAS Build (bulutta iOS derleme), EAS Update, Expo MCP | Faz 1 başı | Ücretsiz plan; aylık derleme kotası sınırlı **[doğrulanacak]** | HoopLab için açılmadı. Geliştirmede Expo Go, bu bilgisayarda Expo CLI'nin girişli olduğu başka bir projenin hesabıyla açılıyor; yerel sunucu expo.dev'de proje oluşturmaz. HoopLab'in hesabı EAS işinde kararlaştırılacak |
 | Supabase | Veritabanı, giriş, Edge Functions, zamanlayıcı (Frankfurt) | Faz 1 | Ücretsiz plan; 7 gün istek gelmezse duraklatma **[kaynaklı]**. Gerekirse Pro plan, aylık ~25$ **[doğrulanacak]** | açılmadı |
 | Apple Developer Programı | TestFlight, uygulamanın kalıcı kurulumu, bildirimler | Faz 1 sonu | Yıllık 99$ **[kaynaklı]** | açılmadı |
 | Anthropic API (Console) | Uygulamadaki AI koç (Edge Functions) | Faz 3 | Kullanıma göre ödeme; **Claude aboneliğinden ayrı faturalanır**. Hesap açılınca aylık harcama limiti konur | açılmadı |

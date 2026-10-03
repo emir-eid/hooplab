@@ -1,6 +1,6 @@
 #!/bin/sh
 # HoopLab pre-push: araç testleri, tip denetimi, paket testleri, tüm repo gizlilik taraması ve kaynak
-# doğrulaması geçmeden push yok. Uygulama (Faz 1) geldikçe onun tip denetimi ve testleri de buraya eklenir.
+# doğrulaması geçmeden push yok. Uygulamanın (apps/mobile) tip denetimi ve testleri dahil.
 
 if ! command -v node >/dev/null 2>&1; then
   echo "[pre-push] node bulunamadı; kontroller koşamadı. Push durduruldu." >&2
@@ -15,7 +15,10 @@ fi
 node --test "tools/**/*.test.mjs" &&
   node_modules/.bin/tsc -p packages/theme &&
   node_modules/.bin/tsc -p packages/theme/tsconfig.test.json &&
+  node_modules/.bin/tsc -p apps/mobile &&
+  node_modules/.bin/tsc -p apps/mobile/tsconfig.test.json &&
   node --test "packages/**/*.test.ts" &&
+  node --test "apps/mobile/src/**/*.test.ts" &&
   node tools/guard/privacy-guard.mjs --all &&
   node tools/guard/privacy-guard.mjs --history &&
   node tools/research/validate-sources.mjs || {

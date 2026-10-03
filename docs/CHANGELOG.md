@@ -24,6 +24,7 @@ Uygulamaya veya altyapıya görünür değişiklikler. Biçim: [Keep a Changelog
 - `/rep` ara rapor komutu: oturum içinde kayıt + push, oturum başına tek bloklu rapor; `/ac` ve `/kapat` buna göre güncellendi; karar 0012.
 - Tasarım token'ları `packages/theme` (`@hooplab/theme`): açık/koyu palet, hale, tipografi, ölçüler, hareket, görünüm tercihleri; maketle birebir test ve WCAG kontrast testi; Bricolage opsz 96 display kesimi; karar 0013.
 - npm workspaces, TypeScript 6.0 (Expo SDK 57 ile aynı); tip denetimi ve paket testleri `check`, pre-push ve CI'da.
+- Uygulama iskeleti `apps/mobile` (Expo SDK 57, Expo Router): Bugün, Trend, Koç, Ben sekmeleri; maketteki cam sekme çubuğu; Ben → Görünüm'de Sistem / Açık / Koyu tema ve haleyi canlandır tercihi (cihazda saklanır); `@hooplab/theme` renk, yazı ve fontları; uygulama tip denetimi ve testleri `check`, pre-push ve CI'da; `npm run mobile`; karar 0014.
 
 ### Değişti
 - C maketi: açık temada soluk metin ve durum renginin yazı/ikon kullanımı WCAG 4,5:1'e göre koyulaştırıldı; koyu temada soluk metin açıldı.

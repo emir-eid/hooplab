@@ -12,11 +12,14 @@ Tekrar yaşanabilecek hatalar ve önceden bilinen tuzaklar. Her madde: **ders**,
 - **[ölçüldü] Metro `.env` değerlerini paketleme anında gömer.** `.env` değişince Metro yeniden başlatılır.
 - **[ölçüldü] `EXPO_PUBLIC_` değişkenleri uygulama paketinde herkese açıktır.** Bekçi: `herkese-acik-sir-adi` kuralı.
 - **[ölçüldü] `@expo-google-fonts/*` paket kökünden import edilmez.** Kök, tüm ağırlıkları yeniden dışa aktarır ve paketi megabaytlarca büyütür. Alt yol importu kullanılır (`@expo-google-fonts/<font>/400Regular`).
-- **[ölçüldü] Expo SDK sürümleri arasında import yolları değişebilir** (ör. SDK 57'de `Tabs` artık `expo-router/tabs` yolundan geliyor). API'ler eğitim verisinden varsayılmaz, `node_modules` veya güncel dokümandan doğrulanır.
+- **[ölçüldü] Expo SDK sürümleri arasında import yolları değişebilir.** SDK 57'de `Stack` kökten değil `expo-router/stack`, JS sekmeler `expo-router/js-tabs` (aynı dosya `expo-router/tabs`; kökteki `Tabs` deprecated), React Navigation tipleri expo-router'ın içine gömülü (`BottomTabBarProps` → `expo-router/js-tabs`). `expo-font` `FontSource` tipini dışa aktarmıyor. API'ler eğitim verisinden varsayılmaz, `node_modules` veya güncel dokümandan doğrulanır. Kanıt: 2026-10-03 Faz 1 iskelet işi.
 - **[ölçüldü] Özel fontta italik, `fontStyle: 'italic'` ile değil ayrı font dosyasıyla yapılır.** Aksi halde Android italiği uydurur, iOS uydurmaz.
 - **[ölçüldü] Tab bar ve güvenli alan ölçüleri sabit sayıyla yazılmaz**, `useSafeAreaInsets()` ile alınır.
 - **[ölçüldü] `@expo-google-fonts` sabit dosyaları değişken fontun bir optik boyutunda kesilmiştir (Bricolage Grotesque: opsz 14); RN değişken font eksenini ayarlayamaz.** Tarayıcıdaki maket optik boyutu yazı boyuna göre otomatik seçtiği için büyük yazı RN'de farklı görünür (aynı kelime opsz 96'da %11 daha dar). Çözüm: değişken fonttan gereken kesimi fontTools ile üretip pakete koymak (`packages/theme/fonts/`). Kanıt: 2026-10-03 22:52 oturumu, [0013](decisions/0013-tasarim-tokenlari.md). Bekçi: `packages/theme/test/maket-parity.test.ts` (opsz 96 yalnız 48 pt+).
-- **[ölçüldü] Test tip denetimi ayrı `tsconfig` ile yapılır.** Node tipleri uygulama koduna sızarsa `fs`/`Buffer` RN'de yokken geçerli görünür.
+- **[ölçüldü] Test tip denetimi ayrı `tsconfig` ile yapılır.** Node tipleri uygulama koduna sızarsa `fs`/`Buffer` RN'de yokken geçerli görünür. Kökte `@types/node` olduğu için uygulamanın `tsconfig`'inde `"types": []` şart; yoksa TypeScript onu kendiliğinden ekler. Bekçi: `apps/mobile/tsconfig.json`.
+- **[ölçüldü] `create-expo-app` şablonu repo kökü gibi davranır:** kendi `AGENTS.md`, `LICENSE`, `.claude/settings.json` (farklı marketplace adıyla Expo plugin'i) ve `.vscode` dosyalarını getirir; monorepo içinde bunlar silinir. Repo içinde git başlatmayı sorar; `--no-install` ile kurulum köke bırakılır. Kanıt: 2026-10-03 Faz 1 iskelet işi.
+- **[ölçüldü] RN iOS `Switch` kendi stiline `alignSelf: 'flex-start'` ekler (`Libraries/Components/Switch/Switch.js`); satırda ortalanmaz, üste yapışır. Web önizlemesi bunu göstermez.** Anahtar bir `View` ile sarılır. Genel ders: web önizlemesi yerleşim için yeterli değil, native bileşenler cihazda bakılır. Kanıt: 2026-10-04 cihaz kontrolü. Bekçi: `ListRow` sarmalayıcısı.
+- **[ölçüldü] react-native-web'de `props.pointerEvents` deprecated, `<Svg accessible={false}>` DOM'a sızıp konsol hatası verir.** `pointerEvents` stile yazılır; SVG'ye erişilebilirlik prop'u verilmez, üstteki `Pressable` etiketi taşır.
 
 ## Git ve süreç
 
@@ -32,6 +35,7 @@ Tekrar yaşanabilecek hatalar ve önceden bilinen tuzaklar. Her madde: **ders**,
 
 - **[ölçüldü] Windows PowerShell 5.1 boruyla native programa veri gönderirken başa BOM ekleyebilir; `JSON.parse` kırılır.** Stdin okuyan script'ler BOM'u atar (`.replace(/^﻿/, '')`). Hata yutan bir hook'ta bu sessiz arızaya dönüşür. Kanıt: 2026-10-03 kurulum oturumu, `tools/hooks/archive-transcript.mjs`. Claude Code hook'ları `bash` ile çalıştırıldığı için asıl yol etkilenmiyordu.
 - **[ölçüldü] Google Drive dosya sistemi zaman damgasının milisaniye altını atıyor** (kaynak ile kopya arasında ~0,76 ms fark). "Hedef daha yeni mi?" karşılaştırması bu yüzden her seferinde yanlış sonuç verip gereksiz kopya yapıyordu. Çözüm: aynı boyut ve 2 saniye tolerans. Bekçi: `tools/backup/backup-private.test.mjs`.
+- **[ölçüldü] Windows'ta Python metin modunda yazınca satır sonları CRLF olur;** `.gitattributes` commit'te düzeltir ama çalışma kopyasındaki hook betiği CRLF kalır. Dosya düzenlerken Edit aracı veya `io.open(..., newline='')` kullanılır. CRLF temizliği (`sed "s/\r$//"`) **asla toplu ve ikili dosyalara** uygulanmaz: PNG'ler bozuldu, şablondan geri yüklendi. Kanıt: 2026-10-03 Faz 1 iskelet işi. Bekçi: yok (yöntem).
 - **[ölçüldü] Çok uzun geçici yollarda `git clone` başarısız olabilir** (muhtemelen Windows yol uzunluğu sınırı). Klonlar kısa bir yola (ör. `%TEMP%\kisa-ad`) yapılır; hata çıktısı bastırılmaz.
 
 ## Önizleme ve maketler

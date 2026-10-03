@@ -46,3 +46,4 @@ Hangisi seçildi ve tek paragrafta neden.
 | [0011](0011-hale-efekti-svg.md) | Hale efekti: react-native-svg radyal gradyan + Reanimated transform | Kabul edildi |
 | [0012](0012-ara-rapor-rep.md) | Ara rapor: /rep (oturum içinde kayıt + push, oturum açık kalır) | Kabul edildi |
 | [0013](0013-tasarim-tokenlari.md) | Tasarım token'ları: @hooplab/theme, maketle birebir test, erişilebilir renkler, opsz 96 kesimi | Kabul edildi |
+| [0014](0014-uygulama-iskeleti.md) | Uygulama iskeleti: apps/mobile (SDK 57), özel cam sekme çubuğu, cihazda saklanan görünüm tercihi | Kabul edildi |

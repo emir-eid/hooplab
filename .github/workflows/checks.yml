@@ -31,11 +31,14 @@ jobs:
       - name: Bağımlılıklar
         run: npm ci
 
-      - name: Tip denetimi (paketler ve testleri)
+      - name: Tip denetimi (paketler, uygulama ve testleri)
         run: npm run typecheck
 
       - name: Paket testleri (tema token'ları maketle birebir, kontrast eşikleri)
         run: npm run test:packages
+
+      - name: Uygulama testleri (apps/mobile saf fonksiyonları)
+        run: npm run test:apps
 
       # Kişisel denylist GitHub secret'ından gelir (GUARD_DENYLIST). Yoksa bu kural atlanır ve
       # çıktıda "kişisel denylist yok (atlandı)" yazar. Bekçi değerleri asla yazdırmaz.

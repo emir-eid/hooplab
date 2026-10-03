@@ -66,4 +66,13 @@ Haftalık denetim ve aylık literatür taraması **makineye özeldir** ve yalnı
 npm run check
 ```
 
-Araç testleri, gizlilik taraması (güncel ağaç ve tüm geçmiş) ve kaynak doğrulaması geçmeli. Çıktıda "kişisel denylist N ifade (dosya)" görünmeli.
+Araç testleri, tip denetimi (tema paketi ve uygulama), paket ve uygulama testleri, gizlilik taraması (güncel ağaç ve tüm geçmiş) ve kaynak doğrulaması geçmeli. Çıktıda "kişisel denylist N ifade (dosya)" görünmeli.
+
+## 8. Uygulamayı iPhone'da açmak
+
+1. iPhone'a App Store'dan **Expo Go**'yu kur.
+2. `E:\HoopLab\code` klasöründe `npm run mobile`. Terminalde QR kod çıkar. Windows PowerShell "running scripts is disabled" derse `npm.cmd run mobile` (çalıştırma ilkesini değiştirmeye gerek yok).
+3. iPhone kamerasıyla QR kodu okut; Expo Go'da açılır. iPhone ve bilgisayar aynı Wi-Fi'da olmalı.
+4. Bağlanmazsa: Windows Güvenlik Duvarı Node.js'e özel ağda izin vermeli (ilk çalıştırmada sorar). Olmazsa `npm run mobile -- --tunnel`.
+
+Ayrıntı: [apps/mobile/README.md](../apps/mobile/README.md).
