@@ -18,3 +18,4 @@ Uygulamaya veya altyapıya görünür değişiklikler. Biçim: [Keep a Changelog
 - `private` klasörünün Drive'a eklemeli yedeği (`tools/backup`, SessionEnd hook'u, `/kapat`).
 - Belgeler: `COSTS.md`, `DATA-INVENTORY.md`, `SETUP.md`; karar 0008.
 - `/ac` hook ve plugin yüklemesini kendisi denetliyor.
+- Faz 0 veri testi: Google Health API erişimi doğrulandı; karar 0009 (herkes kendi hesabıyla), Google Health bağlantısı rehberi, Faz 0 özeti.

@@ -2,13 +2,13 @@
 
 Her faz, bitiş kriteri karşılanınca `/kapat` ile kapanır: faz özeti `docs/phases/faz-N.md` dosyasına yazılır ve `faz-N-tamam` git etiketi atılır.
 
-## Faz 0: Veri erişimi testi ve altyapı
+## Faz 0: Veri erişimi testi ve altyapı ✓ ([özet](phases/faz-0.md))
 
 - [x] Proje yapısı, oturum sistemi (`/ac`, `/kapat`), hook'lar, gizlilik bekçisi, kaynak doğrulayıcı, CI
 - [x] Gizlilik altyapısı eklemeleri: geçmiş taraması, CI'da denylist desteği, `private` Drive yedeği ([0008](decisions/0008-gizlilik-altyapisi-eklemeleri.md))
 - [x] Ürün tanımı, maliyet/hesaplar, veri envanteri, yeni makine rehberi
-- [ ] Skill seti: kopyalanan skill'ler yüklü; **Expo ve Supabase plugin'lerinin kurulumu ilk yeni oturumda doğrulanacak**
-- [ ] Hook'ların Claude Code tarafından gerçekten tetiklendiği ilk yeni oturumda doğrulanacak
+- [x] Skill seti: kopyalanan skill'ler yüklü (Expo ve Supabase plugin kurulumu Faz 1'e devredildi)
+- [x] SessionStart hook'u tetikleniyor (doğrulandı); SessionEnd / PreCompact doğrulaması Faz 1'e devredildi
 - [x] `GUARD_DENYLIST` GitHub secret'ı (kullanıcı ekledi; CI'ın okuduğu doğrulandı)
 - [x] Google Cloud projesi + Google Health API + OAuth istemcisi (kullanıcı)
 - [x] Go kurulumu, `ghealth` CLI derleme, giriş
@@ -16,7 +16,7 @@ Her faz, bitiş kriteri karşılanınca `/kapat` ile kapanır: faz özeti `docs/
 - [x] Ölçülenler: erişim var mı, Türkiye hesabında veri dönüyor mu, Fitbit Air'in ürettiği alanlar, veri çözünürlüğü, token ömrü
 - [x] Karar 0001 kesinleşti (veya B planı)
 - [x] "Herkes kendi hesabıyla" ilkesi ([0009](decisions/0009-herkes-kendi-hesabiyla.md)) ve [Google Health bağlantısı rehberi](guides/google-health-baglantisi.md)
-- [ ] Yenileme token'ının 7. günde düştüğünün pratik ölçümü (2026-10-10 civarı; Faz 0.5 sırasında, bitişi bekletmez)
+- Takip: yenileme token'ının 7. günde düştüğünün pratik ölçümü (2026-10-10 civarı, STATE'te)
 
 **Bitiş kriteri:** Kendi verine programatik erişimin çalıştığı (veya çalışmadığı ve B planının seçildiği) ölçülerek kanıtlandı.
 
@@ -30,6 +30,7 @@ Her faz, bitiş kriteri karşılanınca `/kapat` ile kapanır: faz özeti `docs/
 
 ## Faz 1: Temel uygulama (MVP)
 
+- [ ] Expo ve Supabase plugin'lerinin kurulumu (Faz 0'dan devir); SessionEnd / PreCompact arşiv hook'unun doğrulanması
 - [ ] Expo projesi (`apps/mobile`), TypeScript strict, Expo Router
 - [ ] Supabase projesi (Frankfurt), şema, RLS, tek kullanıcı girişi
 - [ ] Supabase oturumu için SecureStore parçalama adaptörü (bkz. LESSONS)
