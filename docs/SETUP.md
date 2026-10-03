@@ -8,7 +8,7 @@ Projeyi başka bir bilgisayarda (ör. laptop) çalıştırmak için. Git yalnız
 
 - Git, Node.js 22+ ve GitHub CLI (`gh auth login` ile, repoya erişimi olan hesapla)
 - Google Drive masaüstü uygulaması (yedeğe erişim için)
-- Faz 0 için: Go (`ghealth` CLI'ı derlemek için)
+- Google Health verisini CLI'dan çekmek için: Go (`winget install --id GoLang.Go -e`) ve `ghealth` ([rehber](guides/google-health-baglantisi.md) §5). Ana makinede kaynak `C:\gh\ghealth-src`, ayar ve token'lar `private/ghealth` (`GHEALTH_CONFIG_DIR` ile); yedekten gelir, yeniden giriş gerekmez (token 7 günden eskiyse `ghealth auth login`)
 
 ## 2. Klasörler ve repo
 

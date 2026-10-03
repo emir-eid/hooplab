@@ -34,8 +34,14 @@ Tekrar yaşanabilecek hatalar ve önceden bilinen tuzaklar. Her madde: **ders**,
 ## Google Health / veri
 
 - **[kaynaklı] Fitbit Web API 30 Ekim 2026'da kapanıyor** ([Google Health API bülteni](https://developers.google.com/health/newsletters)). Kullanılmaz. Yerine Google Health API v4.
-- **[kaynaklı] Google Health API dokümanı yeni projelerin kabul edilmediğini söylüyor** ([başlarken](https://developers.google.com/health/get-started)). Öte yandan resmi bireysel CLI ([`ghealth`](https://github.com/Google-Health-API/google-health-cli)) kişinin kendi Google Cloud projesiyle çalışıyor. Hangisinin geçerli olduğu Faz 0'da ölçülecek.
-- **[doğrulanacak] Test modundaki (yayımlanmamış) Google OAuth uygulamalarında yenileme token'ı 7 günde düşebilir.** Faz 0'da ölçülecek.
+- **[ölçüldü] "Yeni proje kabul etmiyoruz" notuna rağmen kişisel Google Cloud projesi çalışıyor.** Doküman ([başlarken](https://developers.google.com/health/get-started)) böyle diyor, ama 2026-10-03'te yeni açılan bir projede API'yi etkinleştirmek, "Testing" modunda External OAuth (Desktop app) almak ve Türkiye hesabından veri çekmek sorunsuz oldu. Kanıt: Faz 0 oturumu, `ghealth` commit `9cf0274`.
+- **[kaynaklı] Testing modundaki External OAuth uygulamalarında yenileme token'ı 7 günde düşer** (yalnız ad/e-posta/profil kapsamı isteyen uygulamalar hariç; [Google OAuth 2.0, "Refresh token expiration"](https://developers.google.com/identity/protocols/oauth2#expiration)). Erişim token'ı 1 saatlik. Uygulama haftada bir yeniden giriş akışına hazır olmalı. Pratik ölçüm 2026-10-10 civarı.
+- **[ölçüldü] Bazı günlük rollup'lar en fazla 14 gün kabul eder:** `active-minutes`, `calories-in-heart-rate-zone`, `heart-rate`, `total-calories`. Aralık parçalanır.
+- **[ölçüldü] Gün içi nabız (`heart-rate list`) yaklaşık 3 saniyede bir örnek verir, günde yaklaşık 35 bin kayıt.** 30 gün tek istekte kayıt sınırına takılır ve sessizce eksik döner; gün gün çekilir. Uygulama ham nabzı saklamaz, sunucuda özetler.
+- **[ölçüldü] `food list` bir besin kataloğunu sayfalıyor ve bitmiyor.** Kişisel kayıt değil; kullanılmaz (kişisel kayıt `nutrition-log`).
+- **[ölçüldü] Basketbol antrenmanı/maçı `exerciseType: SPORT` ("Sport") olarak geliyor; basketbola özgü tip yok.** Seans türünü (maç/antrenman/şut) kullanıcı etiketler.
+- **[ölçüldü] Adım ve mesafe iki kaynaktan gelir:** cihaz (`FITBIT`) ve iPhone (`HEALTH_KIT`). Toplarken `dataSource` ile ayrılır, çift sayılmaz.
+- **[ölçüldü] Fitbit Air'in ürettiği tipler (14 günlük ölçüm):** gece HRV (günlük özet: ortalama RMSSD, derin uyku RMSSD, entropi, NREM nabız; ayrıca uyku boyunca LF/HF güçlü örnekler), dinlenik nabız, evreli uyku (AWAKE/LIGHT/DEEP/REM, kısa uyanmalar), SpO2 (günlük + örnekler), solunum hızı, gece cilt sıcaklığı sapması, gün içi nabız, egzersiz (nabız bölgeleri, START/PAUSE/STOP olayları), aktif bölge dakikaları, aktivite seviyesi, sedanter dönemler, adım, mesafe, kalori. **Gelmeyenler:** VO2max (her üç tip boş), EKG, düzensiz ritim bildirimi, irtifa, vücut sıcaklığı, kan şekeri, vücut yağı. **`swim-lengths-data` yüzme olmadan da kayıt üretiyor** (13 günde yaklaşık 190 kayıt, sahibi o dönemde yüzmedi); bu tip yok sayılır.
 - **[doğrulanacak] Google Health'ten Apple Health'e senkron HRV'yi aktarmıyor.** Bu yüzden Apple Health yalnız B planı.
 
 ## Supabase

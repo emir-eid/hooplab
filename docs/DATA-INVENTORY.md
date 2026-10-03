@@ -14,6 +14,7 @@ Hangi veri nerede durur, hangi servise ne gider, ne kadar saklanır, nasıl sili
 | Kanıt tabanı: kaynak özetleri, kurallar | Bu repo (`research/`) | GitHub; Supabase (Faz 3, arama için) | Herkese açık (kişisel veri içermez) |
 | Kişisel notlar | `/kapat` | `private/journal` + Drive yedeği | Sahibi |
 | Claude Code oturum dökümleri | Hook'lar | `private/transcripts` + Drive yedeği | Sahibi |
+| Google OAuth istemci sırrı ve token'ları (Faz 0) | `ghealth` setup | `private/ghealth` + Drive yedeği | `ghealth` CLI |
 | Kişisel denylist | Sahibi | `private/guard-denylist.txt` + Drive yedeği + GitHub Actions secret | Gizlilik bekçisi (değerleri hiçbir yere yazdırmaz) |
 | Kod, belgeler, sentetik demo verisi | Geliştirme | GitHub (ileride public) | Herkes |
 
@@ -21,7 +22,7 @@ Hangi veri nerede durur, hangi servise ne gider, ne kadar saklanır, nasıl sili
 
 | Servis | Ne gider | Ne gitmez |
 |---|---|---|
-| Google (Health API) | OAuth ile veri okuma istekleri | Uygulama girdileri |
+| Google (Health API) | OAuth ile salt okuma istekleri (sahibinin kendi Google Cloud projesi, [0009](decisions/0009-herkes-kendi-hesabiyla.md)) | Uygulama girdileri |
 | Supabase (Frankfurt) | Uygulamanın tüm verisi | — |
 | Anthropic API (Faz 3) | Hesaplanmış özet sayılar, ilgili kanıt metinleri, kullanıcının sorusu | Ad, e-posta, doğum tarihi, kimlik bilgileri, ham zaman serileri |
 | GitHub | Kod ve belgeler; denylist (şifreli secret olarak) | Sağlık verisi, `private` klasörü |

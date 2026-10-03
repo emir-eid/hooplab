@@ -10,11 +10,13 @@ Her faz, bitiş kriteri karşılanınca `/kapat` ile kapanır: faz özeti `docs/
 - [ ] Skill seti: kopyalanan skill'ler yüklü; **Expo ve Supabase plugin'lerinin kurulumu ilk yeni oturumda doğrulanacak**
 - [ ] Hook'ların Claude Code tarafından gerçekten tetiklendiği ilk yeni oturumda doğrulanacak
 - [x] `GUARD_DENYLIST` GitHub secret'ı (kullanıcı ekledi; CI'ın okuduğu doğrulandı)
-- [ ] Google Cloud projesi + Google Health API + OAuth istemcisi (kullanıcı)
-- [ ] Go kurulumu, `ghealth` CLI derleme, giriş
-- [ ] Son 30 günün verisi `../private/data/` klasörüne (HRV, uyku evreleri, dinlenik nabız, nabız, SpO2, solunum, egzersiz)
-- [ ] Ölçülenler: erişim var mı, Türkiye hesabında veri dönüyor mu, Fitbit Air'in ürettiği alanlar, veri çözünürlüğü, token ömrü
-- [ ] Karar 0001 kesinleşti (veya B planı)
+- [x] Google Cloud projesi + Google Health API + OAuth istemcisi (kullanıcı)
+- [x] Go kurulumu, `ghealth` CLI derleme, giriş
+- [x] Son 30 günün verisi `../private/data/` klasörüne (HRV, uyku evreleri, dinlenik nabız, nabız, SpO2, solunum, egzersiz)
+- [x] Ölçülenler: erişim var mı, Türkiye hesabında veri dönüyor mu, Fitbit Air'in ürettiği alanlar, veri çözünürlüğü, token ömrü
+- [x] Karar 0001 kesinleşti (veya B planı)
+- [x] "Herkes kendi hesabıyla" ilkesi ([0009](decisions/0009-herkes-kendi-hesabiyla.md)) ve [Google Health bağlantısı rehberi](guides/google-health-baglantisi.md)
+- [ ] Yenileme token'ının 7. günde düştüğünün pratik ölçümü (2026-10-10 civarı; Faz 0.5 sırasında, bitişi bekletmez)
 
 **Bitiş kriteri:** Kendi verine programatik erişimin çalıştığı (veya çalışmadığı ve B planının seçildiği) ölçülerek kanıtlandı.
 
@@ -31,7 +33,9 @@ Her faz, bitiş kriteri karşılanınca `/kapat` ile kapanır: faz özeti `docs/
 - [ ] Expo projesi (`apps/mobile`), TypeScript strict, Expo Router
 - [ ] Supabase projesi (Frankfurt), şema, RLS, tek kullanıcı girişi
 - [ ] Supabase oturumu için SecureStore parçalama adaptörü (bkz. LESSONS)
-- [ ] Google Health senkronu (Edge Function + zamanlayıcı)
+- [ ] Google Health senkronu (Edge Function + zamanlayıcı); gün içi nabız sunucuda özetlenir, ham saklanmaz; adım/mesafe kaynağa göre tekilleştirilir; `swim-lengths-data` yok sayılır
+- [ ] Kurulum sihirbazı (kullanıcının kendi Google Cloud / Supabase değerleri, [0009](decisions/0009-herkes-kendi-hesabiyla.md)) ve haftalık "yeniden bağlan" akışı
+- [ ] Seans etiketleme: basketbol API'de `SPORT` olarak geliyor; maç / antrenman / şut kullanıcıdan
 - [ ] Sabah check-in (uyku kalitesi, yorgunluk, kas ağrısı, stres, ruh hali)
 - [ ] Seans kaydı (tür, süre, RPE, oynanan dakika)
 - [ ] Toparlanma ekranı (HRV / dinlenik nabız / uyku, kişisel banda göre)

@@ -33,7 +33,7 @@ Hangisi seçildi ve tek paragrafta neden.
 
 | No | Karar | Durum |
 |---|---|---|
-| [0001](0001-veri-kaynagi-google-health-api.md) | Veri kaynağı: Google Health API v4 | Kabul edildi (Faz 0 doğrulamasına bağlı) |
+| [0001](0001-veri-kaynagi-google-health-api.md) | Veri kaynağı: Google Health API v4 | Kabul edildi, Faz 0'da doğrulandı |
 | [0002](0002-platform-expo-react-native.md) | Platform: Expo (React Native), PWA değil | Kabul edildi |
 | [0003](0003-backend-supabase.md) | Backend: Supabase (Frankfurt) | Kabul edildi |
 | [0004](0004-mimari-hesap-motoru-kanit-ai.md) | Mimari: deterministik hesap motoru + kanıt tabanı + AI yorum | Kabul edildi |
@@ -41,3 +41,4 @@ Hangisi seçildi ve tek paragrafta neden.
 | [0006](0006-calisma-sistemi.md) | Çalışma sistemi: /ac-/kapat, STATE, hook'lar, CI, zamanlanmış görevler | Kabul edildi |
 | [0007](0007-skill-seti.md) | Skill seti | Kabul edildi |
 | [0008](0008-gizlilik-altyapisi-eklemeleri.md) | Gizlilik altyapısı: Drive yedeği, CI'da denylist, geçmiş taraması | Kabul edildi |
+| [0009](0009-herkes-kendi-hesabiyla.md) | Herkes kendi hesabıyla: merkezi servis yok | Kabul edildi |
