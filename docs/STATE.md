@@ -3,12 +3,12 @@
 Tek doğruluk kaynağı. `/rep` her iş sonunda, `/kapat` her oturum sonunda günceller; `/ac` her oturum başında okur. 150 satırı geçince eski bölümler `docs/archive/` klasörüne taşınır.
 
 <!-- ozet:basla -->
-**Faz:** 0.5, tasarım yönü. Yön seçildi: **C · Hale**, açık ve koyu tema, Sistem / Açık / Koyu ([0010](decisions/0010-tasarim-yonu-hale.md)); hale `react-native-svg` ile ([0011](decisions/0011-hale-efekti-svg.md)). Maketler: [design/maketler/](../design/maketler/index.html).
-**Son oturum:** [2026-10-03 22:52 Faz 0.5: plugin kurulumu ve /rep](sessions/2026-10-03-2252-faz05-plugin-ve-rep.md) (açık; `/rep` ile sürüyor)
+**Faz:** 1 başlamadı; Faz 0.5 tamamlandı (2026-10-03, `faz-0.5-tamam`). Tasarım: **C · Hale**, açık ve koyu tema ([0010](decisions/0010-tasarim-yonu-hale.md)); token'lar [packages/theme](../packages/theme/README.md) ([0013](decisions/0013-tasarim-tokenlari.md)); hale `react-native-svg` ile ([0011](decisions/0011-hale-efekti-svg.md)).
+**Son oturum:** [2026-10-03 22:52 Faz 0.5: plugin kurulumu, /rep ve tasarım token'ları](sessions/2026-10-03-2252-faz05-plugin-ve-rep.md) (açık; `/rep` ile sürüyor)
 
 **Sıradaki işler (sıralı):**
-1. **Faz 0.5 son iş:** `design/maketler/c-hale.html` içinden tasarım token'ları (renk açık + koyu, tipografi, boşluk, köşe, hareket, hale renkleri ve gradyan durakları) → TypeScript tema dosyası (hex). Bitince Faz 0.5 özeti ve `faz-0.5-tamam` etiketi. Önerilen: Opus + orta.
-2. **Faz 1 başı:** `apps/mobile` iskeleti (Expo ve Supabase plugin'leri yüklü).
+1. **Faz 1 başı:** `apps/mobile` iskeleti: Expo SDK 57, TypeScript strict, Expo Router; npm workspace'e ekle, `@hooplab/theme`'i bağla (Metro'nun workspace paketini ve `.ts` importlarını çözdüğünü doğrula), fontları alt yol importuyla yükle, tema context'i (Sistem / Açık / Koyu). Önce PRODUCT.md ve LESSONS "Expo / React Native". Önerilen: Opus + yüksek (ilk iskelet, sürüm ve yapı kararları).
+2. **Faz 1:** Supabase projesi (Frankfurt), şema, RLS, tek kullanıcı girişi ([ROADMAP](ROADMAP.md) Faz 1).
 3. **Takip (2026-10-10 civarı):** yenileme token'ı 7. günde düştü mü? `GHEALTH_CONFIG_DIR` = `E:\HoopLab\private\ghealth` ile `C:\gh\ghealth-src\ghealth.exe user paired-devices list`; sonucu LESSONS'taki [kaynaklı] maddeye [ölçüldü] olarak işle.
 
 **Açık riskler:**
@@ -17,11 +17,13 @@ Tek doğruluk kaynağı. `/rep` her iş sonunda, `/kapat` her oturum sonunda gü
 - Supabase ücretsiz planı 7 gün istek gelmezse projeyi duraklatıyor (Faz 1'de gözlenecek).
 - Arşiv hook'u: SessionEnd döküm yazıyor (2026-10-03'te görüldü); PreCompact henüz doğrulanmadı.
 - Hale `react-native-svg` gradyanlarıyla cihazda kademelenme (banding) gösterebilir; görülürse yalnız `<Aura>` Skia'ya taşınır ([0011](decisions/0011-hale-efekti-svg.md)).
+- Token'ların cihazda bakılacak noktaları (satır yüksekliği kırpması, koyu kart halkası, cam): [packages/theme/README.md](../packages/theme/README.md).
 
 **Kullanıcı işleri:**
-- Expo MCP (plugin'le geldi) Expo hesabıyla yetkilendirilmedi; Faz 1'de EAS gerekince `/mcp` üzerinden.
+- Expo Go'yu iPhone'a kur (Faz 1 iskeleti cihazda bununla açılacak).
+- Expo MCP (plugin'le geldi) Expo hesabıyla yetkilendirilmedi; Faz 1'de EAS gerekince.
 - İstersen zamanlanmış görevleri kenar çubuğundaki "Scheduled" bölümünden bir kez "Run now" ile çalıştır.
-- C maketi telefonda: https://claude.ai/artifact/GWScS6NjHsxUphrHSFLo7J (özel; güncellemek için bu URL'ye yayınlanır). Görünüm ekranındaki "Haleyi canlandır" ve "Diğer" satırlarını isteyip istemediğini söyle.
+- C maketi telefonda: https://claude.ai/artifact/GWScS6NjHsxUphrHSFLo7J (özel). Erişilebilirlik renkleri öncesinden kalma; istersen aynı adrese güncel hali yayınlanır.
 <!-- ozet:bitti -->
 
 ## Faz durumu
@@ -29,7 +31,7 @@ Tek doğruluk kaynağı. `/rep` her iş sonunda, `/kapat` her oturum sonunda gü
 | Faz | Durum |
 |---|---|
 | 0 Veri erişimi testi + altyapı | Tamamlandı (2026-10-03, `faz-0-tamam`) |
-| 0.5 Tasarım yönü | Sürüyor: yön seçildi, token'lar kaldı |
+| 0.5 Tasarım yönü | Tamamlandı (2026-10-03, `faz-0.5-tamam`) |
 | 1 Temel uygulama (MVP) | Başlamadı |
 | 2 Hesap motoru | Başlamadı |
 | 3 AI koç | Başlamadı |
@@ -42,7 +44,8 @@ Ayrıntı: [ROADMAP.md](ROADMAP.md).
 | Araç | Durum |
 |---|---|
 | Windows 11, PowerShell + Git Bash | var |
-| Node.js | 24.14 |
+| Node.js | 24.14 (npm workspaces; `npm install` şart, [SETUP.md](SETUP.md)) |
+| TypeScript | 6.0.3 (Expo SDK 57 şablonuyla aynı) |
 | git | 2.52 (`core.hooksPath=.githooks` bu klonda ayarlı; yeni klonda `npm run hooks:install`) |
 | GitHub CLI | var, `emir-eid` hesabı |
 | Go | 1.27.0 (winget); `ghealth` kaynağı ve derlemesi `C:\gh\ghealth-src`, ayarları `../private/ghealth` |

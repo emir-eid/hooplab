@@ -24,13 +24,14 @@ Her faz, bitiş kriteri karşılanınca `/kapat` ile kapanır: faz özeti `docs/
 
 - [x] 2-3 farklı görsel yön, telefon boyutunda HTML maket (`frontend-design`): [design/maketler/](../design/maketler/index.html)
 - [x] Kullanıcı seçimi: C · Hale, açık ve koyu tema ([0010](decisions/0010-tasarim-yonu-hale.md)); hale aracı [0011](decisions/0011-hale-efekti-svg.md)
-- [ ] Tasarım sistemi: renk, tipografi, boşluk, köşe, hareket token'ları (`design:design-system`, `apple-design`)
+- [x] Tasarım sistemi: renk, tipografi, boşluk, köşe, hareket token'ları: [packages/theme](../packages/theme/README.md) ([0013](decisions/0013-tasarim-tokenlari.md))
 
 **Bitiş kriteri:** Seçilmiş yön ve TypeScript tema dosyasına çevrilebilir token seti.
 
 ## Faz 1: Temel uygulama (MVP)
 
-- [ ] Expo ve Supabase plugin'lerinin kurulumu (Faz 0'dan devir); SessionEnd / PreCompact arşiv hook'unun doğrulanması
+- [x] Expo ve Supabase plugin'lerinin kurulumu (Faz 0'dan devir; 2026-10-03)
+- [ ] SessionEnd / PreCompact arşiv hook'unun doğrulanması
 - [ ] Expo projesi (`apps/mobile`), TypeScript strict, Expo Router
 - [ ] Supabase projesi (Frankfurt), şema, RLS, tek kullanıcı girişi
 - [ ] Supabase oturumu için SecureStore parçalama adaptörü (bkz. LESSONS)

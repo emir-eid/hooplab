@@ -28,6 +28,15 @@ jobs:
       - name: Araç testleri (bekçinin kendi negatif testleri dahil)
         run: node --test "tools/**/*.test.mjs"
 
+      - name: Bağımlılıklar
+        run: npm ci
+
+      - name: Tip denetimi (paketler ve testleri)
+        run: npm run typecheck
+
+      - name: Paket testleri (tema token'ları maketle birebir, kontrast eşikleri)
+        run: npm run test:packages
+
       # Kişisel denylist GitHub secret'ından gelir (GUARD_DENYLIST). Yoksa bu kural atlanır ve
       # çıktıda "kişisel denylist yok (atlandı)" yazar. Bekçi değerleri asla yazdırmaz.
       - name: Gizlilik taraması (tüm repo)

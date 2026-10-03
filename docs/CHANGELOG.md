@@ -22,3 +22,8 @@ Uygulamaya veya altyapıya görünür değişiklikler. Biçim: [Keep a Changelog
 - Faz 0.5 tasarım maketleri (`design/maketler/`): üç görsel yön; seçilen C · Hale için koyu tema ve Görünüm ekranı; kararlar 0010 ve 0011; maket önizleme sunucusu (`.claude/launch.json`).
 - Expo ve Supabase plugin'leri proje kapsamında yüklendi; kurulum komutları SETUP'ta.
 - `/rep` ara rapor komutu: oturum içinde kayıt + push, oturum başına tek bloklu rapor; `/ac` ve `/kapat` buna göre güncellendi; karar 0012.
+- Tasarım token'ları `packages/theme` (`@hooplab/theme`): açık/koyu palet, hale, tipografi, ölçüler, hareket, görünüm tercihleri; maketle birebir test ve WCAG kontrast testi; Bricolage opsz 96 display kesimi; karar 0013.
+- npm workspaces, TypeScript 6.0 (Expo SDK 57 ile aynı); tip denetimi ve paket testleri `check`, pre-push ve CI'da.
+
+### Değişti
+- C maketi: açık temada soluk metin ve durum renginin yazı/ikon kullanımı WCAG 4,5:1'e göre koyulaştırıldı; koyu temada soluk metin açıldı.

@@ -12,31 +12,34 @@
 /* Yerleşim: büyük başlık + hale + beyaz kartlar; yüzen kapsül sekme çubuğu.
    Her renk bir token. Açık değerler :root'ta, koyu değerler [data-tema="koyu"] altında. */
 :root {
-  --bg: #EFEDE8; --card: #FFFFFF; --card2: #F6F5F1; --ink: #15171A; --ink2: #4A4E56; --mute: #8B8F97; --line: #E5E2DB;
+  --bg: #EFEDE8; --card: #FFFFFF; --card2: #F6F5F1; --ink: #15171A; --ink2: #4A4E56; --mute: #686C74; --line: #E5E2DB;
   --on-ink: #FFFFFF; --strong: #15171A; --on-strong: #FFFFFF; --result: #15171A; --on-result: #FFFFFF;
   --glass: rgba(255, 255, 255, .72); --glass-edge: rgba(0, 0, 0, .06); --chip: rgba(255, 255, 255, .7);
   --tab-on: rgba(21, 23, 26, .07); --dot: #CFCBC2; --band: #F1EFE9; --track: rgba(21, 23, 26, .1); --knob: #FFFFFF;
   --shadow: 0 1px 2px rgba(20, 20, 20, .04), 0 8px 24px -12px rgba(20, 20, 20, .12);
   --float: 0 0 0 .5px rgba(0, 0, 0, .06), 0 10px 30px -10px rgba(0, 0, 0, .25);
   --g: #1FA874; --y: #E8930C; --r: #E8492F;
+  /* Durum rengi yazı/ikon olarak: açık zeminde WCAG 4,5:1 için koyulaştırılmış (dolgu --g/--y/--r aynı kalır). */
+  --g-ink: #077A52; --y-ink: #9A6004; --r-ink: #C82709;
   --aura-op: .95;
   --a1: #FFC24D; --a2: #FFE3A3; --a3: #FF9F6B;
-  --s: var(--y);
+  --s: var(--y); --s-ink: var(--y-ink);
   --page-bg: #E2DFD8; --page-ink: #15171A; --sb: #15171A; --sb-bg: #EFEDE8;
   --disp: 'Bricolage Grotesque', 'Avenir Next', sans-serif; --body: 'Figtree', 'Avenir Next', sans-serif;
   color-scheme: light;
 }
-:root[data-state="yesil"] { --s: var(--g); --a1: #6EDDB0; --a2: #CBF3E1; --a3: #9BE7C6; }
-:root[data-state="kirmizi"] { --s: var(--r); --a1: #FF7A5E; --a2: #FFD3C7; --a3: #FF9C85; }
+:root[data-state="yesil"] { --s: var(--g); --s-ink: var(--g-ink); --a1: #6EDDB0; --a2: #CBF3E1; --a3: #9BE7C6; }
+:root[data-state="kirmizi"] { --s: var(--r); --s-ink: var(--r-ink); --a1: #FF7A5E; --a2: #FFD3C7; --a3: #FF9C85; }
 
 :root[data-tema="koyu"] {
-  --bg: #0E0F11; --card: #18191C; --card2: #222327; --ink: #F1F0EC; --ink2: #B3B5BB; --mute: #7C7F87; --line: #2A2B30;
+  --bg: #0E0F11; --card: #18191C; --card2: #222327; --ink: #F1F0EC; --ink2: #B3B5BB; --mute: #878A92; --line: #2A2B30;
   --on-ink: #0E0F11; --strong: #F1F0EC; --on-strong: #0E0F11; --result: #222429; --on-result: #F1F0EC;
   --glass: rgba(36, 37, 41, .72); --glass-edge: rgba(255, 255, 255, .08); --chip: rgba(255, 255, 255, .09);
   --tab-on: rgba(255, 255, 255, .1); --dot: #4A4C52; --band: #1F2024; --track: rgba(255, 255, 255, .12); --knob: #F1F0EC;
   --shadow: 0 0 0 1px rgba(255, 255, 255, .035);
   --float: 0 0 0 .5px rgba(255, 255, 255, .08), 0 10px 30px -10px rgba(0, 0, 0, .7);
   --g: #3CCB92; --y: #FFAE33; --r: #FF6B52;
+  --g-ink: #3CCB92; --y-ink: #FFAE33; --r-ink: #FF6B52;
   --aura-op: .5;
   --a1: #FFA21F; --a2: #C25E00; --a3: #FF6A2B;
   --page-bg: #08090A; --page-ink: #ECEBE7; --sb: #F1F0EC; --sb-bg: #0E0F11;
@@ -79,7 +82,7 @@ body { font-family: var(--body); transition: background .4s, color .4s; }
 
 .card { margin: 12px 16px 0; padding: 16px; border-radius: 26px; background: var(--card); box-shadow: var(--shadow); transition: background .4s; }
 .advice { display: grid; grid-template-columns: 40px 1fr; gap: 12px; align-items: start; margin-top: 26px; }
-.advice .ico { width: 40px; height: 40px; border-radius: 14px; display: grid; place-items: center; background: color-mix(in srgb, var(--s) 16%, var(--card)); color: var(--s); }
+.advice .ico { width: 40px; height: 40px; border-radius: 14px; display: grid; place-items: center; background: color-mix(in srgb, var(--s) 16%, var(--card)); color: var(--s-ink); }
 .advice .ico .ic { width: 22px; height: 22px; stroke-width: 2; }
 .advice b { display: block; font-size: 13px; color: var(--mute); font-weight: 600; margin-bottom: 2px; }
 .advice p { margin: 0; font-size: 15.5px; line-height: 1.42; }
@@ -97,7 +100,7 @@ body { font-family: var(--body); transition: background .4s, color .4s; }
 .m-v { margin-top: 8px; font: 700 34px/1 var(--disp); letter-spacing: -.03em; }
 .m-v small { font: 600 13px var(--body); color: var(--mute); letter-spacing: 0; margin-left: 3px; }
 .m-n { margin-top: 6px; font-size: 12.5px; color: var(--mute); font-weight: 500; }
-.off .m-n { color: var(--s); font-weight: 600; }
+.off .m-n { color: var(--s-ink); font-weight: 600; }
 .chartcard { padding: 16px 12px 12px; }
 .chartcard .hd { display: flex; justify-content: space-between; align-items: baseline; padding: 0 4px; }
 .chartcard .hd .m-v { margin: 4px 0 0; }

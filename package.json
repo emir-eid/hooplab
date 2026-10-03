@@ -15,6 +15,15 @@
     "backup": "node tools/backup/backup-private.mjs",
     "research:check": "node tools/research/validate-sources.mjs",
     "research:check:online": "node tools/research/validate-sources.mjs --online",
-    "check": "npm run test:tools && npm run guard:all && npm run guard:history && npm run research:check"
+    "check": "npm run test:tools && npm run typecheck && npm run test:packages && npm run guard:all && npm run guard:history && npm run research:check",
+    "typecheck": "tsc -p packages/theme && tsc -p packages/theme/tsconfig.test.json",
+    "test:packages": "node --test \"packages/**/*.test.ts\""
+  },
+  "workspaces": [
+    "packages/*"
+  ],
+  "devDependencies": {
+    "@types/node": "~24.19.1",
+    "typescript": "~6.0.3"
   }
 }

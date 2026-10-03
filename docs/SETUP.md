@@ -15,8 +15,10 @@ Projeyi başka bir bilgisayarda (ör. laptop) çalıştırmak için. Git yalnız
 ```bash
 mkdir -p /e/HoopLab && cd /e/HoopLab
 git clone https://github.com/emir-eid/hooplab.git code
-cd code && npm run hooks:install
+cd code && npm install && npm run hooks:install
 ```
+
+`npm install` şart: pre-push kapısı tip denetimi için `node_modules` ister, yoksa push durur.
 
 Commit kimliği (bu klonda bir kez):
 

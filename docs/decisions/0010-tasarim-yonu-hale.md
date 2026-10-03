@@ -17,6 +17,7 @@ Kullanıcı C'yi "her şeyiyle" seçti. Ardından uygulamanın koyu teması olma
 
 ## Sonuçlar
 - Token'lar (renk, tipografi, boşluk, köşe, hareket, hale renkleri) C'nin maketinden çıkarılır; her renk açık ve koyu değerle tanımlanır. React Native `oklch()` anlamadığı için değerler hex olur ([LESSONS](../LESSONS.md)).
-- Görünüm ekranına iki öneri eklendi ve henüz kapsamda kesinleşmedi: "Haleyi canlandır" anahtarı (Hareketi Azalt açıksa hale her zaman durur) ve "Diğer" grubundaki yer tutucu satırlar.
+- Görünüm ekranına iki öneri eklendi: "Haleyi canlandır" anahtarı (Hareketi Azalt açıksa hale her zaman durur) ve "Diğer" grubundaki satırlar (uygulama simgesi, sayı biçimi). Kullanıcı ikisinin de kalmasına karar verdi (2026-10-03).
+- Token'lar ve maket üzerindeki erişilebilirlik düzeltmeleri: [0013](0013-tasarim-tokenlari.md).
 - A ve B maketleri karşılaştırma kaydı olarak repoda kalır; B'nin dipnot dili ileride kaynak gösterimi için fikir kaynağı olabilir.
 - **Yeniden değerlendirme tetikleyicisi:** cihazda 4 haftalık kullanımda durumun bir bakışta okunmadığı veya koyu temada okunabilirlik sorunu görüldüğü durum.

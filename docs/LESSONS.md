@@ -15,6 +15,7 @@ Tekrar yaşanabilecek hatalar ve önceden bilinen tuzaklar. Her madde: **ders**,
 - **[ölçüldü] Expo SDK sürümleri arasında import yolları değişebilir** (ör. SDK 57'de `Tabs` artık `expo-router/tabs` yolundan geliyor). API'ler eğitim verisinden varsayılmaz, `node_modules` veya güncel dokümandan doğrulanır.
 - **[ölçüldü] Özel fontta italik, `fontStyle: 'italic'` ile değil ayrı font dosyasıyla yapılır.** Aksi halde Android italiği uydurur, iOS uydurmaz.
 - **[ölçüldü] Tab bar ve güvenli alan ölçüleri sabit sayıyla yazılmaz**, `useSafeAreaInsets()` ile alınır.
+- **[ölçüldü] `@expo-google-fonts` sabit dosyaları değişken fontun bir optik boyutunda kesilmiştir (Bricolage Grotesque: opsz 14); RN değişken font eksenini ayarlayamaz.** Tarayıcıdaki maket optik boyutu yazı boyuna göre otomatik seçtiği için büyük yazı RN'de farklı görünür (aynı kelime opsz 96'da %11 daha dar). Çözüm: değişken fonttan gereken kesimi fontTools ile üretip pakete koymak (`packages/theme/fonts/`). Kanıt: 2026-10-03 22:52 oturumu, [0013](decisions/0013-tasarim-tokenlari.md). Bekçi: `packages/theme/test/maket-parity.test.ts` (opsz 96 yalnız 48 pt+).
 - **[ölçüldü] Test tip denetimi ayrı `tsconfig` ile yapılır.** Node tipleri uygulama koduna sızarsa `fs`/`Buffer` RN'de yokken geçerli görünür.
 
 ## Git ve süreç
@@ -24,6 +25,7 @@ Tekrar yaşanabilecek hatalar ve önceden bilinen tuzaklar. Her madde: **ders**,
 - **[ölçüldü] Çöken bekçi, hiçbir şey bulamayan bekçiden kötüdür: kapıyı açık bırakır.** Bekçiler fail-closed yazılır ve negatif testle kanıtlanır. `git ls-files` silinmiş ama stage'lenmemiş dosyayı da listeler; diskte olmayan yol atlanır. Bekçi: `tools/guard/privacy-guard.test.mjs`.
 - **[ölçüldü] Görsel iş gözle doğrulanmadan bitmiş sayılmaz.** Rasterleştirip bakmak, kod okurken görünmeyen hataları yakalar. Dosya biçimi iddiaları (ör. "arka plan şeffaf") ölçülür, göz kararına güvenilmez.
 - **[ölçüldü] Masaüstü uygulaması, `.claude/settings.json` içindeki `enabledPlugins` / `extraKnownMarketplaces` tanımına rağmen proje plugin'lerini kendiliğinden yüklemiyor; onay penceresi de çıkmıyor.** `/ac` plugin skill'lerinin listede olup olmadığına bakar. Kurulum: masaüstünün paketlediği `%APPDATA%\Claude\claude-code\<sürüm>\<hash>\claude.exe` ile `plugin install <ad> -s project` ([SETUP.md](SETUP.md) §5). CLI `settings.json`'u yeniden biçimlendirir; içerik aynıysa geri alınır. Kanıt: 2026-10-03 22:52 oturumu. Bekçi: `/ac` adım 8.
+- **[ölçüldü] Testteki beklenen değer elle hesaplanmaz, referans uygulamadan ölçülür.** `mix` testine elle hesaplanan `#FCF0DD` yazıldı; kod doğruydu, Chromium'un `color-mix` çıktısı `#FBEED8`. Kanıt: 2026-10-03 22:52 oturumu, `packages/theme/test/tokens.test.ts`. Bekçi: yok (yöntem).
 - **[ölçüldü] Atlanan doğrulama token tasarrufu değil gizli borçtur.** Tip denetimi ve testler commit/push öncesi yerelde koşar, CI'a devredilmez.
 
 ## Windows
