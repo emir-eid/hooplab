@@ -31,7 +31,7 @@ Her faz, bitiş kriteri karşılanınca `/kapat` ile kapanır: faz özeti `docs/
 ## Faz 1: Temel uygulama (MVP)
 
 - [x] Expo ve Supabase plugin'lerinin kurulumu (Faz 0'dan devir; 2026-10-03)
-- [ ] SessionEnd / PreCompact arşiv hook'unun doğrulanması
+- [x] SessionEnd / PreCompact arşiv hook'unun doğrulanması (2026-10-05; SessionEnd 2026-10-03'te, PreCompact gerçek `/compact`'te)
 - [x] Expo projesi (`apps/mobile`), TypeScript strict, Expo Router (2026-10-04, [0014](decisions/0014-uygulama-iskeleti.md))
 - [x] Supabase projesi (Frankfurt), şema, RLS, tek kullanıcı girişi (2026-10-04, [0015](decisions/0015-veritabani-tek-sahip-rls.md); şema ilk tabloyla, diğer tablolar formlarla)
 - [x] Supabase oturumu için SecureStore parçalama adaptörü (2026-10-04, testli)
