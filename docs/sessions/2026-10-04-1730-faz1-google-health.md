@@ -1,9 +1,9 @@
 # 2026-10-04 17:30 — Faz 1: Google Health senkronu
 
 - **Faz:** 1
-- **Durum:** açık (/rep)
+- **Durum:** kapandı (/kapat, 18:46)
 - **Model / efor:** Opus 5.5 · yüksek
-- **Commit'ler:** bu bloğun `/rep` commit'i
+- **Commit'ler:** `44fa4fc` (Blok 1; CI yeşil), bu raporun kapanış commit'i
 
 ## Blok 1 — Google Health senkronu: şema, Edge Functions, zamanlayıcı, bağlantı ekranı (17:30)
 
@@ -39,7 +39,7 @@ STATE'teki ilk iş: Fitbit Air verisini Google Health API v4'ten sunucu tarafın
 
 ## Açık kalanlar
 - Yenileme token'ının 7. günde düşmesi gerçek hesapta ölçülmedi: `ghealth` takibi (2026-10-10) ve uygulamadaki "Yeniden bağlan" akışının cihazda ilk gerçek denemesi aynı hafta.
-- Metro (8081) ve yerel web önizlemesi (8082) açık; Claude kapatır.
+- Metro (8081) oturum sonunda açık bırakıldı; Claude yeniden başlatır / kapatır (SETUP §8). Yerel web önizlemesi (8082), sahte Google ve yerel Edge Runtime kapatıldı.
 - `supabase/functions/.env` yalnız yerel sahte değerler (gitignore'lu).
 
 ## Sıradaki adım

@@ -4,7 +4,7 @@ Tek doğruluk kaynağı. `/rep` her iş sonunda, `/kapat` her oturum sonunda gü
 
 <!-- ozet:basla -->
 **Faz:** 1 sürüyor: iskelet ([0014](decisions/0014-uygulama-iskeleti.md)), Supabase + giriş ([0015](decisions/0015-veritabani-tek-sahip-rls.md)), sabah check-in + ağrı haritası ve seans kaydı ([0017](decisions/0017-sabah-check-in-olcegi.md)), **Vücut** sekmesi ([0018](decisions/0018-vucut-gorunumu.md)) iPhone'da doğrulandı. **Google Health senkronu** bulutta ve iPhone'da çalışıyor ([0019](decisions/0019-google-health-senkronu.md)): Ben → Google Health ile bağlan / yeniden bağlan; saatlik zamanlayıcı; günlük HRV, dinlenik nabız, SpO2, solunum, cilt sıcaklığı, nabız özeti (ham nabız yok), adım / mesafe / kalori / aktif dakika (bileklik kaynağı), uyku ve egzersiz oturumları. Hesap motoru `packages/engine`; ilk 10 kaynak ve 4 kural `research/`'te. Dış servis işlerini Claude yürütür ([0016](decisions/0016-dis-servisleri-claude-yurutur.md)). Tasarım: **C · Hale** ([0010](decisions/0010-tasarim-yonu-hale.md)), token'lar [packages/theme](../packages/theme/README.md).
-**Son oturum:** [2026-10-04 17:30 Faz 1: Google Health senkronu](sessions/2026-10-04-1730-faz1-google-health.md) (açık, /rep)
+**Son oturum:** [2026-10-04 17:30 Faz 1: Google Health senkronu](sessions/2026-10-04-1730-faz1-google-health.md)
 
 **Sıradaki işler (sıralı):**
 1. **Faz 1: Seans etiketleme.** Google'dan gelen egzersiz oturumları (basketbol `SPORT`) ile elle girilen seans kaydını eşleştirmek; maç / antrenman / şut etiketi kullanıcıdan (ROADMAP Faz 1). Önce PRODUCT §4 ve `exercise_sessions` / `training_sessions` şeması. Önerilen: Opus + orta.
