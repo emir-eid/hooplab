@@ -1,0 +1,49 @@
+{
+  "module": "toparlanma",
+  "rules": [
+    {
+      "id": "hrv-olcu",
+      "description": "İzlenen HRV değeri: gece derin uyku dönemindeki RMSSD (ms). Bant ve ortalamalar doğal logaritması (ln) üzerinden hesaplanır, ekranda ms olarak gösterilir.",
+      "value": { "metric": "deep_sleep_rmssd", "transform": "ln", "unit": "ms" },
+      "applies_to": "Google Health günlük HRV özeti (health_daily.hrv_deep_rmssd_ms)",
+      "sources": ["buchheit-2014", "plews-2013", "plews-2014"],
+      "notes": "Bütün gecenin RMSSD'si uyku evresi dağılımından etkilenir; gece ölçümünde derin uyku dönemleri daha kararlıdır (buchheit-2014). Fitbit uygulamasının gösterdiği gece ortalaması (hrv_rmssd_ms) saklanır ama durum için kullanılmaz (karar 0021). ln dönüşümü HRV izleme çalışmalarının ortak yöntemi (plews-2013, plews-2014). Kaynakların ölçümü çoğunlukla sabah kısa kayıt; gece bileklik ölçümüne aktarım bir varsayımdır."
+    },
+    {
+      "id": "toparlanma-bant",
+      "description": "Kişisel bant: son 7 günün ortalaması, ondan hemen önceki 28 günün günlük değerlerinin ortalaması ± 0,5 SD ile karşılaştırılır. Bandın altı, içi, üstü.",
+      "value": { "rolling_days": 7, "baseline_days": 28, "sd_multiplier": 0.5, "metrics": ["hrv", "resting_hr"] },
+      "applies_to": "HRV (ln) ve dinlenik nabız (atım/dk); her gün yeniden hesaplanır",
+      "sources": ["manresa-rocamora-2021", "vesterinen-2016", "buchheit-2014", "duking-2021"],
+      "notes": "Çalışmalar 7 günlük ortalamayı 3-4 haftalık sabit bir başlangıç döneminden hesaplanan ortalama ± 0,5 SD ile karşıladı ve referansı dönem ortasında güncelledi (manresa-rocamora-2021). Sürekli kullanımda referans her gün kayar; 7 günlük pencereyle çakışmaz, böylece bu haftaki düşüş bandı aşağı çekmez. SD örneklem SD'si (n − 1). Dinlenik nabıza aynı yöntem uygulanır: anlamlı değişim kişisel günden güne oynamanın kesri (buchheit-2014). Kaynaklar dayanıklılık sporcularından; basketbola aktarım bir varsayımdır."
+    },
+    {
+      "id": "toparlanma-veri-yeterliligi",
+      "description": "Ortalama ve bant için en az veri: 7 günlük pencerede en az 3 değer, 28 günlük başlangıç penceresinde en az 12 değer (haftada 3). Daha azsa sonuç üretilmez, 'veri yetersiz' gösterilir.",
+      "value": { "rolling_min_values": 3, "baseline_min_values": 12 },
+      "applies_to": "HRV, dinlenik nabız ve 7 gecelik uyku ortalaması",
+      "sources": ["plews-2014"],
+      "notes": "plews-2014 haftalık HRV ortalaması için en az 3 geçerli ölçüm öneriyor; başlangıç penceresi için haftada 3 × 4 hafta. Aynı alt sınır dinlenik nabız ve uyku ortalamasına da uygulanır (doğrudan kaynak yok; tutarlılık için)."
+    },
+    {
+      "id": "uyku-kisa",
+      "description": "Son 7 gecenin ortalama uyku süresi (uykuda geçen dakika, şekerlemeler hariç) 7 saatin altındaysa uyku 'kısa'.",
+      "value": { "min_hours": 7, "rolling_nights": 7, "unit": "saat" },
+      "applies_to": "Google Health uyku oturumları (sleep_sessions.minutes_asleep, şekerleme olmayanlar; bitiş gününe göre)",
+      "sources": ["walsh-2021"],
+      "notes": "walsh-2021 sporcularda alışkanlık haline gelmiş kısa uykuyu gecede 7 saatten az olarak tanımlıyor ve herkese aynı süreyi önermek yerine kişisel ihtiyacı öneriyor. Kişisel uyku ihtiyacı henüz ölçülmüyor; 7 saat bu yüzden alt sınır olarak kullanılır. Tek gece değil ortalama okunur."
+    },
+    {
+      "id": "gunun-durumu",
+      "description": "Günün durumu: HRV bandın altında ve dinlenik nabız bandın üstündeyse 'Toparlan'; HRV bandın dışında (iki yönde), dinlenik nabız bandın üstünde veya uyku kısaysa 'Kontrollü'; hiçbiri yoksa 'Hazır'. HRV bandı yoksa durum üretilmez.",
+      "value": {
+        "requires": ["hrv"],
+        "recover_when_all": ["hrv_low", "rhr_high"],
+        "caution_when_any": ["hrv_low", "hrv_high", "rhr_high", "sleep_short"]
+      },
+      "applies_to": "Bugün ekranındaki 'Bugünün durumu'; tanı değil, izleme özeti",
+      "sources": ["vesterinen-2016", "plews-2013", "buchheit-2014", "bellenger-2016", "walsh-2021"],
+      "notes": "Test edilmiş karar kuralı yalnız HRV'dir: bant içinde planlanan yoğunluk, bant dışında (iki yönde) düşük yoğunluk (vesterinen-2016). HRV tek başına uyumu ayırt etmeyebilir (bellenger-2016) ve HRV düşüşü nabızla birlikte okunur (plews-2013, buchheit-2014); bu yüzden en ağır durum iki otonom işaret aynı yönü gösterdiğinde. Uyku kısalığı (walsh-2021) yalnız 'Kontrollü'ye katkı verir. Bu birleşim HoopLab'in sentezidir, doğrulanmış bir hazır olma skoru değildir (karar 0021)."
+    }
+  ]
+}

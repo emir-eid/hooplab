@@ -29,3 +29,11 @@ export function formatShortDay(localDate: string): string {
   const date = new Date(Number(match[1]), Number(match[2]) - 1, Number(match[3]));
   return shortWeekdays[date.getDay()] ?? '';
 }
+
+/** Yerel tarihin ("2026-10-03") gün ve ayı: "Cmt 3 Ekim". Biçim bozuksa boş metin. */
+export function formatShortDate(localDate: string): string {
+  const match = /^(\d{4})-(\d{2})-(\d{2})$/.exec(localDate);
+  if (!match) return '';
+  const date = new Date(Number(match[1]), Number(match[2]) - 1, Number(match[3]));
+  return `${shortWeekdays[date.getDay()] ?? ''} ${date.getDate()} ${months[date.getMonth()] ?? ''}`;
+}

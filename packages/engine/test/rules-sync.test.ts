@@ -5,7 +5,19 @@ import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { readdirSync, readFileSync } from 'node:fs';
 
-import { bodyRegions, painScale, rpeAnchors, rpeScale, wellnessItems, wellnessScale } from '../src/index.ts';
+import {
+  bodyRegions,
+  dayStatusRule,
+  hrvTransform,
+  painScale,
+  recoveryBand,
+  recoveryMinValues,
+  rpeAnchors,
+  rpeScale,
+  shortSleep,
+  wellnessItems,
+  wellnessScale,
+} from '../src/index.ts';
 
 const read = (rel: string) => readFileSync(new URL(rel, import.meta.url), 'utf8');
 
@@ -45,6 +57,26 @@ test('ağrı ölçeği kuralla aynı', () => {
   const { value } = rule('agri.json', 'agri-olcek');
   assert.equal(value.min, painScale.min);
   assert.equal(value.max, painScale.max);
+});
+
+test('toparlanma bandı, veri yeterliliği ve uyku eşiği kuralla aynı', () => {
+  assert.equal(rule('toparlanma.json', 'hrv-olcu').value.transform, hrvTransform);
+  const band = rule('toparlanma.json', 'toparlanma-bant').value;
+  assert.equal(band.rolling_days, recoveryBand.rollingDays);
+  assert.equal(band.baseline_days, recoveryBand.baselineDays);
+  assert.equal(band.sd_multiplier, recoveryBand.sdMultiplier);
+  const min = rule('toparlanma.json', 'toparlanma-veri-yeterliligi').value;
+  assert.equal(min.rolling_min_values, recoveryMinValues.rolling);
+  assert.equal(min.baseline_min_values, recoveryMinValues.baseline);
+  const sleep = rule('toparlanma.json', 'uyku-kisa').value;
+  assert.equal(sleep.min_hours, shortSleep.minHours);
+  assert.equal(sleep.rolling_nights, shortSleep.rollingNights);
+});
+
+test('günün durumu birleşimi kuralla aynı', () => {
+  const { value } = rule('toparlanma.json', 'gunun-durumu');
+  assert.deepEqual(value.recover_when_all, [...dayStatusRule.recoverWhenAll]);
+  assert.deepEqual(value.caution_when_any, [...dayStatusRule.cautionWhenAny]);
 });
 
 test('veritabanı CHECK aralıkları motorla aynı', () => {

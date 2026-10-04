@@ -4,3 +4,4 @@ export * from './scales.ts';
 export * from './body-regions.ts';
 export * from './session-load.ts';
 export * from './wellness.ts';
+export * from './recovery.ts';

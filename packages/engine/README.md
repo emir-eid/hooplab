@@ -8,10 +8,11 @@ HoopLab'in hesap motoru: sayıları kod hesaplar, AI hesaplamaz ([CLAUDE.md §3]
 | [src/body-regions.ts](src/body-regions.ts) | Ağrı haritası ve vücut görünümünün bölge listesi, sol / sağ / orta | [0017](../../docs/decisions/0017-sabah-check-in-olcegi.md) |
 | [src/session-load.ts](src/session-load.ts) | `sessionLoad(rpe, dakika)` = RPE × dakika (AU) | `yuk.json → seans-yuku` |
 | [src/wellness.ts](src/wellness.ts) | `wellnessTotal` (5-25) | `iyi-olus.json → checkin-olcek` |
+| [src/recovery.ts](src/recovery.ts) | `readMetric` (7 günlük ortalama, 28 günlük bant ± 0,5 SD, HRV ln), `readSleep`, `dayStatus` | `toparlanma.json` → `hrv-olcu`, `toparlanma-bant`, `toparlanma-veri-yeterliligi`, `uyku-kisa`, `gunun-durumu` ([0021](../../docs/decisions/0021-toparlanma-kisisel-bant.md)) |
 
 ## Bekçiler
 
 - [test/rules-sync.test.ts](test/rules-sync.test.ts): motor sabitleri `research/rules` JSON'larıyla ve `supabase/migrations` içindeki CHECK'lerle aynı mı? Biri değişip diğeri değişmezse kırılır.
 - Geçersiz girdide fonksiyonlar `null` döner; kısmi veya uydurma sayı üretmez.
 
-Faz 2'de baseline, akut / kronik yük, monotonluk ve kas / tendon bölge yükü (tahmin) buraya gelir.
+Faz 2'de check-in ve solunum baseline'ı, akut / kronik yük, monotonluk ve kas / tendon bölge yükü (tahmin) buraya gelir.

@@ -41,7 +41,7 @@ Her faz, bitiş kriteri karşılanınca `/kapat` ile kapanır: faz özeti `docs/
 - [x] Sabah check-in (uyku kalitesi, yorgunluk, kas ağrısı, stres, ruh hali) + ağrı haritası (2026-10-04, [0017](decisions/0017-sabah-check-in-olcegi.md); web ve iPhone'da doğrulandı; kaydırıcı Gesture Handler'la)
 - [x] Seans kaydı (tür, süre, RPE, oynanan dakika) (2026-10-04; web ve iPhone'da doğrulandı)
 - [x] Vücut görünümü: döndürülebilir 3D manken, ağrı haritası, 1 gün / 3 gün / 1 hafta (2026-10-04, [0018](decisions/0018-vucut-gorunumu.md); iPhone'da doğrulandı). Filtrenin bölge yükü raporu Faz 2'de
-- [ ] Toparlanma ekranı (HRV / dinlenik nabız / uyku, kişisel banda göre)
+- [x] Toparlanma ekranı (HRV / dinlenik nabız / uyku, kişisel banda göre) (2026-10-05, [0021](decisions/0021-toparlanma-kisisel-bant.md); Bugün'de durum, hale, HRV grafiği; web önizlemesinde doğrulandı, iPhone denemesi bekliyor)
 - [ ] Demo modu (sentetik "demo sporcu")
 - [ ] Apple Developer Programı, EAS Build, TestFlight
 - [ ] Public'e geçiş öncesi denetim: `npm run guard:history` temiz (denylist dosyası ve secret ile), README hikayesi, LICENSE (MIT), GitHub secret scanning + push protection
@@ -51,7 +51,7 @@ Her faz, bitiş kriteri karşılanınca `/kapat` ile kapanır: faz özeti `docs/
 
 ## Faz 2: Hesap motoru (`packages/engine`)
 
-- [ ] Kişisel baseline'lar (HRV, dinlenik nabız, uyku, solunum)
+- [ ] Kişisel baseline'lar: HRV, dinlenik nabız ve uyku Faz 1'de geldi ([0021](decisions/0021-toparlanma-kisisel-bant.md)); kalanlar solunum ve check-in
 - [ ] Antrenman yükü: seans yükü (RPE × dakika), akut/kronik yük, monotonluk
 - [ ] Kas ve tendon bölge yükü modeli (tahmin olarak etiketli), ağrı haritasıyla kalibrasyon
 - [ ] Beslenme hedefleri (yük gününe göre karbonhidrat/protein g/kg), enerji yetersizliği uyarısı

@@ -1,5 +1,5 @@
-// Bugün: sabah check-in çağrısı veya özeti, saatten gelen ve etiket bekleyen oturumlar (karar 0020), bugünün seansları.
-// Günün durumu Google Health verisiyle gelecek.
+// Bugün: günün durumu ve gece verisi (karar 0021), sabah check-in çağrısı veya özeti,
+// saatten gelen ve etiket bekleyen oturumlar (karar 0020), bugünün seansları.
 
 import { sessionLoad, wellnessTotal, wellnessTotalRange } from '@hooplab/engine';
 import { layout, radius, size, spacing } from '@hooplab/theme';
@@ -7,13 +7,15 @@ import { router, useFocusEffect } from 'expo-router';
 import { useCallback, useState } from 'react';
 import { Pressable, StyleSheet, View } from 'react-native';
 
+import { Aura } from '@/components/aura';
 import { Card } from '@/components/card';
-import { ComingSoon } from '@/components/coming-soon';
 import { GroupLabel, ListGroup, ListRow } from '@/components/list';
 import { PageHeader } from '@/components/page-header';
+import { NightData, RecoveryState } from '@/components/recovery-section';
 import { Screen } from '@/components/screen';
 import { Text } from '@/components/text';
 import { sessionKindLabels } from '@/copy/labels';
+import { levelStates } from '@/copy/recovery';
 import {
   fetchCheckin,
   fetchPendingExercises,
@@ -22,6 +24,8 @@ import {
   type TrainingSession,
 } from '@/data/daily-log';
 import { exerciseSummary, type ExerciseSession } from '@/data/exercise-tagging';
+import { fetchRecovery } from '@/data/recovery';
+import type { RecoveryView } from '@/data/recovery-view';
 import { usePalette } from '@/theme/appearance';
 import { formatDayHeader } from '@/utils/format-date';
 import { addDays, toLocalDate } from '@/utils/local-date';
@@ -37,6 +41,8 @@ export default function TodayScreen() {
   const palette = usePalette();
   const [log, setLog] = useState<TodayLog | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const [recovery, setRecovery] = useState<RecoveryView | null>(null);
+  const [recoveryError, setRecoveryError] = useState<string | null>(null);
 
   // Form kapanınca ekran yeniden odaklanır ve günün kaydı tazelenir.
   useFocusEffect(
@@ -55,6 +61,15 @@ export default function TodayScreen() {
           }
         },
       );
+      fetchRecovery(today).then((r) => {
+        if (cancelled) return;
+        if (r.ok) {
+          setRecovery(r.value);
+          setRecoveryError(null);
+        } else {
+          setRecoveryError(r.message);
+        }
+      });
       return () => {
         cancelled = true;
       };
@@ -64,10 +79,19 @@ export default function TodayScreen() {
   const total = log?.checkin ? wellnessTotal(log.checkin.answers) : null;
   const today = toLocalDate(new Date());
   const yesterday = toLocalDate(addDays(new Date(), -1));
+  const auraState = recovery ? levelStates[recovery.status.level] : null;
 
   return (
     <Screen>
+      {auraState ? <Aura state={auraState} /> : null}
       <PageHeader overline={formatDayHeader(new Date())} title="Bugün" />
+
+      {recovery ? <RecoveryState view={recovery} /> : null}
+      {recoveryError ? (
+        <Text variant="footnoteMedium" style={[styles.error, { color: palette.statusInk.red }]} accessibilityRole="alert">
+          {recoveryError}
+        </Text>
+      ) : null}
 
       {log && !log.checkin ? (
         <Pressable
@@ -153,10 +177,7 @@ export default function TodayScreen() {
         </>
       ) : null}
 
-      <ComingSoon
-        title="Günün durumu"
-        body="HRV, dinlenik nabız ve uykun kendi bandınla karşılaştırılıp burada özetlenecek. Önce Google Health bağlantısı kurulacak."
-      />
+      {recovery && !recovery.empty ? <NightData view={recovery} /> : null}
     </Screen>
   );
 }
