@@ -73,7 +73,10 @@ Araç testleri, tip denetimi (tema paketi ve uygulama), paket ve uygulama testle
 1. iPhone'a App Store'dan **Expo Go**'yu kur.
 2. `E:\HoopLab\code` klasöründe `npm run mobile`. Terminalde QR kod çıkar. Windows PowerShell "running scripts is disabled" derse `npm.cmd run mobile` (çalıştırma ilkesini değiştirmeye gerek yok).
 3. iPhone kamerasıyla QR kodu okut; Expo Go'da açılır. iPhone ve bilgisayar aynı Wi-Fi'da olmalı.
-4. Bağlanmazsa: Windows Güvenlik Duvarı Node.js'e özel ağda izin vermeli (ilk çalıştırmada sorar). Olmazsa `npm run mobile -- --tunnel`.
+4. **Metro'yu Claude yönetir** (kullanıcı isteği, 2026-10-04): başlatma, yeniden başlatma, kapatma. Terminal paneli bu makinede komut alamadığı için (LESSONS "Windows") Claude şunu çalıştırır:
+   - Başlat: `Start-Process npm.cmd -ArgumentList 'run','mobile' -WorkingDirectory 'E:\HoopLab\code' -WindowStyle Hidden -RedirectStandardOutput "$env:TEMP\hooplab-metro.log" -RedirectStandardError "$env:TEMP\hooplab-metro.err.log"`; günlükte `Waiting on http://localhost:8081` görülünce hazır. QR basılmaz; Expo Go projeyi son açılanlardan açar.
+   - Durdur: `taskkill /T /F /PID <8081'i dinleyen süreç>` (`Get-NetTCPConnection -LocalPort 8081 -State Listen`).
+5. Bağlanmazsa: Windows Güvenlik Duvarı Node.js'e özel ağda izin vermeli (ilk çalıştırmada sorar). Olmazsa `npm run mobile -- --tunnel`.
 
 Ayrıntı: [apps/mobile/README.md](../apps/mobile/README.md).
 

@@ -6,10 +6,10 @@ import { durationLimits, rpeScale, sessionLoad } from '@hooplab/engine';
 import { layout, radius, spacing } from '@hooplab/theme';
 import { router } from 'expo-router';
 import { useState } from 'react';
-import { ScrollView, StyleSheet, View } from 'react-native';
+import { StyleSheet, View } from 'react-native';
 
 import { Chip, ChipSet } from '@/components/chip';
-import { FormBlock, FormDock, FormHeader, useDockSpace } from '@/components/form';
+import { FormBlock, FormDock, FormHeader, FormScroll, useDockSpace } from '@/components/form';
 import { ScaleSlider } from '@/components/scale-slider';
 import { Stepper } from '@/components/stepper';
 import { Text } from '@/components/text';
@@ -62,7 +62,7 @@ export default function SessionNewScreen() {
 
   return (
     <View style={[styles.root, { backgroundColor: palette.bg }]}>
-      <ScrollView contentContainerStyle={{ paddingBottom: dockSpace }}>
+      <FormScroll contentContainerStyle={{ paddingBottom: dockSpace }}>
         <FormHeader title="Seans kaydı" subtitle="Seans bittikten sonra, tüm seans için." />
 
         <FormBlock title="Gün">
@@ -161,7 +161,7 @@ export default function SessionNewScreen() {
             {`RPE ${rpe ?? '–'}\n× ${durationMin} dk`}
           </Text>
         </View>
-      </ScrollView>
+      </FormScroll>
       <FormDock label="Kaydet" onPress={save} disabled={kind === null || rpe === null} loading={saving} error={error} />
     </View>
   );

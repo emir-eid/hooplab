@@ -2,8 +2,9 @@
 
 import { layout, radius, size, spacing } from '@hooplab/theme';
 import { router } from 'expo-router';
-import type { ReactNode } from 'react';
-import { Pressable, StyleSheet, View } from 'react-native';
+import { createContext, useContext, useRef, type ReactNode, type RefObject } from 'react';
+import { Pressable, StyleSheet, View, type ScrollViewProps } from 'react-native';
+import { ScrollView } from 'react-native-gesture-handler';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import Svg, { Defs, LinearGradient, Rect, Stop } from 'react-native-svg';
 
@@ -11,6 +12,26 @@ import { Icon } from '@/components/icon';
 import { PrimaryButton } from '@/components/primary-button';
 import { Text } from '@/components/text';
 import { usePalette } from '@/theme/appearance';
+
+const FormScrollContext = createContext<RefObject<ScrollView | null> | null>(null);
+
+/**
+ * Formun kaydırılan gövdesi. Gesture Handler'ın ScrollView'u: içindeki sürüklemeli kontroller
+ * (ScaleSlider) ref üzerinden kaydırmayı kendi hareketleri bitene veya başarısız olana dek bekletir.
+ */
+export function FormScroll(props: ScrollViewProps & { children: ReactNode }) {
+  const ref = useRef<ScrollView>(null);
+  return (
+    <FormScrollContext.Provider value={ref}>
+      <ScrollView ref={ref} {...props} />
+    </FormScrollContext.Provider>
+  );
+}
+
+/** Çevreleyen FormScroll'un ref'i; form dışında null. */
+export function useFormScrollRef(): RefObject<ScrollView | null> | null {
+  return useContext(FormScrollContext);
+}
 
 /** Form başlığı: tutamaç, başlık, kapat düğmesi, altında kısa açıklama. */
 export function FormHeader({ title, subtitle }: { title: string; subtitle?: string }) {

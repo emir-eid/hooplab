@@ -29,4 +29,5 @@ Uygulamaya veya altyapıya görünür değişiklikler. Biçim: [Keep a Changelog
 - Sabah check-in (beş madde 1-5) ve ağrı haritası (bölge ve taraf başına 0-10), seans kaydı (tür, süre, RPE, oynanan dakika, canlı seans yükü); sekme çubuğunda artı düğmesi ve kayıt seçici; Bugün'de check-in özeti ve günün seansları. `daily_checkins`, `pain_reports`, `save_morning_checkin` (pgTAP). İlk doğrulanmış kaynaklar (10) ve kurallar (`iyi-olus`, `yuk`, `agri`); hesap motoru `packages/engine`; yerel Supabase'e bağlı web önizlemesi (`npm run web:local`, sentetik demo kullanıcısı); karar 0017.
 
 ### Değişti
+- Kaydırıcı (ağrı / sertlik, RPE) Gesture Handler'a taşındı: yatay sürükleme kaydırıcıyı, dikey hareket sayfayı kaydırır; kaydırıcı sürüklenirken form kaymaz. Kök düzende `GestureHandlerRootView`, formlarda `FormScroll`.
 - C maketi: açık temada soluk metin ve durum renginin yazı/ikon kullanımı WCAG 4,5:1'e göre koyulaştırıldı; koyu temada soluk metin açıldı.
