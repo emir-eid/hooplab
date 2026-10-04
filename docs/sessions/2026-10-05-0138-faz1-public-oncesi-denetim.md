@@ -46,10 +46,30 @@ STATE'teki 3. iş, ROADMAP Faz 1 maddesi: repo public olmadan önce herkese aç�
   - private kişisel repoda secret scanning yok (422);
   - public olacak repoda dosya dışında yayımlanan şeyler de var (mesajlar, yazar satırı, Actions logları), bekçi bunların bir kısmını artık tarıyor.
 
+## Blok 2 — README'ye demo ekran görüntüleri (01:55)
+
+### Amaç
+Repo public olmadan önce README'yi vitrin haline getirmek. Görüntüler yalnız sentetik demo verisinden (CLAUDE.md §2, [0022](../decisions/0022-demo-modu.md)).
+
+### Yapılanlar
+- Çalışan Metro'ya (8081, bu projenin `expo start`'ı) bağlanıldı; demo modu tarayıcı panelinde 390×844'te açılıp ekranlar seçildi.
+- [tools/dev/demo-screenshots.mjs](../../tools/dev/demo-screenshots.mjs), `npm run screenshots`: başsız Chrome'u DevTools protokolüyle sürer. Adımlar: demoyu açar, Hazır / Toparlan durumlarını seçer, Gece verisi'ne kayar, Vücut'ta 1 haftayı seçer. Her ekranı 390×844, 2x, açık ve koyu temada WebP olarak yazar.
+- 8 görüntü [docs/gorseller/](../gorseller/) içinde, tanesi 34-73 KB. Görüntüler okunarak gözle kontrol edildi. İlk çekimdeki iki sorun düzeltildi: Gece verisi kaydırması ve Vücut'un kayık açılıp 1 günde boş kalması. Betik ikinci kez çalıştırıldığında dosya boyutları aynı çıktı (tekrarlanabilir).
+- [README](../../README.md): dört görüntü yan yana, `<picture>` ile açık / koyu temaya göre değişiyor; altında "sentetik sporcu verisi" notu. README GitHub markdown API'siyle HTML'e çevrilip başsız Chrome'da iki temada görüntülendi; düzen doğru.
+- [apps/mobile/README](../../apps/mobile/README.md) ve [CHANGELOG](../CHANGELOG.md) güncellendi. `npm run check` yeşil.
+
+### Kararlar
+- yok
+
+### Sorunlar ve hatalar
+- Betiğin ikinci denemesinde Chrome açılmadı. Sebep: profil klasörü göreli yolla verilmişti. Repodaki betik mutlak geçici klasör kullanıyor (kodda not var).
+
+### Öğrenilenler
+- yok (göreli profil yolu betikte yorum olarak duruyor; tekrar yaşanma yolu kapalı)
+
 ## Açık kalanlar
 - Repo public: kullanıcı onayıyla; adımlar [denetim raporunda](../audits/2026-10-05-public-oncesi.md) "Public anında".
 - Takip (2026-10-08 / 10 civarı): kişisel bant ve OAuth yenileme token'ının 7. gün düşüşü (STATE sıradaki işler 1).
-- İsteğe bağlı: README'ye demo modundan sentetik ekran görüntüleri.
 
 ## Sıradaki adım
 - STATE sıradaki işler 1: takip (2026-10-08 / 10 civarı). Bugün yapılabilecek olan: Apple Developer Programı, EAS Build, TestFlight veya repoyu public yapmak.

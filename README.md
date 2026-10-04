@@ -6,6 +6,14 @@ Profesyonel bir basketbolcunun kendi antrenmanı için geliştirdiği iPhone uyg
 
 > Durum: **Faz 1 (temel uygulama) sürüyor.** Canlı durum: [docs/STATE.md](docs/STATE.md) · Ürün tanımı: [docs/PRODUCT.md](docs/PRODUCT.md) · Yol haritası: [docs/ROADMAP.md](docs/ROADMAP.md)
 
+<p align="center">
+  <picture><source media="(prefers-color-scheme: dark)" srcset="docs/gorseller/bugun-hazir-dark.webp"><img src="docs/gorseller/bugun-hazir-light.webp" alt="Bugün ekranı: günün durumu Hazır" width="200"></picture>
+  <picture><source media="(prefers-color-scheme: dark)" srcset="docs/gorseller/bugun-toparlan-dark.webp"><img src="docs/gorseller/bugun-toparlan-light.webp" alt="Bugün ekranı: günün durumu Toparlan, nedenleri ve öneri" width="200"></picture>
+  <picture><source media="(prefers-color-scheme: dark)" srcset="docs/gorseller/gece-verisi-dark.webp"><img src="docs/gorseller/gece-verisi-light.webp" alt="Gece verisi: HRV grafiği kişisel bantla, dinlenik nabız, uyku, solunum" width="200"></picture>
+  <picture><source media="(prefers-color-scheme: dark)" srcset="docs/gorseller/vucut-dark.webp"><img src="docs/gorseller/vucut-light.webp" alt="Vücut: 3D mankende son bir haftanın ağrı haritası" width="200"></picture>
+</p>
+<p align="center"><sub>Demo modu, sentetik sporcu verisi. Soldan: günün durumu Hazır ve Toparlan, gece verisi, haftalık ağrı haritası.</sub></p>
+
 ## Neden
 
 Giyilebilir cihazların yorumları ortalama bir kullanıcıya göre ayarlı. Profesyonel bir sporcunun değerleri bu çerçevede yanlış okunur. Çok düşük dinlenik nabız, yüksek haftalık yük ve uzun toparlanma ihtiyacı buna örnektir. Cihaz bazı şeyleri hiç ölçemez: seansın ne kadar zorladığı, hangi kasın ağrıdığı, maç takvimi. HoopLab bu boşluğu doldurmayı hedefliyor. Uygulama sporcunun kendi geçmişine bakar, eksik bilgiyi kısa girdilerle sporcudan alır ve her yorumu bir bilimsel kaynağa bağlar.

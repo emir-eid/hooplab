@@ -33,6 +33,7 @@ Uygulamaya veya altyapıya görünür değişiklikler. Biçim: [Keep a Changelog
 - Toparlanma: Bugün'de günün durumu (Hazır / Kontrollü / Toparlan / Bant oluşuyor), durum renginde hale (`<Aura>`), gerekçe, çipler ve tek öneri; Gece verisi bölümünde derin uyku HRV'sinin 7 günlük ortalaması ve kişisel bandıyla 21 günlük grafik (dokunarak veya sürükleyerek gün seçme), dinlenik nabız, uyku, son gece HRV ve solunum kartları; **Nasıl hesaplanıyor?** ekranı. Hesap `packages/engine` (`recovery.ts`), kural `research/rules/toparlanma.json`, 8 yeni doğrulanmış kaynak; karar 0021.
 - Demo modu: giriş ekranında **Demoyu aç** ve Ben → **Demo sporcuyu göster**; sentetik sporcu cihazda üretilir, hiçbir sunucuya bağlanılmaz; Bugün'de Hazır / Kontrollü / Toparlan seçici; demoda girilen kayıtlar bellekte; Ben → **Demodan çık**. Karar 0022.
 - `LICENSE` (MIT) ve README'nin yeni hali: ne yaptığı, ilkeler, nasıl geliştirildiği, gizlilik, demo ile hızlı deneme; başta kısa İngilizce özet.
+- README'de demo modundan ekran görüntüleri (Bugün: Hazır ve Toparlan, gece verisi, Vücut; açık ve koyu tema, `docs/gorseller/`). Yeniden üretmek için `npm run screenshots` (`tools/dev/demo-screenshots.mjs`, başsız Chrome).
 - Gizlilik bekçisi commit mesajlarını da tarıyor: `--history` her commit ve etiket mesajını ve yazar satırını tarar; yeni `--message` modu ve `.githooks/commit-msg` yazılan mesajı commit'ten önce durdurur (negatif testli).
 
 ### Değişti

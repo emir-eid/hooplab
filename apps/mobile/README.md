@@ -10,7 +10,7 @@ Kök klasörden (`npm install` bir kez):
 npm run mobile
 ```
 
-Terminalde çıkan QR kodu iPhone kamerasıyla okut; Expo Go'da açılır. iPhone ve bilgisayar aynı Wi-Fi'da olmalı. Web önizlemesi: `npm run web -w @hooplab/mobile` (Claude Code'da `.claude/launch.json` → `mobil-web`). Görsel doğrulama ve ekran görüntüsü için yerel Supabase'e bağlı önizleme: `npm run db:start`, `npm run db:reset`, `npm run web:local` (port 8082, `mobil-web-yerel`); giriş `supabase/seed.sql`'deki sentetik demo kullanıcısıyla, gerçek hesaba girilmez.
+Terminalde çıkan QR kodu iPhone kamerasıyla okut; Expo Go'da açılır. iPhone ve bilgisayar aynı Wi-Fi'da olmalı. Web önizlemesi: `npm run web -w @hooplab/mobile` (Claude Code'da `.claude/launch.json` → `mobil-web`). Görsel doğrulama ve ekran görüntüsü için yerel Supabase'e bağlı önizleme: `npm run db:start`, `npm run db:reset`, `npm run web:local` (port 8082, `mobil-web-yerel`); giriş `supabase/seed.sql`'deki sentetik demo kullanıcısıyla, gerçek hesaba girilmez. README ekran görüntüleri: web önizlemesi açıkken `npm run screenshots` (demo modu, başsız Chrome, açık ve koyu tema → `docs/gorseller/`).
 
 ## Düzen
 

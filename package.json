@@ -22,6 +22,7 @@
     "test:apps": "node --test \"apps/mobile/src/**/*.test.ts\"",
     "mobile": "npm run start -w @hooplab/mobile",
     "web:local": "node tools/dev/web-local.mjs",
+    "screenshots": "node tools/dev/demo-screenshots.mjs",
     "db:start": "supabase start -x studio,imgproxy,realtime,storage-api,edge-runtime,logflare,vector,supavisor,mailpit,postgres-meta",
     "db:stop": "supabase stop",
     "db:reset": "supabase db reset",
