@@ -89,3 +89,13 @@ Proje kullanıcının kendi Supabase hesabındadır (0009). Bu makinede bir kez:
 3. Yerel test için Docker Desktop açık olmalı: `npm run db:start`, `npm run test:db`, `npm run db:stop`.
 
 Yeni projede panodan: kullanıcıyı ekle (**Auto Confirm User**), **Allow new users to sign up** kapalı. Ayrıntı: [0015](decisions/0015-veritabani-tek-sahip-rls.md).
+
+### Google Health senkronu ([0019](decisions/0019-google-health-senkronu.md))
+
+Bulutta bir kez (Claude yürütür): Supabase secrets `GOOGLE_HEALTH_CLIENT_ID`, `GOOGLE_HEALTH_CLIENT_SECRET` (Web istemcisinin JSON'undan, değer ekrana basılmadan), `GHEALTH_CRON_SECRET` (rastgele); Vault'ta `project_url` ve aynı `ghealth_cron_secret`; `npx supabase functions deploy ghealth-connect ghealth-callback ghealth-sync`. Web istemcisinin kurulumu: [rehber](guides/google-health-baglantisi.md) §4.
+
+Yerel uçtan uca deneme (sentetik, gerçek Google'a gidilmez):
+
+1. `node tools/dev/fake-google-health.ts` (sahte Google, port 54399).
+2. `supabase/functions/.env` (gitignore'lu): istemci değerleri sahte, `GHEALTH_REDIRECT_URI=http://127.0.0.1:54321/functions/v1/ghealth-callback`, `GHEALTH_AUTH_URL=http://127.0.0.1:54399/auth`, `GHEALTH_TOKEN_URL` / `GHEALTH_REVOKE_URL` / `GHEALTH_API_BASE` `http://host.docker.internal:54399/...`, `GHEALTH_CRON_SECRET`.
+3. `npx supabase functions serve --env-file supabase/functions/.env`, sonra `npm run web:local` ile Ben → Google Health. `npm run db:reset` yerel senkron verisini siler.

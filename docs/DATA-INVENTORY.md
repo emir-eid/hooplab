@@ -6,7 +6,8 @@ Hangi veri nerede durur, hangi servise ne gider, ne kadar saklanır, nasıl sili
 
 | Veri | Kaynak | Nerede saklanır | Kim / ne erişir |
 |---|---|---|---|
-| Cihaz verisi: HRV, uyku, nabız, SpO2, solunum, egzersiz | Fitbit Air → Google Health | Google (kaynak); Faz 0 dışa aktarımları `private/data`; Faz 1+ Supabase (Frankfurt) | Sahibi; senkron Edge Function'ı |
+| Cihaz verisi: günlük HRV, dinlenik nabız, SpO2, solunum, gece cilt sıcaklığı, günlük nabız özeti (en düşük / ortalama / en yüksek), adım, mesafe, kalori, aktif bölge dakikası; uyku ve egzersiz oturumları | Fitbit Air → Google Health API v4 | Google (kaynak); Faz 0 dışa aktarımları `private/data`; Supabase `health_daily`, `sleep_sessions`, `exercise_sessions` (2026-10-04'ten beri, [0019](decisions/0019-google-health-senkronu.md)). **Saklanmayanlar:** gün içi ham nabız (hiç çekilmez), uyku evre zaman çizelgesi, egzersiz notları, `swim-lengths-data`, iPhone adımı | Sahibi yalnız okur (RLS); yazan yalnız senkron Edge Function'ı (`service_role`) |
+| Google Health bağlantı durumu: bağlı mı, son senkron, veri aralığı, saat dilimi, kısa hata kodu | Senkron | Supabase `health_sync_status` | Sahibi okur; senkron yazar |
 | Kullanıcı girdileri: check-in, seans, ağrı haritası, kilo, beslenme, sıvı | Uygulama | Supabase (`training_sessions`, `daily_checkins`, `pain_reports` 2026-10-04'ten beri; diğerleri geldikçe) | Sahibi (RLS ile yalnız kendi satırları, [0015](decisions/0015-veritabani-tek-sahip-rls.md)) |
 | Giriş hesabı: e-posta, şifre özeti | Supabase panosu (bir kez) | Supabase Auth (`auth.users`) | Sahibi; yeni kayıt kapalı |
 | Oturum: erişim ve yenileme token'ı, kullanıcı kimliği ve e-postası | Supabase Auth | iPhone Keychain (`expo-secure-store`, parçalı); web önizlemesinde tarayıcının localStorage'ı | Yalnız uygulama |
@@ -17,6 +18,7 @@ Hangi veri nerede durur, hangi servise ne gider, ne kadar saklanır, nasıl sili
 | Kişisel notlar | `/kapat` | `private/journal` + Drive yedeği | Sahibi |
 | Claude Code oturum dökümleri | Hook'lar | `private/transcripts` + Drive yedeği | Sahibi |
 | Google OAuth istemci sırrı ve token'ları (Faz 0) | `ghealth` setup | `private/ghealth` + Drive yedeği | `ghealth` CLI |
+| Google OAuth Web istemcisi sırrı, yenileme token'ı, OAuth durumu (tek kullanımlık, 15 dk) | Kullanıcının Google Cloud projesi; izin ekranı | Supabase secrets; `google_health_tokens`, `google_health_oauth_states` (yalnız `service_role`) | Yalnız Edge Functions; uygulama ve kullanıcı oturumu okuyamaz |
 | Kişisel denylist | Sahibi | `private/guard-denylist.txt` + Drive yedeği + GitHub Actions secret | Gizlilik bekçisi (değerleri hiçbir yere yazdırmaz) |
 | Görünüm tercihi: tema (Sistem / Açık / Koyu), haleyi canlandır | Uygulama | Cihazda AsyncStorage (`hooplab.appearance.v1`); web önizlemesinde tarayıcının localStorage'ı | Yalnız uygulama; hiçbir servise gitmez |
 | Kod, belgeler, sentetik demo verisi | Geliştirme | GitHub (ileride public) | Herkes |
@@ -25,7 +27,7 @@ Hangi veri nerede durur, hangi servise ne gider, ne kadar saklanır, nasıl sili
 
 | Servis | Ne gider | Ne gitmez |
 |---|---|---|
-| Google (Health API) | OAuth ile salt okuma istekleri (sahibinin kendi Google Cloud projesi, [0009](decisions/0009-herkes-kendi-hesabiyla.md)) | Uygulama girdileri |
+| Google (Health API, OAuth) | Edge Functions'tan salt okuma istekleri (4 kapsam: aktivite, sağlık ölçümleri, uyku, ayarlar); token yenileme ve iptal (sahibinin kendi Google Cloud projesi, [0009](decisions/0009-herkes-kendi-hesabiyla.md), [0019](decisions/0019-google-health-senkronu.md)) | Uygulama girdileri, Supabase verisi |
 | Supabase (Frankfurt) | Uygulamanın tüm verisi | — |
 | Anthropic API (Faz 3) | Hesaplanmış özet sayılar, ilgili kanıt metinleri, kullanıcının sorusu | Ad, e-posta, doğum tarihi, kimlik bilgileri, ham zaman serileri |
 | GitHub | Kod ve belgeler; denylist (şifreli secret olarak) | Sağlık verisi, `private` klasörü |
@@ -44,6 +46,7 @@ Son satıra dikkat: geliştirme sırasında sohbete yazılan veya Claude'a okutu
 | Veri | Saklama | Silme |
 |---|---|---|
 | Supabase verileri | Sahibi silene kadar | Uygulamadan veya Supabase panosundan; tüm hesabın silinmesi projeyi siler |
+| Google bağlantısı | Bağlantı kesilene veya izin düşene kadar | Ben → Google Health → Bağlantıyı kes: token Google'da iptal edilir ve silinir; gelmiş cihaz verisi kalır (panodan silinir). Düşen token (7. gün) kendiliğinden silinir |
 | Google'daki kaynak veri | Google'ın politikası | Google Health / Google hesabı ayarlarından |
 | `private` klasörü ve Drive yedeği | Süresiz | Elle. Yedek eklemelidir: kaynakta silinen dosya yedekte kalır, ayrıca Drive'dan silinmelidir |
 | GitHub secret `GUARD_DENYLIST` | Süresiz | Repo ayarları → Secrets |

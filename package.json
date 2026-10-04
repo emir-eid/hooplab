@@ -15,8 +15,8 @@
     "backup": "node tools/backup/backup-private.mjs",
     "research:check": "node tools/research/validate-sources.mjs",
     "research:check:online": "node tools/research/validate-sources.mjs --online",
-    "check": "npm run test:tools && npm run typecheck && npm run test:packages && npm run test:apps && npm run guard:all && npm run guard:history && npm run research:check",
-    "typecheck": "tsc -p packages/theme && tsc -p packages/theme/tsconfig.test.json && tsc -p packages/engine && tsc -p packages/engine/tsconfig.test.json && tsc -p apps/mobile && tsc -p apps/mobile/tsconfig.test.json",
+    "check": "npm run test:tools && npm run typecheck && npm run test:packages && npm run test:apps && npm run test:functions && npm run guard:all && npm run guard:history && npm run research:check",
+    "typecheck": "tsc -p packages/theme && tsc -p packages/theme/tsconfig.test.json && tsc -p packages/engine && tsc -p packages/engine/tsconfig.test.json && tsc -p apps/mobile && tsc -p apps/mobile/tsconfig.test.json && tsc -p supabase/functions && tsc -p supabase/functions/tsconfig.test.json",
     "test:packages": "node --test \"packages/**/*.test.ts\"",
     "test:apps": "node --test \"apps/mobile/src/**/*.test.ts\"",
     "mobile": "npm run start -w @hooplab/mobile",
@@ -24,13 +24,15 @@
     "db:start": "supabase start -x studio,imgproxy,realtime,storage-api,edge-runtime,logflare,vector,supavisor,mailpit,postgres-meta",
     "db:stop": "supabase stop",
     "db:reset": "supabase db reset",
-    "test:db": "supabase test db"
+    "test:db": "supabase test db",
+    "test:functions": "node --test \"supabase/functions/tests/**/*.test.ts\""
   },
   "workspaces": [
     "packages/*",
     "apps/*"
   ],
   "devDependencies": {
+    "@supabase/server": "1.9.0",
     "@types/node": "~24.19.1",
     "supabase": "2.119.0",
     "typescript": "~6.0.3"

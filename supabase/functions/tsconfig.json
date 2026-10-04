@@ -1,0 +1,25 @@
+{
+  // Edge Functions (Deno) için tip denetimi; Deno bu makinede yok. `npm:` adresleri repodaki aynı
+  // sürüm paketlere eşlenir, Deno globalleri _shared/runtime.d.ts'te. Testler tsconfig.test.json ile.
+  "compilerOptions": {
+    "target": "ES2022",
+    "lib": ["ES2022", "DOM", "DOM.Iterable"],
+    "module": "ESNext",
+    "moduleResolution": "bundler",
+    "types": [],
+    "strict": true,
+    "noUncheckedIndexedAccess": true,
+    "exactOptionalPropertyTypes": true,
+    "noImplicitOverride": true,
+    "verbatimModuleSyntax": true,
+    "erasableSyntaxOnly": true,
+    "allowImportingTsExtensions": true,
+    "noEmit": true,
+    "skipLibCheck": true,
+    "paths": {
+      "npm:@supabase/server@1.9.0": ["../../node_modules/@supabase/server"],
+      "npm:@supabase/supabase-js@2.117.2": ["../../node_modules/@supabase/supabase-js"]
+    }
+  },
+  "include": ["_shared", "ghealth-connect", "ghealth-callback", "ghealth-sync"]
+}

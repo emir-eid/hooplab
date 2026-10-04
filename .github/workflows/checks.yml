@@ -40,6 +40,9 @@ jobs:
       - name: Uygulama testleri (apps/mobile saf fonksiyonları)
         run: npm run test:apps
 
+      - name: Edge Function testleri
+        run: npm run test:functions
+
       # Kişisel denylist GitHub secret'ından gelir (GUARD_DENYLIST). Yoksa bu kural atlanır ve
       # çıktıda "kişisel denylist yok (atlandı)" yazar. Bekçi değerleri asla yazdırmaz.
       - name: Gizlilik taraması (tüm repo)

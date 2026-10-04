@@ -30,7 +30,26 @@ Google'ın dokümanı yeni projeleri kabul etmediğini söylese de 2026-10-03'te
 3. **Audience → Test users**: kendi Google hesabını ekle.
 4. Uygulamayı **yayımlama**, "Testing" durumunda kalsın. Sonucu: yenileme token'ı 7 günde düşer, haftada bir yeniden bağlanırsın ([Google OAuth belgesi](https://developers.google.com/identity/protocols/oauth2#expiration)).
 
-## 4. OAuth istemcisi
+## 4. OAuth istemcileri
+
+İki istemci açılır: uygulamanın senkronu için **Web application** (zorunlu) ve `ghealth` CLI ile deneme için **Desktop app** (isteğe bağlı, §5).
+
+### 4a. Uygulama için Web istemcisi (zorunlu)
+
+Uygulama izin ekranını telefonda açar; Google seni kendi Supabase projendeki `ghealth-callback` fonksiyonuna geri gönderir ([karar 0019](../decisions/0019-google-health-senkronu.md)). Desktop istemcisi yalnız `127.0.0.1`'e dönebildiği için bu iş için kullanılamaz.
+
+1. **Clients → Create client**.
+2. Application type: **Web application**. Ad serbest (ör. `HoopLab sunucu`).
+3. **Authorized JavaScript origins**: boş bırak.
+4. **Authorized redirect URIs → Add URI**: Supabase proje adresin + `/functions/v1/ghealth-callback`. Örnek biçim: `https://<proje-kimligin>.supabase.co/functions/v1/ghealth-callback`. Proje adresi Supabase panosunda **Project Settings → Data API** sayfasında yazar. Sonda `/` olmamalı, harfi harfine aynı olmalı.
+5. "AI-powered agent" kutusunu **işaretleme**.
+6. **Create** → **Download JSON**. Dosyayı repo dışındaki gizli klasöre koy (ör. `private/ghealth/web_client_secret.json`). Repoya, sohbete veya paylaşılan bir klasöre koyma.
+7. İstemci kimliği ve sırrı Supabase secrets'a yazılır (`GOOGLE_HEALTH_CLIENT_ID`, `GOOGLE_HEALTH_CLIENT_SECRET`; [SETUP](../SETUP.md) §9).
+8. Uygulamada **Ben → Google Health → Google Health'e bağlan**. İzin ekranında "Google hasn't verified this app" uyarısında **Advanced → Go to <uygulama adı>**, sonra istenen dört iznin hepsini onayla.
+
+Uygulama "Testing" durumunda kaldığı için izin 7 günde düşer; o ekranda **Yeniden bağlan** görünür.
+
+### 4b. Deneme için Desktop istemcisi (isteğe bağlı)
 
 1. **Clients → Create client** (veya Credentials → Create credentials → OAuth client ID).
 2. Application type: **Desktop app**. Ad serbest.
