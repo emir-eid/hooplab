@@ -45,7 +45,7 @@ Her faz, bitiş kriteri karşılanınca `/kapat` ile kapanır: faz özeti `docs/
 - [x] Demo modu (sentetik "demo sporcu") (2026-10-05, [0022](decisions/0022-demo-modu.md); uygulama içi, çevrimdışı; Hazır / Kontrollü / Toparlan seçici)
 - [ ] Apple Developer Programı, EAS Build, TestFlight
 - [x] Public'e geçiş öncesi denetim: `npm run guard:history` temiz (denylist dosyası ve secret ile), README hikayesi, LICENSE (MIT) (2026-10-05, [denetim raporu](audits/2026-10-05-public-oncesi.md)). Secret scanning + push protection private kişisel repoda açılamıyor (422), "Repo public" maddesine taşındı
-- [ ] Repo public: görünürlüğü değiştirmeden hemen önce geçmiş taraması yeniden koşulur ([0008](decisions/0008-gizlilik-altyapisi-eklemeleri.md)); değiştirdikten hemen sonra secret scanning + push protection açılır ([denetim raporu](audits/2026-10-05-public-oncesi.md) "Public anında")
+- [x] Repo public (2026-10-05 01:57): son geçmiş ve log taraması temiz; görünürlük değişti; secret scanning + push protection açık (ilk taramada uyarı 0); Wiki ve Projects kapatıldı ([denetim raporu](audits/2026-10-05-public-oncesi.md))
 
 **Bitiş kriteri:** Uygulama iPhone'da TestFlight'tan kurulu, gerçek veriyle her gün kullanılabiliyor; repo public ve temiz.
 

@@ -47,6 +47,15 @@ Elle yapılan denetim (ROADMAP Faz 1, [0005](../decisions/0005-repo-ve-gizlilik-
 5. Kullanıcı (yalnız konsoldan, isteğe bağlı): GitHub → Settings → Code security → **Push protection for yourself**.
 6. Repo sayfası tarayıcıda açılıp README'nin ve bağlantıların düzgün göründüğü kontrol edilir.
 
+## Sonuç: public yapıldı (2026-10-05 01:57, kullanıcı onayıyla)
+
+1. Son tarama: geçmiş taraması (928 girdi, mesajlar dahil) ve 34 Actions logu temiz; CI yeşil; çalışma kopyası temiz ve push'lanmış.
+2. `gh repo edit --visibility public` → `PUBLIC`.
+3. Secret scanning ve push protection `enabled` (API ile doğrulandı); ilk taramadan sonra uyarı sayısı 0.
+4. Wiki ve Projects kapatıldı. Dependabot uyarıları açılmadı (bildirim e-postası doğurur; kullanıcı kararı).
+5. Kullanıcıya kalan (isteğe bağlı): GitHub → Settings → Code security → Push protection for yourself.
+6. Repo sayfası giriş yapmadan erişilebilir (200). README, dört görüntü ve LICENSE GitHub'da tarayıcıda doğrulandı.
+
 ## /ac'de konuşulacaklar
 
 - Repo'yu public yapma kararı ve zamanı. Bu denetimden sonra teknik engel yok.

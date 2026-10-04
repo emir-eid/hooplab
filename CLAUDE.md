@@ -33,7 +33,7 @@ Kapsamla ilgili bir işe (yeni ekran, modül, girdi) başlamadan önce PRODUCT.m
 
 ## 2. Gizlilik — kırmızı çizgiler
 
-Repo ileride **public** olacak. Bu yüzden:
+Repo **public** (2026-10-05'ten beri; secret scanning ve push protection açık). Bu yüzden:
 
 - **Sağlık verisi, kişisel bilgi** (boy, kilo, yaş/doğum tarihi, sakatlık geçmişi, e-posta, telefon) ve **sırlar** repoya hiçbir dosyada girmez: kod, belge, test, oturum raporu, commit mesajı dahil.
 - Ham veri dışa aktarımları `../private/data/` klasörüne, kişisel gözlemler `../private/journal/` klasörüne yazılır. Bu klasör repo dışındadır.

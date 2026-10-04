@@ -46,7 +46,7 @@ STATE'teki 3. iş, ROADMAP Faz 1 maddesi: repo public olmadan önce herkese aç�
   - private kişisel repoda secret scanning yok (422);
   - public olacak repoda dosya dışında yayımlanan şeyler de var (mesajlar, yazar satırı, Actions logları), bekçi bunların bir kısmını artık tarıyor.
 
-## Blok 2 — README'ye demo ekran görüntüleri (01:55)
+## Blok 2 — README'ye demo ekran görüntüleri (01:54)
 
 ### Amaç
 Repo public olmadan önce README'yi vitrin haline getirmek. Görüntüler yalnız sentetik demo verisinden (CLAUDE.md §2, [0022](../decisions/0022-demo-modu.md)).
@@ -67,9 +67,41 @@ Repo public olmadan önce README'yi vitrin haline getirmek. Görüntüler yalnı
 ### Öğrenilenler
 - yok (göreli profil yolu betikte yorum olarak duruyor; tekrar yaşanma yolu kapalı)
 
+## Blok 3 — Repo public (01:59)
+
+### Amaç
+STATE'teki 3. iş: [denetim raporundaki](../audits/2026-10-05-public-oncesi.md) "Public anında" listesiyle repoyu public yapmak. Onay kullanıcıdan geldi: "önce 1, sonra 2'yi art arda yap" (CLAUDE.md §7, herkese açık yayın).
+
+### Yapılanlar
+- **Önce:**
+  - CI'ın iki yeni çalışmasının bitmesi beklendi (yeşil).
+  - 34 Actions logu indirilip bekçi kurallarıyla tarandı; temiz, loglar silindi.
+  - Geçmiş taraması (928 girdi) push öncesinde temizdi; çalışma kopyası temiz ve push'lanmış.
+  - Hesap doğrulandı: `gh auth status`, `emir-eid`.
+- **Görünürlük:** `gh repo edit emir-eid/hooplab --visibility public --accept-visibility-change-consequences` → `PUBLIC`.
+- **Hemen sonra:**
+  - Secret scanning ve push protection API ile açıldı, `security_and_analysis` ile doğrulandı.
+  - 30 sn sonra secret scanning uyarısı 0.
+  - Wiki ve Projects kapatıldı (kullanılmıyor).
+- **Doğrulama:** repo sayfası ve ham görsel giriş yapmadan 200 döndü. GitHub sayfası tarayıcı panelinde açıldı: README, 4 görüntü yüklendi (`naturalWidth > 0`), "MIT license" sekmesi var.
+- **Belgeler:**
+  - [ROADMAP](../ROADMAP.md) maddesi kapandı.
+  - CLAUDE.md §2 "public olacak" → "public".
+  - [STATE](../STATE.md)'te sıradaki iş 3 kurulum sihirbazı oldu.
+  - Denetim raporuna "Sonuç" bölümü eklendi.
+
+### Kararlar
+- Dependabot uyarıları açılmadı: bildirim e-postası doğurur, kullanıcının kararı.
+
+### Sorunlar ve hatalar
+- yok
+
+### Öğrenilenler
+- yok
+
 ## Açık kalanlar
-- Repo public: kullanıcı onayıyla; adımlar [denetim raporunda](../audits/2026-10-05-public-oncesi.md) "Public anında".
+- İsteğe bağlı, kullanıcı (konsol): GitHub → Settings → Code security → Push protection for yourself. Dependabot uyarılarını açmak isteğe bağlı.
 - Takip (2026-10-08 / 10 civarı): kişisel bant ve OAuth yenileme token'ının 7. gün düşüşü (STATE sıradaki işler 1).
 
 ## Sıradaki adım
-- STATE sıradaki işler 1: takip (2026-10-08 / 10 civarı). Bugün yapılabilecek olan: Apple Developer Programı, EAS Build, TestFlight veya repoyu public yapmak.
+- STATE sıradaki işler 1: takip (2026-10-08 / 10 civarı).
