@@ -1,4 +1,5 @@
-// Bugün: sabah check-in çağrısı veya özeti, bugünün seansları. Günün durumu Google Health senkronuyla gelecek.
+// Bugün: sabah check-in çağrısı veya özeti, saatten gelen ve etiket bekleyen oturumlar (karar 0020), bugünün seansları.
+// Günün durumu Google Health verisiyle gelecek.
 
 import { sessionLoad, wellnessTotal, wellnessTotalRange } from '@hooplab/engine';
 import { layout, radius, size, spacing } from '@hooplab/theme';
@@ -8,19 +9,28 @@ import { Pressable, StyleSheet, View } from 'react-native';
 
 import { Card } from '@/components/card';
 import { ComingSoon } from '@/components/coming-soon';
-import { GroupLabel } from '@/components/list';
+import { GroupLabel, ListGroup, ListRow } from '@/components/list';
 import { PageHeader } from '@/components/page-header';
 import { Screen } from '@/components/screen';
 import { Text } from '@/components/text';
 import { sessionKindLabels } from '@/copy/labels';
-import { fetchCheckin, fetchSessions, type Checkin, type TrainingSession } from '@/data/daily-log';
+import {
+  fetchCheckin,
+  fetchPendingExercises,
+  fetchSessions,
+  type Checkin,
+  type TrainingSession,
+} from '@/data/daily-log';
+import { exerciseSummary, type ExerciseSession } from '@/data/exercise-tagging';
 import { usePalette } from '@/theme/appearance';
 import { formatDayHeader } from '@/utils/format-date';
-import { toLocalDate } from '@/utils/local-date';
+import { addDays, toLocalDate } from '@/utils/local-date';
 
 interface TodayLog {
   checkin: Checkin | null;
   sessions: TrainingSession[];
+  /** Bugün ve dün saatin kaydettiği, henüz etiketlenmemiş oturumlar (seans formunun gün sınırıyla aynı). */
+  pending: ExerciseSession[];
 }
 
 export default function TodayScreen() {
@@ -33,15 +43,18 @@ export default function TodayScreen() {
     useCallback(() => {
       let cancelled = false;
       const today = toLocalDate(new Date());
-      Promise.all([fetchCheckin(today), fetchSessions(today)]).then(([checkin, sessions]) => {
-        if (cancelled) return;
-        if (checkin.ok && sessions.ok) {
-          setLog({ checkin: checkin.value, sessions: sessions.value });
-          setError(null);
-        } else {
-          setError(!checkin.ok ? checkin.message : !sessions.ok ? sessions.message : null);
-        }
-      });
+      const yesterday = toLocalDate(addDays(new Date(), -1));
+      Promise.all([fetchCheckin(today), fetchSessions(today), fetchPendingExercises(yesterday, today)]).then(
+        ([checkin, sessions, pending]) => {
+          if (cancelled) return;
+          if (checkin.ok && sessions.ok && pending.ok) {
+            setLog({ checkin: checkin.value, sessions: sessions.value, pending: pending.value });
+            setError(null);
+          } else {
+            setError(!checkin.ok ? checkin.message : !sessions.ok ? sessions.message : !pending.ok ? pending.message : null);
+          }
+        },
+      );
       return () => {
         cancelled = true;
       };
@@ -49,6 +62,8 @@ export default function TodayScreen() {
   );
 
   const total = log?.checkin ? wellnessTotal(log.checkin.answers) : null;
+  const today = toLocalDate(new Date());
+  const yesterday = toLocalDate(addDays(new Date(), -1));
 
   return (
     <Screen>
@@ -102,6 +117,23 @@ export default function TodayScreen() {
         </Text>
       ) : null}
 
+      {log && log.pending.length > 0 ? (
+        <ListGroup label="Saatten gelenler" footer="Saat zamanı ve süreyi kaydetti. Türünü ve zorluğunu sen ver; yük hesabına öyle girer.">
+          {log.pending.map((e) => {
+            const summary = exerciseSummary(e, today, yesterday);
+            return (
+              <ListRow
+                key={e.id}
+                label={summary.title}
+                detail={summary.detail}
+                value="Etiketle"
+                onPress={() => router.push({ pathname: '/session-new', params: { exercise: e.id } })}
+              />
+            );
+          })}
+        </ListGroup>
+      ) : null}
+
       {log && log.sessions.length > 0 ? (
         <>
           <GroupLabel>Bugünün seansları</GroupLabel>
@@ -111,7 +143,7 @@ export default function TodayScreen() {
                 <View style={styles.rowText}>
                   <Text variant="rowLabel">{sessionKindLabels[s.kind]}</Text>
                   <Text variant="caption" tone="inkMuted">
-                    {`${s.durationMin} dk · RPE ${s.rpe}${s.minutesPlayed !== null ? ` · ${s.minutesPlayed} dk oynadı` : ''}`}
+                    {`${s.durationMin} dk · RPE ${s.rpe}${s.minutesPlayed !== null ? ` · ${s.minutesPlayed} dk oynadı` : ''}${s.exerciseSessionId ? ' · saatle eşleşti' : ''}`}
                   </Text>
                 </View>
                 <Text variant="callout">{`${sessionLoad(s.rpe, s.durationMin) ?? '–'} AU`}</Text>

@@ -52,3 +52,4 @@ Hangisi seçildi ve tek paragrafta neden.
 | [0017](0017-sabah-check-in-olcegi.md) | Sabah check-in: beş madde 1-5 (5 = en iyi), ağrı haritası sol / sağ, NRS 0-10 | Kabul edildi |
 | [0018](0018-vucut-gorunumu.md) | Vücut görünümü: stilize 3D manken (three.js + expo-gl), ağrı haritası, aşamalı bölge raporu | Kabul edildi |
 | [0019](0019-google-health-senkronu.md) | Google Health senkronu: Web OAuth istemcisi + Edge Functions, günlük özetler (ham nabız yok), saatlik zamanlayıcı | Kabul edildi |
+| [0020](0020-seans-etiketleme.md) | Seans etiketleme: saat oturumu ile seans kaydı bire bir bağlanır, tür ve RPE kullanıcıdan, "Seans değil" | Kabul edildi |

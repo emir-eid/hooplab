@@ -57,6 +57,8 @@ export function ListGroup({ label, footer, children }: ListGroupProps) {
 
 interface ListRowProps {
   label: string;
+  /** Etiketin altındaki soluk ikinci satır (ör. saat ve süre). */
+  detail?: string;
   /** Sağdaki soluk değer (ör. seçili seçenek). */
   value?: string;
   /** Sağdaki kontrol (ör. Switch). Verilirse satır dokunulabilir olmaz. */
@@ -64,11 +66,20 @@ interface ListRowProps {
   onPress?: () => void;
 }
 
-export function ListRow({ label, value, accessory, onPress }: ListRowProps) {
+export function ListRow({ label, detail, value, accessory, onPress }: ListRowProps) {
   const palette = usePalette();
   const content = (
     <>
-      <Text variant="rowLabel">{label}</Text>
+      {detail ? (
+        <View style={styles.text}>
+          <Text variant="rowLabel">{label}</Text>
+          <Text variant="caption" tone="inkMuted">
+            {detail}
+          </Text>
+        </View>
+      ) : (
+        <Text variant="rowLabel">{label}</Text>
+      )}
       {/* Sarmalayıcı şart: RN iOS'ta Switch'e kendiliğinden alignSelf: 'flex-start' verir, satırın ortalamasını ezer. */}
       {accessory ? <View>{accessory}</View> : (
         <View style={styles.value}>
@@ -85,7 +96,8 @@ export function ListRow({ label, value, accessory, onPress }: ListRowProps) {
     <Pressable
       onPress={onPress}
       accessibilityRole="button"
-      accessibilityHint={value ? `Şu an: ${value}` : undefined}
+      accessibilityLabel={detail ? `${label}, ${detail}` : undefined}
+      accessibilityHint={value && !detail ? `Şu an: ${value}` : undefined}
       style={({ pressed }) => [styles.row, pressed && { backgroundColor: palette.cardMuted }]}>
       {content}
     </Pressable>
@@ -119,6 +131,7 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     gap: spacing[3],
   },
+  text: { flex: 1, gap: spacing[0.5], paddingVertical: spacing[2.5] },
   value: {
     flexDirection: 'row',
     alignItems: 'center',

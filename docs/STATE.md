@@ -3,11 +3,11 @@
 Tek doğruluk kaynağı. `/rep` her iş sonunda, `/kapat` her oturum sonunda günceller; `/ac` her oturum başında okur. 150 satırı geçince eski bölümler `docs/archive/` klasörüne taşınır.
 
 <!-- ozet:basla -->
-**Faz:** 1 sürüyor: iskelet ([0014](decisions/0014-uygulama-iskeleti.md)), Supabase + giriş ([0015](decisions/0015-veritabani-tek-sahip-rls.md)), sabah check-in + ağrı haritası ve seans kaydı ([0017](decisions/0017-sabah-check-in-olcegi.md)), **Vücut** sekmesi ([0018](decisions/0018-vucut-gorunumu.md)) iPhone'da doğrulandı. **Google Health senkronu** bulutta ve iPhone'da çalışıyor ([0019](decisions/0019-google-health-senkronu.md)): Ben → Google Health ile bağlan / yeniden bağlan; saatlik zamanlayıcı; günlük HRV, dinlenik nabız, SpO2, solunum, cilt sıcaklığı, nabız özeti (ham nabız yok), adım / mesafe / kalori / aktif dakika (bileklik kaynağı), uyku ve egzersiz oturumları. Hesap motoru `packages/engine`; ilk 10 kaynak ve 4 kural `research/`'te. Dış servis işlerini Claude yürütür ([0016](decisions/0016-dis-servisleri-claude-yurutur.md)). Tasarım: **C · Hale** ([0010](decisions/0010-tasarim-yonu-hale.md)), token'lar [packages/theme](../packages/theme/README.md).
-**Son oturum:** [2026-10-04 17:30 Faz 1: Google Health senkronu](sessions/2026-10-04-1730-faz1-google-health.md)
+**Faz:** 1 sürüyor: iskelet ([0014](decisions/0014-uygulama-iskeleti.md)), Supabase + giriş ([0015](decisions/0015-veritabani-tek-sahip-rls.md)), sabah check-in + ağrı haritası ve seans kaydı ([0017](decisions/0017-sabah-check-in-olcegi.md)), **Vücut** sekmesi ([0018](decisions/0018-vucut-gorunumu.md)) iPhone'da doğrulandı. **Google Health senkronu** bulutta ve iPhone'da çalışıyor ([0019](decisions/0019-google-health-senkronu.md)): Ben → Google Health ile bağlan / yeniden bağlan; saatlik zamanlayıcı; günlük HRV, dinlenik nabız, SpO2, solunum, cilt sıcaklığı, nabız özeti (ham nabız yok), adım / mesafe / kalori / aktif dakika (bileklik kaynağı), uyku ve egzersiz oturumları. **Seans etiketleme** ([0020](decisions/0020-seans-etiketleme.md)) bulutta ve iPhone'da: Bugün → Saatten gelenler (bugün ve dün), saat oturumu seans kaydına bağlanır, tür ve RPE kullanıcıdan, "Seans değil"; yeni tür Mobilite / yoga. Hesap motoru `packages/engine`; ilk 10 kaynak ve 4 kural `research/`'te. Dış servis işlerini Claude yürütür ([0016](decisions/0016-dis-servisleri-claude-yurutur.md)). Tasarım: **C · Hale** ([0010](decisions/0010-tasarim-yonu-hale.md)), token'lar [packages/theme](../packages/theme/README.md).
+**Son oturum:** [2026-10-04 23:46 Faz 1: seans etiketleme](sessions/2026-10-04-2346-faz1-seans-etiketleme.md) (açık, /rep)
 
 **Sıradaki işler (sıralı):**
-1. **Faz 1: Seans etiketleme.** Google'dan gelen egzersiz oturumları (basketbol `SPORT`) ile elle girilen seans kaydını eşleştirmek; maç / antrenman / şut etiketi kullanıcıdan (ROADMAP Faz 1). Önce PRODUCT §4 ve `exercise_sessions` / `training_sessions` şeması. Önerilen: Opus + orta.
+1. **Faz 1: Toparlanma ekranı.** HRV / dinlenik nabız / uyku kişisel banda göre (ROADMAP Faz 1); veri artık bulutta. Önce PRODUCT §3 modül 1, `research/rules` ve `packages/engine`: bant hesabı motorda, her eşik kaynaklı (CLAUDE.md §3). Bugün'deki "Günün durumu" kartı da buna bağlanır. Önerilen: Opus + yüksek.
 2. **Takip (2026-10-10 civarı):** yenileme token'ı 7. günde düştü mü? Uygulamada Ben → Google Health "Yeniden bağlan" gösteriyor mu, yeniden bağlanma cihazda çalışıyor mu? Ayrıca `GHEALTH_CONFIG_DIR` = `E:\HoopLab\private\ghealth` ile `C:\gh\ghealth-src\ghealth.exe user paired-devices list`; sonucu LESSONS'taki [kaynaklı] maddeye [ölçüldü] olarak işle.
 3. **Faz 1: SessionEnd / PreCompact arşiv hook'unun doğrulanması** (ROADMAP'te açık).
 
@@ -27,7 +27,7 @@ Tek doğruluk kaynağı. `/rep` her iş sonunda, `/kapat` her oturum sonunda gü
 - Google Health: haftada bir uygulamadan Ben → Google Health → **Yeniden bağlan** (izin 7 günde düşer). Web istemcisinin JSON'u `private/ghealth/web_client_secret.json`.
 - Metro'yu (Expo sunucusu) Claude başlatır / yeniden başlatır / kapatır ([SETUP](SETUP.md) §8); Expo Go projeyi son açılanlardan açar.
 - Expo MCP (plugin'le geldi) Expo hesabıyla yetkilendirilmedi; EAS işinde.
-- C maketi telefonda: https://claude.ai/artifact/GWScS6NjHsxUphrHSFLo7J (özel). Erişilebilirlik renkleri öncesinden kalma; istersen aynı adrese güncel hali yayınlanır.
+- C maketi telefonda: https://claude.ai/artifact/GWScS6NjHsxUphrHSFLo7J (özel; 2026-10-04'te erişilebilir renklerle güncellendi, `design/maketler/c-hale.html` ile aynı).
 <!-- ozet:bitti -->
 
 ## Faz durumu
@@ -36,7 +36,7 @@ Tek doğruluk kaynağı. `/rep` her iş sonunda, `/kapat` her oturum sonunda gü
 |---|---|
 | 0 Veri erişimi testi + altyapı | Tamamlandı (2026-10-03, `faz-0-tamam`) |
 | 0.5 Tasarım yönü | Tamamlandı (2026-10-03, `faz-0.5-tamam`) |
-| 1 Temel uygulama (MVP) | Sürüyor (iskelet, Supabase + giriş, check-in + seans kaydı, kaydırıcı düzeltmesi, vücut görünümü, Google Health senkronu 2026-10-04) |
+| 1 Temel uygulama (MVP) | Sürüyor (iskelet, Supabase + giriş, check-in + seans kaydı, kaydırıcı düzeltmesi, vücut görünümü, Google Health senkronu, seans etiketleme 2026-10-04) |
 | 2 Hesap motoru | Başlamadı |
 | 3 AI koç | Başlamadı |
 | 4 Son rötuşlar | Başlamadı |

@@ -29,7 +29,7 @@ export const sideLabels: Record<BodySide, string> = {
   center: 'Orta',
 };
 
-export const sessionKinds = ['team_practice', 'game', 'strength', 'conditioning', 'shooting', 'rehab'] as const;
+export const sessionKinds = ['team_practice', 'game', 'shooting', 'strength', 'conditioning', 'mobility', 'rehab'] as const;
 export type SessionKind = (typeof sessionKinds)[number];
 
 export const sessionKindLabels: Record<SessionKind, string> = {
@@ -38,6 +38,7 @@ export const sessionKindLabels: Record<SessionKind, string> = {
   strength: 'Kuvvet',
   conditioning: 'Kondisyon',
   shooting: 'Şut',
+  mobility: 'Mobilite / yoga',
   rehab: 'Rehabilitasyon',
 };
 

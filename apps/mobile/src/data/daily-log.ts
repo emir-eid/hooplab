@@ -1,9 +1,10 @@
-// Kayıt formlarının veri erişimi: sabah check-in (+ ağrı haritası) ve seans kaydı.
+// Kayıt formlarının veri erişimi: sabah check-in (+ ağrı haritası), seans kaydı ve seans etiketleme (karar 0020).
 // Erişimi RLS korur (karar 0015); user_id veritabanında oturumdan yazılır, istemci göndermez.
 
 import { isCompleteWellness, wellnessItems, type WellnessAnswers } from '@hooplab/engine';
 
 import type { SessionKind } from '@/copy/labels';
+import { linkCandidates, pendingExercises, type ExerciseSession } from '@/data/exercise-tagging';
 import { buildPainHistory, type PainHistory } from '@/data/pain-history';
 import { painEntries, painMapFromRows, type PainMap } from '@/data/pain-map';
 import { supabase } from '@/lib/supabase';
@@ -12,6 +13,7 @@ export type Result<T> = { ok: true; value: T } | { ok: false; message: string };
 
 const offline = 'Bağlantı kurulamadı. İnternetini kontrol edip yeniden dene.';
 const failed = 'Kaydedilemedi. Biraz sonra yeniden dene.';
+const alreadyLinked = 'Bu saat kaydı başka bir seansa bağlanmış. Listeyi yenileyip yeniden dene.';
 
 export interface Checkin {
   answers: WellnessAnswers;
@@ -25,6 +27,8 @@ export interface TrainingSession {
   durationMin: number;
   rpe: number;
   minutesPlayed: number | null;
+  /** Eşleşen saat oturumu; yoksa seans yalnız elle girilmiştir. */
+  exerciseSessionId: string | null;
 }
 
 export interface NewTrainingSession {
@@ -33,6 +37,8 @@ export interface NewTrainingSession {
   durationMin: number;
   rpe: number;
   minutesPlayed: number | null;
+  /** Saat oturumundan etiketleniyorsa: bağlanacak oturum ve başlangıç zamanı. */
+  exercise?: Pick<ExerciseSession, 'id' | 'startTime'>;
 }
 
 /** O günün check-in'i; yoksa null. */
@@ -73,8 +79,11 @@ export async function insertSession(session: NewTrainingSession): Promise<Result
     duration_min: session.durationMin,
     rpe: session.rpe,
     minutes_played: session.kind === 'game' ? session.minutesPlayed : null,
+    exercise_session_id: session.exercise?.id ?? null,
+    started_at: session.exercise?.startTime ?? null,
   });
-  return error ? { ok: false, message: failed } : { ok: true, value: null };
+  if (error) return { ok: false, message: error.code === '23505' ? alreadyLinked : failed };
+  return { ok: true, value: null };
 }
 
 interface SessionRow {
@@ -84,27 +93,127 @@ interface SessionRow {
   duration_min: number;
   rpe: number;
   minutes_played: number | null;
+  exercise_session_id: string | null;
+}
+
+const sessionColumns = 'id, local_date, kind, duration_min, rpe, minutes_played, exercise_session_id';
+
+function sessionFromRow(r: SessionRow): TrainingSession {
+  return {
+    id: r.id,
+    localDate: r.local_date,
+    kind: r.kind,
+    durationMin: r.duration_min,
+    rpe: r.rpe,
+    minutesPlayed: r.minutes_played,
+    exerciseSessionId: r.exercise_session_id,
+  };
 }
 
 export async function fetchSessions(localDate: string): Promise<Result<TrainingSession[]>> {
   if (!supabase) return { ok: false, message: offline };
   const { data, error } = await supabase
     .from('training_sessions')
-    .select('id, local_date, kind, duration_min, rpe, minutes_played')
+    .select(sessionColumns)
     .eq('local_date', localDate)
     .order('created_at', { ascending: true });
   if (error) return { ok: false, message: offline };
+  return { ok: true, value: (data as SessionRow[]).map(sessionFromRow) };
+}
+
+// --- Seans etiketleme ---
+
+interface ExerciseRow {
+  id: string;
+  local_date: string;
+  start_time: string;
+  end_time: string;
+  start_utc_offset_s: number | null;
+  exercise_type: string;
+  display_name: string | null;
+  avg_hr_bpm: number | null;
+  dismissed_at: string | null;
+}
+
+const exerciseColumns =
+  'id, local_date, start_time, end_time, start_utc_offset_s, exercise_type, display_name, avg_hr_bpm, dismissed_at';
+
+function exerciseFromRow(r: ExerciseRow): ExerciseSession {
+  return {
+    id: r.id,
+    localDate: r.local_date,
+    startTime: r.start_time,
+    endTime: r.end_time,
+    startUtcOffsetS: r.start_utc_offset_s,
+    exerciseType: r.exercise_type,
+    displayName: r.display_name,
+    avgHrBpm: r.avg_hr_bpm,
+    dismissed: r.dismissed_at !== null,
+  };
+}
+
+/** from–to (dahil) günlerinde saatin kaydettiği, henüz etiketlenmemiş oturumlar. */
+export async function fetchPendingExercises(from: string, to: string): Promise<Result<ExerciseSession[]>> {
+  if (!supabase) return { ok: false, message: offline };
+  const [exercises, sessions] = await Promise.all([
+    supabase
+      .from('exercise_sessions')
+      .select(exerciseColumns)
+      .gte('local_date', from)
+      .lte('local_date', to)
+      .is('dismissed_at', null),
+    supabase.from('training_sessions').select(sessionColumns).gte('local_date', from).lte('local_date', to),
+  ]);
+  if (exercises.error || sessions.error) return { ok: false, message: offline };
   return {
     ok: true,
-    value: (data as SessionRow[]).map((r) => ({
-      id: r.id,
-      localDate: r.local_date,
-      kind: r.kind,
-      durationMin: r.duration_min,
-      rpe: r.rpe,
-      minutesPlayed: r.minutes_played,
-    })),
+    value: pendingExercises(
+      (exercises.data as ExerciseRow[]).map(exerciseFromRow),
+      (sessions.data as SessionRow[]).map(sessionFromRow),
+    ),
   };
+}
+
+export interface ExerciseToTag {
+  exercise: ExerciseSession;
+  /** Aynı güne elle girilmiş, henüz bağlanmamış kayıtlar: "Bu kayıt mı?" */
+  candidates: TrainingSession[];
+}
+
+/** Etiketleme formu için saat oturumu ve aynı günün bağlanabilir kayıtları. Oturum yoksa null. */
+export async function fetchExerciseToTag(id: string): Promise<Result<ExerciseToTag | null>> {
+  if (!supabase) return { ok: false, message: offline };
+  const { data, error } = await supabase.from('exercise_sessions').select(exerciseColumns).eq('id', id).maybeSingle();
+  if (error) return { ok: false, message: offline };
+  if (!data) return { ok: true, value: null };
+  const exercise = exerciseFromRow(data as ExerciseRow);
+  const sessions = await fetchSessions(exercise.localDate);
+  if (!sessions.ok) return sessions;
+  return { ok: true, value: { exercise, candidates: linkCandidates(exercise, sessions.value) } };
+}
+
+/** Elle girilmiş bir kaydı saat oturumuna bağlar; başlangıç zamanı saatten gelir. */
+export async function linkSession(
+  sessionId: string,
+  exercise: Pick<ExerciseSession, 'id' | 'startTime'>,
+): Promise<Result<null>> {
+  if (!supabase) return { ok: false, message: offline };
+  const { error } = await supabase
+    .from('training_sessions')
+    .update({ exercise_session_id: exercise.id, started_at: exercise.startTime })
+    .eq('id', sessionId);
+  if (error) return { ok: false, message: error.code === '23505' ? alreadyLinked : failed };
+  return { ok: true, value: null };
+}
+
+/** "Seans değil": oturum etiketlenecekler listesinden çıkar (ör. yürüyüş). */
+export async function dismissExercise(id: string): Promise<Result<null>> {
+  if (!supabase) return { ok: false, message: offline };
+  const { error } = await supabase
+    .from('exercise_sessions')
+    .update({ dismissed_at: new Date().toISOString() })
+    .eq('id', id);
+  return error ? { ok: false, message: failed } : { ok: true, value: null };
 }
 
 /** Vücut görünümü: verilen günlerin (eskiden yeniye) check-in günleri ve ağrı kayıtları. */

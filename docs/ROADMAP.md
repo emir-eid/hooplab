@@ -37,7 +37,7 @@ Her faz, bitiş kriteri karşılanınca `/kapat` ile kapanır: faz özeti `docs/
 - [x] Supabase oturumu için SecureStore parçalama adaptörü (2026-10-04, testli)
 - [x] Google Health senkronu (Edge Function + zamanlayıcı); gün içi nabız sunucuda özetlenir, ham saklanmaz; adım/mesafe kaynağa göre tekilleştirilir; `swim-lengths-data` yok sayılır (2026-10-04, [0019](decisions/0019-google-health-senkronu.md); bulutta ve iPhone'da doğrulandı). Haftalık "yeniden bağlan" akışı da bu işte geldi (Ben → Google Health)
 - [ ] Kurulum sihirbazı (kullanıcının kendi Google Cloud / Supabase değerleri, [0009](decisions/0009-herkes-kendi-hesabiyla.md)); haftalık "yeniden bağlan" akışı Google Health senkronuyla geldi
-- [ ] Seans etiketleme: basketbol API'de `SPORT` olarak geliyor; maç / antrenman / şut kullanıcıdan
+- [x] Seans etiketleme: basketbol API'de `SPORT` / `BASKETBALL` olarak geliyor; maç / antrenman / şut kullanıcıdan (2026-10-04, [0020](decisions/0020-seans-etiketleme.md); Bugün → Saatten gelenler; bulutta ve iPhone'da doğrulandı)
 - [x] Sabah check-in (uyku kalitesi, yorgunluk, kas ağrısı, stres, ruh hali) + ağrı haritası (2026-10-04, [0017](decisions/0017-sabah-check-in-olcegi.md); web ve iPhone'da doğrulandı; kaydırıcı Gesture Handler'la)
 - [x] Seans kaydı (tür, süre, RPE, oynanan dakika) (2026-10-04; web ve iPhone'da doğrulandı)
 - [x] Vücut görünümü: döndürülebilir 3D manken, ağrı haritası, 1 gün / 3 gün / 1 hafta (2026-10-04, [0018](decisions/0018-vucut-gorunumu.md); iPhone'da doğrulandı). Filtrenin bölge yükü raporu Faz 2'de
