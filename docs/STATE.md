@@ -4,7 +4,7 @@ Tek doğruluk kaynağı. `/rep` her iş sonunda, `/kapat` her oturum sonunda gü
 
 <!-- ozet:basla -->
 **Faz:** 1 sürüyor: iskelet ([0014](decisions/0014-uygulama-iskeleti.md)), Supabase + giriş ([0015](decisions/0015-veritabani-tek-sahip-rls.md)) iPhone'da doğrulandı. Sabah check-in (5 madde 1-5) + ağrı haritası (sol / sağ, 0-10) ve seans kaydı hazır, buluttaki şemada; iPhone'da doğrulandı; kaydırıcı Gesture Handler'la akıcı ([0017](decisions/0017-sabah-check-in-olcegi.md)). **Vücut** sekmesi: döndürülebilir 3D manken üzerinde ağrı haritası, 1 gün / 3 gün / 1 hafta, iPhone'da doğrulandı ([0018](decisions/0018-vucut-gorunumu.md)); bölge yükü raporu Faz 2'de. Hesap motoru `packages/engine` açıldı; ilk 10 kaynak ve 4 kural `research/`'te. Dış servis işlerini Claude yürütür ([0016](decisions/0016-dis-servisleri-claude-yurutur.md)). Tasarım: **C · Hale** ([0010](decisions/0010-tasarim-yonu-hale.md)), token'lar [packages/theme](../packages/theme/README.md).
-**Son oturum:** [2026-10-04 13:11 Faz 1: kaydırıcı düzeltmesi ve vücut görünümü](sessions/2026-10-04-1311-faz1-kaydirici.md) (açık, /rep)
+**Son oturum:** [2026-10-04 13:11 Faz 1: kaydırıcı düzeltmesi ve vücut görünümü](sessions/2026-10-04-1311-faz1-kaydirici.md)
 
 **Sıradaki işler (sıralı):**
 1. **Faz 1: Google Health senkronu.** Edge Function + zamanlayıcı; gün içi nabız sunucuda özetlenir, ham saklanmaz; adım / mesafe kaynağa göre tekilleştirilir; `swim-lengths-data` yok sayılır (ROADMAP Faz 1). Önce DATA-INVENTORY / COSTS ve LESSONS "Google Health / veri". Yeni tablo ve sır (OAuth) gelir; Supabase secrets ve RLS testleri. Önerilen: Opus + yüksek.
