@@ -1,6 +1,6 @@
 # 0021. Toparlanma: derin uyku HRV'si, 7 gün / 4 hafta kişisel bant (± 0,5 SD), HRV öncelikli günün durumu
 
-- **Durum:** Kabul edildi; motor testleri, yerel web önizlemesi (sentetik veri, açık ve koyu, dört durum) ve iPhone'da (Expo Go, gerçek veri, "Bant oluşuyor") doğrulandı (2026-10-05); grafik seçimi web'de doğrulandı, iPhone denemesi bekliyor
+- **Durum:** Kabul edildi; motor testleri, yerel web önizlemesi (sentetik veri, açık ve koyu, dört durum) ve iPhone'da (Expo Go, gerçek veri, "Bant oluşuyor") doğrulandı (2026-10-05); grafik seçimi web'de ve iPhone'da doğrulandı
 - **Tarih:** 2026-10-05
 - **İlgili:** [0004](0004-mimari-hesap-motoru-kanit-ai.md), [0010](0010-tasarim-yonu-hale.md), [0011](0011-hale-efekti-svg.md), [0019](0019-google-health-senkronu.md), ROADMAP Faz 1, `research/rules/toparlanma.json`
 

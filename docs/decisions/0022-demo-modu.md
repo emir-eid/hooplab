@@ -1,6 +1,6 @@
 # 0022. Demo modu: uygulama içi, çevrimdışı sentetik sporcu, kayıtlar bellekte, durum seçici
 
-- **Durum:** Kabul edildi; testler ve yerel web önizlemesiyle doğrulandı (2026-10-05); iPhone denemesi bekliyor
+- **Durum:** Kabul edildi; testler, yerel web önizlemesi ve iPhone'da (Expo Go: üç senaryo, Vücut, Demodan çık) doğrulandı (2026-10-05)
 - **Tarih:** 2026-10-05
 - **İlgili:** [0005](0005-repo-ve-gizlilik-ayrimi.md), [0009](0009-herkes-kendi-hesabiyla.md), [0021](0021-toparlanma-kisisel-bant.md), PRODUCT §2, ROADMAP Faz 1
 
