@@ -1,9 +1,9 @@
 # 2026-10-04 23:46 — Faz 1: seans etiketleme
 
 - **Faz:** 1
-- **Durum:** açık (/rep)
+- **Durum:** kapandı (/kapat, 23:49)
 - **Model / efor:** Opus 5.5
-- **Commit'ler:** Blok 1'in rep commit'i
+- **Commit'ler:** `92ed07b` (Blok 1; rep), bu raporun kapanış commit'i
 
 ## Blok 1 — Seans etiketleme: saat oturumu ↔ seans kaydı (23:46)
 
