@@ -1,0 +1,13 @@
+#!/bin/sh
+# HoopLab commit-msg: gizlilik bekçisi commit mesajını (sır kalıpları, kişisel denylist) tarar.
+# Repo public olunca mesajlar da herkese açılır. Bekçi çalışamazsa commit DURUR (fail-closed).
+
+if ! command -v node >/dev/null 2>&1; then
+  echo "[commit-msg] node bulunamadı; gizlilik bekçisi koşamadı. Commit durduruldu." >&2
+  exit 1
+fi
+
+node tools/guard/privacy-guard.mjs --message "$1" || {
+  echo "[commit-msg] Commit durduruldu: mesajda yukarıdaki ihlal var. Mesajı düzelt; --no-verify kullanma." >&2
+  exit 1
+}

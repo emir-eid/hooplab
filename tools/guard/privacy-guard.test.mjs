@@ -115,8 +115,8 @@ function tempRepo() {
   return dir;
 }
 
-function runGuard(cwd, mode, extraEnv = {}) {
-  return spawnSync(process.execPath, [GUARD, mode], {
+function runGuard(cwd, mode, extraEnv = {}, args = []) {
+  return spawnSync(process.execPath, [GUARD, mode, ...args], {
     cwd,
     encoding: 'utf8',
     env: { ...process.env, HOOPLAB_GUARD_DENYLIST: path.join(cwd, '__yok__.txt'), HOOPLAB_GUARD_DENYLIST_TEXT: '', ...extraEnv },
@@ -189,6 +189,62 @@ test('CLI --history: temiz geçmiş geçer', () => {
     writeFileSync(path.join(dir, 'a.ts'), 'export const a = 1;\n');
     commitAll(dir, 'ilk');
     assert.equal(runGuard(dir, '--history').status, 0);
+  } finally {
+    rmSync(dir, { recursive: true, force: true });
+  }
+});
+
+test('CLI --history: commit mesajındaki sır ve denylist ifadesi yakalanır, değer gösterilmez', () => {
+  const dir = tempRepo();
+  try {
+    writeFileSync(path.join(dir, 'a.ts'), 'export const a = 1;\n');
+    commitAll(dir, `anahtar ${fake.anthropic} eklendi`);
+    writeFileSync(path.join(dir, 'b.ts'), 'export const b = 1;\n');
+    commitAll(dir, 'not: sahte-ifade-7');
+    const r = runGuard(dir, '--history', { HOOPLAB_GUARD_DENYLIST_TEXT: 'sahte-ifade-7' });
+    assert.equal(r.status, 1, r.stderr);
+    assert.match(r.stderr, /commit [0-9a-f]{7}:\d+\s+anthropic-anahtari/);
+    assert.match(r.stderr, /commit [0-9a-f]{7}:\d+\s+kisisel-tanimlayici/);
+    assert.ok(!r.stderr.includes('sahte-ifade-7'), 'değer çıktıda görünmemeli');
+  } finally {
+    rmSync(dir, { recursive: true, force: true });
+  }
+});
+
+test('CLI --history: yazar e-postası denylist\'teyse yakalanır', () => {
+  const dir = tempRepo();
+  try {
+    writeFileSync(path.join(dir, 'a.ts'), 'export const a = 1;\n');
+    commitAll(dir, 'ilk');
+    const r = runGuard(dir, '--history', { HOOPLAB_GUARD_DENYLIST_TEXT: 'test@example.invalid' });
+    assert.equal(r.status, 1, r.stderr);
+    assert.match(r.stderr, /commit [0-9a-f]{7}:1\s+kisisel-tanimlayici/);
+  } finally {
+    rmSync(dir, { recursive: true, force: true });
+  }
+});
+
+test('CLI --message: mesajdaki sır commit\'i durdurur, # satırları ve temiz mesaj geçer', () => {
+  const dir = tempRepo();
+  try {
+    const msg = path.join(dir, 'MSG');
+    writeFileSync(msg, `[F1] düzeltme ${fake.github}\n`);
+    const bad = runGuard(dir, '--message', {}, [msg]);
+    assert.equal(bad.status, 1, bad.stderr);
+    assert.match(bad.stderr, /commit-mesaji:1\s+github-tokeni/);
+
+    writeFileSync(msg, `[F1] düzeltme\n# ${fake.github}\n`);
+    assert.equal(runGuard(dir, '--message', {}, [msg]).status, 0, 'yorum satırı taranmamalı');
+  } finally {
+    rmSync(dir, { recursive: true, force: true });
+  }
+});
+
+test('CLI --message: dosya yoksa veya verilmezse kapı KAPALI kalır (çıkış 2)', () => {
+  const dir = tempRepo();
+  try {
+    assert.equal(runGuard(dir, '--message', {}, [path.join(dir, 'yok')]).status, 2);
+    assert.equal(runGuard(dir, '--message').status, 2);
   } finally {
     rmSync(dir, { recursive: true, force: true });
   }

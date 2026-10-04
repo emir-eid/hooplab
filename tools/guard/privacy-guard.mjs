@@ -4,7 +4,9 @@
 // Kullanım:
 //   node tools/guard/privacy-guard.mjs --staged   commit'e girecek dosyaları tarar (pre-commit)
 //   node tools/guard/privacy-guard.mjs --all      izlenen + eklenmeye aday tüm dosyaları tarar (CI, /kapat)
-//   node tools/guard/privacy-guard.mjs --history  tüm git geçmişindeki her dosya sürümünü tarar (CI, public öncesi)
+//   node tools/guard/privacy-guard.mjs --history  tüm git geçmişindeki her dosya sürümünü, commit ve etiket
+//                                                  mesajını ve yazar satırını tarar (CI, public öncesi)
+//   node tools/guard/privacy-guard.mjs --message <dosya>  yazılmakta olan commit mesajını tarar (commit-msg)
 //
 // Çıkış kodları: 0 temiz · 1 ihlal bulundu · 2 bekçi hatası.
 // Bekçi kendi hatasında da commit'i DURDURUR (fail-closed): çöken bekçi kapıyı açık bırakmamalı.
@@ -229,11 +231,37 @@ function collectHistory(root) {
   // Yol kuralları için: geçmişte herhangi bir commit'te var olmuş her yol
   const allPaths = new Set(git(['log', '--all', '--name-only', '--format='], root).split('\n').filter(Boolean));
   for (const p of allPaths) entries.push({ path: p, content: null });
+  entries.push(...collectMessages(root));
   return entries;
 }
 
-function collect(mode, root) {
+// Commit mesajları (yazar ve commit eden satırıyla) ve açıklamalı etiket mesajları: repo public olunca
+// bunlar da herkese açılır. Yol olarak "commit <kısa-sha>" / "etiket <ad>" verilir; yol kurallarına takılmaz.
+function collectMessages(root) {
+  const entries = [];
+  const log = git(['log', '--all', '--format=%h%x00%an <%ae>%x00%cn <%ce>%x00%B%x01'], root);
+  for (const rec of log.split('\x01')) {
+    const [sha, author, committer, body] = rec.replace(/^\n/, '').split('\0');
+    if (!sha) continue;
+    entries.push({ path: `commit ${sha}`, content: `Yazar: ${author}\nCommit eden: ${committer}\n${body ?? ''}` });
+  }
+  const tags = git(['for-each-ref', 'refs/tags', '--format=%(refname:short)%00%(contents)%01'], root);
+  for (const rec of tags.split('\x01')) {
+    const [name, body] = rec.replace(/^\n/, '').split('\0');
+    if (name && body) entries.push({ path: `etiket ${name}`, content: body });
+  }
+  return entries;
+}
+
+// Git'in varsayılan temizliği gibi # ile başlayan satırlar atılır (şablondaki dosya listesi vb.).
+function collectMessageFile(file) {
+  const text = readFileSync(file, 'utf8');
+  return [{ path: 'commit-mesaji', content: text.split(/\r?\n/).filter((l) => !l.startsWith('#')).join('\n') }];
+}
+
+function collect(mode, root, arg) {
   if (mode === '--history') return collectHistory(root);
+  if (mode === '--message') return collectMessageFile(arg);
   if (mode === '--staged') {
     const paths = splitZ(git(['diff', '--cached', '--name-only', '-z', '--diff-filter=ACMR'], root));
     return paths.map((p) => ({ path: p, content: decode(gitBuffer(['show', `:${p}`], root)) }));
@@ -252,13 +280,13 @@ function collect(mode, root) {
 }
 
 function main() {
-  const mode = process.argv[2];
-  if (!['--staged', '--all', '--history'].includes(mode)) {
-    console.error('Kullanım: privacy-guard.mjs --staged | --all | --history');
+  const [mode, arg] = process.argv.slice(2);
+  if (!['--staged', '--all', '--history', '--message'].includes(mode) || (mode === '--message' && !arg)) {
+    console.error('Kullanım: privacy-guard.mjs --staged | --all | --history | --message <dosya>');
     process.exit(2);
   }
   const root = git(['rev-parse', '--show-toplevel'], process.cwd()).trim();
-  const entries = collect(mode, root);
+  const entries = collect(mode, root, arg);
   const { list, sources } = loadDenylist(root);
   const raw = scanEntries(entries, { denylist: list });
 
@@ -269,7 +297,7 @@ function main() {
     return seen.has(key) ? false : (seen.add(key), true);
   });
 
-  const unit = mode === '--history' ? 'geçmiş girdisi' : 'dosya';
+  const unit = { '--history': 'geçmiş girdisi', '--message': 'commit mesajı' }[mode] ?? 'dosya';
   const scope = `${entries.length} ${unit}, kişisel denylist ${sources.length ? `${list.length} ifade (${sources.join(' + ')})` : 'yok (atlandı)'}`;
   if (violations.length === 0) {
     console.log(`[gizlilik-bekcisi] temiz (${scope})`);

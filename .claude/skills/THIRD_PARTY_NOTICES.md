@@ -9,7 +9,7 @@ Bu klasördeki aşağıdaki skill'ler kaynak repolarından **değiştirilmeden**
 | `review-animations` | https://github.com/emilkowalski/skills (`skills/review-animations`) | `e8a175de22ae1e49370fc144c1f3bb9aeedf988d` | MIT |
 | `react-native-best-practices` | https://github.com/software-mansion-labs/skills (`skills/react-native-best-practices`) | `e3f00cdb34942cee8b788abe10fe0d78a7f2b4e9` | MIT (SKILL.md `license: MIT` beyanı ve marketplace kaydı; repo kökünde LICENSE dosyası yok) |
 
-Kendi skill'lerimiz: `ac`, `kapat`.
+Kendi skill'lerimiz: `ac`, `rep`, `kapat`.
 
 Plugin olarak yüklenenler (dosyaları bu repoda değil, `.claude/settings.json` üzerinden): `expo` (expo/skills), `supabase` ve `postgres-best-practices` (supabase/agent-skills).
 

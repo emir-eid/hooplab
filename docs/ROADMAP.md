@@ -41,11 +41,11 @@ Her faz, bitiş kriteri karşılanınca `/kapat` ile kapanır: faz özeti `docs/
 - [x] Sabah check-in (uyku kalitesi, yorgunluk, kas ağrısı, stres, ruh hali) + ağrı haritası (2026-10-04, [0017](decisions/0017-sabah-check-in-olcegi.md); web ve iPhone'da doğrulandı; kaydırıcı Gesture Handler'la)
 - [x] Seans kaydı (tür, süre, RPE, oynanan dakika) (2026-10-04; web ve iPhone'da doğrulandı)
 - [x] Vücut görünümü: döndürülebilir 3D manken, ağrı haritası, 1 gün / 3 gün / 1 hafta (2026-10-04, [0018](decisions/0018-vucut-gorunumu.md); iPhone'da doğrulandı). Filtrenin bölge yükü raporu Faz 2'de
-- [x] Toparlanma ekranı (HRV / dinlenik nabız / uyku, kişisel banda göre) (2026-10-05, [0021](decisions/0021-toparlanma-kisisel-bant.md); Bugün'de durum, hale, HRV grafiği; web önizlemesinde doğrulandı, iPhone denemesi bekliyor)
+- [x] Toparlanma ekranı (HRV / dinlenik nabız / uyku, kişisel banda göre) (2026-10-05, [0021](decisions/0021-toparlanma-kisisel-bant.md); Bugün'de durum, hale, HRV grafiği; web önizlemesinde ve iPhone'da doğrulandı)
 - [x] Demo modu (sentetik "demo sporcu") (2026-10-05, [0022](decisions/0022-demo-modu.md); uygulama içi, çevrimdışı; Hazır / Kontrollü / Toparlan seçici)
 - [ ] Apple Developer Programı, EAS Build, TestFlight
-- [ ] Public'e geçiş öncesi denetim: `npm run guard:history` temiz (denylist dosyası ve secret ile), README hikayesi, LICENSE (MIT), GitHub secret scanning + push protection
-- [ ] Repo public
+- [x] Public'e geçiş öncesi denetim: `npm run guard:history` temiz (denylist dosyası ve secret ile), README hikayesi, LICENSE (MIT) (2026-10-05, [denetim raporu](audits/2026-10-05-public-oncesi.md)). Secret scanning + push protection private kişisel repoda açılamıyor (422), "Repo public" maddesine taşındı
+- [ ] Repo public: görünürlüğü değiştirmeden hemen önce geçmiş taraması yeniden koşulur ([0008](decisions/0008-gizlilik-altyapisi-eklemeleri.md)); değiştirdikten hemen sonra secret scanning + push protection açılır ([denetim raporu](audits/2026-10-05-public-oncesi.md) "Public anında")
 
 **Bitiş kriteri:** Uygulama iPhone'da TestFlight'tan kurulu, gerçek veriyle her gün kullanılabiliyor; repo public ve temiz.
 

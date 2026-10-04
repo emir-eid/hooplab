@@ -40,7 +40,7 @@ Repo ileride **public** olacak. Bu yüzden:
 - Sırlar `.env.local` (gitignore'lu) veya Supabase secrets içinde durur. **`EXPO_PUBLIC_` ile başlayan her değer herkese açıktır** (uygulama paketine gömülür); sır asla `EXPO_PUBLIC_` olmaz. Claude API anahtarı ve Google OAuth sırrı uygulamaya girmez, yalnız Edge Functions kullanır.
 - Ekran görüntüsü, demo, test ve örnek veri her zaman **sentetik** veriyle yapılır.
 - Commit'ler GitHub noreply e-postasıyla atılır (repo yerel git ayarı).
-- Bekçiler: `.githooks/pre-commit` (gizlilik taraması), `.githooks/pre-push` (testler). `--no-verify` **yasaktır**. Bekçi durdurursa sebep düzeltilir.
+- Bekçiler: `.githooks/pre-commit` (gizlilik taraması), `.githooks/commit-msg` (commit mesajında gizlilik taraması), `.githooks/pre-push` (testler). `--no-verify` **yasaktır**. Bekçi durdurursa sebep düzeltilir.
 
 ## 3. Bilim kuralları
 
