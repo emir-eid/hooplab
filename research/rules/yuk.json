@@ -1,0 +1,21 @@
+{
+  "module": "yuk",
+  "rules": [
+    {
+      "id": "seans-rpe-olcek",
+      "description": "Seans RPE: değiştirilmiş CR-10, 0-10 tam sayı; sözel çapalar 0, 1, 2, 3, 4, 5, 7 ve 10'da.",
+      "value": { "min": 0, "max": 10, "step": 1, "anchors": [0, 1, 2, 3, 4, 5, 7, 10], "unit": "RPE" },
+      "applies_to": "her seans bittikten sonra, tüm seans için tek puan",
+      "sources": ["foster-2001", "haddad-2017"],
+      "notes": "Çapaların ifadeleri açık erişimli derlemeden (haddad-2017) doğrulandı; birincil kaynak foster-2001."
+    },
+    {
+      "id": "seans-yuku",
+      "description": "Seans yükü = RPE × süre (dakika), keyfi birim (AU).",
+      "value": { "formula": "rpe * duration_min", "unit": "AU" },
+      "applies_to": "her seans; maçta süre olarak seansın tamamı (ısınma dahil) kullanılır, oynanan dakika ayrı tutulur",
+      "sources": ["foster-2001", "haddad-2017", "burger-2024"],
+      "notes": "Yük saklanmaz, packages/engine sessionLoad hesaplar. Maçta süre tanımı (tam seans mı oynanan dakika mı) Faz 2'de akut/kronik yükle birlikte yeniden değerlendirilecek."
+    }
+  ]
+}

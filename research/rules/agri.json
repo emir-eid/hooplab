@@ -1,0 +1,13 @@
+{
+  "module": "agri",
+  "rules": [
+    {
+      "id": "agri-olcek",
+      "description": "Ağrı haritası: bölge ve taraf başına ağrı / sertlik, sayısal derecelendirme ölçeği (NRS-11) 0-10 tam sayı; 0 = yok, 10 = en kötü.",
+      "value": { "min": 0, "max": 10, "step": 1, "unit": "NRS" },
+      "applies_to": "sabah check-in içinde veya istenince; kişinin kendi geçmişiyle kıyaslanır, popülasyon eşiği yok",
+      "sources": ["todri-2025", "hawker-2011"],
+      "notes": "Sporcuya özgü bir NRS kaynağı yok; klinik popülasyondan (todri-2025) yalnız ölçek biçimi alındı, eşik alınmadı."
+    }
+  ]
+}

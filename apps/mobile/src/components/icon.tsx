@@ -28,6 +28,8 @@ const paths = {
     </>
   ),
   plus: <Path d="M12 5v14M5 12h14" />,
+  minus: <Path d="M5 12h14" />,
+  close: <Path d="M6 6l12 12M18 6L6 18" />,
   chevron: <Path d="M9 5l7 7-7 7" />,
   chevronBack: <Path d="M15 5l-7 7 7 7" />,
 } as const;

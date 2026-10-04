@@ -60,6 +60,17 @@ function RootNavigator() {
       <Stack screenOptions={{ headerShown: false, contentStyle: { backgroundColor: palette.bg } }}>
         <Stack.Protected guard={session !== null}>
           <Stack.Screen name="(tabs)" />
+          <Stack.Screen
+            name="add"
+            options={{
+              presentation: 'formSheet',
+              sheetAllowedDetents: 'fitToContents',
+              sheetGrabberVisible: true,
+              contentStyle: { backgroundColor: palette.bg },
+            }}
+          />
+          <Stack.Screen name="checkin" options={{ presentation: 'modal' }} />
+          <Stack.Screen name="session-new" options={{ presentation: 'modal' }} />
         </Stack.Protected>
         <Stack.Protected guard={session === null}>
           <Stack.Screen name="sign-in" />

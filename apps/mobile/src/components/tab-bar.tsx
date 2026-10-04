@@ -1,8 +1,9 @@
-// Yüzen cam sekme çubuğu (maket: .tabwrap, .tabbar, .tab). Expo Router Tabs'ın tabBar prop'una verilir.
-// Artı düğmesi (.fab) kayıt formlarıyla birlikte eklenecek; o zaman çubuk sağında 62 pt'lik yer açılır.
+// Yüzen cam sekme çubuğu (maket: .tabwrap, .tabbar, .tab, .fab). Expo Router Tabs'ın tabBar prop'una verilir.
+// Sağdaki artı düğmesi kayıt seçicisini (app/add.tsx) açar.
 
 import { layout, radius, size, spacing } from '@hooplab/theme';
 import { BlurView } from 'expo-blur';
+import { router } from 'expo-router';
 import type { BottomTabBarProps } from 'expo-router/js-tabs';
 import { Pressable, StyleSheet, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
@@ -95,6 +96,18 @@ export function TabBar({ state, descriptors, navigation }: BottomTabBarProps) {
           );
         })}
       </View>
+
+      <Pressable
+        onPress={() => router.push('/add')}
+        accessibilityRole="button"
+        accessibilityLabel="Kayıt ekle"
+        style={({ pressed }) => [
+          styles.fab,
+          { backgroundColor: palette.strong, boxShadow: palette.shadow.float },
+          pressed && styles.fabPressed,
+        ]}>
+        <Icon name="plus" color={palette.onStrong} size={size.icon} strokeWidth={2.2} />
+      </Pressable>
     </View>
   );
 }
@@ -125,6 +138,14 @@ const styles = StyleSheet.create({
     borderRadius: radius.full,
     overflow: 'hidden',
   },
+  fab: {
+    width: size.fab,
+    height: size.fab,
+    borderRadius: radius.full,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  fabPressed: { opacity: 0.85, transform: [{ scale: 0.96 }] },
   tab: {
     flex: 1,
     height: size.tabBar - spacing[2.5],

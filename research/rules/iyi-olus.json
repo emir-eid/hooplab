@@ -1,0 +1,13 @@
+{
+  "module": "iyi-olus",
+  "rules": [
+    {
+      "id": "checkin-olcek",
+      "description": "Sabah check-in: beş madde (uyku kalitesi, yorgunluk, kas ağrısı, stres, ruh hali), her biri 1-5 tam sayı; tüm maddelerde 5 = en iyi; toplam 5-25.",
+      "value": { "items": 5, "min": 1, "max": 5, "step": 1, "total_min": 5, "total_max": 25, "unit": "puan" },
+      "applies_to": "her sabah, antrenmandan önce; puanlar kişisel baseline'a göre okunur, popülasyon eşiği yok",
+      "sources": ["zhang-2026", "conte-2018", "saw-2016", "burger-2024", "hooper-1995", "mclean-2010"],
+      "notes": "Madde listesi ve 1-5 aralığı basketbol çalışmasından (zhang-2026, tam metin). Çalışmadaki 0,5 adım yerine tam sayı: 30 saniye hedefi ve tek dokunuş (karar 0017). Kısa uyarlanmış anketler doğrulanmış ölçek değildir (burger-2024); bu yüzden check-in yalnız izleme aracıdır."
+    }
+  ]
+}

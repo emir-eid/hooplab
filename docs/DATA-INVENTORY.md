@@ -7,7 +7,7 @@ Hangi veri nerede durur, hangi servise ne gider, ne kadar saklanır, nasıl sili
 | Veri | Kaynak | Nerede saklanır | Kim / ne erişir |
 |---|---|---|---|
 | Cihaz verisi: HRV, uyku, nabız, SpO2, solunum, egzersiz | Fitbit Air → Google Health | Google (kaynak); Faz 0 dışa aktarımları `private/data`; Faz 1+ Supabase (Frankfurt) | Sahibi; senkron Edge Function'ı |
-| Kullanıcı girdileri: check-in, seans, ağrı haritası, kilo, beslenme, sıvı | Uygulama | Supabase (`training_sessions` 2026-10-04'ten beri; diğerleri geldikçe) | Sahibi (RLS ile yalnız kendi satırları, [0015](decisions/0015-veritabani-tek-sahip-rls.md)) |
+| Kullanıcı girdileri: check-in, seans, ağrı haritası, kilo, beslenme, sıvı | Uygulama | Supabase (`training_sessions`, `daily_checkins`, `pain_reports` 2026-10-04'ten beri; diğerleri geldikçe) | Sahibi (RLS ile yalnız kendi satırları, [0015](decisions/0015-veritabani-tek-sahip-rls.md)) |
 | Giriş hesabı: e-posta, şifre özeti | Supabase panosu (bir kez) | Supabase Auth (`auth.users`) | Sahibi; yeni kayıt kapalı |
 | Oturum: erişim ve yenileme token'ı, kullanıcı kimliği ve e-postası | Supabase Auth | iPhone Keychain (`expo-secure-store`, parçalı); web önizlemesinde tarayıcının localStorage'ı | Yalnız uygulama |
 | Profil: boy, kilo, doğum tarihi, sakatlık geçmişi | Uygulama | Yalnız Supabase | Sahibi; hesap motoru |

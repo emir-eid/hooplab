@@ -10,14 +10,16 @@ Kök klasörden (`npm install` bir kez):
 npm run mobile
 ```
 
-Terminalde çıkan QR kodu iPhone kamerasıyla okut; Expo Go'da açılır. iPhone ve bilgisayar aynı Wi-Fi'da olmalı. Web önizlemesi: `npm run web -w @hooplab/mobile` (Claude Code'da `.claude/launch.json` → `mobil-web`).
+Terminalde çıkan QR kodu iPhone kamerasıyla okut; Expo Go'da açılır. iPhone ve bilgisayar aynı Wi-Fi'da olmalı. Web önizlemesi: `npm run web -w @hooplab/mobile` (Claude Code'da `.claude/launch.json` → `mobil-web`). Görsel doğrulama ve ekran görüntüsü için yerel Supabase'e bağlı önizleme: `npm run db:start`, `npm run db:reset`, `npm run web:local` (port 8082, `mobil-web-yerel`); giriş `supabase/seed.sql`'deki sentetik demo kullanıcısıyla, gerçek hesaba girilmez.
 
 ## Düzen
 
 | Klasör | İçerik |
 |---|---|
-| `src/app/` | Yalnız rotalar. `(tabs)`: Bugün (`index`), Trend, Koç, Ben (`me/`: yığın, Görünüm alt sayfası) |
+| `src/app/` | Yalnız rotalar. `(tabs)`: Bugün (`index`), Trend, Koç, Ben (`me/`: yığın, Görünüm alt sayfası). Kök yığında artı düğmesinin açtığı `add` (sayfa), `checkin` ve `session-new` (modal) |
 | `src/components/` | Yeniden kullanılan arayüz: `Text`, `Card`, `Screen`, `PageHeader`, liste, sekme çubuğu, ikonlar, tema seçici |
+| `src/data/` | Supabase erişimi (`daily-log.ts`) ve saf veri modeli (`pain-map.ts`, testli) |
+| `src/copy/` | Formların Türkçe etiketleri; ölçekler `@hooplab/engine`'de |
 | `src/theme/` | Görünüm tercihi ve etkin palet (`useAppearance`, `usePalette`), font listesi |
 | `src/utils/` | Saf yardımcılar |
 

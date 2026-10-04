@@ -31,9 +31,9 @@ Basketbola özgü odak: sıçrama yükü ve patellar / Aşil tendonu, ani duruş
 
 | Girdi | Ne zaman | Süre hedefi | Not |
 |---|---|---|---|
-| **Sabah check-in:** uyku kalitesi, yorgunluk, kas ağrısı, stres, ruh hali | Her sabah | 30 saniye | Hooper / McLean tipi öznel iyi oluş ölçeği; ölçek aralığı Faz 1'de kararlaştırılacak |
+| **Sabah check-in:** uyku kalitesi, yorgunluk, kas ağrısı, stres, ruh hali | Her sabah | 30 saniye | Hooper / McLean tipi öznel iyi oluş ölçeği; her madde 1-5, 5 = en iyi, toplam 5-25 ([0017](decisions/0017-sabah-check-in-olcegi.md)) |
 | **Seans kaydı:** tür (takım antrenmanı, maç, kuvvet, kondisyon, şut, rehabilitasyon), süre, RPE (0-10), maçta oynanan dakika, içerik etiketleri | Her seanstan sonra | 30 saniye | Seans yükü = RPE × dakika |
-| **Ağrı haritası:** bölge bazında 0-10 ağrı / sertlik | Check-in içinde veya istenince | 15 saniye | Bölgeler: baldır, Aşil, ayak bileği, patellar tendon, quadriceps, hamstring, adduktor, kalça, bel, omuz |
+| **Ağrı haritası:** bölge ve taraf bazında 0-10 ağrı / sertlik (NRS) | Check-in içinde | 15 saniye | Bölgeler: baldır, Aşil, ayak bileği, patellar tendon, quadriceps, hamstring, adduktor, kalça, bel, omuz; bel dışında sol / sağ ayrı ([0017](decisions/0017-sabah-check-in-olcegi.md)) |
 | **Sabah kilo** | Her sabah (isteğe bağlı) | 5 saniye | |
 | **Ter testi:** öncesi / sonrası tartı, içilen sıvı | Ara sıra (farklı koşullarda) | 1 dakika | |
 | **Beslenme ve su** | Gün içinde (basit) | Öğün başına 15 saniye | Kalori sayacı değil; karbonhidrat / protein kaba tahmini |
@@ -58,13 +58,13 @@ Ayrıntı: [CLAUDE.md §3](../CLAUDE.md) ve [karar 0004](decisions/0004-mimari-h
 
 ## 7. Aday kaynaklar (henüz doğrulanmadı)
 
-Planlama sırasında anılan çalışmalar. **Hiçbiri henüz `research/sources` içinde değildir.** Faz 2'de her biri DOI / PMID ile doğrulanarak eklenecek; künye ayrıntıları o sırada kesinleşir. Doğrulanamayan çıkarılır.
+Planlama sırasında anılan çalışmalar. Doğrulanıp `research/sources`'a girenler işaretli (✓); kalanlar Faz 2'de DOI / PMID ile doğrulanarak eklenecek; künye ayrıntıları o sırada kesinleşir. Doğrulanamayan çıkarılır.
 
 | Modül | Aday |
 |---|---|
 | Toparlanma | Plews ve ark. 2013 (HRV ile antrenman takibi, Sports Medicine); Buchheit 2014 (nabız ve HRV ile sporcu takibi) |
-| Yük | Foster ve ark. 2001 (seans RPE yöntemi); Williams ve ark. 2017 (üstel ağırlıklı akut/kronik yük); Impellizzeri ve ark. 2020 (akut/kronik oran eleştirisi) |
-| İyi oluş ölçeği | Hooper ve Mackinnon 1995; McLean ve ark. 2010 |
+| Yük | ✓ Foster ve ark. 2001 (seans RPE yöntemi, `foster-2001`; çapalar `haddad-2017`); Williams ve ark. 2017 (üstel ağırlıklı akut/kronik yük); Impellizzeri ve ark. 2020 (akut/kronik oran eleştirisi) |
+| İyi oluş ölçeği | ✓ Hooper ve ark. 1995 (`hooper-1995`); ✓ McLean ve ark. 2010 (`mclean-2010`); ek olarak ✓ `saw-2016`, `conte-2018`, `zhang-2026`, `burger-2024` |
 | Uyku | Mah ve ark. 2011 (basketbolcularda uyku uzatma); Walsh ve ark. 2021 (sporcu ve uyku uzman konsensüsü, BJSM) |
 | Beslenme | Thomas, Erdman ve Burke 2016 (ACSM / AND / DC ortak bildirgesi); Morton ve ark. 2018 (protein meta-analizi); Jäger ve ark. 2017 (ISSN protein bildirgesi); Mountjoy ve ark. 2023 (IOC REDs konsensüsü) |
 | Hidrasyon | Sawka ve ark. 2007 (ACSM sıvı bildirgesi); McDermott ve ark. 2017 (NATA bildirgesi) |
@@ -90,7 +90,7 @@ Planlama sırasında anılan çalışmalar. **Hiçbiri henüz `research/sources`
 | Soru | Ne zaman karar |
 |---|---|
 | Fitbit Air hangi alanları üretiyor, hangi çözünürlükte? | Faz 0 (ölçüm) |
-| Check-in ölçeği (1-5, 1-7 veya 0-10)? | Faz 1 |
+| ~~Check-in ölçeği (1-5, 1-7 veya 0-10)?~~ 1-5, 5 = en iyi ([0017](decisions/0017-sabah-check-in-olcegi.md)) | Faz 1 ✓ |
 | Kas / tendon modelinin bölge listesi ve hareket → bölge eşlemesi | Faz 2 başı |
 | Maç takvimi elle mi girilecek, otomatik bir kaynak var mı? | Faz 1 |
 | Takım staff'ıyla paylaşım isteniyor mu? | Faz 4 |

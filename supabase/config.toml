@@ -220,7 +220,9 @@ web3 = 30
 
 [auth.email]
 # Allow/disallow new user signups via email to your project.
-enable_signup = false
+# HoopLab: true şart. Yerel GoTrue bunu e-posta sağlayıcısının açık/kapalı anahtarı olarak okur; false olunca
+# e-posta + şifre girişi de kapanır (email_provider_disabled). Yeni kayıt [auth] enable_signup = false ile kapalı.
+enable_signup = true
 # If enabled, a user will be required to confirm any email change on both the old, and new email
 # addresses. If disabled, only the new email is required to confirm.
 double_confirm_changes = true
