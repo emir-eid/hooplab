@@ -4,6 +4,7 @@
 import { isCompleteWellness, wellnessItems, type WellnessAnswers } from '@hooplab/engine';
 
 import type { SessionKind } from '@/copy/labels';
+import { buildPainHistory, type PainHistory } from '@/data/pain-history';
 import { painEntries, painMapFromRows, type PainMap } from '@/data/pain-map';
 import { supabase } from '@/lib/supabase';
 
@@ -104,4 +105,18 @@ export async function fetchSessions(localDate: string): Promise<Result<TrainingS
       minutesPlayed: r.minutes_played,
     })),
   };
+}
+
+/** Vücut görünümü: verilen günlerin (eskiden yeniye) check-in günleri ve ağrı kayıtları. */
+export async function fetchPainHistory(dates: readonly string[]): Promise<Result<PainHistory>> {
+  if (!supabase) return { ok: false, message: offline };
+  const from = dates[0];
+  const to = dates[dates.length - 1];
+  if (!from || !to) return { ok: true, value: buildPainHistory([], [], []) };
+  const [checkins, pain] = await Promise.all([
+    supabase.from('daily_checkins').select('local_date').gte('local_date', from).lte('local_date', to),
+    supabase.from('pain_reports').select('local_date, region, side, pain').gte('local_date', from).lte('local_date', to),
+  ]);
+  if (checkins.error || pain.error) return { ok: false, message: offline };
+  return { ok: true, value: buildPainHistory(dates, checkins.data ?? [], pain.data ?? []) };
 }

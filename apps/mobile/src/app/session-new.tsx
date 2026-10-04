@@ -9,7 +9,8 @@ import { useState } from 'react';
 import { StyleSheet, View } from 'react-native';
 
 import { Chip, ChipSet } from '@/components/chip';
-import { FormBlock, FormDock, FormHeader, FormScroll, useDockSpace } from '@/components/form';
+import { FormBlock, FormDock, FormHeader, useDockSpace } from '@/components/form';
+import { GestureScrollView } from '@/components/gesture-scroll';
 import { ScaleSlider } from '@/components/scale-slider';
 import { Stepper } from '@/components/stepper';
 import { Text } from '@/components/text';
@@ -62,7 +63,7 @@ export default function SessionNewScreen() {
 
   return (
     <View style={[styles.root, { backgroundColor: palette.bg }]}>
-      <FormScroll contentContainerStyle={{ paddingBottom: dockSpace }}>
+      <GestureScrollView contentContainerStyle={{ paddingBottom: dockSpace }}>
         <FormHeader title="Seans kaydı" subtitle="Seans bittikten sonra, tüm seans için." />
 
         <FormBlock title="Gün">
@@ -161,7 +162,7 @@ export default function SessionNewScreen() {
             {`RPE ${rpe ?? '–'}\n× ${durationMin} dk`}
           </Text>
         </View>
-      </FormScroll>
+      </GestureScrollView>
       <FormDock label="Kaydet" onPress={save} disabled={kind === null || rpe === null} loading={saving} error={error} />
     </View>
   );

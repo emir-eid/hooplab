@@ -16,9 +16,10 @@ Terminalde çıkan QR kodu iPhone kamerasıyla okut; Expo Go'da açılır. iPhon
 
 | Klasör | İçerik |
 |---|---|
-| `src/app/` | Yalnız rotalar. `(tabs)`: Bugün (`index`), Trend, Koç, Ben (`me/`: yığın, Görünüm alt sayfası). Kök yığında artı düğmesinin açtığı `add` (sayfa), `checkin` ve `session-new` (modal) |
-| `src/components/` | Yeniden kullanılan arayüz: `Text`, `Card`, `Screen`, `PageHeader`, liste, sekme çubuğu, ikonlar, tema seçici |
-| `src/data/` | Supabase erişimi (`daily-log.ts`) ve saf veri modeli (`pain-map.ts`, testli) |
+| `src/app/` | Yalnız rotalar. `(tabs)`: Bugün (`index`), Vücut (`body`), Trend, Koç, Ben (`me/`: yığın, Görünüm alt sayfası). Kök yığında artı düğmesinin açtığı `add` (sayfa), `checkin` ve `session-new` (modal) |
+| `src/components/` | Yeniden kullanılan arayüz: `Text`, `Card`, `Screen`, `PageHeader`, liste, sekme çubuğu, ikonlar, tema seçici, `GestureScrollView` (sürüklemeli kontrollerin kaydırması), `BodyView` (3D manken) |
+| `src/body/` | Vücut görünümü: manken geometrisi (`body-model.ts`, testli), renkler (`body-colors.ts`, testli), three.js sahnesi (`body-scene.ts`) ([0018](../../docs/decisions/0018-vucut-gorunumu.md)) |
+| `src/data/` | Supabase erişimi (`daily-log.ts`) ve saf veri modeli (`pain-map.ts`, `pain-history.ts`; testli) |
 | `src/copy/` | Formların Türkçe etiketleri; ölçekler `@hooplab/engine`'de |
 | `src/theme/` | Görünüm tercihi ve etkin palet (`useAppearance`, `usePalette`), font listesi |
 | `src/utils/` | Saf yardımcılar |

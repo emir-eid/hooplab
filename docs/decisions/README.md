@@ -50,3 +50,4 @@ Hangisi seçildi ve tek paragrafta neden.
 | [0015](0015-veritabani-tek-sahip-rls.md) | Veritabanı: tek sahip RLS, açık GRANT, migration'lar repoda, oturum Keychain'de parçalı | Kabul edildi |
 | [0016](0016-dis-servisleri-claude-yurutur.md) | Dış servis işlemlerini Claude yürütür (CLAUDE.md §7) | Kabul edildi |
 | [0017](0017-sabah-check-in-olcegi.md) | Sabah check-in: beş madde 1-5 (5 = en iyi), ağrı haritası sol / sağ, NRS 0-10 | Kabul edildi |
+| [0018](0018-vucut-gorunumu.md) | Vücut görünümü: stilize 3D manken (three.js + expo-gl), ağrı haritası, aşamalı bölge raporu | Kabul edildi |

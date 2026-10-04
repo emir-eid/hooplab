@@ -25,6 +25,8 @@ Uygulamanın **ne** yaptığını ve **neden** yaptığını anlatır. Nasıl ya
 | 7 | **Takviye** | Kullanıcının sorusu veya mevcut takviyeleri | Yalnız kanıtı güçlü olanlar hakkında bilgi; her zaman doping riski uyarısı | 3 |
 | 8 | **AI koç** | Hesaplanmış değerler ve kanıt tabanı | Günlük özet; soru-cevap; her iddia kaynaklı, kaynak yoksa "yeterli kanıt yok" | 3 |
 
+**Vücut görünümü** (Faz 1'de ağrı haritasıyla, [0018](decisions/0018-vucut-gorunumu.md)): döndürülebilir manken; 1 gün / 3 gün / 1 hafta. Hedef (kullanıcı tarifi, Faz 2-3): 3 gün ve 1 haftada o dönemdeki aktivitelerin türü ve yoğunluğu, hangi bölgeleri ne kadar etkilemiş olabileceği, kullanıcı girdileri ve cihaz verisiyle birlikte değerlendirilir ve bölge bazında bir rapor çıkar. Bölge yükünü modül 3 (motor) hesaplar, raporun metnini koç (modül 8) yazar; her ikisi "tahmin" etiketli.
+
 Basketbola özgü odak: sıçrama yükü ve patellar / Aşil tendonu, ani duruş ve yön değiştirmede quadriceps ve adduktorlar, sprintte hamstring, sık maç ve seyahat takvimi.
 
 ## 4. Kullanıcı girdileri (cihazın ölçemediği)

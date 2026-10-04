@@ -16,6 +16,7 @@ import { usePalette } from '@/theme/appearance';
 /** Sekme rotalarının ikonları. Yeni sekme eklenirse burada da tanımlanır. */
 const tabIcons: Record<string, IconName> = {
   index: 'today',
+  body: 'body',
   trend: 'trend',
   coach: 'coach',
   me: 'me',

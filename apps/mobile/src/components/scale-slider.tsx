@@ -1,6 +1,6 @@
 // Tam sayı kaydırıcısı (maket: .track, .fill, .knob, .track-l): dokunarak veya sürükleyerek seçilir.
 // RPE (0-10) ve ağrı (0-10) için. Sürükleme Gesture Handler'la: yatay hareket kaydırıcıyı başlatır,
-// dikey hareket kaydırıcıyı düşürür ve sayfaya bırakılır. Kaydırıcı sürüklenirken FormScroll kaymaz.
+// dikey hareket kaydırıcıyı düşürür ve sayfaya bırakılır. Kaydırıcı sürüklenirken çevreleyen GestureScrollView kaymaz.
 
 import { radius, size, spacing } from '@hooplab/theme';
 import { useId, useLayoutEffect, useMemo, useRef, useState } from 'react';
@@ -8,7 +8,7 @@ import { StyleSheet, View, type LayoutChangeEvent } from 'react-native';
 import { Gesture, GestureDetector } from 'react-native-gesture-handler';
 import Svg, { Defs, LinearGradient, Rect, Stop } from 'react-native-svg';
 
-import { useFormScrollRef } from '@/components/form';
+import { useGestureScrollRef } from '@/components/gesture-scroll';
 import { Text } from '@/components/text';
 import { usePalette } from '@/theme/appearance';
 
@@ -32,7 +32,7 @@ const FAIL_OFFSET_Y = 8;
 
 export function ScaleSlider({ value, onChange, min, max, label, valueText, low, high }: ScaleSliderProps) {
   const palette = usePalette();
-  const scrollRef = useFormScrollRef();
+  const scrollRef = useGestureScrollRef();
   const [width, setWidth] = useState(0);
   const gradientId = `slider-fill-${useId().replace(/[^a-zA-Z0-9_-]/g, '')}`;
   const ratio = ((value ?? min) - min) / (max - min);

@@ -7,7 +7,8 @@ import { router } from 'expo-router';
 import { useEffect, useState } from 'react';
 import { ActivityIndicator, StyleSheet, View } from 'react-native';
 
-import { FormBlock, FormDock, FormHeader, FormScroll, useDockSpace } from '@/components/form';
+import { FormBlock, FormDock, FormHeader, useDockSpace } from '@/components/form';
+import { GestureScrollView } from '@/components/gesture-scroll';
 import { PainMapPicker } from '@/components/pain-map-picker';
 import { ScaleQuestion } from '@/components/scale-question';
 import { Text } from '@/components/text';
@@ -63,7 +64,7 @@ export default function CheckinScreen() {
 
   return (
     <View style={[styles.root, { backgroundColor: palette.bg }]}>
-      <FormScroll contentContainerStyle={{ paddingBottom: dockSpace }} keyboardShouldPersistTaps="handled">
+      <GestureScrollView contentContainerStyle={{ paddingBottom: dockSpace }} keyboardShouldPersistTaps="handled">
         <FormHeader
           title="Sabah check-in"
           subtitle={existing ? 'Bugünkü kaydın. Değiştirip yeniden kaydedebilirsin.' : 'Beş soru, yaklaşık 30 saniye.'}
@@ -106,7 +107,7 @@ export default function CheckinScreen() {
             </Text>
           </>
         )}
-      </FormScroll>
+      </GestureScrollView>
       <FormDock
         label="Kaydet"
         onPress={save}
