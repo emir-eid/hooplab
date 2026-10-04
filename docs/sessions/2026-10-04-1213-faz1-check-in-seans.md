@@ -1,9 +1,9 @@
 # 2026-10-04 12:13 — Faz 1: sabah check-in ve seans kaydı
 
 - **Faz:** 1
-- **Durum:** açık (/rep)
+- **Durum:** kapandı (/kapat, 12:20)
 - **Model / efor:** Opus 5.5
-- **Commit'ler:** bu bloğun `rep` commit'i
+- **Commit'ler:** `d122b1e` (Blok 1; CI yeşil), bu raporun kapanış commit'i
 
 ## Blok 1 — Check-in ölçeği kaynakları, check-in + ağrı haritası + seans kaydı formları (12:13)
 
@@ -39,9 +39,28 @@ STATE'teki ilk iş: check-in ölçeğini doğrulanmış kaynaklarla kararlaştı
 - LESSONS "Önizleme": react-native-svg web'de boyutsuz 300 × 150 çizer.
 - LESSONS "Windows": CRLF dersi tekrarlandı olarak işaretlendi.
 
+## Blok 2 — Cihaz geri bildirimi (12:20)
+
+### Amaç
+Formların iPhone'da (Expo Go) kullanıcı tarafından denenmesi.
+
+### Yapılanlar
+- Kullanıcı cihazda denedi. **Artı düğmesinin açtığı sayfanın yüksekliği (`fitToContents`) iyi.**
+- **Kaydırıcı (ağrı / sertlik ve RPE) yeterince akıcı değil:** sürüklerken sayfa da dikey kayıyor, kontrol zor. Düzeltme sıradaki işlere eklendi.
+
+### Kararlar
+- yok
+
+### Sorunlar ve hatalar
+- Kaydırıcı RN responder sistemiyle yazılmıştı; `ScrollView` içinde dikey hareketi sayfa alıyor (`onResponderTerminationRequest` her zaman `true`). Web önizlemesinde (fareyle) görünmedi, yalnız dokunmatik cihazda çıktı.
+
+### Öğrenilenler
+- LESSONS "Expo / React Native": ScrollView içindeki sürüklemeli kontrol responder'la değil Gesture Handler ile yazılır, yatay hareket başlayınca kaydırma kilitlenir; web önizlemesi dokunma çakışmasını göstermez.
+
 ## Açık kalanlar
-- Cihazda doğrulama: artı düğmesinin açtığı sayfanın yüksekliği (`fitToContents`), sayfa kayarken kaydırıcıyı sürükleme, kayıttan sonra dönülen sekme. Metro yeni `@hooplab/engine` paketi için yeniden başlatılmalı.
-- Vücut görünümü (kullanıcı isteği, bu oturum): çizim yolu, veri kapsamı ve sekme yeri için kullanıcı kararı bekleniyor.
+- Kaydırıcı düzeltmesi (yukarıda): sürükleme başlayınca sayfa kaymamalı.
+- Kayıttan sonra dönülen sekme cihazda ayrıca teyit edilmedi (web'de bir kez "Ben"e düşmüştü).
+- Vücut görünümü (kullanıcı isteği): çizim yolu, ilk sürümün verisi ve sekme yeri için kullanıcı kararı bekleniyor.
 
 ## Sıradaki adım
-- Vücut görünümü: kullanıcının üç kararından sonra (çizim yolu, ilk sürümün veri kapsamı, sekme yeri).
+- Kaydırıcıyı Gesture Handler'a taşımak (küçük, önce bu); ardından vücut görünümü, kullanıcının üç kararından sonra.

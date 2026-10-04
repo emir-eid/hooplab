@@ -38,8 +38,8 @@ Her faz, bitiş kriteri karşılanınca `/kapat` ile kapanır: faz özeti `docs/
 - [ ] Google Health senkronu (Edge Function + zamanlayıcı); gün içi nabız sunucuda özetlenir, ham saklanmaz; adım/mesafe kaynağa göre tekilleştirilir; `swim-lengths-data` yok sayılır
 - [ ] Kurulum sihirbazı (kullanıcının kendi Google Cloud / Supabase değerleri, [0009](decisions/0009-herkes-kendi-hesabiyla.md)) ve haftalık "yeniden bağlan" akışı
 - [ ] Seans etiketleme: basketbol API'de `SPORT` olarak geliyor; maç / antrenman / şut kullanıcıdan
-- [x] Sabah check-in (uyku kalitesi, yorgunluk, kas ağrısı, stres, ruh hali) + ağrı haritası (2026-10-04, [0017](decisions/0017-sabah-check-in-olcegi.md); web önizlemesinde doğrulandı, cihaz bekliyor)
-- [x] Seans kaydı (tür, süre, RPE, oynanan dakika) (2026-10-04; web önizlemesinde doğrulandı, cihaz bekliyor)
+- [x] Sabah check-in (uyku kalitesi, yorgunluk, kas ağrısı, stres, ruh hali) + ağrı haritası (2026-10-04, [0017](decisions/0017-sabah-check-in-olcegi.md); web önizlemesinde doğrulandı; cihazda denendi, kaydırıcı akıcılığı düzeltilecek)
+- [x] Seans kaydı (tür, süre, RPE, oynanan dakika) (2026-10-04; web önizlemesinde doğrulandı; cihazda denendi, kaydırıcı akıcılığı düzeltilecek)
 - [ ] Toparlanma ekranı (HRV / dinlenik nabız / uyku, kişisel banda göre)
 - [ ] Demo modu (sentetik "demo sporcu")
 - [ ] Apple Developer Programı, EAS Build, TestFlight
