@@ -1,5 +1,6 @@
 // Giriş ekranı. Tek kullanıcı: kayıt yok, hesap Supabase panosunda bir kez açılır ve yeni kayıtlar
 // kapatılır. Bağlantı değerleri eksikse form yerine nedeni gösterilir (kurulum sihirbazı ileride, 0009).
+// Demo (karar 0022) bağlantı değerleri olmadan da açılır: repo'yu klonlayan biri sunucusuz gezebilir.
 
 import { layout, spacing } from '@hooplab/theme';
 import { useRef, useState } from 'react';
@@ -8,11 +9,12 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { useSession } from '@/auth/session';
 import { Card } from '@/components/card';
-import { ListGroup } from '@/components/list';
+import { ListGroup, ListRow } from '@/components/list';
 import { PageHeader } from '@/components/page-header';
 import { PrimaryButton } from '@/components/primary-button';
 import { Text } from '@/components/text';
 import { TextFieldRow } from '@/components/text-field';
+import { startDemo } from '@/demo/demo-mode';
 import { supabaseConfig } from '@/lib/supabase';
 import { usePalette } from '@/theme/appearance';
 
@@ -116,6 +118,10 @@ export default function SignInScreen() {
             </Text>
           </Card>
         )}
+
+        <ListGroup label="Demo" footer="Sentetik bir sporcunun verisiyle tüm ekranları gez. Sunucuya bağlanmaz; girdiğin kayıtlar uygulama kapanınca silinir.">
+          <ListRow label="Demoyu aç" onPress={() => startDemo()} />
+        </ListGroup>
       </ScrollView>
     </KeyboardAvoidingView>
   );

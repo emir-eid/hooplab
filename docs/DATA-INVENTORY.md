@@ -22,6 +22,7 @@ Hangi veri nerede durur, hangi servise ne gider, ne kadar saklanır, nasıl sili
 | Kişisel denylist | Sahibi | `private/guard-denylist.txt` + Drive yedeği + GitHub Actions secret | Gizlilik bekçisi (değerleri hiçbir yere yazdırmaz) |
 | Görünüm tercihi: tema (Sistem / Açık / Koyu), haleyi canlandır | Uygulama | Cihazda AsyncStorage (`hooplab.appearance.v1`); web önizlemesinde tarayıcının localStorage'ı | Yalnız uygulama; hiçbir servise gitmez |
 | Kod, belgeler, sentetik demo verisi | Geliştirme | GitHub (ileride public) | Herkes |
+| Demo modundaki sentetik sporcu ve demoda girilen kayıtlar | Uygulama içinde üretilir (`apps/mobile/src/demo`, [0022](decisions/0022-demo-modu.md)) | Yalnız cihazın belleği; hiçbir servise gitmez, uygulama kapanınca silinir | Cihazı kullanan |
 
 ## Üçüncü taraflara ne gider
 

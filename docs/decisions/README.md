@@ -54,3 +54,4 @@ Hangisi seçildi ve tek paragrafta neden.
 | [0019](0019-google-health-senkronu.md) | Google Health senkronu: Web OAuth istemcisi + Edge Functions, günlük özetler (ham nabız yok), saatlik zamanlayıcı | Kabul edildi |
 | [0020](0020-seans-etiketleme.md) | Seans etiketleme: saat oturumu ile seans kaydı bire bir bağlanır, tür ve RPE kullanıcıdan, "Seans değil" | Kabul edildi |
 | [0021](0021-toparlanma-kisisel-bant.md) | Toparlanma: derin uyku HRV'si, 7 gün / 4 hafta kişisel bant (± 0,5 SD), HRV öncelikli günün durumu | Kabul edildi |
+| [0022](0022-demo-modu.md) | Demo modu: uygulama içi, çevrimdışı sentetik sporcu, kayıtlar bellekte, durum seçici | Kabul edildi |

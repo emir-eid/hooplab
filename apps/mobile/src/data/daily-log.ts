@@ -1,5 +1,6 @@
 // Kayıt formlarının veri erişimi: sabah check-in (+ ağrı haritası), seans kaydı ve seans etiketleme (karar 0020).
 // Erişimi RLS korur (karar 0015); user_id veritabanında oturumdan yazılır, istemci göndermez.
+// Demo modu açıksa her fonksiyon bellekteki demo deposuna gider (karar 0022).
 
 import { isCompleteWellness, wellnessItems, type WellnessAnswers } from '@hooplab/engine';
 
@@ -7,6 +8,7 @@ import type { SessionKind } from '@/copy/labels';
 import { linkCandidates, pendingExercises, type ExerciseSession } from '@/data/exercise-tagging';
 import { buildPainHistory, type PainHistory } from '@/data/pain-history';
 import { painEntries, painMapFromRows, type PainMap } from '@/data/pain-map';
+import { demoStore } from '@/demo/demo-mode';
 import { supabase } from '@/lib/supabase';
 
 export type Result<T> = { ok: true; value: T } | { ok: false; message: string };
@@ -43,6 +45,8 @@ export interface NewTrainingSession {
 
 /** O günün check-in'i; yoksa null. */
 export async function fetchCheckin(localDate: string): Promise<Result<Checkin | null>> {
+  const demo = demoStore();
+  if (demo) return demo.fetchCheckin(localDate);
   if (!supabase) return { ok: false, message: offline };
   const [checkin, pain] = await Promise.all([
     supabase.from('daily_checkins').select(wellnessItems.join(', ')).eq('local_date', localDate).maybeSingle(),
@@ -57,6 +61,8 @@ export async function fetchCheckin(localDate: string): Promise<Result<Checkin | 
 
 /** Check-in ve o günün ağrı haritası tek işlemde (save_morning_checkin). */
 export async function saveCheckin(localDate: string, checkin: Checkin): Promise<Result<null>> {
+  const demo = demoStore();
+  if (demo) return demo.saveCheckin(localDate, checkin);
   if (!supabase) return { ok: false, message: offline };
   const { answers } = checkin;
   const { error } = await supabase.rpc('save_morning_checkin', {
@@ -72,6 +78,8 @@ export async function saveCheckin(localDate: string, checkin: Checkin): Promise<
 }
 
 export async function insertSession(session: NewTrainingSession): Promise<Result<null>> {
+  const demo = demoStore();
+  if (demo) return demo.insertSession(session);
   if (!supabase) return { ok: false, message: offline };
   const { error } = await supabase.from('training_sessions').insert({
     local_date: session.localDate,
@@ -111,6 +119,8 @@ function sessionFromRow(r: SessionRow): TrainingSession {
 }
 
 export async function fetchSessions(localDate: string): Promise<Result<TrainingSession[]>> {
+  const demo = demoStore();
+  if (demo) return demo.fetchSessions(localDate);
   if (!supabase) return { ok: false, message: offline };
   const { data, error } = await supabase
     .from('training_sessions')
@@ -154,6 +164,8 @@ function exerciseFromRow(r: ExerciseRow): ExerciseSession {
 
 /** from–to (dahil) günlerinde saatin kaydettiği, henüz etiketlenmemiş oturumlar. */
 export async function fetchPendingExercises(from: string, to: string): Promise<Result<ExerciseSession[]>> {
+  const demo = demoStore();
+  if (demo) return demo.fetchPendingExercises(from, to);
   if (!supabase) return { ok: false, message: offline };
   const [exercises, sessions] = await Promise.all([
     supabase
@@ -182,6 +194,8 @@ export interface ExerciseToTag {
 
 /** Etiketleme formu için saat oturumu ve aynı günün bağlanabilir kayıtları. Oturum yoksa null. */
 export async function fetchExerciseToTag(id: string): Promise<Result<ExerciseToTag | null>> {
+  const demo = demoStore();
+  if (demo) return demo.fetchExerciseToTag(id);
   if (!supabase) return { ok: false, message: offline };
   const { data, error } = await supabase.from('exercise_sessions').select(exerciseColumns).eq('id', id).maybeSingle();
   if (error) return { ok: false, message: offline };
@@ -197,6 +211,8 @@ export async function linkSession(
   sessionId: string,
   exercise: Pick<ExerciseSession, 'id' | 'startTime'>,
 ): Promise<Result<null>> {
+  const demo = demoStore();
+  if (demo) return demo.linkSession(sessionId, exercise);
   if (!supabase) return { ok: false, message: offline };
   const { error } = await supabase
     .from('training_sessions')
@@ -208,6 +224,8 @@ export async function linkSession(
 
 /** "Seans değil": oturum etiketlenecekler listesinden çıkar (ör. yürüyüş). */
 export async function dismissExercise(id: string): Promise<Result<null>> {
+  const demo = demoStore();
+  if (demo) return demo.dismissExercise(id);
   if (!supabase) return { ok: false, message: offline };
   const { error } = await supabase
     .from('exercise_sessions')
@@ -218,6 +236,8 @@ export async function dismissExercise(id: string): Promise<Result<null>> {
 
 /** Vücut görünümü: verilen günlerin (eskiden yeniye) check-in günleri ve ağrı kayıtları. */
 export async function fetchPainHistory(dates: readonly string[]): Promise<Result<PainHistory>> {
+  const demo = demoStore();
+  if (demo) return demo.fetchPainHistory(dates);
   if (!supabase) return { ok: false, message: offline };
   const from = dates[0];
   const to = dates[dates.length - 1];

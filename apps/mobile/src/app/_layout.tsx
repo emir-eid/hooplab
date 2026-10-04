@@ -1,5 +1,6 @@
 // Kök düzen: görünüm tercihi, fontlar ve saklanan oturum okunana kadar açılış ekranı açık kalır;
-// sonra tema ve gezinme kurulur. Oturum yoksa yalnız giriş ekranına gidilebilir.
+// sonra tema ve gezinme kurulur. Oturum yoksa yalnız giriş ekranına gidilebilir; demo modu (karar 0022)
+// oturum gibi sayılır ama sunucuya dokunmaz.
 
 import { DarkTheme, DefaultTheme, ThemeProvider, type Theme } from 'expo-router';
 import { Stack } from 'expo-router/stack';
@@ -10,6 +11,7 @@ import { useEffect } from 'react';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 
 import { SessionProvider, useSession } from '@/auth/session';
+import { useDemoScenario } from '@/demo/demo-mode';
 import { AppearanceProvider, useAppearance } from '@/theme/appearance';
 import { fontMap } from '@/theme/fonts';
 
@@ -31,6 +33,8 @@ export default function RootLayout() {
 function RootNavigator() {
   const { palette, ready } = useAppearance();
   const { session, ready: sessionReady } = useSession();
+  const demo = useDemoScenario();
+  const signedIn = session !== null || demo !== null;
   const [fontsLoaded, fontError] = useFonts(fontMap);
   // Font yüklenemezse uygulama sistem fontuyla açılır; hata geliştirmede görünsün.
   const loaded = ready && sessionReady && (fontsLoaded || fontError !== null);
@@ -62,7 +66,7 @@ function RootNavigator() {
     <ThemeProvider value={navigationTheme}>
       <StatusBar style={palette.statusBar} />
       <Stack screenOptions={{ headerShown: false, contentStyle: { backgroundColor: palette.bg } }}>
-        <Stack.Protected guard={session !== null}>
+        <Stack.Protected guard={signedIn}>
           <Stack.Screen name="(tabs)" />
           <Stack.Screen
             name="add"
@@ -77,7 +81,7 @@ function RootNavigator() {
           <Stack.Screen name="session-new" options={{ presentation: 'modal' }} />
           <Stack.Screen name="recovery-method" />
         </Stack.Protected>
-        <Stack.Protected guard={session === null}>
+        <Stack.Protected guard={!signedIn}>
           <Stack.Screen name="sign-in" />
         </Stack.Protected>
       </Stack>

@@ -9,6 +9,8 @@ import { PageHeader } from '@/components/page-header';
 import { Screen } from '@/components/screen';
 import { fetchSyncStatus } from '@/data/google-health';
 import { describeConnection } from '@/data/google-health-status';
+import type { DemoScenario } from '@/demo/demo-data';
+import { startDemo, stopDemo, useDemoScenario } from '@/demo/demo-mode';
 import { useAppearance } from '@/theme/appearance';
 
 const themeLabels: Record<ThemePreference, string> = {
@@ -17,7 +19,13 @@ const themeLabels: Record<ThemePreference, string> = {
   dark: 'Koyu',
 };
 
-export default function MeScreen() {
+// Demo açılıp kapanınca ekran baştan kurulur ve Google Health özeti yeniden okunur.
+export default function MeRoute() {
+  const demo = useDemoScenario();
+  return <MeScreen key={demo ?? 'real'} demo={demo} />;
+}
+
+function MeScreen({ demo }: { demo: DemoScenario | null }) {
   const { preferences } = useAppearance();
   const { session, signOut } = useSession();
   const [healthSummary, setHealthSummary] = useState<string | undefined>(undefined);
@@ -59,9 +67,20 @@ export default function MeScreen() {
           onPress={() => router.push('/me/appearance')}
         />
       </ListGroup>
-      <ListGroup label="Hesap" footer={session?.user.email}>
-        <ListRow label="Çıkış yap" onPress={confirmSignOut} />
-      </ListGroup>
+      {demo ? (
+        <ListGroup label="Demo" footer="Demo sporcu: tüm veriler sentetik ve yalnız bu cihazın belleğinde. Çıkınca girdiğin kayıtlar silinir.">
+          <ListRow label="Demodan çık" onPress={stopDemo} />
+        </ListGroup>
+      ) : (
+        <>
+          <ListGroup label="Demo" footer="Sentetik bir sporcunun verisiyle gezinmek için. Senin verine dokunmaz, sunucuya bağlanmaz.">
+            <ListRow label="Demo sporcuyu göster" onPress={() => startDemo()} />
+          </ListGroup>
+          <ListGroup label="Hesap" footer={session?.user.email}>
+            <ListRow label="Çıkış yap" onPress={confirmSignOut} />
+          </ListGroup>
+        </>
+      )}
     </Screen>
   );
 }

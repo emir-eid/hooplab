@@ -9,6 +9,7 @@ import { Pressable, StyleSheet, View } from 'react-native';
 
 import { Aura } from '@/components/aura';
 import { Card } from '@/components/card';
+import { DemoBar } from '@/components/demo-bar';
 import { GroupLabel, ListGroup, ListRow } from '@/components/list';
 import { PageHeader } from '@/components/page-header';
 import { NightData, RecoveryState } from '@/components/recovery-section';
@@ -26,6 +27,8 @@ import {
 import { exerciseSummary, type ExerciseSession } from '@/data/exercise-tagging';
 import { fetchRecovery } from '@/data/recovery';
 import type { RecoveryView } from '@/data/recovery-view';
+import type { DemoScenario } from '@/demo/demo-data';
+import { useDemoScenario } from '@/demo/demo-mode';
 import { usePalette } from '@/theme/appearance';
 import { formatDayHeader } from '@/utils/format-date';
 import { addDays, toLocalDate } from '@/utils/local-date';
@@ -37,7 +40,13 @@ interface TodayLog {
   pending: ExerciseSession[];
 }
 
-export default function TodayScreen() {
+// Demo senaryosu değişince ekran baştan kurulur: veri yeniden çekilir, grafik seçimi gibi durumlar sıfırlanır.
+export default function TodayRoute() {
+  const demo = useDemoScenario();
+  return <TodayScreen key={demo ?? 'real'} demo={demo} />;
+}
+
+function TodayScreen({ demo }: { demo: DemoScenario | null }) {
   const palette = usePalette();
   const [log, setLog] = useState<TodayLog | null>(null);
   const [error, setError] = useState<string | null>(null);
@@ -85,6 +94,7 @@ export default function TodayScreen() {
     <Screen>
       {auraState ? <Aura state={auraState} /> : null}
       <PageHeader overline={formatDayHeader(new Date())} title="Bugün" />
+      {demo ? <DemoBar scenario={demo} /> : null}
 
       {recovery ? <RecoveryState view={recovery} /> : null}
       {recoveryError ? (

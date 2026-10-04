@@ -3,11 +3,14 @@
 
 import type { Result } from '@/data/daily-log';
 import { buildRecoveryView, recoveryFrom, type HealthDailyRow, type RecoveryView, type SleepRow } from '@/data/recovery-view';
+import { demoStore } from '@/demo/demo-mode';
 import { supabase } from '@/lib/supabase';
 
 const offline = 'Gece verisi alınamadı. İnternetini kontrol edip yeniden dene.';
 
 export async function fetchRecovery(today: string): Promise<Result<RecoveryView>> {
+  const demo = demoStore();
+  if (demo) return demo.fetchRecovery(today);
   if (!supabase) return { ok: false, message: offline };
   const from = recoveryFrom(today);
   const [daily, sleep] = await Promise.all([
