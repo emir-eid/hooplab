@@ -99,8 +99,32 @@ STATE'teki 3. iş: [denetim raporundaki](../audits/2026-10-05-public-oncesi.md) 
 ### Öğrenilenler
 - yok
 
+## Blok 4 — Dependabot uyarıları (11:09)
+
+### Amaç
+Kullanıcı kararı: kişisel push protection zaten açıkmış. Dependabot uyarıları açılsın; e-postaya güvenilmesin, uyarıları haftalık denetim sınıflasın.
+
+### Yapılanlar
+- `PUT repos/emir-eid/hooplab/vulnerability-alerts` (204). Otomatik düzeltme PR'ları (`automated-security-fixes`) kapalı bırakıldı: Expo'nun sürüm sabitlemesini bozan PR'lar üretir.
+- İlk taramada 4 açık uyarı çıktı. Dördü de Expo'nun dolaylı bağımlılığı; Edge Functions'ta açık yok. Her biri `npm ls` ile izlendi:
+  - `braces` (yüksek, düzeltme yok): `@expo/cli` → Metro dosya haritası. Yalnız geliştirme.
+  - `node-forge` (yüksek, düzeltme yok): `@expo/cli` → kod imzalama sertifikaları. Yalnız geliştirme; HoopLab expo-updates kod imzalamasını kullanmıyor.
+  - `uuid` (orta): `@expo/config-plugins` → `xcode`. Yalnız derleme.
+  - `decode-uri-component` (orta): `expo-router` → `query-string`. Uygulamaya giriyor. Risk: bozuk kodlanmış bir bağlantının uygulamayı kilitlemesi (hizmet engelleme). Veri sızıntısı değil. Düzeltme sürümü var ama `query-string` 7 eski sürüme bağlı; Expo güncellemesiyle çözülmesi beklenir, override yapılmadı.
+- Haftalık denetim görevinin talimatına (`C:\Users\user\.claude\scheduled-tasks\hooplab-haftalik-denetim\SKILL.md`, repo dışı) `j` maddesi eklendi: açık uyarıları "uygulamada / sunucuda çalışan" veya "yalnız geliştirme" diye sınıflar, yenileri işaretler, dismiss ve güncelleme yapmaz. Aynı dosyada repo "private" yazıyordu; "public" yapıldı.
+- [audits/README](../audits/README.md), [denetim raporu](../audits/2026-10-05-public-oncesi.md) "Sonuç" ve [CHANGELOG](../CHANGELOG.md) güncellendi.
+
+### Kararlar
+- Dependabot uyarıları açık, otomatik düzeltme PR'ları kapalı. Uyarılar e-posta yerine haftalık denetimden okunur (kullanıcı onayı). Uyarılar şimdilik kapatılmadı; Expo SDK yükseltmesinde yeniden bakılır.
+
+### Sorunlar ve hatalar
+- yok
+
+### Öğrenilenler
+- yok
+
 ## Açık kalanlar
-- İsteğe bağlı, kullanıcı (konsol): GitHub → Settings → Code security → Push protection for yourself. Dependabot uyarılarını açmak isteğe bağlı.
+- Kullanıcı (konsol, isteğe bağlı): GitHub → Settings → Notifications → Dependabot alerts e-postasını kapatmak (uyarıları haftalık denetim okuyor).
 - Takip (2026-10-08 / 10 civarı): kişisel bant ve OAuth yenileme token'ının 7. gün düşüşü (STATE sıradaki işler 1).
 
 ## Sıradaki adım

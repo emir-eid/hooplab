@@ -52,7 +52,7 @@ Elle yapılan denetim (ROADMAP Faz 1, [0005](../decisions/0005-repo-ve-gizlilik-
 1. Son tarama: geçmiş taraması (928 girdi, mesajlar dahil) ve 34 Actions logu temiz; CI yeşil; çalışma kopyası temiz ve push'lanmış.
 2. `gh repo edit --visibility public` → `PUBLIC`.
 3. Secret scanning ve push protection `enabled` (API ile doğrulandı); ilk taramadan sonra uyarı sayısı 0.
-4. Wiki ve Projects kapatıldı. Dependabot uyarıları açılmadı (bildirim e-postası doğurur; kullanıcı kararı).
+4. Wiki ve Projects kapatıldı. Dependabot uyarıları kullanıcı kararıyla açıldı (11:09); otomatik düzeltme PR'ları kapalı. Uyarıları haftalık denetim okuyup sınıflar.
 5. Kullanıcıya kalan (isteğe bağlı): GitHub → Settings → Code security → Push protection for yourself.
 6. Repo sayfası giriş yapmadan erişilebilir (200). README, dört görüntü ve LICENSE GitHub'da tarayıcıda doğrulandı.
 

@@ -34,6 +34,7 @@ Uygulamaya veya altyapıya görünür değişiklikler. Biçim: [Keep a Changelog
 - Demo modu: giriş ekranında **Demoyu aç** ve Ben → **Demo sporcuyu göster**; sentetik sporcu cihazda üretilir, hiçbir sunucuya bağlanılmaz; Bugün'de Hazır / Kontrollü / Toparlan seçici; demoda girilen kayıtlar bellekte; Ben → **Demodan çık**. Karar 0022.
 - `LICENSE` (MIT) ve README'nin yeni hali: ne yaptığı, ilkeler, nasıl geliştirildiği, gizlilik, demo ile hızlı deneme; başta kısa İngilizce özet.
 - README'de demo modundan ekran görüntüleri (Bugün: Hazır ve Toparlan, gece verisi, Vücut; açık ve koyu tema, `docs/gorseller/`). Yeniden üretmek için `npm run screenshots` (`tools/dev/demo-screenshots.mjs`, başsız Chrome).
+- Repo public; GitHub secret scanning, push protection ve Dependabot uyarıları açık (otomatik düzeltme PR'ları kapalı). Haftalık denetim Dependabot uyarılarını uygulamada / sunucuda çalışan veya yalnız geliştirme diye sınıflıyor.
 - Gizlilik bekçisi commit mesajlarını da tarıyor: `--history` her commit ve etiket mesajını ve yazar satırını tarar; yeni `--message` modu ve `.githooks/commit-msg` yazılan mesajı commit'ten önce durdurur (negatif testli).
 
 ### Değişti
