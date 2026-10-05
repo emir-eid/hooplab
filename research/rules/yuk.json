@@ -15,7 +15,55 @@
       "value": { "formula": "rpe * duration_min", "unit": "AU" },
       "applies_to": "her seans; maçta süre olarak seansın tamamı (ısınma dahil) kullanılır, oynanan dakika ayrı tutulur",
       "sources": ["foster-2001", "haddad-2017", "burger-2024"],
-      "notes": "Yük saklanmaz, packages/engine sessionLoad hesaplar. Maçta süre tanımı (tam seans mı oynanan dakika mı) Faz 2'de akut/kronik yükle birlikte yeniden değerlendirilecek."
+      "notes": "Yük saklanmaz, packages/engine sessionLoad hesaplar. Maçta tam seans süresi korunur (karar 0025): basketbolda seans RPE ile yük izleyen çalışmalar da (weiss-2017, ferioli-2020) seansın tamamını kullanıyor."
+    },
+    {
+      "id": "yuk-gunluk",
+      "description": "Günlük yük = o günün (sporcunun yerel günü) seans yüklerinin toplamı. Seans kaydı olmayan gün 0 yük sayılır.",
+      "value": { "formula": "sum(session_load)", "rest_day_value": 0, "unit": "AU" },
+      "applies_to": "ilk seans kaydının olduğu günden bugüne her gün",
+      "sources": ["bourdon-2017", "foster-1998", "haddad-2017"],
+      "notes": "Dinlenme günü yükün parçasıdır; monotonluk ve ortalamalar 0 yüklü günlerle hesaplanır (foster-1998). Uygulama kaydedilmemiş bir seansı dinlenme gününden ayıramaz; etiketlenmemiş saat oturumlarının ekranda nasıl belirtileceği arayüz adımında kararlaştırılır (karar 0025). İlk kayıttan önceki günler bilinmiyor sayılır, 0 sayılmaz."
+    },
+    {
+      "id": "yuk-haftalik",
+      "description": "Son 7 günün toplam yükü, ondan önceki 7 günün toplamı ve haftadan haftaya değişim; son 28 günün haftalık ortalaması (28 günlük toplam / 4). Yalnız gösterilir, eşik yok.",
+      "value": { "week_days": 7, "average_weeks": 4, "unit": "AU" },
+      "applies_to": "bugün dahil son 7 / 14 / 28 gün; pencerenin tamamı ilk kayıttan sonraysa hesaplanır",
+      "sources": ["andrade-2020", "ferioli-2020", "weiss-2017"],
+      "notes": "1 hafta / 4 hafta penceresi akut / kronik yük çalışmalarında en yaygın olanı (andrade-2020). Haftadan haftaya değişim basketbolda incelenmiş ama sakatlıkla ilişkili bulunmamış bir gösterge (ferioli-2020); bu yüzden eşiği ve rengi yok."
+    },
+    {
+      "id": "yuk-ewma",
+      "description": "Akut ve kronik yük üstel ağırlıklı ortalama (EWMA) ile: bugünkü = günlük yük × λ + (1 − λ) × dünkü; λ = 2 / (N + 1); akut N = 7, kronik N = 28 gün.",
+      "value": { "acute_n": 7, "chronic_n": 28, "lambda": "2/(N+1)", "unit": "AU/gün" },
+      "applies_to": "yuk-gunluk serisi; ilk kayıt gününden başlar",
+      "sources": ["williams-2017", "ren-2024", "murray-2017", "griffin-2019", "andrade-2020"],
+      "notes": "EWMA kayan ortalamadan daha duyarlı bulundu (murray-2017, griffin-2019). Formül williams-2017'de; mektup açık erişimde olmadığı için ren-2024 tam metninden doğrulandı. Başlangıç değeri kaynaklarda tanımlı değil; HoopLab ağırlıkları ilk kayıt gününden itibaren normalleştirir (ağırlıklar toplamı 1), yani kayıt öncesi günleri 0 saymaz. Yeterince uzun geçmişte bu, özyinelemeli formülle aynı sonucu verir (karar 0025)."
+    },
+    {
+      "id": "yuk-orani",
+      "description": "Akut / kronik oran = akut EWMA / kronik EWMA. Sakatlık riski olarak değil, 'bu hafta alıştığın seviyenin kaç katı' bağlamı olarak gösterilir. İlk kayıttan bu yana en az 28 gün geçmeden ve kronik yük 0 iken hesaplanmaz.",
+      "value": { "formula": "ewma_acute / ewma_chronic", "min_history_days": 28 },
+      "applies_to": "bugün",
+      "sources": ["williams-2017", "andrade-2020", "ding-2026", "impellizzeri-2020", "impellizzeri-2021", "lolli-2017"],
+      "notes": "En güncel meta-analiz oranı tek başına tahmin aracı değil, bağlam göstergesi olarak okumayı öneriyor (ding-2026). Oranın nedensel kanıtı yok ve istatistik sorunları var (lolli-2017, impellizzeri-2020, impellizzeri-2021); bu yüzden 'güvenli bölge' rengi ve risk dili yok. En az geçmiş kronik pencerenin uzunluğu (N = 28)."
+    },
+    {
+      "id": "yuk-artis-notu",
+      "description": "Oran 1,5 veya üstündeyse bilgi notu: 'Bu hafta yük alıştığın seviyenin belirgin üstünde.' Tahmin olarak etiketlenir; sakatlık tahmini değildir. Düşük oran için not veya renk yok.",
+      "value": { "ratio_min": 1.5, "label": "tahmin" },
+      "applies_to": "yuk-orani hesaplanabildiğinde, bugün",
+      "sources": ["gabbett-2016", "maupin-2020", "andrade-2020", "soligard-2016", "ding-2026", "chan-2024", "weiss-2017", "ferioli-2020", "impellizzeri-2020", "impellizzeri-2021"],
+      "notes": "1,5, çalışmaların 'yüksek oran' için en sık kullandığı alt sınır (gabbett-2016, maupin-2020); ani yük artışları uzlaşı metinlerinde risk etkeni (soligard-2016). Eşik başka takım sporlarından; basketbolda oran eşikleri doğrulanmadı (chan-2024; weiss-2017 belirsiz, ferioli-2020 ilişki yok). Bu yüzden not bir uyarı ya da risk tahmini değil, 'alıştığından belirgin fazla' bilgisidir (karar 0025)."
+    },
+    {
+      "id": "yuk-monotonluk",
+      "description": "Monotonluk = son 7 günün günlük yük ortalaması / standart sapması (örneklem SD'si, 0 yüklü günler dahil). Gerilim = son 7 günün toplam yükü × monotonluk. Yalnız gösterilir, eşik yok.",
+      "value": { "window_days": 7, "sd": "sample", "threshold": null },
+      "applies_to": "son 7 gün ilk kayıttan sonraysa; SD 0 ise (her gün aynı yük) hesaplanmaz",
+      "sources": ["foster-1998", "haddad-2017"],
+      "notes": "Foster eşikleri sporcuya özgü buldu, evrensel değer vermedi; sık anılan '2'nin üstü' eşiği doğrulanmış bir kaynakta bulunamadı, kullanılmaz. SD türü kaynaklarda yazmıyor; örneklem SD'si (n − 1) seçildi. Kişisel geçmişe göre yorum ileride, haftalar biriktikçe."
     }
   ]
 }

@@ -31,4 +31,4 @@ verified_on: 2026-10-04
 
 ## Bağlı kurallar
 
-- `rules/yuk.json` → `seans-rpe-olcek`, `seans-yuku`
+- `rules/yuk.json` → `seans-rpe-olcek`, `seans-yuku`, `yuk-gunluk`, `yuk-monotonluk`
