@@ -1,9 +1,9 @@
 # 2026-10-05 01:38 — Faz 1: public'e geçiş öncesi denetim
 
 - **Faz:** 1
-- **Durum:** açık (/rep)
+- **Durum:** kapandı (/kapat, 11:12)
 - **Model / efor:** Opus 5.5 · yüksek
-- **Commit'ler:** bu bloğun `/rep` commit'i
+- **Commit'ler:** `238069b` (Blok 1), `5c86f09` (Blok 2), `e26e878` (Blok 3), `6d00bb7` (Blok 4), bu raporun kapanış commit'i
 
 ## Blok 1 — Public'e geçiş öncesi denetim, README, LICENSE, bekçide commit mesajı taraması (01:38)
 
@@ -127,5 +127,7 @@ Kullanıcı kararı: kişisel push protection zaten açıkmış. Dependabot uyar
 - Kullanıcı (konsol, isteğe bağlı): GitHub → Settings → Notifications → Dependabot alerts e-postasını kapatmak (uyarıları haftalık denetim okuyor).
 - Takip (2026-10-08 / 10 civarı): kişisel bant ve OAuth yenileme token'ının 7. gün düşüşü (STATE sıradaki işler 1).
 
+- Vücut mankeninde bel / uyluk birleşiminde tırtıklı bir kenar görüldü (README görüntüsü, başsız Chrome). Başsız çizimden mi kaynaklanıyor, cihazda da var mı: iPhone'da bakılacak.
+
 ## Sıradaki adım
-- STATE sıradaki işler 1: takip (2026-10-08 / 10 civarı).
+- STATE sıradaki işler 1: takip (2026-10-08 / 10 civarı). O tarihe kadar: 3. iş, kurulum sihirbazı.
