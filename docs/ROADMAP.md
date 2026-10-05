@@ -52,7 +52,7 @@ Her faz, bitiş kriteri karşılanınca `/kapat` ile kapanır: faz özeti `docs/
 ## Faz 2: Hesap motoru (`packages/engine`)
 
 - [ ] Kişisel baseline'lar: HRV, dinlenik nabız ve uyku Faz 1'de geldi ([0021](decisions/0021-toparlanma-kisisel-bant.md)); kalanlar solunum ve check-in
-- [ ] Antrenman yükü: seans yükü (RPE × dakika), akut/kronik yük, monotonluk. Kaynaklar ve yöntem hazır (2026-10-05, [0025](decisions/0025-antrenman-yuku.md); 17 yeni kaynak, 6 kural); motor ve arayüz sürüyor
+- [x] Antrenman yükü: seans yükü (RPE × dakika), akut/kronik yük, monotonluk (2026-10-06, [0025](decisions/0025-antrenman-yuku.md); 17 yeni kaynak, 6 kural; motor testli, Trend ve Bugün arayüzü web önizlemesinde ve iPhone'da doğrulandı)
 - [ ] Kas ve tendon bölge yükü modeli (tahmin olarak etiketli), ağrı haritasıyla kalibrasyon
 - [ ] Beslenme hedefleri (yük gününe göre karbonhidrat/protein g/kg), enerji yetersizliği uyarısı
 - [ ] Hidrasyon: ter oranı testi, sıvı hedefi

@@ -9,6 +9,11 @@ import {
   bodyRegions,
   dayStatusRule,
   hrvTransform,
+  loadEwma,
+  loadRatioRule,
+  loadSpikeRule,
+  loadWeek,
+  monotonyRule,
   painScale,
   recoveryBand,
   recoveryMinValues,
@@ -77,6 +82,23 @@ test('günün durumu birleşimi kuralla aynı', () => {
   const { value } = rule('toparlanma.json', 'gunun-durumu');
   assert.deepEqual(value.recover_when_all, [...dayStatusRule.recoverWhenAll]);
   assert.deepEqual(value.caution_when_any, [...dayStatusRule.cautionWhenAny]);
+});
+
+test('antrenman yükü pencereleri ve eşikleri kuralla aynı', () => {
+  assert.equal(rule('yuk.json', 'yuk-gunluk').value.rest_day_value, 0);
+  const week = rule('yuk.json', 'yuk-haftalik').value;
+  assert.equal(week.week_days, loadWeek.days);
+  assert.equal(week.average_weeks, loadWeek.averageWeeks);
+  const ewma = rule('yuk.json', 'yuk-ewma').value;
+  assert.equal(ewma.acute_n, loadEwma.acuteN);
+  assert.equal(ewma.chronic_n, loadEwma.chronicN);
+  assert.equal(ewma.lambda, '2/(N+1)');
+  assert.equal(rule('yuk.json', 'yuk-orani').value.min_history_days, loadRatioRule.minHistoryDays);
+  assert.equal(rule('yuk.json', 'yuk-artis-notu').value.ratio_min, loadSpikeRule.ratioMin);
+  const mono = rule('yuk.json', 'yuk-monotonluk').value;
+  assert.equal(mono.window_days, monotonyRule.windowDays);
+  assert.equal(mono.sd, 'sample');
+  assert.equal(mono.threshold, null);
 });
 
 test('veritabanı CHECK aralıkları motorla aynı', () => {

@@ -1,6 +1,6 @@
 # 0025. Antrenman yükü: bileşenler ayrı, EWMA oranı yalnız bağlam, 1,5 üstünde bilgi notu, monotonluk eşiksiz
 
-- **Durum:** Kabul edildi (yöntem ve kurallar); motor ve arayüz sürüyor
+- **Durum:** Kabul edildi; motor testli, arayüz web önizlemesinde (390×844, açık ve koyu, üç demo senaryosu) ve iPhone'da (Expo Go, demo) doğrulandı (2026-10-06)
 - **Tarih:** 2026-10-05
 - **İlgili:** [0004](0004-mimari-hesap-motoru-kanit-ai.md), [0017](0017-sabah-check-in-olcegi.md), [0020](0020-seans-etiketleme.md), [0021](0021-toparlanma-kisisel-bant.md), ROADMAP Faz 2, PRODUCT modül 2, `research/rules/yuk.json`
 
@@ -30,11 +30,15 @@ Kullanıcı **B**'yi seçti.
 - **Bilgi notu:** oran ≥ 1,5 ise "Bu hafta yük alıştığın seviyenin belirgin üstünde", "tahmin" etiketiyle. Sakatlık tahmini olarak sunulmaz. Düşük oran için not yok.
 - **Monotonluk ve gerilim:** son 7 gün; monotonluk = ortalama / örneklem SD'si (0 yüklü günler dahil), gerilim = 7 günlük toplam × monotonluk. SD 0 ise üretilmez. Eşik yok; "2'nin üstü" eşiği doğrulanmış bir kaynakta bulunamadı.
 - **Maç süresi:** tam seans süresi korunur (seans RPE ile basketbol çalışmaları da öyle yapıyor); oynanan dakika ayrı tutulur.
-- **Kod:** hesap `packages/engine` içinde, sabitler `rules-sync` testiyle `yuk.json`'a bağlı.
+- **Hesabın günü:** bugün seans kaydı varsa bugün, yoksa dün. Sabah henüz girilmemiş seans bugünü 0 yaparsa akut EWMA tek başına %25 düşerdi (λ = 0,25); dinlenme günü ertesi gün hesaba girer. Sonuç hangi güne ait olduğunu söyler (`asOf`).
+- **Arayüz (kullanıcı seçimi):** ayrıntı **Trend** sekmesinde: 28 günlük günlük yük çubukları (son 7 gün belirgin, öncesi soluk, kesikli çizgi alıştığın günlük yük = kronik EWMA; dokunarak gün seçme), son 7 / önceki 7 gün ve değişim, dört kart (alıştığına göre, 4 hafta ort., monotonluk, gerilim), yöntem notu. **Bugün**'de yalnız not düştüğünde tek satır, Trend'e götürür. Renk ve risk dili yok; not "Tahmin" rozetli.
+- **Etiketsiz saat oturumları (kullanıcı seçimi):** son 28 günde varsa yük bölümünün üstünde "Saatte N oturum etiketlenmedi" satırı ve "Etiketle" (en yeni oturumu seans formunda açar; eski oturumlar da etiketlenebilir). Grafikte günler ayrıca işaretlenmez.
+- **Kod:** `packages/engine/src/training-load.ts` (`readTrainingLoad`, `dailyLoads`, `ewma`); sabitler `rules-sync` testiyle `yuk.json`'a bağlı. Uygulamada `data/training-load-view.ts` (saf; 120 günlük seans penceresi, daha eskisinin EWMA ağırlığı ihmal edilebilir), `data/training-load.ts`, `copy/training-load.ts`, `components/load-chart.tsx`, `components/load-section.tsx`; demo sporcuya 42 günlük sentetik seans geçmişi (yeşil oran ≈ 1,0, sarı ≈ 1,1, kırmızı kamp haftası ≈ 1,7 ve not).
 
 ## Sonuçlar
+- **EWMA oranı kayan ortalamadan sıkışıktır** (murray-2017'nin bulgusuyla uyumlu): uzun süre sabit yükten sonra son haftanın yükü 2 katına çıkınca oran yaklaşık 1,34, 2,5 katında 1,45, 3 katında 1,53 olur (motor testi, kapalı form). Not ancak yaklaşık 2,8 katlık bir haftada düşer; aynı senaryoda kayan ortalama 2 katta 1,6 verirdi. Eşik literatürde iki yöntem için aynı aralıklarla kullanılıyor (murray-2017); not bu yüzden seyrek ve temkinli.
 - Gerçek hesapta oran ve not ilk seans kaydından 28 gün sonra görünür; o zamana kadar günlük ve haftalık değerler gösterilir.
-- Uygulama kaydedilmemiş bir seansı dinlenme gününden ayıramaz: unutulan kayıt o günü 0 yapar, oranı ve monotonluğu çarpıtır. Etiketlenmemiş saat oturumlarının yük ekranında nasıl belirtileceği arayüz adımında kararlaştırılır.
+- Uygulama kaydedilmemiş bir seansı dinlenme gününden ayıramaz: unutulan kayıt o günü 0 yapar, oranı ve monotonluğu çarpıtır. Etiketlenmemiş saat oturumları bu yüzden yük bölümünde sayılır ve etiketlemeye bağlanır.
 - Monotonluk ve gerilim için kişisel bant (haftalar biriktikçe) ileride; şimdilik yalnız sayı.
 - Kas / tendon bölge yükü (modül 3) ve beslenmenin gün tipi bu günlük yükü kullanacak.
 - **Yeniden değerlendirme tetikleyicisi:** basketbolda iç yükle oran ya da ani artış eşiğini doğrulayan bir çalışma veya uzlaşı metni; oranın uzlaşı metinlerinden çıkarılması (impellizzeri-2021'in önerisi); not gerçek hissiyatla sürekli çelişirse.

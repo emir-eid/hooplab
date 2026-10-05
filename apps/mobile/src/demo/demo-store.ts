@@ -1,12 +1,15 @@
 // Demo modunun bellekteki veritabanı (karar 0022): veri fonksiyonlarıyla aynı imzalar, ağ yok.
 // Kayıtlar (check-in, seans, etiketleme) yalnız bellekte; uygulama kapanınca veya senaryo değişince sıfırlanır.
 
+import { addIsoDays } from '@hooplab/engine';
+
 import type { Checkin, ExerciseToTag, NewTrainingSession, Result, TrainingSession } from '@/data/daily-log';
 import { linkCandidates, pendingExercises, type ExerciseSession } from '@/data/exercise-tagging';
 import type { SyncStatusRow } from '@/data/google-health-status';
 import { buildPainHistory, type PainHistory } from '@/data/pain-history';
 import { painEntries, painMapFromRows } from '@/data/pain-map';
 import { buildRecoveryView, recoveryFrom, type RecoveryView } from '@/data/recovery-view';
+import { buildTrainingLoadView, loadChartDays, type TrainingLoadView } from '@/data/training-load-view';
 import { createDemoDb, type DemoDb, type DemoScenario } from '@/demo/demo-data';
 
 export const demoUnavailable = 'Demoda Google Health bağlantısı yok; veriler sentetik.';
@@ -100,6 +103,13 @@ export class DemoStore {
         today,
       ),
     );
+  }
+
+  async fetchTrainingLoad(today: string): Promise<Result<TrainingLoadView>> {
+    const rows = this.db.sessions.map((s) => ({ local_date: s.localDate, rpe: s.rpe, duration_min: s.durationMin }));
+    const earliest = rows.reduce<string | null>((min, r) => (min === null || r.local_date < min ? r.local_date : min), null);
+    const pending = await this.fetchPendingExercises(addIsoDays(today, -(loadChartDays - 1)), today);
+    return ok(buildTrainingLoadView(rows, today, { earliest, untagged: pending.ok ? pending.value : [] }));
   }
 
   async fetchSyncStatus(): Promise<Result<SyncStatusRow | null>> {

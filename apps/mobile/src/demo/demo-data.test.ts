@@ -2,6 +2,7 @@ import assert from 'node:assert/strict';
 import { test } from 'node:test';
 
 import { buildRecoveryView } from '../data/recovery-view.ts';
+import { buildTrainingLoadView } from '../data/training-load-view.ts';
 import { createDemoDb, demoScenarios } from './demo-data.ts';
 
 const now = new Date('2026-10-05T09:00:00+03:00');
@@ -44,4 +45,20 @@ test('bugün check-in yok, etiket bekleyen oturum var, satırlar biçimde', () =
   // Eşleşmiş seansın saat oturumu var
   const linked = db.sessions.filter((s) => s.exerciseSessionId);
   assert.ok(linked.every((s) => db.exercises.some((e) => e.id === s.exerciseSessionId)));
+});
+
+test('yük: yeşil dengeli, sarı orta artış (not yok), kırmızı kamp haftası (oran 1,5 üstü, not)', () => {
+  for (const today of days) {
+    const ratio = (scenario: (typeof demoScenarios)[number]) => {
+      const db = createDemoDb(scenario, today, now);
+      const rows = db.sessions.map((s) => ({ local_date: s.localDate, rpe: s.rpe, duration_min: s.durationMin }));
+      const earliest = rows.map((r) => r.local_date).sort()[0] ?? null;
+      return buildTrainingLoadView(rows, today, { earliest, untagged: [] }).reading;
+    };
+    const [green, yellow, red] = [ratio('green'), ratio('yellow'), ratio('red')];
+    assert.ok(green.ratio !== null && green.ratio < 1.1 && !green.spike, `yeşil ${green.ratio}`);
+    assert.ok(yellow.ratio !== null && yellow.ratio > green.ratio! + 0.05 && !yellow.spike, `sarı ${yellow.ratio}`);
+    assert.ok(red.ratio !== null && red.spike, `kırmızı ${red.ratio}`);
+    assert.ok(green.monotony !== null && green.strain !== null);
+  }
 });

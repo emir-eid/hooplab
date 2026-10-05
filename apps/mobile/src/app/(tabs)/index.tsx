@@ -1,5 +1,5 @@
 // Bugün: günün durumu ve gece verisi (karar 0021), sabah check-in çağrısı veya özeti,
-// saatten gelen ve etiket bekleyen oturumlar (karar 0020), bugünün seansları.
+// saatten gelen ve etiket bekleyen oturumlar (karar 0020), bugünün seansları; yük notu yalnız oran 1,5'i geçince (karar 0025).
 
 import { sessionLoad, wellnessTotal, wellnessTotalRange } from '@hooplab/engine';
 import { layout, radius, size, spacing } from '@hooplab/theme';
@@ -11,6 +11,7 @@ import { Aura } from '@/components/aura';
 import { Card } from '@/components/card';
 import { DemoBar } from '@/components/demo-bar';
 import { GroupLabel, ListGroup, ListRow } from '@/components/list';
+import { LoadSpikeRow } from '@/components/load-section';
 import { PageHeader } from '@/components/page-header';
 import { NightData, RecoveryState } from '@/components/recovery-section';
 import { Screen } from '@/components/screen';
@@ -27,6 +28,8 @@ import {
 import { exerciseSummary, type ExerciseSession } from '@/data/exercise-tagging';
 import { fetchRecovery } from '@/data/recovery';
 import type { RecoveryView } from '@/data/recovery-view';
+import { fetchTrainingLoad } from '@/data/training-load';
+import type { TrainingLoadView } from '@/data/training-load-view';
 import type { DemoScenario } from '@/demo/demo-data';
 import { useDemoScenario } from '@/demo/demo-mode';
 import { usePalette } from '@/theme/appearance';
@@ -52,6 +55,7 @@ function TodayScreen({ demo }: { demo: DemoScenario | null }) {
   const [error, setError] = useState<string | null>(null);
   const [recovery, setRecovery] = useState<RecoveryView | null>(null);
   const [recoveryError, setRecoveryError] = useState<string | null>(null);
+  const [load, setLoad] = useState<TrainingLoadView | null>(null);
 
   // Form kapanınca ekran yeniden odaklanır ve günün kaydı tazelenir.
   useFocusEffect(
@@ -78,6 +82,10 @@ function TodayScreen({ demo }: { demo: DemoScenario | null }) {
         } else {
           setRecoveryError(r.message);
         }
+      });
+      // Yük notu ikincil: alınamazsa Bugün hata göstermez, not yalnız görünmez.
+      fetchTrainingLoad(today).then((r) => {
+        if (!cancelled) setLoad(r.ok ? r.value : null);
       });
       return () => {
         cancelled = true;
@@ -150,6 +158,8 @@ function TodayScreen({ demo }: { demo: DemoScenario | null }) {
           {error}
         </Text>
       ) : null}
+
+      {load ? <LoadSpikeRow view={load} /> : null}
 
       {log && log.pending.length > 0 ? (
         <ListGroup label="Saatten gelenler" footer="Saat zamanı ve süreyi kaydetti. Türünü ve zorluğunu sen ver; yük hesabına öyle girer.">

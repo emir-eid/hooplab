@@ -1,0 +1,77 @@
+// Antrenman yükü görünümü: seans satırlarından motorun okumasına ve grafiğe (karar 0025, rules/yuk.json).
+// Saf modül; sorgu training-load.ts'te. Sayıları motor hesaplar, burada yalnız satırlar seriye çevrilir.
+
+import { addIsoDays, dailyLoads, loadWeek, readTrainingLoad, type TrainingLoadReading } from '@hooplab/engine';
+
+/** Grafikte gösterilen gün sayısı: 4 hafta (yuk-haftalik penceresi). */
+export const loadChartDays = loadWeek.days * loadWeek.averageWeeks;
+
+/**
+ * Seansların çekileceği en eski gün. Kronik EWMA'da (N = 28) 120 günden eski bir günün ağırlığı on binde
+ * birkaçtır; daha eskisi sonucu değiştirmez. Görsel / performans seçimi, eşik değil.
+ */
+export const loadLookbackDays = 120;
+
+export function loadFrom(today: string): string {
+  return addIsoDays(today, -(loadLookbackDays - 1));
+}
+
+export interface LoadSessionRow {
+  local_date: string;
+  rpe: number;
+  duration_min: number;
+}
+
+export interface LoadChartDay {
+  date: string;
+  /** O günün yükü (AU); ilk kayıttan önceki günler null (bilinmiyor, 0 değil). */
+  load: number | null;
+  /** Akut pencerede mi (hesap gününde biten son 7 gün)? */
+  acute: boolean;
+}
+
+export interface UntaggedExercise {
+  id: string;
+  localDate: string;
+}
+
+export interface TrainingLoadView {
+  reading: TrainingLoadReading;
+  chart: LoadChartDay[];
+  /** Son 4 haftada saatin kaydettiği ama seans olarak etiketlenmemiş (ve "Seans değil" denmemiş) oturumlar, en yeni önce. */
+  untagged: UntaggedExercise[];
+  /** Hiç seans kaydı yok. */
+  empty: boolean;
+}
+
+/**
+ * `earliest`: hesabın tamamındaki ilk seans günü (pencereden eskiyse geçmiş pencerenin başından sayılır;
+ * daha önceki günler bilinmiyor kabul edilir, 0 sayılmaz).
+ */
+export function buildTrainingLoadView(
+  rows: readonly LoadSessionRow[],
+  today: string,
+  opts: { earliest: string | null; untagged: readonly UntaggedExercise[] },
+): TrainingLoadView {
+  const from = loadFrom(today);
+  const sessions = rows
+    .filter((r) => r.local_date >= from && r.local_date <= today)
+    .map((r) => ({ date: r.local_date, rpe: r.rpe, durationMin: r.duration_min }));
+  const historyStart = opts.earliest !== null && opts.earliest < from ? from : undefined;
+  const reading = readTrainingLoad(sessions, today, historyStart ? { historyStart } : {});
+
+  const chartFrom = addIsoDays(today, -(loadChartDays - 1));
+  const acuteFrom = addIsoDays(reading.asOf, -(loadWeek.days - 1));
+  const loads = new Map(dailyLoads(sessions, chartFrom, today).map((d) => [d.date, d.load]));
+  const chart: LoadChartDay[] = [];
+  for (let d = chartFrom; d <= today; d = addIsoDays(d, 1)) {
+    const known = reading.historyStart !== null && d >= reading.historyStart;
+    chart.push({ date: d, load: known ? (loads.get(d) ?? 0) : null, acute: d >= acuteFrom && d <= reading.asOf });
+  }
+
+  const untagged = opts.untagged
+    .filter((e) => e.localDate >= chartFrom && e.localDate <= today)
+    .map(({ id, localDate }) => ({ id, localDate }))
+    .sort((a, b) => (a.localDate < b.localDate ? 1 : a.localDate > b.localDate ? -1 : 0));
+  return { reading, chart, untagged, empty: reading.historyStart === null };
+}

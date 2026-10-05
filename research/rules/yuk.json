@@ -23,7 +23,7 @@
       "value": { "formula": "sum(session_load)", "rest_day_value": 0, "unit": "AU" },
       "applies_to": "ilk seans kaydının olduğu günden bugüne her gün",
       "sources": ["bourdon-2017", "foster-1998", "haddad-2017"],
-      "notes": "Dinlenme günü yükün parçasıdır; monotonluk ve ortalamalar 0 yüklü günlerle hesaplanır (foster-1998). Uygulama kaydedilmemiş bir seansı dinlenme gününden ayıramaz; etiketlenmemiş saat oturumlarının ekranda nasıl belirtileceği arayüz adımında kararlaştırılır (karar 0025). İlk kayıttan önceki günler bilinmiyor sayılır, 0 sayılmaz."
+      "notes": "Dinlenme günü yükün parçasıdır; monotonluk ve ortalamalar 0 yüklü günlerle hesaplanır (foster-1998). Uygulama kaydedilmemiş bir seansı dinlenme gününden ayıramaz; etiketlenmemiş saat oturumları yük bölümünde sayılır ve etiketlemeye bağlanır (karar 0025). İlk kayıttan önceki günler bilinmiyor sayılır, 0 sayılmaz."
     },
     {
       "id": "yuk-haftalik",

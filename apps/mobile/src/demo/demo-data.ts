@@ -72,6 +72,48 @@ function at(date: string, hour: number, minute: number): string {
   return `${date}T${hh}:${mm}:00+03:00`;
 }
 
+/**
+ * Elle girilmiş geçmiş seanslar (2-41 gün önce; dünkü antrenman ayrıca saatle eşleşmiş olarak eklenir).
+ * Haftalık düzen: 4 takım antrenmanı, 2 kuvvet, 1 maç, 1 dinlenme günü. Son hafta (1-6 gün önce) senaryoya göre:
+ * yeşil aynı düzen (oran yaklaşık 1), sarı orta artış (bağlam, not yok), kırmızı hafif bir dönemden sonra
+ * çift seanslı kamp haftası (oran 1,5 üstü, bilgi notu). Toparlanmanın rastgele dizisinden ayrı tohum.
+ */
+function historySessions(scenario: DemoScenario, today: string): TrainingSession[] {
+  const r = rng(20261006);
+  const out: TrainingSession[] = [];
+  const add = (daysAgo: number, kind: TrainingSession['kind'], durationMin: number, rpe: number, minutesPlayed: number | null = null) =>
+    out.push({
+      id: `demo-session-${daysAgo}-${kind}`,
+      localDate: addIsoDays(today, -daysAgo),
+      kind,
+      durationMin: Math.round(durationMin + 10 * noise(r)),
+      rpe: clamp(rpe + noise(r) * 0.4, 0, 10),
+      minutesPlayed,
+      exerciseSessionId: null,
+    });
+
+  for (let i = 2; i < historyDays; i++) {
+    const recent = i < 7;
+    const day = i % 7;
+    if (scenario === 'red' && recent) {
+      // Kamp: her gün iki seans.
+      add(i, 'team_practice', 120, 8);
+      add(i, 'strength', 70, 7);
+      continue;
+    }
+    const light = scenario === 'red'; // kırmızının öncesi: sezon arası, hafif
+    const boost = scenario === 'yellow' && recent ? 1.7 : 1;
+    if (day === 3) continue; // dinlenme
+    if (day === 6 && !light) {
+      add(i, 'game', 105 * boost, 8, 24);
+      continue;
+    }
+    add(i, 'team_practice', (light ? 60 : 95) * boost, light ? 4 : 6);
+    if ((day === 1 || day === 4) && !light) add(i, 'strength', 55, 6);
+  }
+  return out;
+}
+
 /** Senaryo ve bugün için demo veritabanı. `now` yalnız senkron zaman damgası içindir. */
 export function createDemoDb(scenario: DemoScenario, today: string, now: Date): DemoDb {
   const r = rng(20261005);
@@ -168,6 +210,8 @@ export function createDemoDb(scenario: DemoScenario, today: string, now: Date): 
       exerciseSessionId: 'demo-ex-yesterday-practice',
     },
   ];
+
+  sessions.push(...historySessions(scenario, today));
 
   const connectedAt = new Date(now.getTime() - 2 * 86_400_000).toISOString();
   return {

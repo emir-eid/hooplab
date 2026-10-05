@@ -114,7 +114,7 @@ export function RecoveryState({ view }: { view: RecoveryView }) {
   );
 }
 
-interface TileProps {
+export interface TileProps {
   label: string;
   value: string;
   unit: string;
@@ -124,7 +124,7 @@ interface TileProps {
   state: "green" | "yellow" | "red" | null;
 }
 
-function Tile({ label, value, unit, note, flagged, state }: TileProps) {
+export function Tile({ label, value, unit, note, flagged, state }: TileProps) {
   const palette = usePalette();
   const accent = flagged && state ? palette.statusInk[state] : null;
   return (

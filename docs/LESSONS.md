@@ -59,6 +59,7 @@ Tekrar yaşanabilecek hatalar ve önceden bilinen tuzaklar. Her madde: **ders**,
 
 - **[ölçüldü] Tarayıcı paneli `file://` ile açılan HTML'i statik kopya olarak gösterir; bağlı CSS ve JS dosyaları yüklenmez.** Maketler yerel sunucuyla açılır: `.claude/launch.json` içindeki `maketler` yapılandırması (`python -m http.server 4173`). Kanıt: 2026-10-03 Faz 0.5 oturumu. Bekçi: yok (launch.json kayıtlı).
 - **[ölçüldü] Panel daralınca öykünülen telefon görünümü küçültülür ve tıklama koordinatları kayar** (çipe yapılan tıklama başlığa düştü; `elementFromPoint` doğru öğeyi gösterirken). Etkileşimden önce `resize_window` yeniden çağrılır; şüphede `document` düzeyinde olay hedefi dinlenir. Kanıt: 2026-10-04 Vücut sekmesi denemesi.
+- **[ölçüldü] Gesture Handler jesti olan bir bileşen web önizlemesinde sıcak yenilemeyle (HMR) değişince jest bayat kalabilir: dokunma hiçbir şey yapmaz, konsolda hata yoktur.** Tıklama doğru öğeye düşse de (`elementFromPoint`) seçim olmaz; sayfa tam yenilenince çalışır. Jestli bir bileşen düzenlendikten sonra etkileşim denemesi tam yenilemeyle yapılır (demo modu bellekte olduğu için yeniden açılır). Kanıt: 2026-10-06 yük grafiği (`load-chart.tsx`). Bekçi: yok.
 - **[ölçüldü] Tarayıcı panelinin ekran görüntüsü bazen eksik veya tekrarlı çizilir** (boş alan, aynı ekranın karolar halinde tekrarı). Hata sanmadan önce DOM ölçümüyle (`getBoundingClientRect`, `scrollHeight`) içeriğin yerinde olduğu doğrulanır ve görüntü yeniden çekilir. Kanıt: 2026-10-03 Faz 0.5 oturumu.
 
 ## Google Health / veri

@@ -12,7 +12,7 @@ Hangi veri nerede durur, hangi servise ne gider, ne kadar saklanır, nasıl sili
 | Giriş hesabı: e-posta, şifre özeti | Supabase panosu (bir kez) | Supabase Auth (`auth.users`) | Sahibi; yeni kayıt kapalı |
 | Oturum: erişim ve yenileme token'ı, kullanıcı kimliği ve e-postası | Supabase Auth | iPhone Keychain (`expo-secure-store`, parçalı); web önizlemesinde tarayıcının localStorage'ı | Yalnız uygulama |
 | Profil: boy, kilo, doğum tarihi, sakatlık geçmişi | Uygulama | Yalnız Supabase | Sahibi; hesap motoru |
-| Hesaplanmış değerler: baseline, yük, tahminler, hedefler | Hesap motoru | Supabase | Sahibi; AI koç (özet olarak) |
+| Hesaplanmış değerler: baseline, yük, tahminler, hedefler | Hesap motoru | Şimdilik saklanmaz: toparlanma bandı ve antrenman yükü her gösterimde cihazda, Supabase satırlarından hesaplanır ([0021](decisions/0021-toparlanma-kisisel-bant.md), [0025](decisions/0025-antrenman-yuku.md)); ileride koç için Supabase | Sahibi; AI koç (özet olarak) |
 | AI özetleri ve cevapları | Anthropic API | Supabase | Sahibi |
 | Kanıt tabanı: kaynak özetleri, kurallar | Bu repo (`research/`) | GitHub; Supabase (Faz 3, arama için) | Herkese açık (kişisel veri içermez) |
 | Kişisel notlar | `/kapat` | `private/journal` + Drive yedeği | Sahibi |
