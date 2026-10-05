@@ -1,9 +1,9 @@
 # 2026-10-05 15:11 — Faz 1: kurulum sihirbazı ve EAS hazırlığı
 
 - **Faz:** 1
-- **Durum:** açık (/rep)
+- **Durum:** kapandı (/kapat, 16:01)
 - **Model / efor:** Opus 5.5
-- **Commit'ler:** `f624959` (Blok 1), Blok 2'nin `/rep` commit'i
+- **Commit'ler:** `f624959` (Blok 1), `a1e2f24` (Blok 2), bu raporun kapanış commit'i
 
 ## Blok 1 — Kurulum sihirbazı ve Google istemci sırrının yenilenmesi (15:11)
 
