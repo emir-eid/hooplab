@@ -1,9 +1,9 @@
 # 2026-10-06 01:08 — Faz 2: antrenman yükü (kaynaklar, yöntem, motor ve arayüz)
 
 - **Faz:** 2 (Faz 1'in TestFlight maddesi Apple'ı bekliyor)
-- **Durum:** açık (/rep)
+- **Durum:** kapandı (/kapat, 01:34)
 - **Model / efor:** Opus 5.5
-- **Commit'ler:** `d6159df` (Blok 1), Blok 2'nin `rep:` commit'i
+- **Commit'ler:** `d6159df` (Blok 1), `0af0ed9` (Blok 2), bu raporun kapanış commit'i
 
 ## Blok 1 — Antrenman yükü: kaynak taraması ve yöntem kararı (2026-10-05 16:04'te açılan oturum)
 
