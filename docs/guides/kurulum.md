@@ -104,6 +104,17 @@ npm run mobile
 
 Son 90 günün verisi birkaç dakikada gelir, sonra saatte bir kendiliğinden güncellenir.
 
+## İsteğe bağlı: TestFlight ile kalıcı kurulum
+
+Expo Go bilgisayar açıkken çalışır. Uygulamayı telefonda kalıcı kurmak için Apple Developer Programı üyeliği (yıllık ücretli) ve bir Expo hesabı gerekir. iOS derlemesi Mac'siz, EAS bulutunda yapılır.
+
+1. `apps/mobile` klasöründe `npx eas-cli init` ile kendi EAS projeni aç.
+2. Komutun `app.json`'a yazdığı proje kimliğini ve sahibini oradan sil, `apps/mobile/.env.local`'a yaz ([.env.example](../../apps/mobile/.env.example)). Paket kimliğini de oraya ekle.
+3. Aynı değerleri ve iki `EXPO_PUBLIC_SUPABASE_*` değerini EAS'ta "production" ortam değişkeni yap.
+4. Derle: `npm run eas -- build --platform ios --profile production`.
+
+Ayrıntı ve gerekçe: [karar 0024](../decisions/0024-eas-derleme-ve-guncelleme.md). Bu akışın ilk gerçek derlemesi henüz yapılmadı; yapılınca bu bölüm doğrulanmış adımlarla güncellenecek.
+
 ## Haftalık
 
 Google, Testing modundaki kişisel projelerde izni 7 günde bir düşürür. Süre dolunca **Ben → Google Health**'te **Yeniden bağlan** görünür; bir dokunuş yeter.

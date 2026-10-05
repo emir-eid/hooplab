@@ -1,9 +1,9 @@
-# 2026-10-05 15:11 — Faz 1: kurulum sihirbazı
+# 2026-10-05 15:11 — Faz 1: kurulum sihirbazı ve EAS hazırlığı
 
 - **Faz:** 1
 - **Durum:** açık (/rep)
 - **Model / efor:** Opus 5.5
-- **Commit'ler:** bu bloğun `/rep` commit'i
+- **Commit'ler:** `f624959` (Blok 1), Blok 2'nin `/rep` commit'i
 
 ## Blok 1 — Kurulum sihirbazı ve Google istemci sırrının yenilenmesi (15:11)
 
@@ -69,9 +69,62 @@ Kapsamı kullanıcı seçti:
   - Edge Runtime yokken Kong gövdesiz 503 döndürüyor.
 - [LESSONS](../LESSONS.md) "Windows": `fetch` sonrası `process.exit` çökmesi.
 
+## Blok 2 — Apple Developer kaydı ve EAS hazırlığı (15:50)
+
+### Amaç
+STATE'teki 2. iş, Faz 1'in son açık maddesi: Apple Developer Programı, EAS Build ve TestFlight. 1. iş (takip) 2026-10-08'den önce yapılamıyor.
+
+### Yapılanlar
+- **Maliyet ve sınırlar resmi sayfalardan doğrulandı.** [COSTS](../COSTS.md) güncellendi:
+  - Apple: yıllık 99 USD, kayıtta yerel para birimiyle gösterilir.
+  - Expo ücretsiz planı: ayda 15 iOS derlemesi, derleme başına 45 dk, EAS Update 1.000 aylık aktif kullanıcıya kadar.
+  - TestFlight: iç testte Apple incelemesi yok, derleme 90 gün geçerli.
+- **Apple Developer kaydı:** kullanıcı uygulamadan kaydolmaya çalıştı, kimlik doğrulaması reddedildi.
+  - Resmi şartlar ve Apple forumundaki benzer vakalar araştırıldı. Bir Türkiye vakasında ödeme çekilmiş ama üyelik açılmamış; destek kaydı iptal edip iade edince yeniden kayıt çalışmış.
+  - Kullanıcı Apple Developer desteğinde vaka açtı (Membership and Account → Program Enrolment). Yanıt bekleniyor.
+- **EAS projesi:** `@rotavi/hooplab`, mevcut kişisel Expo hesabında açıldı.
+- **Yapılandırmayı resmi komutlar üretti:** `eas init`, `eas build:configure`, `npx expo install expo-updates` (~57.0.24), `eas update:configure`.
+- **Kimlik ortamdan okunuyor:**
+  - [app.config.ts](../../apps/mobile/app.config.ts) ve [build-identity.ts](../../apps/mobile/src/lib/build-identity.ts) (3 test) şu değerleri `apps/mobile/.env.local`'dan alır: paket kimliği (`io.github.emireid.hooplab`), EAS proje kimliği, sahip, güncelleme adresi.
+  - Komutların `app.json`'a yazdığı kimlik oradan çıkarıldı.
+  - Şifreleme beyanı (`usesNonExemptEncryption: false`) eklendi.
+- **[eas.json](../../apps/mobile/eas.json):** tek `production` profili (ortam ve kanal `production`, `autoIncrement`). Geliştirme ve önizleme profilleri çıkarıldı.
+- **runtimeVersion politikası:** `fingerprint`; iOS parmak izi üretildi.
+- **EAS "production" ortam değişkenleri:** beş değer yazıldı (üç `HOOPLAB_*`, iki `EXPO_PUBLIC_SUPABASE_*`), değerler ekrana basılmadı.
+- **Sarmalayıcı:** [tools/dev/eas.mjs](../../tools/dev/eas.mjs) (`npm run eas -- <komut>`).
+- **Doğrulama:**
+  - `npx expo config` değerleri doğru çözüyor; `npm run eas -- config` üretim profilini doğru gösteriyor.
+  - `expo-doctor` 21/21.
+  - Yerel `expo export --platform ios` başarılı; hiçbir şey yayımlanmadı.
+  - `npm run check` yeşil.
+- **Belgeler:**
+  - yeni: [0024](../decisions/0024-eas-derleme-ve-guncelleme.md)
+  - güncellenenler: [COSTS](../COSTS.md), [DATA-INVENTORY](../DATA-INVENTORY.md) (Expo'ya ne gidiyor), [SETUP](../SETUP.md) §10, [kurulum rehberi](../guides/kurulum.md) (TestFlight bölümü, henüz doğrulanmadı), `.env.example` (örnek değerler yorumda), [ROADMAP](../ROADMAP.md) (madde kısmen), CHANGELOG
+
+### Kararlar
+- [0024 EAS derleme ve güncelleme](../decisions/0024-eas-derleme-ve-guncelleme.md). Kullanıcı kararları:
+  - Mevcut Expo hesabı. CLAUDE.md §7'deki "HoopLab'e ayrılmış hesap" kuralının istisnası, gerekçesiyle kayıtlı.
+  - Paket kimliği `io.github.emireid.hooplab`.
+  - EAS Update ilk derlemeyle birlikte.
+  - `fingerprint` politikası.
+- Kullanıcı Blok 1'den sonra `/kapat` önerisini reddetti ve aynı oturumda devam etti.
+
+### Sorunlar ve hatalar
+- `app.config.ts`'ten uzantısız TypeScript importu çözülmedi (`Cannot find module`). `.ts` uzantısıyla çözüldü.
+- EAS CLI `.env.local`'ı yüklemediği için projeyi bulamadı; sarmalayıcıyla çözüldü.
+- `build:configure` `--non-interactive` kabul etmedi; stdin kapalıyken çalıştı.
+- `.env.example`'daki örnek değerler olduğu gibi açılırsa yapılandırmayı durdururdu; yorum satırına alındı.
+
+### Öğrenilenler
+- [LESSONS](../LESSONS.md) "Expo / React Native":
+  - Expo CLI `.env.local`'ı yükler, EAS CLI yüklemez.
+  - `app.config.ts`'ten TypeScript importu `.ts` uzantısı ister.
+  - `eas init` ve `update:configure` kimliği `app.json`'a yazar.
+
 ## Açık kalanlar
-- Sihirbaz sıfırdan yeni bir bulut projesinde hiç koşmadı (kullanıcı kararı: ikinci proje açılmadı). Proje bağlama, `db push` ve fonksiyon dağıtımı adımları bulutta yalnız mevcut projede ve "zaten kurulu" durumunda görüldü.
+- Apple Developer kaydı: kimlik doğrulaması reddedildi, Apple desteğinde vaka açık. Yanıt gelince: üyelik, App Store Connect API anahtarı (`.p8`, `private/`), ilk derleme, kullanıcı onayıyla TestFlight gönderimi, iPhone'da kontrol.
+- Kurulum sihirbazı sıfırdan yeni bir bulut projesinde hiç koşmadı (Blok 1). Sihirbaz EAS'ı denetlemiyor; ilk derlemeden sonra eklenebilir.
 - Takip (2026-10-08 / 10 civarı): kişisel bant ve OAuth yenileme token'ının 7. gün düşüşü (STATE sıradaki işler 1).
 
 ## Sıradaki adım
-- STATE sıradaki işler 1: takip (2026-10-08 / 10 civarı). O tarihe kadar: 2. iş, Apple Developer / EAS Build / TestFlight (ücretli üyelik, kullanıcı onayıyla).
+- STATE sıradaki işler 1: takip (2026-10-08 / 10 civarı). Apple yanıtı daha önce gelirse 2. iş (ilk derleme ve TestFlight).

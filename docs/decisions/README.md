@@ -56,3 +56,4 @@ Hangisi seçildi ve tek paragrafta neden.
 | [0021](0021-toparlanma-kisisel-bant.md) | Toparlanma: derin uyku HRV'si, 7 gün / 4 hafta kişisel bant (± 0,5 SD), HRV öncelikli günün durumu | Kabul edildi |
 | [0022](0022-demo-modu.md) | Demo modu: uygulama içi, çevrimdışı sentetik sporcu, kayıtlar bellekte, durum seçici | Kabul edildi |
 | [0023](0023-kurulum-sihirbazi-terminalde.md) | Kurulum sihirbazı terminalde: `npm run setup` kurar, `--check` denetler, uygulama eksikliği söyler | Kabul edildi |
+| [0024](0024-eas-derleme-ve-guncelleme.md) | EAS derleme ve güncelleme: mevcut Expo hesabı, kimlik ortamdan, fingerprint, tek üretim profili | Kabul edildi |

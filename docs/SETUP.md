@@ -118,3 +118,14 @@ Yerel uçtan uca deneme (sentetik, gerçek Google'a gidilmez):
 1. `node tools/dev/fake-google-health.ts` (sahte Google, port 54399).
 2. `supabase/functions/.env` (gitignore'lu): istemci değerleri sahte (zamanlayıcı sırrı ve yerel Vault için `npm run setup -- --local --yes`; yerel mod gerçek Google dosyasını okumaz), `GHEALTH_REDIRECT_URI=http://127.0.0.1:54321/functions/v1/ghealth-callback`, `GHEALTH_AUTH_URL=http://127.0.0.1:54399/auth`, `GHEALTH_TOKEN_URL` / `GHEALTH_REVOKE_URL` / `GHEALTH_API_BASE` `http://host.docker.internal:54399/...`, `GHEALTH_CRON_SECRET`.
 3. `npx supabase functions serve --env-file supabase/functions/.env`, sonra `npm run web:local` ile Ben → Google Health. `npm run db:reset` yerel senkron verisini siler.
+
+## 10. EAS (iOS derleme ve güncelleme)
+
+Proje mevcut kişisel Expo hesabında ([0024](decisions/0024-eas-derleme-ve-guncelleme.md)). Bu bilgisayarda EAS CLI o hesapla girişli. Yeni makinede kullanıcı bir kez `npx.cmd eas-cli@24.10.0 login` yapar.
+
+- Kimlik değerleri `apps/mobile/.env.local`'da durur (`HOOPLAB_IOS_BUNDLE_ID`, `HOOPLAB_EAS_PROJECT_ID`, `HOOPLAB_EAS_OWNER`; [.env.example](../apps/mobile/.env.example)). Aynı değerler ve iki `EXPO_PUBLIC_SUPABASE_*` değeri EAS'ta "production" ortam değişkeni olarak da durur: `npm run eas -- env:list --environment production`.
+- EAS CLI `.env.local`'ı kendisi yüklemez. Komutlar her zaman `npm run eas -- <komut>` ile çalıştırılır; sarmalayıcı değerleri ortama verir, sürüm sabittir.
+- Native değişiklik (paket, izin, eklenti, SDK) olursa derleme: `npm run eas -- build --platform ios --profile production`. TestFlight'a gönderim (`submit`) her seferinde kullanıcı onayıyla yapılır (CLAUDE.md §7).
+- Yalnız JS, stil veya görsel değiştiyse güncelleme: `npm run eas -- update --channel production --environment production --message "..."`. Üretim kanalına yayın kullanıcı onayıyla yapılır. `runtimeVersion` politikası `fingerprint`: uyumsuz güncelleme eski derlemeye gitmez.
+- İlk derleme Apple Developer üyeliği onaylanınca yapılır. App Store Connect API anahtarı (`.p8`) `private/` klasörüne konur.
+

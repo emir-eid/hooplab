@@ -10,7 +10,10 @@
     "backgroundColor": "#EFEDE8",
     "ios": {
       "icon": "./assets/expo.icon",
-      "supportsTablet": false
+      "supportsTablet": false,
+      "runtimeVersion": {
+        "policy": "fingerprint"
+      }
     },
     "android": {
       "adaptiveIcon": {
