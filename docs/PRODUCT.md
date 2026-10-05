@@ -12,6 +12,8 @@ Uygulamanın **ne** yaptığını ve **neden** yaptığını anlatır. Nasıl ya
 
 **Tek kullanıcı:** uygulamanın sahibi, profesyonel basketbolcu, iPhone kullanıcısı. Uygulama başkalarına dağıtılmaz. Portfolyo için yalnız sentetik verili **demo modu** gösterilir.
 
+Kod public ve MIT lisanslı. Başkası kendi Supabase ve Google Cloud hesabıyla kendisi kurabilir. Merkezi servis yok ([0009](decisions/0009-herkes-kendi-hesabiyla.md)). Sunucu tarafını terminaldeki kurulum sihirbazı kurar ve denetler (`npm run setup`, `npm run setup:check`). Uygulama yalnız kurulum eksikse bunu söyler ([0023](decisions/0023-kurulum-sihirbazi-terminalde.md), [rehber](guides/kurulum.md)). Bu bir kolaylıktır, hedef kitle değil: ürün kararları sahibine göre verilir.
+
 ## 3. Ne yapar: modüller
 
 | # | Modül | Girdiler | Çıktı | Faz |

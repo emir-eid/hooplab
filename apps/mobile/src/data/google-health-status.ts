@@ -119,3 +119,16 @@ export function describeConnectOutcome(returnedUrl: string): { ok: boolean; mess
   }
   return null;
 }
+
+/**
+ * Edge Function çağrısı başarısız olduğunda söylenen. 404 = fonksiyon dağıtılmamış; 503 ve
+ * `not_configured` = sunucuda Google istemci sırları yok (fonksiyon yarım yapılandırmayla çalışmaz).
+ * İkisi de kurulum eksiği; kurulum sihirbazı (karar 0023) gösterir ve kurar. Gövdesiz 503 geçici
+ * bir ağ geçidi hatası olabilir, kurulum eksiği sayılmaz.
+ */
+export function describeFunctionFailure(status: number | undefined, errorCode: string | undefined, fallback: string): string {
+  if (status === 404 || (status === 503 && errorCode === 'not_configured')) {
+    return 'Sunucuda Google Health kurulumu eksik. Bilgisayarda npm run setup:check eksikleri gösterir, npm run setup kurar.';
+  }
+  return fallback;
+}

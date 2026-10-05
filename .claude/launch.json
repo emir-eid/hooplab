@@ -37,6 +37,19 @@
         "web:local"
       ],
       "port": 8082
+    },
+    {
+      "name": "mobil-web-kurulumsuz",
+      "runtimeExecutable": "npm",
+      "runtimeArgs": [
+        "run",
+        "web:local",
+        "--",
+        "--unconfigured",
+        "--port",
+        "8083"
+      ],
+      "port": 8083
     }
   ]
 }

@@ -1,5 +1,5 @@
 // Supabase bağlantı değerlerinin denetimi. Değerler kullanıcının kendi projesinden gelir ve koda
-// sabit yazılmaz (0009); şimdilik apps/mobile/.env.local, ileride kurulum sihirbazı. Saf fonksiyon; testi yanında.
+// sabit yazılmaz (0009); apps/mobile/.env.local'a kurulum sihirbazı yazar (npm run setup, 0023). Saf fonksiyon; testi yanında.
 
 export type SupabaseConfigResult =
   | { ok: true; url: string; publishableKey: string }

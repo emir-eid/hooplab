@@ -19,6 +19,7 @@ Yığın: Expo (React Native, TypeScript, Expo Router) · Supabase (Frankfurt) �
 | Hangi hesap, ne zaman, ne kadar; sırlar nerede? | [docs/COSTS.md](docs/COSTS.md) |
 | Hangi veri nerede, hangi servise ne gidiyor? | [docs/DATA-INVENTORY.md](docs/DATA-INVENTORY.md) |
 | Başka bir makinede kurulum | [docs/SETUP.md](docs/SETUP.md) |
+| Kendi hesaplarınla sıfırdan kurulum (`npm run setup`) | [docs/guides/kurulum.md](docs/guides/kurulum.md) |
 
 Kapsamla ilgili bir işe (yeni ekran, modül, girdi) başlamadan önce PRODUCT.md'nin ilgili bölümü okunur. Yeni bir veri türü, servis veya sır eklendiğinde DATA-INVENTORY.md ve COSTS.md aynı commit'te güncellenir.
 

@@ -85,17 +85,36 @@ Ayrıntı: [apps/mobile/README.md](../apps/mobile/README.md).
 Proje kullanıcının kendi Supabase hesabındadır (0009). Bu makinede bir kez:
 
 1. Kullanıcı: `npx.cmd supabase login` (tarayıcıda HoopLab'e ayrılmış hesapla).
-2. Claude yürütür (CLAUDE.md §7): `npx supabase link --project-ref <ref>`, `apps/mobile/.env.local` dosyasını `supabase projects api-keys` çıktısından yazar ([.env.example](../apps/mobile/.env.example)), `npx supabase db push`.
-3. Yerel test için Docker Desktop açık olmalı: `npm run db:start`, `npm run test:db`, `npm run db:stop`.
+2. Claude yürütür (CLAUDE.md §7): `npm run setup -- --project-ref <ref> --yes`. Kurulum sihirbazı ([0023](decisions/0023-kurulum-sihirbazi-terminalde.md)) şunları yapar:
+   - projeyi bağlar
+   - `apps/mobile/.env.local` dosyasını yazar (yalnız publishable anahtar)
+   - migration'ları uygular
+   - Google istemci sırlarını yazar (`../private/ghealth/web_client_secret.json`'dan, değer ekrana basılmadan)
+   - zamanlayıcı sırrını Supabase secrets'a ve Vault'a aynı değerle yazar
+   - Vault'a `project_url` yazar
+   - Edge Functions'ı dağıtır (`--use-api`)
+3. Elle kalanları sihirbaz numaralı listeler. Yeni projede panodan:
+   - kullanıcıyı ekle (**Auto Confirm User**)
+   - **Allow new users to sign up** kapalı
 
-Yeni projede panodan: kullanıcıyı ekle (**Auto Confirm User**), **Allow new users to sign up** kapalı. Ayrıntı: [0015](decisions/0015-veritabani-tek-sahip-rls.md).
+   Ayrıntı: [0015](decisions/0015-veritabani-tek-sahip-rls.md).
+4. Denetim: `npm run setup:check` (salt-okur, 12 madde). Migration veya fonksiyon dağıtımından sonra da çalıştırılır.
+5. Yerel test için Docker Desktop açık olmalı: `npm run db:start`, `npm run test:db`, `npm run db:stop`.
+
+Sıfırdan, başka birinin hesabıyla kurulum: [guides/kurulum.md](guides/kurulum.md).
 
 ### Google Health senkronu ([0019](decisions/0019-google-health-senkronu.md))
 
-Bulutta bir kez (Claude yürütür): Supabase secrets `GOOGLE_HEALTH_CLIENT_ID`, `GOOGLE_HEALTH_CLIENT_SECRET` (Web istemcisinin JSON'undan, değer ekrana basılmadan), `GHEALTH_CRON_SECRET` (rastgele); Vault'ta `project_url` ve aynı `ghealth_cron_secret`; `npx supabase functions deploy ghealth-connect ghealth-callback ghealth-sync`. Web istemcisinin kurulumu: [rehber](guides/google-health-baglantisi.md) §4.
+Bulut tarafını kurulum sihirbazı kurar (yukarıda). Kurduğu değerler:
+
+- Supabase secrets: `GOOGLE_HEALTH_CLIENT_ID`, `GOOGLE_HEALTH_CLIENT_SECRET`, `GHEALTH_CRON_SECRET`
+- Vault: `project_url`, `ghealth_cron_secret`
+- Fonksiyonlar: `ghealth-connect`, `ghealth-callback`, `ghealth-sync`
+
+Fonksiyon kodu değiştiğinde yeniden dağıtım: `npm run setup -- --redeploy --yes`. Web istemcisinin kurulumu: [rehber](guides/google-health-baglantisi.md) §4.
 
 Yerel uçtan uca deneme (sentetik, gerçek Google'a gidilmez):
 
 1. `node tools/dev/fake-google-health.ts` (sahte Google, port 54399).
-2. `supabase/functions/.env` (gitignore'lu): istemci değerleri sahte, `GHEALTH_REDIRECT_URI=http://127.0.0.1:54321/functions/v1/ghealth-callback`, `GHEALTH_AUTH_URL=http://127.0.0.1:54399/auth`, `GHEALTH_TOKEN_URL` / `GHEALTH_REVOKE_URL` / `GHEALTH_API_BASE` `http://host.docker.internal:54399/...`, `GHEALTH_CRON_SECRET`.
+2. `supabase/functions/.env` (gitignore'lu): istemci değerleri sahte (zamanlayıcı sırrı ve yerel Vault için `npm run setup -- --local --yes`; yerel mod gerçek Google dosyasını okumaz), `GHEALTH_REDIRECT_URI=http://127.0.0.1:54321/functions/v1/ghealth-callback`, `GHEALTH_AUTH_URL=http://127.0.0.1:54399/auth`, `GHEALTH_TOKEN_URL` / `GHEALTH_REVOKE_URL` / `GHEALTH_API_BASE` `http://host.docker.internal:54399/...`, `GHEALTH_CRON_SECRET`.
 3. `npx supabase functions serve --env-file supabase/functions/.env`, sonra `npm run web:local` ile Ben → Google Health. `npm run db:reset` yerel senkron verisini siler.

@@ -4,6 +4,7 @@ import { test } from 'node:test';
 import {
   describeConnection,
   describeConnectOutcome,
+  describeFunctionFailure,
   formatSyncTime,
   type SyncStatusRow,
   tokenDaysLeft,
@@ -66,4 +67,13 @@ test('izin ekranından dönüş sonucu', () => {
   assert.match(describeConnectOutcome('hooplab://me/google-health?ghealth=error&code=missing_scopes')?.message ?? '', /tüm kutuları/);
   assert.match(describeConnectOutcome('hooplab://me/google-health?ghealth=error&code=x')?.message ?? '', /Bağlanılamadı/);
   assert.equal(describeConnectOutcome('hooplab://me/google-health'), null);
+});
+
+test('fonksiyon yok (404) veya sunucu sırları yok (503 not_configured) ise kurulum eksiği söylenir', () => {
+  assert.match(describeFunctionFailure(404, undefined, 'x'), /npm run setup/);
+  assert.match(describeFunctionFailure(503, 'not_configured', 'x'), /npm run setup/);
+  // Gövdesiz 503 geçici ağ geçidi hatası olabilir (yerelde fonksiyonlar çalışmıyorken ölçüldü).
+  assert.equal(describeFunctionFailure(503, undefined, 'geçici'), 'geçici');
+  assert.equal(describeFunctionFailure(500, 'not_configured', 'Biraz sonra yeniden dene.'), 'Biraz sonra yeniden dene.');
+  assert.equal(describeFunctionFailure(undefined, undefined, 'çevrimdışı'), 'çevrimdışı');
 });

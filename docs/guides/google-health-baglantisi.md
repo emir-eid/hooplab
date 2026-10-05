@@ -1,6 +1,6 @@
 # Google Health bağlantısı (kendi hesabınla)
 
-HoopLab merkezi bir servis kullanmaz ([karar 0009](../decisions/0009-herkes-kendi-hesabiyla.md)). Fitbit / Google Health verine erişmek için **kendi** Google Cloud projeni ve OAuth istemcini açarsın. Veri, kota ve olası ücret tamamen senin hesabında kalır. Uygulamadaki kurulum sihirbazı (Faz 1) aynı adımları anlatır.
+HoopLab merkezi bir servis kullanmaz ([karar 0009](../decisions/0009-herkes-kendi-hesabiyla.md)). Fitbit / Google Health verine erişmek için **kendi** Google Cloud projeni ve OAuth istemcini açarsın. Veri, kota ve olası ücret tamamen senin hesabında kalır. Supabase tarafını kurulum sihirbazı kurar ([kurulum rehberi](kurulum.md)); bu rehber yalnız Google tarafını anlatır.
 
 Son doğrulama: 2026-10-03 (Google Cloud konsolu, `ghealth` commit `9cf0274`). Konsol arayüzü değişebilir; menü adları farklıysa aynı anlamdaki seçeneği seç.
 
@@ -44,7 +44,7 @@ Uygulama izin ekranını telefonda açar; Google seni kendi Supabase projendeki 
 4. **Authorized redirect URIs → Add URI**: Supabase proje adresin + `/functions/v1/ghealth-callback`. Örnek biçim: `https://<proje-kimligin>.supabase.co/functions/v1/ghealth-callback`. Proje adresi Supabase panosunda **Project Settings → Data API** sayfasında yazar. Sonda `/` olmamalı, harfi harfine aynı olmalı.
 5. "AI-powered agent" kutusunu **işaretleme**.
 6. **Create** → **Download JSON**. Dosyayı repo dışındaki gizli klasöre koy (ör. `private/ghealth/web_client_secret.json`). Repoya, sohbete veya paylaşılan bir klasöre koyma.
-7. İstemci kimliği ve sırrı Supabase secrets'a yazılır (`GOOGLE_HEALTH_CLIENT_ID`, `GOOGLE_HEALTH_CLIENT_SECRET`; [SETUP](../SETUP.md) §9).
+7. İstemci kimliğini ve sırrını kurulum sihirbazı Supabase secrets'a yazar: `npm run setup -- --google-json <dosya>` (`GOOGLE_HEALTH_CLIENT_ID`, `GOOGLE_HEALTH_CLIENT_SECRET`; [kurulum rehberi](kurulum.md) §4).
 8. Uygulamada **Ben → Google Health → Google Health'e bağlan**. İzin ekranında "Google hasn't verified this app" uyarısında **Advanced → Go to <uygulama adı>**, sonra istenen dört iznin hepsini onayla.
 
 Uygulama "Testing" durumunda kaldığı için izin 7 günde düşer; o ekranda **Yeniden bağlan** görünür.

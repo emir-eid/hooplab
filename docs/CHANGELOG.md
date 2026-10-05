@@ -36,6 +36,7 @@ Uygulamaya veya altyapıya görünür değişiklikler. Biçim: [Keep a Changelog
 - README'de demo modundan ekran görüntüleri (Bugün: Hazır ve Toparlan, gece verisi, Vücut; açık ve koyu tema, `docs/gorseller/`). Yeniden üretmek için `npm run screenshots` (`tools/dev/demo-screenshots.mjs`, başsız Chrome).
 - Repo public; GitHub secret scanning, push protection ve Dependabot uyarıları açık (otomatik düzeltme PR'ları kapalı). Haftalık denetim Dependabot uyarılarını uygulamada / sunucuda çalışan veya yalnız geliştirme diye sınıflıyor.
 - Gizlilik bekçisi commit mesajlarını da tarıyor: `--history` her commit ve etiket mesajını ve yazar satırını tarar; yeni `--message` modu ve `.githooks/commit-msg` yazılan mesajı commit'ten önce durdurur (negatif testli).
+- Kurulum sihirbazı `npm run setup` / `npm run setup:check` (`tools/setup`). Kendi Supabase projene bağlanır ve `.env.local`'ı yazar. Ardından migration'ları, Google istemci sırlarını, zamanlayıcı sırrını (Supabase secrets ve Vault'a aynı değer), Vault'taki proje adresini ve Edge Functions'ı kurar. Elle kalan adımları numaralı listeler. `--check` sırları okumadan özetleriyle denetler, `--local` yerel Supabase'i hedefler. Uygulama kurulum eksiğini söyler: giriş ekranında ve Google Health'te. Rehber `docs/guides/kurulum.md`, karar 0023.
 
 ### Değişti
 - Sekme ekranlarının kabı (`Screen`) Gesture Handler'ın ScrollView'unu kullanıyor: içindeki sürüklemeli kontroller sayfa kaydırmasını bekletebiliyor.

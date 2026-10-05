@@ -1,6 +1,6 @@
 # HoopLab
 
-> **In English.** HoopLab is a personal iPhone app (Expo + Supabase) that a professional basketball player is building for personal use. It reads wearable data from the Google Health API and the athlete's own daily inputs. Each value is compared with the athlete's **own baseline**, not with general-population norms. Numbers come from a deterministic, tested engine. Every threshold links to a verified scientific source (DOI/PMID). An AI model will only *explain* numbers the engine has already computed; it never calculates them. The repo also keeps the whole development record: decision records, session reports, lessons learned and a privacy guard that scans every commit and the full git history. The documentation is in Turkish. The app has an offline **demo mode** with a synthetic athlete, so no account is needed to look around.
+> **In English.** HoopLab is a personal iPhone app (Expo + Supabase) that a professional basketball player is building for personal use. It reads wearable data from the Google Health API and the athlete's own daily inputs. Each value is compared with the athlete's **own baseline**, not with general-population norms. Numbers come from a deterministic, tested engine. Every threshold links to a verified scientific source (DOI/PMID). An AI model will only *explain* numbers the engine has already computed; it never calculates them. The repo also keeps the whole development record: decision records, session reports, lessons learned and a privacy guard that scans every commit and the full git history. The documentation is in Turkish. The app has an offline **demo mode** with a synthetic athlete, so no account is needed to look around. To run it with your own Supabase and Google Cloud accounts, `npm run setup` installs and checks the server side ([guide, Turkish](docs/guides/kurulum.md)).
 
 Profesyonel bir basketbolcunun kendi antrenmanı için geliştirdiği iPhone uygulaması. Fitbit Air / Google Health verisini ve sporcunun kendi girdilerini birleştirir. Değerleri sedanter popülasyon normlarına göre değil, **sporcunun kendi baseline'ına** göre değerlendirir.
 
@@ -71,7 +71,7 @@ npm install
 npm run mobile
 ```
 
-QR kodunu iPhone kamerasıyla okutun ve giriş ekranında **Demoyu aç**'a dokunun. Demo için Supabase bağlantısı gerekmez. Web önizlemesi için `npm run web -w @hooplab/mobile` çalıştırılır. Gerçek veriyle kurulum şimdilik elle yapılıyor: [docs/SETUP.md](docs/SETUP.md) §9 ve [Google Health bağlantısı rehberi](docs/guides/google-health-baglantisi.md). Herkesin kendi Google Cloud ve Supabase hesabıyla kurabileceği bir kurulum sihirbazı planlı ([0009](docs/decisions/0009-herkes-kendi-hesabiyla.md)).
+QR kodunu iPhone kamerasıyla okutun ve giriş ekranında **Demoyu aç**'a dokunun. Demo için Supabase bağlantısı gerekmez. Web önizlemesi için `npm run web -w @hooplab/mobile` çalıştırılır. Gerçek veriyle kendi Supabase ve Google Cloud hesaplarınla kurmak için: `npm run setup`. Sihirbaz sunucu tarafını kurar ve senin konsolda yapacağın birkaç adımı numaralı listeler; `npm run setup:check` hiçbir şeyi değiştirmeden denetler. Adım adım: [docs/guides/kurulum.md](docs/guides/kurulum.md) ([0009](docs/decisions/0009-herkes-kendi-hesabiyla.md), [0023](docs/decisions/0023-kurulum-sihirbazi-terminalde.md)).
 
 ```bash
 npm run hooks:install   # yeni klonda bir kez: git hook'larını etkinleştirir

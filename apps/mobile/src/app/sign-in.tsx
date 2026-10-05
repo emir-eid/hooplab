@@ -1,5 +1,5 @@
 // Giriş ekranı. Tek kullanıcı: kayıt yok, hesap Supabase panosunda bir kez açılır ve yeni kayıtlar
-// kapatılır. Bağlantı değerleri eksikse form yerine nedeni gösterilir (kurulum sihirbazı ileride, 0009).
+// kapatılır. Bağlantı değerleri eksikse form yerine nedeni ve kurulum sihirbazı gösterilir (0023).
 // Demo (karar 0022) bağlantı değerleri olmadan da açılır: repo'yu klonlayan biri sunucusuz gezebilir.
 
 import { layout, spacing } from '@hooplab/theme';
@@ -113,8 +113,9 @@ export default function SignInScreen() {
               {configProblems[supabaseConfig.problem]}
             </Text>
             <Text variant="footnoteRegular" tone="inkMuted">
-              apps/mobile/.env.local dosyasına EXPO_PUBLIC_SUPABASE_URL ve EXPO_PUBLIC_SUPABASE_PUBLISHABLE_KEY
-              değerlerini yaz, sonra Metro'yu yeniden başlat.
+              Bilgisayarda repo klasöründe npm run setup çalıştır: Supabase projeni kurar ve bu değerleri
+              apps/mobile/.env.local dosyasına yazar. Sonra Metro'yu yeniden başlat. Adımlar:
+              docs/guides/kurulum.md.
             </Text>
           </Card>
         )}
