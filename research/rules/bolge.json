@@ -1,0 +1,75 @@
+{
+  "module": "kas-tendon",
+  "rules": [
+    {
+      "id": "bolge-icerik-etiketleri",
+      "description": "Seans içerik etiketleri: sıçrama / iniş, yön değiştirme / ani duruş, sprint, alt vücut kuvvet, üst vücut kuvvet. Seans RPE'si fizyolojik yükü, etiketler hangi dokuların mekanik olarak çalıştığını işaretler. Türe göre hazır seçili gelir; kullanıcı düzeltir.",
+      "value": {
+        "tags": ["jump", "cod", "sprint", "lower_strength", "upper_strength"],
+        "defaults_by_kind": {
+          "team_practice": ["jump", "cod", "sprint"],
+          "game": ["jump", "cod", "sprint"],
+          "shooting": ["jump"],
+          "conditioning": ["sprint"],
+          "strength": ["lower_strength"],
+          "mobility": [],
+          "rehab": []
+        }
+      },
+      "applies_to": "her seans kaydı; etiketsiz eski seanslar türün hazır etiketleriyle sayılır ve bu ekranda belirtilir",
+      "sources": ["vanrenterghem-2017", "kalkhoven-2021"],
+      "notes": "Fizyolojik ve biyomekanik yük ayrı yollardır (vanrenterghem-2017); RPE doku yükünü göstermez (kalkhoven-2021), bu yüzden içerik ayrıca işaretlenir. Hazır seçimler bir kullanıcı arayüzü varsayılanıdır, eşik değildir; 30 saniyelik kayıt hedefi için (karar 0027). PRODUCT'taki 'temas' etiketi alınmadı: kaynaklı bir bölge eşlemesi yok."
+    },
+    {
+      "id": "bolge-esleme",
+      "description": "Etiket → bölge eşlemesi (nitel, katsayısız). Sıçrama / iniş: patellar tendon, Aşil. Yön değiştirme / ani duruş: quadriceps, adduktor. Sprint: hamstring, baldır, Aşil. Alt vücut kuvvet: quadriceps, hamstring, kalça. Üst vücut kuvvet: omuz. Ayak bileği ve bel modelde yok; yalnız ağrı haritasında.",
+      "value": {
+        "jump": ["patellar_tendon", "achilles"],
+        "cod": ["quadriceps", "adductor"],
+        "sprint": ["hamstring", "calf", "achilles"],
+        "lower_strength": ["quadriceps", "hamstring", "hip"],
+        "upper_strength": ["shoulder"],
+        "not_modeled": ["ankle", "lower_back"]
+      },
+      "applies_to": "bölge yükü ve toparlanma penceresi hesabı",
+      "sources": ["lian-2005", "bahr-2014", "silbernagel-2007", "harper-2022", "serner-2019", "danielsson-2020", "finnern-2026", "panagiotakis-2017", "bache-mathiesen-2024", "sprague-2018"],
+      "notes": "Sıçrama → patellar tendon: basketbol ve voleybolda yaygınlık en yüksek (lian-2005), sıçrama sıklığı maruziyet olarak (bahr-2014); sıçrama yükünün diz şikayetine nedensel etkisi bulunamadı (bache-mathiesen-2024) ve güçlü bir değiştirilebilir risk etkeni yok (sprague-2018), bu yüzden eşleme maruziyettir, risk değil. Sıçrama ve koşu → Aşil (silbernagel-2007). Ani duruş → quadricepste yüksek eksantrik iş (harper-2022, tam metin). Yön değiştirme → adduktor (serner-2019, finnern-2026). Sprint → hamstring (danielsson-2020, finnern-2026) ve baldır (finnern-2026). Kuvvet etiketleri anatomik eşlemedir; kaynak yalnız toparlanma süresi için (bolge-toparlanma-penceresi). Ayak bileği burkulması basketbolda çoğunlukla rakibin ayağına basmayla oluşan anlık travma (panagiotakis-2017), birikmiş yük değil; bel için kaynaklı bir eşleme yok. Futbol ve voleybol kaynaklarının basketbola aktarımı varsayımdır."
+    },
+    {
+      "id": "bolge-toparlanma-penceresi",
+      "description": "Benzer bir yükten önce önerilen ara: tendon bölgeleri (patellar tendon, Aşil) 48 saat; kas bölgeleri (quadriceps, hamstring, adduktor, baldır, kalça, omuz) 72 saat. Pencere içinde yüklenmiş bölge 'toparlanıyor' olarak gösterilir.",
+      "value": {
+        "tendon_hours": 48,
+        "muscle_hours": 72,
+        "tendon_regions": ["patellar_tendon", "achilles"],
+        "muscle_regions": ["quadriceps", "hamstring", "adductor", "calf", "hip", "shoulder"],
+        "unit": "saat"
+      },
+      "applies_to": "bölgeye eşlenen son seanstan bu yana geçen süre; seans saati bilinmiyorsa takvim günüyle (48 saat = bugün ve dün, 72 saat = bugün ve önceki iki gün)",
+      "sources": ["gabbett-2025", "magnusson-2010", "miller-2005", "doeven-2018"],
+      "notes": "Süreler gabbett-2025'ten: çok sıçramalı yüklenme sonrası tendonda 48 saat, eksantrik kas hasarında 72 saat veya daha uzun. Tendonda kollajen yapımı 24 saatte zirve yapıp yaklaşık 3 gün yüksek kalır (magnusson-2010, miller-2005); maç sonrası kreatin kinaz 72 saate kadar normale döner (doeven-2018). Süreler 'hasar var' demek değil, benzer bir doz için önerilen aradır. Elle girilen seansların saati yok (yalnız saatle eşleşenlerde var); bu yüzden takvim günü yaklaşımı. Derleme düzeyinde kanıt (düzey 4) ve bireysel farklar büyük; tahmin olarak etiketlenir."
+    },
+    {
+      "id": "bolge-yuku",
+      "description": "Bölge yükü = toparlanma penceresi içindeki, o bölgeye eşlenen en az bir etiketi taşıyan seansların seans yükleri toplamı (AU). Seans yükü bölgeler arasında bölünmez; dokuya binen yük değil, o bölgeyi çalıştıran seansların yükü. Kıyas: kendi son 28 gününde aynı uzunluktaki pencerelerin ortalaması; eşik yok.",
+      "value": {
+        "formula": "sum(session_load for sessions in window if tags ∩ region_tags)",
+        "comparison_days": 28,
+        "threshold": null,
+        "unit": "AU",
+        "label": "tahmin"
+      },
+      "applies_to": "Vücut görünümü ve bölge ayrıntısı; her bölge için",
+      "sources": ["vanrenterghem-2017", "kalkhoven-2021", "bache-mathiesen-2024"],
+      "notes": "Mevcut yük ölçüleri doku düzeyindeki mekanik yükle doğrulanmadı (kalkhoven-2021); bölge yükü bu yüzden yalnız maruziyetin yoğunluğunu gösterir ve 'tahmin' etiketlidir. Bölgeler arası katsayı veya sönüm eğrisi kullanılmaz: kaynağı yok (karar 0027, seçenek B reddedildi). Sıçrama yükü bile tek başına diz şikayetiyle nedensel ilişkili bulunmadı (bache-mathiesen-2024); risk dili ve renk yok. Kıyas penceresi antrenman yükünün kronik penceresiyle aynı (yuk-haftalik)."
+    },
+    {
+      "id": "bolge-agri-izleme",
+      "description": "Ağrı izleme modeli, sabah ağrısına uyarlanmış: bir bölgede sabah ağrısı 5'in üstündeyse ya da bölge dün yüklendiyse ve bugünkü sabah ağrısı dünkünden azalmadıysa (dün ağrı vardı) o bölgeye 'tahmin' etiketli bir not düşer.",
+      "value": { "max_nrs": 5, "next_morning": "decrease", "unit": "NRS" },
+      "applies_to": "ağrı haritası (sabah check-in) ve bölge yükü; bölge ve taraf bazında",
+      "sources": ["silbernagel-2007", "seidler-2025"],
+      "notes": "Model tendinopati rehabilitasyonunda kullanılıyor: etkinlik sırası ve sonrası ağrı 0-10 ölçekte 5'e kadar çıkabilir, ertesi sabah azalmış olmalı (seidler-2025 tam metni; ilk kaynak silbernagel-2007). HoopLab yalnız sabah ağrısını kaydettiği için model sabah değerine uyarlanır; bu uyarlama doğrulanmadı. Not tanı değildir; şiddetli, ani başlayan veya şişlikle gelen ağrıda doktora yönlendirilir (CLAUDE.md §3)."
+    }
+  ]
+}
