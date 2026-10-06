@@ -1,9 +1,9 @@
-# 2026-10-07 00:30 — Cihaz kontrolü, açıklama sayfaları ve Trend'de tür rengi
+# 2026-10-07 00:30 — Cihaz kontrolü, açıklama sayfaları, Trend'de tür rengi, kas / tendon kaynakları
 
 - **Faz:** 2 (Faz 1'in TestFlight maddesi Apple'ı bekliyor)
-- **Durum:** açık (/rep)
+- **Durum:** kapandı (/kapat, 01:04)
 - **Model / efor:** Opus 5.5
-- **Commit'ler:** `b1fab3d` (Blok 1-2), Blok 3'ün /rep commit'i
+- **Commit'ler:** `b1fab3d` (Blok 1-2), `30c37b9` (Blok 3), bu raporun kapanış commit'i
 
 ## Blok 1 — Cihaz kontrolü: hale ve manken kenarı (2026-10-06 01:38'de açılan oturum)
 
