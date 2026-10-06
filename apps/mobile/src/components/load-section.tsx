@@ -1,12 +1,14 @@
 // Antrenman yükü bölümleri (karar 0025): Trend'de ayrıntı, Bugün'de yalnız oran 1,5'i geçince tek satırlık not.
-// Sayılar motordan (packages/engine), metinler copy/training-load'dan; burada yalnız yerleşim. Risk rengi yok.
+// Sayılar motordan (packages/engine), metinler copy/training-load'dan; burada yalnız yerleşim. Risk rengi yok;
+// renk yalnız seans türünü gösterir ve her zaman yanında adı ve değeri yazar (karar 0026).
 
-import { layout, radius, spacing } from '@hooplab/theme';
+import { layout, loadGroups, radius, spacing, type LoadGroup } from '@hooplab/theme';
 import { router } from 'expo-router';
 import { useState } from 'react';
 import { StyleSheet, View } from 'react-native';
 
 import { Card } from '@/components/card';
+import { ExplainButton } from '@/components/info-button';
 import { GroupLabel, ListGroup, ListRow } from '@/components/list';
 import { LoadChart } from '@/components/load-chart';
 import { Tile } from '@/components/recovery-section';
@@ -17,6 +19,7 @@ import {
   formatChange,
   formatLoad,
   formatRatio,
+  loadGroupLabels,
   loadMethodNote,
   monotonyNote,
   ratioNote,
@@ -26,11 +29,29 @@ import {
   untaggedDetail,
   untaggedLabel,
 } from '@/copy/training-load';
-import type { TrainingLoadView } from '@/data/training-load-view';
+import type { LoadParts, TrainingLoadView } from '@/data/training-load-view';
 import { usePalette } from '@/theme/appearance';
 import { formatShortDate } from '@/utils/format-date';
 
 const dash = '–';
+
+/** Renk karesi + tür adı + değer. Değer metin renginde; renk yalnız karede (dataviz). */
+function GroupValue({ group, value }: { group: LoadGroup; value: number }) {
+  const palette = usePalette();
+  return (
+    <View style={styles.groupValue}>
+      <View style={[styles.swatch, { backgroundColor: palette.loadGroup[group] }]} />
+      <Text variant="caption" tone="inkSecondary">
+        {loadGroupLabels[group]}
+      </Text>
+      <Text variant="caption" tone="inkMuted">
+        {formatLoad(value)}
+      </Text>
+    </View>
+  );
+}
+
+const present = (parts: LoadParts): LoadGroup[] => loadGroups.filter((g) => parts[g] > 0);
 
 function openTagging(view: TrainingLoadView) {
   const next = view.untagged[0];
@@ -106,9 +127,12 @@ export function TrainingLoadSection({ view }: { view: TrainingLoadView }) {
       <Card style={styles.chartCard}>
         <View style={styles.chartHead}>
           <View accessibilityLiveRegion="polite">
-            <Text variant="footnote" tone="inkSecondary">
-              {day ? formatShortDate(day.date) : 'Son 7 gün'}
-            </Text>
+            <View style={styles.titleRow}>
+              <Text variant="footnote" tone="inkSecondary">
+                {day ? formatShortDate(day.date) : 'Son 7 gün'}
+              </Text>
+              <ExplainButton id="loadChart" value={r.week === null ? undefined : `${weekValue} AU`} />
+            </View>
             <View style={styles.valueRow}>
               <Text variant="metric">{day ? (day.load === null ? dash : formatLoad(day.load)) : weekValue}</Text>
               <Text variant="footnote" tone="inkMuted">
@@ -118,9 +142,13 @@ export function TrainingLoadSection({ view }: { view: TrainingLoadView }) {
           </View>
           <View style={styles.chartHeadRight}>
             {day ? (
-              <Text variant="caption" tone="inkMuted">
-                {day.load === null ? 'kayıt öncesi' : 'günlük yük'}
-              </Text>
+              day.load === null || day.load === 0 ? (
+                <Text variant="caption" tone="inkMuted">
+                  {day.load === null ? 'kayıt öncesi' : 'seans yok'}
+                </Text>
+              ) : (
+                present(day.parts).map((g) => <GroupValue key={g} group={g} value={day.parts[g]} />)
+              )
             ) : (
               <>
                 <Text variant="caption" tone="inkMuted">
@@ -142,12 +170,14 @@ export function TrainingLoadSection({ view }: { view: TrainingLoadView }) {
           onSelect={setSelected}
           accessibilityLabel={`Antrenman yükü, son ${view.chart.length} gün. Son 7 gün ${weekValue} AU${r.ratio !== null ? `, alıştığın seviyenin ${formatDecimal(r.ratio)} katı` : ''}.`}
         />
+        <View style={styles.groups} accessibilityLabel="Son 7 günün türlere göre yükü">
+          {loadGroups.map((g) => (
+            <GroupValue key={g} group={g} value={view.weekParts[g]} />
+          ))}
+        </View>
         <View style={styles.legend}>
           <Text variant="caption2" tone="inkMuted">
-            Belirgin: son 7 gün
-          </Text>
-          <Text variant="caption2" tone="inkMuted">
-            Soluk: öncesi
+            Gölgeli alan ve yukarıdaki değerler: son 7 gün
           </Text>
           {r.ratio !== null ? (
             <Text variant="caption2" tone="inkMuted">
@@ -160,6 +190,7 @@ export function TrainingLoadSection({ view }: { view: TrainingLoadView }) {
       <View style={styles.grid}>
         <Tile
           label="Alıştığına göre"
+          explain="ratio"
           value={r.ratio === null ? dash : formatRatio(r.ratio)}
           unit=""
           note={ratioNote(r)}
@@ -168,6 +199,7 @@ export function TrainingLoadSection({ view }: { view: TrainingLoadView }) {
         />
         <Tile
           label="4 hafta ort."
+          explain="weeklyAverage"
           value={r.weeklyAverage === null ? dash : formatLoad(r.weeklyAverage)}
           unit="AU/hafta"
           note={r.weeklyAverage === null ? '28 günlük kayıttan sonra' : 'son 28 gün / 4'}
@@ -176,6 +208,7 @@ export function TrainingLoadSection({ view }: { view: TrainingLoadView }) {
         />
         <Tile
           label="Monotonluk"
+          explain="monotony"
           value={r.monotony === null ? dash : formatDecimal(r.monotony)}
           unit=""
           note={r.monotony === null ? 'son 7 günde değişim yok veya kayıt az' : monotonyNote}
@@ -184,6 +217,7 @@ export function TrainingLoadSection({ view }: { view: TrainingLoadView }) {
         />
         <Tile
           label="Gerilim"
+          explain="strain"
           value={r.strain === null ? dash : formatLoad(r.strain)}
           unit="AU"
           note={strainNote}
@@ -221,6 +255,17 @@ const styles = StyleSheet.create({
     paddingHorizontal: spacing[1],
   },
   chartHeadRight: { alignItems: 'flex-end' },
+  titleRow: { flexDirection: 'row', alignItems: 'center', gap: spacing[1.5] },
+  groups: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    columnGap: spacing[4],
+    rowGap: spacing[1],
+    paddingHorizontal: spacing[1],
+    marginTop: spacing[3],
+  },
+  groupValue: { flexDirection: 'row', alignItems: 'center', gap: spacing[1.5] },
+  swatch: { width: 10, height: 10, borderRadius: 3 },
   valueRow: {
     flexDirection: 'row',
     alignItems: 'baseline',

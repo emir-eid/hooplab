@@ -10,6 +10,7 @@ import { Pressable, StyleSheet, View } from 'react-native';
 import { Aura } from '@/components/aura';
 import { Card } from '@/components/card';
 import { DemoBar } from '@/components/demo-bar';
+import { ExplainButton } from '@/components/info-button';
 import { GroupLabel, ListGroup, ListRow } from '@/components/list';
 import { LoadSpikeRow } from '@/components/load-section';
 import { PageHeader } from '@/components/page-header';
@@ -136,9 +137,12 @@ function TodayScreen({ demo }: { demo: DemoScenario | null }) {
         <Pressable onPress={() => router.push('/checkin')} accessibilityRole="button" accessibilityHint="Düzenlemek için dokun">
           {({ pressed }) => (
             <Card style={pressed ? styles.pressed : undefined}>
-              <Text variant="footnote" tone="inkMuted">
-                Sabah check-in
-              </Text>
+              <View style={styles.titleRow}>
+                <Text variant="footnote" tone="inkMuted">
+                  Sabah check-in
+                </Text>
+                <ExplainButton id="checkin" value={`${total} / ${wellnessTotalRange.max}`} />
+              </View>
               <View style={styles.metricRow}>
                 <Text variant="metric">{total}</Text>
                 <Text variant="footnote" tone="inkMuted">
@@ -180,7 +184,10 @@ function TodayScreen({ demo }: { demo: DemoScenario | null }) {
 
       {log && log.sessions.length > 0 ? (
         <>
-          <GroupLabel>Bugünün seansları</GroupLabel>
+          <View style={styles.groupHead}>
+            <GroupLabel>Bugünün seansları</GroupLabel>
+            <ExplainButton id="sessionLoad" style={styles.groupInfo} />
+          </View>
           <View style={[styles.list, { backgroundColor: palette.card, boxShadow: palette.shadow.card }]}>
             {log.sessions.map((s, i) => (
               <View key={s.id} style={[styles.row, i > 0 && { borderTopColor: palette.line, borderTopWidth: StyleSheet.hairlineWidth }]}>
@@ -220,6 +227,9 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   pressed: { opacity: 0.85 },
+  titleRow: { flexDirection: 'row', alignItems: 'center', gap: spacing[1.5] },
+  groupHead: { flexDirection: 'row', alignItems: 'flex-end', justifyContent: 'space-between' },
+  groupInfo: { marginRight: layout.screenInset, marginBottom: spacing[2] },
   metricRow: {
     flexDirection: 'row',
     alignItems: 'baseline',

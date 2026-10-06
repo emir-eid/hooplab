@@ -1,6 +1,6 @@
 # 0025. Antrenman yükü: bileşenler ayrı, EWMA oranı yalnız bağlam, 1,5 üstünde bilgi notu, monotonluk eşiksiz
 
-- **Durum:** Kabul edildi; motor testli, arayüz web önizlemesinde (390×844, açık ve koyu, üç demo senaryosu) ve iPhone'da (Expo Go, demo) doğrulandı (2026-10-06)
+- **Durum:** Kabul edildi; arayüzde renk kuralı [0026](0026-aciklama-sayfalari-ve-tur-rengi.md) ile daraldı (risk rengi yok, seans türü rengi var); motor testli, arayüz web önizlemesinde (390×844, açık ve koyu, üç demo senaryosu) ve iPhone'da (Expo Go, demo) doğrulandı (2026-10-06)
 - **Tarih:** 2026-10-05
 - **İlgili:** [0004](0004-mimari-hesap-motoru-kanit-ai.md), [0017](0017-sabah-check-in-olcegi.md), [0020](0020-seans-etiketleme.md), [0021](0021-toparlanma-kisisel-bant.md), ROADMAP Faz 2, PRODUCT modül 2, `research/rules/yuk.json`
 

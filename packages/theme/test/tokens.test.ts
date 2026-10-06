@@ -9,6 +9,7 @@ import {
   dayStates,
   defaultAppearance,
   isHex,
+  loadGroups,
   mix,
   over,
   palettes,
@@ -140,4 +141,18 @@ test('opsz 96 font dosyası sabit, adı tekil ve lisansı yanında', () => {
   assert.ok(buf.includes(ps), 'PostScript adı tekilleştirilmemiş');
   const ofl = readFileSync(new URL('../fonts/OFL.txt', import.meta.url), 'utf8');
   assert.match(ofl, /SIL Open Font License, Version 1\.1/);
+});
+
+// Seans türü renkleri (karar 0026): grafik işareti olarak kart zemininde en az 3:1, durum renklerinden ve birbirinden ayrı.
+// Renk körlüğü ayrımı dataviz doğrulayıcısıyla denetlendi (karar 0026); burada yalnız değişmezler.
+test('seans türü renkleri kartta en az 3:1 ve hepsi farklı', () => {
+  for (const scheme of ['light', 'dark'] as const) {
+    const p = palettes[scheme];
+    const colors = loadGroups.map((g) => p.loadGroup[g]);
+    assert.equal(new Set(colors).size, loadGroups.length, scheme);
+    for (const g of loadGroups) {
+      assert.ok(contrastRatio(p.loadGroup[g], p.card) >= 3, `${scheme} ${g} ${contrastRatio(p.loadGroup[g], p.card).toFixed(2)}`);
+      for (const s of dayStates) assert.notEqual(p.loadGroup[g], p.status[s], `${scheme} ${g} = durum ${s}`);
+    }
+  }
 });

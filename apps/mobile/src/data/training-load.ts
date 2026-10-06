@@ -17,7 +17,7 @@ export async function fetchTrainingLoad(today: string): Promise<Result<TrainingL
   const [rows, first, pending] = await Promise.all([
     supabase
       .from('training_sessions')
-      .select('local_date, rpe, duration_min')
+      .select('local_date, rpe, duration_min, kind')
       .gte('local_date', loadFrom(today))
       .lte('local_date', today),
     supabase.from('training_sessions').select('local_date').order('local_date', { ascending: true }).limit(1).maybeSingle(),

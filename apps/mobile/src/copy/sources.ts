@@ -1,0 +1,47 @@
+// Kaynak künyeleri: research/sources dosyalarının başlık bilgisinden (yazar, yıl, tür).
+// sources.test.ts her satırı kaynak dosyasıyla karşılaştırır; yeni kaynak eklenince buraya da eklenir.
+
+export interface SourceCite {
+  cite: string;
+  kind: string;
+}
+
+export const sources = {
+  'andrade-2020': { cite: 'Andrade ve ark., 2020', kind: 'Sistematik derleme' },
+  'bellenger-2016': { cite: 'Bellenger ve ark., 2016', kind: 'Meta-analiz' },
+  'bourdon-2017': { cite: 'Bourdon ve ark., 2017', kind: 'Uzman konsensüsü' },
+  'buchheit-2014': { cite: 'Buchheit, 2014', kind: 'Derleme' },
+  'burger-2024': { cite: 'Burger ve ark., 2024', kind: 'Derleme' },
+  'chan-2024': { cite: 'Chan ve ark., 2024', kind: 'Sistematik derleme' },
+  'conte-2018': { cite: 'Conte ve ark., 2018', kind: 'Kohort' },
+  'ding-2026': { cite: 'Ding ve ark., 2026', kind: 'Meta-analiz' },
+  'duking-2021': { cite: 'Düking ve ark., 2021', kind: 'Meta-analiz' },
+  'ferioli-2020': { cite: 'Ferioli ve ark., 2020', kind: 'Kohort' },
+  'foster-1998': { cite: 'Foster, 1998', kind: 'Kohort' },
+  'foster-2001': { cite: 'Foster ve ark., 2001', kind: 'Kesitsel çalışma' },
+  'gabbett-2016': { cite: 'Gabbett, 2016', kind: 'Derleme' },
+  'griffin-2019': { cite: 'Griffin ve ark., 2019', kind: 'Sistematik derleme' },
+  'haddad-2017': { cite: 'Haddad ve ark., 2017', kind: 'Derleme' },
+  'hawker-2011': { cite: 'Hawker ve ark., 2011', kind: 'Derleme' },
+  'hooper-1995': { cite: 'Hooper ve ark., 1995', kind: 'Kohort' },
+  'impellizzeri-2020': { cite: 'Impellizzeri ve ark., 2020', kind: 'Uzman görüşü' },
+  'impellizzeri-2021': { cite: 'Impellizzeri ve ark., 2021', kind: 'Kohort' },
+  'lolli-2017': { cite: 'Lolli ve ark., 2017', kind: 'Uzman görüşü' },
+  'manresa-rocamora-2021': { cite: 'Manresa-Rocamora ve ark., 2021', kind: 'Meta-analiz' },
+  'maupin-2020': { cite: 'Maupin ve ark., 2020', kind: 'Sistematik derleme' },
+  'mclean-2010': { cite: 'McLean ve ark., 2010', kind: 'Kohort' },
+  'murray-2017': { cite: 'Murray ve ark., 2017', kind: 'Kohort' },
+  'plews-2013': { cite: 'Plews ve ark., 2013', kind: 'Derleme' },
+  'plews-2014': { cite: 'Plews ve ark., 2014', kind: 'Kohort' },
+  'ren-2024': { cite: 'Ren ve ark., 2024', kind: 'Kohort' },
+  'saw-2016': { cite: 'Saw ve ark., 2016', kind: 'Sistematik derleme' },
+  'soligard-2016': { cite: 'Soligard ve ark., 2016', kind: 'Uzman konsensüsü' },
+  'todri-2025': { cite: 'Todri ve ark., 2025', kind: 'Kesitsel çalışma' },
+  'vesterinen-2016': { cite: 'Vesterinen ve ark., 2016', kind: 'Randomize kontrollü çalışma' },
+  'walsh-2021': { cite: 'Walsh ve ark., 2021', kind: 'Uzman konsensüsü' },
+  'weiss-2017': { cite: 'Weiss ve ark., 2017', kind: 'Kohort' },
+  'williams-2017': { cite: 'Williams ve ark., 2017', kind: 'Uzman görüşü' },
+  'zhang-2026': { cite: 'Zhang ve ark., 2026', kind: 'Kohort' },
+} as const satisfies Record<string, SourceCite>;
+
+export type SourceId = keyof typeof sources;

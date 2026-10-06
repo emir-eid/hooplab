@@ -80,6 +80,16 @@ function RootNavigator() {
           <Stack.Screen name="checkin" options={{ presentation: 'modal' }} />
           <Stack.Screen name="session-new" options={{ presentation: 'modal' }} />
           <Stack.Screen name="recovery-method" />
+          <Stack.Screen
+            name="explain/[id]"
+            options={{
+              presentation: 'formSheet',
+              sheetAllowedDetents: [0.6, 1],
+              sheetGrabberVisible: true,
+              sheetCornerRadius: 24,
+              contentStyle: { backgroundColor: palette.bg },
+            }}
+          />
         </Stack.Protected>
         <Stack.Protected guard={!signedIn}>
           <Stack.Screen name="sign-in" />

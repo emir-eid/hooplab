@@ -110,6 +110,8 @@ function historySessions(scenario: DemoScenario, today: string): TrainingSession
     }
     add(i, 'team_practice', (light ? 60 : 95) * boost, light ? 4 : 6);
     if ((day === 1 || day === 4) && !light) add(i, 'strength', 55, 6);
+    if (day === 2 && !light) add(i, 'shooting', 35, 4);
+    if (day === 5) add(i, 'mobility', 30, 2); // maç ertesi
   }
   return out;
 }

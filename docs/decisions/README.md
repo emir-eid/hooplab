@@ -58,3 +58,4 @@ Hangisi seçildi ve tek paragrafta neden.
 | [0023](0023-kurulum-sihirbazi-terminalde.md) | Kurulum sihirbazı terminalde: `npm run setup` kurar, `--check` denetler, uygulama eksikliği söyler | Kabul edildi |
 | [0024](0024-eas-derleme-ve-guncelleme.md) | EAS derleme ve güncelleme: mevcut Expo hesabı, kimlik ortamdan, fingerprint, tek üretim profili | Kabul edildi |
 | [0025](0025-antrenman-yuku.md) | Antrenman yükü: bileşenler ayrı, EWMA oranı yalnız bağlam, 1,5 üstünde tahmin etiketli bilgi notu, monotonluk eşiksiz | Kabul edildi |
+| [0026](0026-aciklama-sayfalari-ve-tur-rengi.md) | Açıklama sayfaları (Bu ne? · Nasıl okunur? · Neye göre? · Kaynaklar) ve yük grafiğinde seans türü rengi | Kabul edildi |

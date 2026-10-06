@@ -1,21 +1,23 @@
-// "Nasıl hesaplanıyor?" ekranının kaynak listesi. Kimlikler research/sources dosya adlarıdır;
+// "Nasıl hesaplanıyor?" ekranının kaynak listesi. Kimlikler research/sources dosya adlarıdır, künyeler copy/sources'tan;
 // recovery-sources.test.ts listenin rules/toparlanma.json'daki kaynaklarla aynı kaldığını denetler.
 
-export interface SourceRef {
-  id: string;
-  cite: string;
-  kind: string;
+import { sources, type SourceCite, type SourceId } from './sources.ts';
+
+export interface SourceRef extends SourceCite {
+  id: SourceId;
   /** Uygulamada ne için kullanıldığı. */
   use: string;
 }
 
+const ref = (id: SourceId, use: string): SourceRef => ({ id, ...sources[id], use });
+
 export const recoverySources: readonly SourceRef[] = [
-  { id: 'manresa-rocamora-2021', cite: 'Manresa-Rocamora ve ark., 2021', kind: 'Meta-analiz', use: '7 günlük ortalama, 4 haftalık bant, ± 0,5 SD' },
-  { id: 'vesterinen-2016', cite: 'Vesterinen ve ark., 2016', kind: 'Randomize kontrollü çalışma', use: 'Bant dışında düşük yoğunluk kuralı' },
-  { id: 'duking-2021', cite: 'Düking ve ark., 2021', kind: 'Meta-analiz', use: 'Giyilebilir cihazla ölçülen HRV' },
-  { id: 'plews-2014', cite: 'Plews ve ark., 2014', kind: 'Kohort', use: 'Haftada en az 3 geçerli gece' },
-  { id: 'plews-2013', cite: 'Plews ve ark., 2013', kind: 'Derleme', use: 'Ortalamayla okuma, HRV nabızla birlikte' },
-  { id: 'buchheit-2014', cite: 'Buchheit, 2014', kind: 'Derleme', use: 'Derin uyku HRV, anlamlı değişim' },
-  { id: 'bellenger-2016', cite: 'Bellenger ve ark., 2016', kind: 'Meta-analiz', use: 'HRV tek başına yetmez' },
-  { id: 'walsh-2021', cite: 'Walsh ve ark., 2021', kind: 'Uzman konsensüsü', use: '7 saatin altı kısa uyku' },
+  ref('manresa-rocamora-2021', '7 günlük ortalama, 4 haftalık bant, ± 0,5 SD'),
+  ref('vesterinen-2016', 'Bant dışında düşük yoğunluk kuralı'),
+  ref('duking-2021', 'Giyilebilir cihazla ölçülen HRV'),
+  ref('plews-2014', 'Haftada en az 3 geçerli gece'),
+  ref('plews-2013', 'Ortalamayla okuma, HRV nabızla birlikte'),
+  ref('buchheit-2014', 'Derin uyku HRV, anlamlı değişim'),
+  ref('bellenger-2016', 'HRV tek başına yetmez'),
+  ref('walsh-2021', '7 saatin altı kısa uyku'),
 ];

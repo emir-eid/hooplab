@@ -8,10 +8,11 @@ import { addIsoDays } from '@hooplab/engine';
 import { buildTrainingLoadView, loadChartDays, loadFrom, type LoadSessionRow } from './training-load-view.ts';
 
 const today = '2026-10-31';
-const row = (daysAgo: number, minutes = 60, rpe = 5): LoadSessionRow => ({
+const row = (daysAgo: number, minutes = 60, rpe = 5, kind: LoadSessionRow['kind'] = 'team_practice'): LoadSessionRow => ({
   local_date: addIsoDays(today, -daysAgo),
   rpe,
   duration_min: minutes,
+  kind,
 });
 
 test('kayıt yoksa görünüm boş, grafik günleri bilinmiyor', () => {
@@ -46,4 +47,21 @@ test('pencereden eski ilk kayıt: geçmiş pencerenin başından sayılır, sess
   assert.equal(v.reading.historyStart, loadFrom(today));
   assert.equal(v.reading.historyDays, 120 - 1, 'bugün kayıt yok: hesap düne kadar');
   assert.ok(v.chart.every((d) => d.load !== null));
+});
+
+test('tür grupları günün yükünü böler, son 7 günün dağılımı akut pencereden', () => {
+  const v = buildTrainingLoadView(
+    [row(1, 60, 5, 'game'), row(1, 30, 4, 'strength'), row(2, 40, 2, 'mobility'), row(3, 50, 6, 'shooting'), row(10, 60, 5, 'game')],
+    today,
+    { earliest: addIsoDays(today, -10), untagged: [] },
+  );
+  const day1 = v.chart.find((d) => d.date === addIsoDays(today, -1))!;
+  assert.deepEqual(day1.parts, { game: 300, court: 0, gym: 120, light: 0 });
+  assert.equal(day1.load, 420);
+  for (const d of v.chart) {
+    const sum = d.parts.game + d.parts.court + d.parts.gym + d.parts.light;
+    assert.equal(sum, d.load ?? 0, d.date);
+  }
+  // 10 gün önceki maç akut pencerede değil.
+  assert.deepEqual(v.weekParts, { game: 300, court: 300, gym: 120, light: 80 });
 });

@@ -10,6 +10,13 @@ export type DayState = 'green' | 'yellow' | 'red';
 export const dayStates = ['green', 'yellow', 'red'] as const satisfies readonly DayState[];
 
 type ByState<T> = Record<DayState, T>;
+
+/**
+ * Yük grafiğinde seans türü grupları, yığında alttan üste (karar 0026). Kategorik renk: risk anlamı taşımaz,
+ * durum renklerinden ayrı tonlar. Sıra renk körlüğü denetiminin parçasıdır (komşu çiftler); değiştirilmez.
+ */
+export type LoadGroup = 'game' | 'court' | 'gym' | 'light';
+export const loadGroups = ['game', 'court', 'gym', 'light'] as const satisfies readonly LoadGroup[];
 type AuraColors = readonly [Hex, Hex, Hex];
 
 export interface BasePalette {
@@ -54,6 +61,11 @@ export interface BasePalette {
   status: ByState<Hex>;
   /** Durum rengi yazı ve ikon olarak: kart ve renkli zemin üstünde en az 4,5:1. */
   statusInk: ByState<Hex>;
+  /**
+   * Yük grafiğindeki seans türü grupları (maç, saha, kuvvet / kondisyon, hafif). Makette yok; dataviz doğrulayıcısıyla
+   * kart zemininde denetlendi (karar 0026). Yanında her zaman açıklama satırı olur; renk tek başına anlam taşımaz.
+   */
+  loadGroup: Record<LoadGroup, Hex>;
   /** Hale lekelerinin renkleri (3 leke) ve katman opaklığı. */
   aura: { opacity: number; colors: ByState<AuraColors> };
   /** boxShadow dizeleri (RN 0.76+ web sözdizimi). */
@@ -116,6 +128,7 @@ const light: BasePalette = {
   knob: '#FFFFFF',
   status: { green: '#1FA874', yellow: '#E8930C', red: '#E8492F' },
   statusInk: { green: '#077A52', yellow: '#9A6004', red: '#C82709' },
+  loadGroup: { game: '#D6528F', court: '#2A78D6', gym: '#4A3AA7', light: '#8B8E95' },
   aura: {
     opacity: 0.95,
     colors: {
@@ -155,6 +168,7 @@ const dark: BasePalette = {
   knob: '#F1F0EC',
   status: { green: '#3CCB92', yellow: '#FFAE33', red: '#FF6B52' },
   statusInk: { green: '#3CCB92', yellow: '#FFAE33', red: '#FF6B52' },
+  loadGroup: { game: '#D9539A', court: '#3B9AE6', gym: '#7D55D9', light: '#7D8088' },
   aura: {
     opacity: 0.5,
     colors: {

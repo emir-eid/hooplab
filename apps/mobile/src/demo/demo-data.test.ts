@@ -51,7 +51,7 @@ test('yük: yeşil dengeli, sarı orta artış (not yok), kırmızı kamp haftas
   for (const today of days) {
     const ratio = (scenario: (typeof demoScenarios)[number]) => {
       const db = createDemoDb(scenario, today, now);
-      const rows = db.sessions.map((s) => ({ local_date: s.localDate, rpe: s.rpe, duration_min: s.durationMin }));
+      const rows = db.sessions.map((s) => ({ local_date: s.localDate, rpe: s.rpe, duration_min: s.durationMin, kind: s.kind }));
       const earliest = rows.map((r) => r.local_date).sort()[0] ?? null;
       return buildTrainingLoadView(rows, today, { earliest, untagged: [] }).reading;
     };

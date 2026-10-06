@@ -9,6 +9,7 @@ import { Pressable, StyleSheet, View } from "react-native";
 import { Card } from "@/components/card";
 import { HrvChart } from "@/components/hrv-chart";
 import { Icon } from "@/components/icon";
+import { ExplainButton, InfoButton, openExplainer } from "@/components/info-button";
 import { GroupLabel, ListGroup, ListRow } from "@/components/list";
 import { Text } from "@/components/text";
 import {
@@ -22,6 +23,7 @@ import {
   statusChips,
   statusReason,
 } from "@/copy/recovery";
+import type { ExplainerId } from "@/copy/explainers";
 import type { RecoveryView } from "@/data/recovery-view";
 import { usePalette } from "@/theme/appearance";
 import { formatShortDate } from "@/utils/format-date";
@@ -53,21 +55,11 @@ export function RecoveryState({ view }: { view: RecoveryView }) {
           <Text variant="body" style={styles.reason}>
             {statusReason(view)}
           </Text>
-          <Pressable
+          <InfoButton
             onPress={openMethod}
-            hitSlop={(size.hitTarget - size.citeBadge) / 2}
-            accessibilityRole="link"
             accessibilityLabel="Kaynaklar ve yöntem"
-            style={({ pressed }) => [
-              styles.cite,
-              { backgroundColor: palette.ink },
-              pressed && styles.pressed,
-            ]}
-          >
-            <Text variant="micro" tone="onInk">
-              i
-            </Text>
-          </Pressable>
+            style={styles.cite}
+          />
         </View>
         {chips.length > 0 ? (
           <View style={styles.chips}>
@@ -122,19 +114,25 @@ export interface TileProps {
   /** Bu ölçüm günün durumuna katkı verdi mi (nokta ve not durum renginde). */
   flagged: boolean;
   state: "green" | "yellow" | "red" | null;
+  /** Verilirse kart dokunulabilir ve açıklama alt sayfasını açar (karar 0026). */
+  explain?: ExplainerId;
 }
 
-export function Tile({ label, value, unit, note, flagged, state }: TileProps) {
+export function Tile({ label, value, unit, note, flagged, state, explain }: TileProps) {
   const palette = usePalette();
   const accent = flagged && state ? palette.statusInk[state] : null;
   return (
-    <View
-      style={[
+    <Pressable
+      disabled={!explain}
+      onPress={explain ? () => openExplainer(explain, value === "–" ? undefined : `${value} ${unit}`.trim()) : undefined}
+      style={({ pressed }) => [
         styles.tile,
         { backgroundColor: palette.card, boxShadow: palette.shadow.card },
+        pressed && styles.pressed,
       ]}
-      accessible
+      accessibilityRole={explain ? "button" : undefined}
       accessibilityLabel={`${label}: ${value} ${unit}, ${note}`}
+      accessibilityHint={explain ? "Ne olduğunu ve nasıl okunduğunu açar" : undefined}
     >
       <View style={styles.tileHead}>
         <View
@@ -146,9 +144,16 @@ export function Tile({ label, value, unit, note, flagged, state }: TileProps) {
             },
           ]}
         />
-        <Text variant="footnote" tone="inkSecondary">
+        <Text variant="footnote" tone="inkSecondary" style={styles.tileLabel}>
           {label}
         </Text>
+        {explain ? (
+          <View style={[styles.tileInfo, { borderColor: palette.inkMuted }]}>
+            <Text variant="micro" tone="inkMuted" style={styles.tileInfoText}>
+              i
+            </Text>
+          </View>
+        ) : null}
       </View>
       <View style={styles.valueRow}>
         <Text variant="metric">{value}</Text>
@@ -163,7 +168,7 @@ export function Tile({ label, value, unit, note, flagged, state }: TileProps) {
       >
         {note}
       </Text>
-    </View>
+    </Pressable>
   );
 }
 
@@ -197,11 +202,14 @@ export function NightData({ view }: { view: RecoveryView }) {
       <Card style={styles.chartCard}>
         <View style={styles.chartHead}>
           <View accessibilityLiveRegion="polite">
-            <Text variant="footnote" tone="inkSecondary">
-              {day
-                ? `${formatShortDate(day.date)} · gece`
-                : "HRV · derin uyku · 7 günlük ort."}
-            </Text>
+            <View style={styles.titleRow}>
+              <Text variant="footnote" tone="inkSecondary">
+                {day
+                  ? `${formatShortDate(day.date)} · gece`
+                  : "HRV · derin uyku · 7 günlük ort."}
+              </Text>
+              <ExplainButton id="hrv" value={hrv.rolling === null ? undefined : `${hrvValue} ms`} />
+            </View>
             <View style={styles.valueRow}>
               <Text variant="metric">{day ? round(day.value) : hrvValue}</Text>
               <Text variant="footnote" tone="inkMuted">
@@ -268,6 +276,7 @@ export function NightData({ view }: { view: RecoveryView }) {
       <View style={styles.grid}>
         <Tile
           label="Dinlenik nabız"
+          explain="rhr"
           value={rhr.rolling === null ? dash : String(Math.round(rhr.rolling))}
           unit="atım/dk"
           note={
@@ -280,6 +289,7 @@ export function NightData({ view }: { view: RecoveryView }) {
         />
         <Tile
           label="Uyku"
+          explain="sleep"
           value={sleep.lastNight ? formatSleep(sleep.lastNight.minutes) : dash}
           unit="sa"
           note={
@@ -292,6 +302,7 @@ export function NightData({ view }: { view: RecoveryView }) {
         />
         <Tile
           label="Son gece HRV"
+          explain="hrvNight"
           value={lastHrv ? String(Math.round(lastHrv.value)) : dash}
           unit="ms"
           note="tek gece, gürültülü"
@@ -300,6 +311,7 @@ export function NightData({ view }: { view: RecoveryView }) {
         />
         <Tile
           label="Solunum"
+          explain="respiration"
           value={respiration ? formatDecimal(respiration.value) : dash}
           unit="/dk"
           note="son gece · yorumlanmıyor"
@@ -332,14 +344,8 @@ const styles = StyleSheet.create({
     gap: spacing[1.5],
   },
   reason: { flexShrink: 1, maxWidth: 330 },
-  cite: {
-    marginTop: 3,
-    width: size.citeBadge,
-    height: size.citeBadge,
-    borderRadius: radius.full,
-    alignItems: "center",
-    justifyContent: "center",
-  },
+  cite: { marginTop: 3 },
+  titleRow: { flexDirection: "row", alignItems: "center", gap: spacing[1.5] },
   chips: {
     flexDirection: "row",
     flexWrap: "wrap",
@@ -405,6 +411,16 @@ const styles = StyleSheet.create({
     borderCurve: "continuous",
   },
   tileHead: { flexDirection: "row", alignItems: "center", gap: spacing[1.5] },
+  tileLabel: { flex: 1 },
+  tileInfo: {
+    width: 16,
+    height: 16,
+    borderRadius: radius.full,
+    borderWidth: 1,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  tileInfoText: { lineHeight: 14 },
   dot: { width: 8, height: 8, borderRadius: radius.full },
   valueRow: {
     flexDirection: "row",

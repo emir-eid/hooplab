@@ -1,7 +1,8 @@
 // Antrenman yükü metinleri (karar 0025). Oran sakatlık riski değil, "alıştığın seviyeye göre" bağlamdır;
-// not tahmin olarak etiketlenir. Renk ve "güvenli bölge" dili yok.
+// not tahmin olarak etiketlenir. Risk rengi ve "güvenli bölge" dili yok; renk yalnız seans türünü gösterir (karar 0026).
 
 import { loadRatioRule, loadSpikeRule, type TrainingLoadReading } from '@hooplab/engine';
+import type { LoadGroup } from '@hooplab/theme';
 
 import { formatDecimal } from '@/copy/recovery';
 
@@ -43,4 +44,12 @@ export const monotonyNote = 'Ortalama / gün gün değişim. Eşik yok; kendi ge
 export const strainNote = 'Haftalık yük × monotonluk.';
 
 export const loadMethodNote =
-  'Yük = RPE × dakika (AU). Ortalamalar üstel ağırlıklı: yakın günler daha ağır sayılır (7 ve 28 gün). Oran ve not tahmindir; basketbolda doğrulanmış bir sakatlık eşiği yok.';
+  'Yük = RPE × dakika (AU). Ortalamalar üstel ağırlıklı: yakın günler daha ağır sayılır (7 ve 28 gün). Oran ve not tahmindir; basketbolda doğrulanmış bir sakatlık eşiği yok. Renkler yalnız seans türünü gösterir. Saha: takım antrenmanı ve şut; hafif: mobilite ve rehabilitasyon.';
+
+/** Grafikteki seans türü grupları (karar 0026). */
+export const loadGroupLabels: Record<LoadGroup, string> = {
+  game: 'Maç',
+  court: 'Saha',
+  gym: 'Kuvvet / kondisyon',
+  light: 'Hafif',
+};

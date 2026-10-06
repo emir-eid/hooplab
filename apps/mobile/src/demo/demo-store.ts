@@ -106,7 +106,7 @@ export class DemoStore {
   }
 
   async fetchTrainingLoad(today: string): Promise<Result<TrainingLoadView>> {
-    const rows = this.db.sessions.map((s) => ({ local_date: s.localDate, rpe: s.rpe, duration_min: s.durationMin }));
+    const rows = this.db.sessions.map((s) => ({ local_date: s.localDate, rpe: s.rpe, duration_min: s.durationMin, kind: s.kind }));
     const earliest = rows.reduce<string | null>((min, r) => (min === null || r.local_date < min ? r.local_date : min), null);
     const pending = await this.fetchPendingExercises(addIsoDays(today, -(loadChartDays - 1)), today);
     return ok(buildTrainingLoadView(rows, today, { earliest, untagged: pending.ok ? pending.value : [] }));
