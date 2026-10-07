@@ -1,9 +1,9 @@
 # 2026-10-07 15:52 — Öğün kaydı; su kaydı ve renkli Bugün
 
 - **Faz:** 2 (Faz 1'in TestFlight maddesi Apple'ı bekliyor)
-- **Durum:** açık (/rep)
+- **Durum:** kapandı (/kapat, 23:35)
 - **Model / efor:** Opus 5.5
-- **Commit'ler:** bu raporun /rep commit'i
+- **Commit'ler:** `90f413a` (Blok 1-2), bu raporun kapanış commit'i
 
 ## Blok 1 — Öğün kaydı: kaynaklar, yöntem, veritabanı, motor ve arayüz (açılış 15:52)
 
