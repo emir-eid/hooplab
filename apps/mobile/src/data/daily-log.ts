@@ -2,7 +2,16 @@
 // Erişimi RLS korur (karar 0015); user_id veritabanında oturumdan yazılır, istemci göndermez.
 // Demo modu açıksa her fonksiyon bellekteki demo deposuna gider (karar 0022).
 
-import { isCompleteWellness, wellnessItems, type ContentTag, type WellnessAnswers } from '@hooplab/engine';
+import {
+  addIsoDays,
+  checkinBaseline,
+  isCompleteWellness,
+  readCheckin,
+  wellnessItems,
+  type CheckinReading,
+  type ContentTag,
+  type WellnessAnswers,
+} from '@hooplab/engine';
 
 import type { SessionKind } from '@/copy/labels';
 import { linkCandidates, pendingExercises, type ExerciseSession } from '@/data/exercise-tagging';
@@ -62,6 +71,24 @@ export async function fetchCheckin(localDate: string): Promise<Result<Checkin | 
   const answers = checkin.data as unknown as Partial<WellnessAnswers>;
   if (!isCompleteWellness(answers)) return { ok: true, value: null };
   return { ok: true, value: { answers, pain: painMapFromRows(pain.data ?? []) } };
+}
+
+/**
+ * Sabah check-in'in kişisel kıyası (karar 0028): bugün ve önceki 28 günün check-in'leri. Bugün check-in
+ * yoksa da başlangıç (kaç check-in kaldı) okunur.
+ */
+export async function fetchCheckinReading(today: string): Promise<Result<CheckinReading>> {
+  const demo = demoStore();
+  if (demo) return demo.fetchCheckinReading(today);
+  if (!supabase) return { ok: false, message: offline };
+  const { data, error } = await supabase
+    .from('daily_checkins')
+    .select(['local_date', ...wellnessItems].join(', '))
+    .gte('local_date', addIsoDays(today, -checkinBaseline.baselineDays))
+    .lte('local_date', today);
+  if (error) return { ok: false, message: offline };
+  const rows = (data ?? []) as unknown as ({ local_date: string } & Partial<WellnessAnswers>)[];
+  return { ok: true, value: readCheckin(rows.map(({ local_date, ...answers }) => ({ date: local_date, answers })), today) };
 }
 
 /** Check-in ve o günün ağrı haritası tek işlemde (save_morning_checkin). */

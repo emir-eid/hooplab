@@ -3,6 +3,7 @@
 // (explainers.test.ts denetler). Sayılar motor sabitlerinden; metinde eşik uydurulmaz.
 
 import {
+  checkinBaseline,
   loadEwma,
   loadRatioRule,
   loadSpikeRule,
@@ -12,6 +13,7 @@ import {
   regionComparison,
   regionWindow,
   recoveryMinValues,
+  respirationNightRule,
   shortSleep,
   wellnessScale,
   wellnessTotalRange,
@@ -111,12 +113,18 @@ export const explainers = {
   respiration: {
     title: 'Solunum',
     basis: 'measured',
-    what: 'Uykuda dakikadaki nefes sayısı; saatin son gece ölçümü.',
-    read: ['Şimdilik yalnız gösteriliyor; günün durumuna girmiyor ve yorumlanmıyor.'],
-    reference: 'Henüz kişisel bandı yok. Kaynakları doğrulanınca solunum da kendi geçmişinle karşılaştırılacak.',
+    what: 'Uykuda dakikadaki nefes sayısı. Saat bunu gece nabzının nefesle birlikte hafifçe dalgalanmasından hesaplar. Büyük sayı son gece, altındaki satır son 7 gecenin ortalaması ve bandı.',
+    read: [
+      'Gece solunumu kişiden kişiye çok değişir, ama aynı kişide gece gece çok az oynar. Bu yüzden başkasıyla değil, kendi bandınla karşılaştırılır.',
+      'Bandın altı ya da üstü "her zamankinden farklı" demektir; iyi ya da kötü demez. Günün durumuna girmez.',
+      `Son gece önceki 4 haftanın ortalamasından ${respirationNightRule.aboveBaselineMean} nefes/dk veya daha fazla yüksekse ayrı bir not çıkar.`,
+      'Not tanı değil: hastalık başlangıcında da, sıcak, alkol, stres veya yükseklikte de görülebilir.',
+    ],
+    reference: `${bandText} ${respirationNightRule.aboveBaselineMean} nefes/dk, Fitbit'in kendi çalışmasından: hastalık başlangıcında semptomlu kişilerin yaklaşık üçte birinde en az bir gece olağanın bu kadar üstünde ölçüm görüldü. Sporcularda da gece solunumu, kişisel başlangıç düzeyine göre, diğer ölçümlerden önce değişebilmiş.`,
+    limits: `${bandLimits} ${respirationNightRule.aboveBaselineMean} nefes/dk doğrulanmış bir uyarı eşiği değil ve yanlış alarm oranı bilinmiyor. Bant genişliği HRV çalışmalarından aktarıldı.`,
     medical: true,
-    rules: [],
-    sources: [],
+    rules: ['solunum-bant', 'solunum-tek-gece', 'toparlanma-veri-yeterliligi'],
+    sources: ['natarajan-2021', 'renteria-2024', 'miller-2020', 'nicolo-2020', 'manresa-rocamora-2021', 'plews-2014'],
   },
   checkin: {
     title: 'Sabah check-in',
@@ -124,13 +132,16 @@ export const explainers = {
     what: `Her sabah beş soru: uyku kalitesi, yorgunluk, kas ağrısı, stres, ruh hali. Her biri ${wellnessScale.min}-${wellnessScale.max} arası, ${wellnessScale.max} en iyi. Toplam ${wellnessTotalRange.min}-${wellnessTotalRange.max}.`,
     read: [
       'Yüksek toplam, o sabah kendini iyi hissettiğini gösterir.',
-      'Asıl anlamı kendi geçmişinle kıyasta: senin için olağan toplam birkaç haftalık kayıttan sonra belirir.',
+      `Asıl anlamı kendi geçmişinle kıyasta: bugünkü toplam, önceki ${checkinBaseline.baselineDays} günde girdiğin check-in'lerin ortalamasıyla karşılaştırılır. Fark standart sapma (SD) cinsinden yazılır: "−1 SD", olağan günlük oynamanın bir katı kadar düşük demek.`,
+      `Bugün ${Math.abs(checkinBaseline.zNoteMax)} SD veya daha fazla düşükse "alıştığından belirgin düşük" notu çıkar ve kendi ortalamana göre en çok düşen madde yazılır.`,
+      'Maç ertesi düşük toplam olağandır; not kendi başına yük azalt demez, o günü bilerek planlamanı söyler.',
+      'Günün durumuna girmez; HRV, nabız ve uykudan ayrı okunur.',
       'Karta dokununca o sabahın cevaplarını değiştirebilirsin.',
     ],
-    reference: 'Basketbol çalışmalarında kullanılan kısa iyi oluş anketinden uyarlandı. Sporcunun kendi bildirdiği ölçümler, yükteki değişime kan ya da nabız gibi nesnel ölçümlerden daha duyarlı bulunmuş.',
-    limits: 'Doğrulanmış bir psikometrik ölçek değil; bir izleme aracı, tanı aracı değil.',
-    rules: ['checkin-olcek'],
-    sources: ['zhang-2026', 'saw-2016', 'burger-2024'],
+    reference: "Basketbol çalışmalarında kullanılan kısa iyi oluş anketinden uyarlandı. Sporcunun kendi bildirdiği ölçümler, yükteki değişime kan ya da nabız gibi nesnel ölçümlerden daha duyarlı bulunmuş. Avustralya futbolunda sabah toplamı kendi ortalamasının 1 SD altında olan oyuncuların o günkü antrenman çıktısı küçük ama anlamlı düşük bulundu; futbolda sabah yorgunluğu yüke en duyarlı madde çıktı.",
+    limits: `Kıyas için önceki ${checkinBaseline.baselineDays} günde en az ${checkinBaseline.minValues} check-in gerekir. Doğrulanmış bir psikometrik ölçek değil; bir izleme aracı, tanı aracı değil. 1 SD doğrulanmış bir uyarı eşiği değil; futbol bulgularının basketbola aktarımı varsayım.`,
+    rules: ['checkin-olcek', 'checkin-kisisel'],
+    sources: ['zhang-2026', 'saw-2016', 'burger-2024', 'gallo-2016', 'gallo-2017', 'thorpe-2015'],
   },
   sessionLoad: {
     title: 'Seans yükü · AU',

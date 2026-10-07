@@ -15,7 +15,7 @@ for (const f of ruleFiles) {
 }
 
 test('her açıklamanın kuralları var, kaynakları o kuralların kaynaklarından', () => {
-  for (const [id, e] of Object.entries(explainers)) {
+  for (const [id, e] of Object.entries(explainers) as [string, Explainer][]) {
     const allowed = new Set<string>();
     for (const r of e.rules) {
       const s = rules.get(r);

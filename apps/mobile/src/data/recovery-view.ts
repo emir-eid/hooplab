@@ -5,11 +5,13 @@ import {
   addIsoDays,
   dayStatus,
   readMetric,
+  readRespiration,
   readSleep,
   recoveryLookbackDays,
   type DayStatus,
   type DayValue,
   type MetricReading,
+  type RespirationReading,
   type SleepReading,
 } from '@hooplab/engine';
 
@@ -55,7 +57,8 @@ export interface RecoveryView {
   hrv: MetricReading;
   rhr: MetricReading;
   sleep: SleepReading;
-  respiration: { date: string; value: number } | null;
+  /** Gece solunumu: kişisel bant ve tek gece notu (karar 0028); günün durumuna girmez. */
+  respiration: RespirationReading;
   chart: ChartDay[];
   /** Hiç cihaz verisi yok: Google Health bağlı değil veya henüz senkron olmadı. */
   empty: boolean;
@@ -87,16 +90,17 @@ export function buildRecoveryView(daily: readonly HealthDailyRow[], sleepRows: r
     chart.push({ date, value: value !== null && value > 0 ? value : null, rolling: readMetric(hrvSeries, date, { log: true }).rolling });
   }
 
-  const resp = daily
-    .filter((r) => r.local_date <= today && r.respiratory_rate_bpm !== null && r.respiratory_rate_bpm > 0)
-    .sort((a, b) => (a.local_date < b.local_date ? 1 : -1))[0];
+  const respiration = readRespiration(
+    daily.map((r) => ({ date: r.local_date, value: r.respiratory_rate_bpm })),
+    today,
+  );
 
   return {
     status: dayStatus(hrv, rhr, sleep),
     hrv,
     rhr,
     sleep,
-    respiration: resp ? { date: resp.local_date, value: resp.respiratory_rate_bpm as number } : null,
+    respiration,
     chart,
     empty: daily.length === 0 && sleepRows.length === 0,
   };

@@ -8,6 +8,14 @@
       "applies_to": "her sabah, antrenmandan önce; puanlar kişisel baseline'a göre okunur, popülasyon eşiği yok",
       "sources": ["zhang-2026", "conte-2018", "saw-2016", "burger-2024", "hooper-1995", "mclean-2010"],
       "notes": "Madde listesi ve 1-5 aralığı basketbol çalışmasından (zhang-2026, tam metin). Çalışmadaki 0,5 adım yerine tam sayı: 30 saniye hedefi ve tek dokunuş (karar 0017). Kısa uyarlanmış anketler doğrulanmış ölçek değildir (burger-2024); bu yüzden check-in yalnız izleme aracıdır."
+    },
+    {
+      "id": "checkin-kisisel",
+      "description": "Sabah check-in toplamının kişisel z-skoru: (bugünkü toplam − önceki 28 gündeki check-in toplamlarının ortalaması) / örneklem SD'si. z ≤ −1 ise \"alıştığından belirgin düşük\" notu düşer ve kendi ortalamasına göre en çok düşen madde yazılır. Günün durumuna girmez.",
+      "value": { "metric": "total", "baseline_days": 28, "min_values": 12, "sd": "sample", "z_note_max": -1, "in_day_status": false, "unit": "z" },
+      "applies_to": "o sabahın check-in'i; yalnız check-in yapılan günler başlangıca girer, bugün dahil değil",
+      "sources": ["gallo-2016", "gallo-2017", "thorpe-2015", "saw-2016", "plews-2014"],
+      "notes": "Sabah iyi oluşunun kişisel z-skoru −1 olunca o günkü antrenman çıktısı küçük ama anlamlı düşük bulundu (gallo-2016, Avustralya futbolu); −1 orada bir etki büyüklüğü birimi, doğrulanmış uyarı eşiği değil. Kırmızı bayraklar sporcunun kendi profiline göre konur; maç ertesi düşüş olağan (gallo-2017). Maddeler yüke aynı duyarlılıkta değil, yorgunluk en duyarlısı (thorpe-2015): bu yüzden en çok düşen madde ayrıca gösterilir. Öznel ölçümler yüke nesnel ölçümlerden duyarlı (saw-2016). 28 günlük pencere ve en az 12 değer HRV bandından aktarıldı (plews-2014); check-in'e özgü bir yeterlilik kaynağı bulunamadı. Basketbola aktarım varsayım; check-in doğrulanmış bir ölçek değil (burger-2024, karar 0017). Günün durumuna girmez: birleşim için kaynak yok (karar 0028)."
     }
   ]
 }

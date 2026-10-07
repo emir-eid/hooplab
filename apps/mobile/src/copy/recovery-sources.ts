@@ -20,4 +20,8 @@ export const recoverySources: readonly SourceRef[] = [
   ref('buchheit-2014', 'Derin uyku HRV, anlamlı değişim'),
   ref('bellenger-2016', 'HRV tek başına yetmez'),
   ref('walsh-2021', '7 saatin altı kısa uyku'),
+  ref('natarajan-2021', 'Gece solunumu kişi içinde kararlı; 3 nefes/dk notu'),
+  ref('renteria-2024', 'Sporcularda kişisel başlangıca göre solunum'),
+  ref('miller-2020', 'Gece solunumunda olağandan sapma'),
+  ref('nicolo-2020', 'Solunumu etkileyen etkenler'),
 ];

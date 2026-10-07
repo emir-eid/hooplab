@@ -44,6 +44,22 @@
       "applies_to": "Bugün ekranındaki 'Bugünün durumu'; tanı değil, izleme özeti",
       "sources": ["vesterinen-2016", "plews-2013", "buchheit-2014", "bellenger-2016", "walsh-2021"],
       "notes": "Test edilmiş karar kuralı yalnız HRV'dir: bant içinde planlanan yoğunluk, bant dışında (iki yönde) düşük yoğunluk (vesterinen-2016). HRV tek başına uyumu ayırt etmeyebilir (bellenger-2016) ve HRV düşüşü nabızla birlikte okunur (plews-2013, buchheit-2014); bu yüzden en ağır durum iki otonom işaret aynı yönü gösterdiğinde. Uyku kısalığı (walsh-2021) yalnız 'Kontrollü'ye katkı verir. Bu birleşim HoopLab'in sentezidir, doğrulanmış bir hazır olma skoru değildir (karar 0021)."
+    },
+    {
+      "id": "solunum-bant",
+      "description": "Gece solunum hızının kişisel bandı: son 7 günün ortalaması, önceki 28 günün ortalaması ± 0,5 SD'ye göre (HRV ve dinlenik nabızla aynı yöntem). Yalnız gösterilir; günün durumuna girmez.",
+      "value": { "metric": "respiratory_rate", "rolling_days": 7, "baseline_days": 28, "sd_multiplier": 0.5, "in_day_status": false, "unit": "nefes/dk" },
+      "applies_to": "Google Health'in gece solunum hızı (nefes/dk); veri yeterliliği toparlanma-veri-yeterliligi ile aynı",
+      "sources": ["natarajan-2021", "renteria-2024", "manresa-rocamora-2021"],
+      "notes": "Gece solunumu kişiler arasında çok, kişi içinde az değişiyor (natarajan-2021: 14 günde CV yaklaşık %2-9,5); bu yüzden popülasyon aralığı değil kişisel bant. Sporcularda da kişisel başlangıç düzeyine göre okunmuş (renteria-2024, n=14). Pencereler ve ± 0,5 SD HRV bandından aktarıldı (manresa-rocamora-2021); solunuma özgü doğrulanmış bir bant genişliği bulunamadı. Bandın altı veya üstü bir yorgunluk ya da hazır olma göstergesi olarak doğrulanmadığı için günün durumuna girmez (karar 0028)."
+    },
+    {
+      "id": "solunum-tek-gece",
+      "description": "Son gecenin solunum hızı, önceki 28 günün kişisel ortalamasının 3 nefes/dk veya daha fazla üstündeyse not düşer. Tanı değil: olası nedenler (hastalık başlangıcı, sıcak, alkol, stres, yükseklik) sayılır, kendini hasta hissediyorsa doktora yönlendirilir.",
+      "value": { "above_baseline_mean": 3, "baseline_days": 28, "in_day_status": false, "unit": "nefes/dk" },
+      "applies_to": "son gece; bant için yeterli veri varsa (toparlanma-veri-yeterliligi)",
+      "sources": ["natarajan-2021", "miller-2020", "renteria-2024", "nicolo-2020"],
+      "notes": "3 nefes/dk natarajan-2021'in tanımlayıcı sayısı: COVID-19'da belirtilerin çevresindeki haftada semptomlu kişilerin yaklaşık üçte birinde olağanın en az 3 nefes/dk üstünde bir gece. Doğrulanmış bir uyarı eşiği değil, özgüllüğü verilmedi; tam metindeki z ≥ 2,33 analizi daha hassas ama daha çok yanlış alarm üretebilir, temkinli olan seçildi (karar 0028). Solunum stres, sıcak ve efor gibi pek çok etkene duyarlı (nicolo-2020); bu yüzden not tek bir neden söylemez. Gece solunumu sporcularda diğer ölçümlerden önce değişebiliyor (renteria-2024, miller-2020). CLAUDE.md §3 tıbbi sınır: tanı yok, yönlendirme var."
     }
   ]
 }

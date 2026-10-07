@@ -1,6 +1,6 @@
-// Toparlanma yöntemi ve kaynakları (karar 0021): Bugün'deki durumun nasıl hesaplandığı, sayılar motor sabitlerinden.
+// Toparlanma yöntemi ve kaynakları (karar 0021, 0028): Bugün'deki durumun nasıl hesaplandığı, sayılar motor sabitlerinden.
 
-import { recoveryBand, recoveryMinValues, shortSleep } from '@hooplab/engine';
+import { recoveryBand, recoveryMinValues, respirationNightRule, shortSleep } from '@hooplab/engine';
 
 import { GroupFooter, GroupLabel, ListGroup, ListRow } from '@/components/list';
 import { Card } from '@/components/card';
@@ -31,6 +31,13 @@ export default function RecoveryMethodScreen() {
         </Text>
         <Text variant="bodyCompact">
           {`Ortalama için son ${recoveryBand.rollingDays} günde en az ${recoveryMinValues.rolling}, bant için en az ${recoveryMinValues.baseline} gece gerekir. Daha azsa sonuç gösterilmez.`}
+        </Text>
+      </Card>
+
+      <GroupLabel>Solunum</GroupLabel>
+      <Card>
+        <Text variant="bodyCompact">
+          {`Gece solunumu aynı bantla okunur ama günün durumuna girmez. Son gece önceki ${recoveryBand.baselineDays / 7} haftanın ortalamasından ${respirationNightRule.aboveBaselineMean} nefes/dk veya daha fazla yüksekse ayrı bir not çıkar; not tanı değildir.`}
         </Text>
       </Card>
 

@@ -149,7 +149,9 @@ export function createDemoDb(scenario: DemoScenario, today: string, now: Date): 
         local_date: date,
         hrv_deep_rmssd_ms: Math.round(hrv),
         resting_hr_bpm: clamp(rhr, 38, 70),
-        respiratory_rate_bpm: Math.round((14.4 + 0.4 * noise(r) + (recent && scenario === 'red' ? 1.2 : 0)) * 10) / 10,
+        // Kırmızıda son hafta bandın üstünde ve son gece belirgin yüksek (tek gece notu, karar 0028).
+        respiratory_rate_bpm:
+          Math.round((14.4 + 0.4 * noise(r) + (recent && scenario === 'red' ? (i === 0 ? 3.6 : 1.2) : 0)) * 10) / 10,
       });
       const minutes = recent ? tail.sleep + 10 * noise(r) : 465 + 28 * noise(r);
       sleep.push({ local_date: date, minutes_asleep: Math.round(minutes), is_nap: false });

@@ -1,7 +1,8 @@
 // Bugün: günün durumu ve gece verisi (karar 0021), sabah check-in çağrısı veya özeti,
 // saatten gelen ve etiket bekleyen oturumlar (karar 0020), bugünün seansları; yük notu yalnız oran 1,5'i geçince (karar 0025).
+// Check-in kendi son 4 haftasıyla z-skoruyla kıyaslanır; z ≤ −1 ise not, günün durumuna girmez (karar 0028).
 
-import { sessionLoad, wellnessTotal, wellnessTotalRange } from '@hooplab/engine';
+import { sessionLoad, wellnessTotal, wellnessTotalRange, type CheckinReading } from '@hooplab/engine';
 import { layout, radius, size, spacing } from '@hooplab/theme';
 import { router, useFocusEffect } from 'expo-router';
 import { useCallback, useState } from 'react';
@@ -18,9 +19,11 @@ import { NightData, RecoveryState } from '@/components/recovery-section';
 import { Screen } from '@/components/screen';
 import { Text } from '@/components/text';
 import { sessionKindLabels } from '@/copy/labels';
+import { checkinLowBody, checkinLowTitle, checkinNote, formatZ } from '@/copy/personal-baseline';
 import { levelStates } from '@/copy/recovery';
 import {
   fetchCheckin,
+  fetchCheckinReading,
   fetchPendingExercises,
   fetchSessions,
   type Checkin,
@@ -57,6 +60,7 @@ function TodayScreen({ demo }: { demo: DemoScenario | null }) {
   const [recovery, setRecovery] = useState<RecoveryView | null>(null);
   const [recoveryError, setRecoveryError] = useState<string | null>(null);
   const [load, setLoad] = useState<TrainingLoadView | null>(null);
+  const [checkinReading, setCheckinReading] = useState<CheckinReading | null>(null);
 
   // Form kapanınca ekran yeniden odaklanır ve günün kaydı tazelenir.
   useFocusEffect(
@@ -83,6 +87,10 @@ function TodayScreen({ demo }: { demo: DemoScenario | null }) {
         } else {
           setRecoveryError(r.message);
         }
+      });
+      // Check-in kıyası ikincil: alınamazsa kart yalnız toplamı gösterir.
+      fetchCheckinReading(today).then((r) => {
+        if (!cancelled) setCheckinReading(r.ok ? r.value : null);
       });
       // Yük notu ikincil: alınamazsa Bugün hata göstermez, not yalnız görünmez.
       fetchTrainingLoad(today).then((r) => {
@@ -134,27 +142,45 @@ function TodayScreen({ demo }: { demo: DemoScenario | null }) {
       ) : null}
 
       {log?.checkin && total !== null ? (
-        <Pressable onPress={() => router.push('/checkin')} accessibilityRole="button" accessibilityHint="Düzenlemek için dokun">
-          {({ pressed }) => (
-            <Card style={pressed ? styles.pressed : undefined}>
-              <View style={styles.titleRow}>
-                <Text variant="footnote" tone="inkMuted">
-                  Sabah check-in
-                </Text>
-                <ExplainButton id="checkin" value={`${total} / ${wellnessTotalRange.max}`} />
-              </View>
+        // Açıklama düğmesi düzenleme düğmesinin dışında: iç içe düğme olmaz (web'de geçersiz, ekran okuyucuda karışık).
+        <Card>
+          <View style={styles.titleRow}>
+            <Text variant="footnote" tone="inkMuted">
+              Sabah check-in
+            </Text>
+            <ExplainButton
+              id="checkin"
+              value={`${total} / ${wellnessTotalRange.max}${checkinReading?.z != null ? ` · ${formatZ(checkinReading.z)}` : ''}`}
+            />
+          </View>
+          <Pressable
+            onPress={() => router.push('/checkin')}
+            accessibilityRole="button"
+            accessibilityHint="Düzenlemek için dokun"
+            style={({ pressed }) => (pressed ? styles.pressed : undefined)}>
+            <>
               <View style={styles.metricRow}>
                 <Text variant="metric">{total}</Text>
                 <Text variant="footnote" tone="inkMuted">
                   / {wellnessTotalRange.max}
                 </Text>
               </View>
-              <Text variant="caption" tone="inkMuted">
-                Kendi geçmişinle karşılaştırma birkaç haftalık kayıttan sonra gelecek.
-              </Text>
-            </Card>
-          )}
-        </Pressable>
+              {checkinReading && checkinReading.total === total ? (
+                <Text variant="caption" tone="inkMuted">
+                  {checkinNote(checkinReading)}
+                </Text>
+              ) : null}
+              {checkinReading?.low && checkinReading.total === total ? (
+                <View style={[styles.checkinLow, { borderTopColor: palette.line }]}>
+                  <Text variant="callout">{checkinLowTitle}</Text>
+                  <Text variant="footnoteRegular" tone="inkSecondary">
+                    {checkinLowBody(checkinReading)}
+                  </Text>
+                </View>
+              ) : null}
+            </>
+          </Pressable>
+        </Card>
       ) : null}
 
       {error ? (
@@ -235,6 +261,12 @@ const styles = StyleSheet.create({
     alignItems: 'baseline',
     gap: spacing[1],
     marginTop: spacing[1],
+  },
+  checkinLow: {
+    marginTop: spacing[3],
+    paddingTop: spacing[3],
+    borderTopWidth: StyleSheet.hairlineWidth,
+    gap: spacing[1],
   },
   error: {
     marginTop: spacing[3],

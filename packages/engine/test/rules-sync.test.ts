@@ -7,6 +7,8 @@ import { readdirSync, readFileSync } from 'node:fs';
 
 import {
   bodyRegions,
+  checkinBaseline,
+  respirationNightRule,
   contentTags,
   defaultContentTags,
   modeledRegions,
@@ -85,6 +87,23 @@ test('toparlanma bandı, veri yeterliliği ve uyku eşiği kuralla aynı', () =>
   const sleep = rule('toparlanma.json', 'uyku-kisa').value;
   assert.equal(sleep.min_hours, shortSleep.minHours);
   assert.equal(sleep.rolling_nights, shortSleep.rollingNights);
+});
+
+test('solunum bandı, tek gece notu ve check-in kişisel kıyası kuralla aynı (karar 0028)', () => {
+  const band = rule('toparlanma.json', 'solunum-bant').value;
+  assert.equal(band.rolling_days, recoveryBand.rollingDays);
+  assert.equal(band.baseline_days, recoveryBand.baselineDays);
+  assert.equal(band.sd_multiplier, recoveryBand.sdMultiplier);
+  assert.equal(band.in_day_status, false);
+  const night = rule('toparlanma.json', 'solunum-tek-gece').value;
+  assert.equal(night.above_baseline_mean, respirationNightRule.aboveBaselineMean);
+  assert.equal(night.baseline_days, recoveryBand.baselineDays);
+  const checkin = rule('iyi-olus.json', 'checkin-kisisel').value;
+  assert.equal(checkin.baseline_days, checkinBaseline.baselineDays);
+  assert.equal(checkin.min_values, checkinBaseline.minValues);
+  assert.equal(checkin.z_note_max, checkinBaseline.zNoteMax);
+  assert.equal(checkin.sd, 'sample');
+  assert.equal(checkin.in_day_status, false);
 });
 
 test('günün durumu birleşimi kuralla aynı', () => {

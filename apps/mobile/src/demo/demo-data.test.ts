@@ -29,6 +29,16 @@ test('sarı: HRV düşük ve uyku kısa; kırmızı: HRV düşük ve nabız yük
   assert.ok(signals.includes('hrv_low') && signals.includes('rhr_high'));
 });
 
+test('solunum: yalnız kırmızıda son gece notu; günün durumunu değiştirmez', () => {
+  for (const today of days) {
+    for (const scenario of demoScenarios) {
+      const db = createDemoDb(scenario, today, now);
+      const view = buildRecoveryView(db.healthDaily, db.sleep, today);
+      assert.equal(view.respiration.nightHigh, scenario === 'red', `${scenario} @ ${today}`);
+    }
+  }
+});
+
 test('deterministik: aynı girdi aynı veriyi verir', () => {
   assert.deepEqual(createDemoDb('yellow', days[0]!, now), createDemoDb('yellow', days[0]!, now));
 });

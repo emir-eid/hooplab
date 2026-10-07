@@ -60,3 +60,4 @@ Hangisi seçildi ve tek paragrafta neden.
 | [0025](0025-antrenman-yuku.md) | Antrenman yükü: bileşenler ayrı, EWMA oranı yalnız bağlam, 1,5 üstünde tahmin etiketli bilgi notu, monotonluk eşiksiz | Kabul edildi |
 | [0026](0026-aciklama-sayfalari-ve-tur-rengi.md) | Açıklama sayfaları (Bu ne? · Nasıl okunur? · Neye göre? · Kaynaklar) ve yük grafiğinde seans türü rengi | Kabul edildi |
 | [0027](0027-kas-tendon-bolge-yuku.md) | Kas ve tendon bölge yükü: içerik etiketleri, katsayısız eşleme, toparlanma penceresi (tendon 48, kas 72 saat), ağrı izleme | Kabul edildi |
+| [0028](0028-solunum-ve-checkin-kisisel.md) | Solunum ve check-in için kişisel kıyas: solunum bandı ve tek gece notu (+3 nefes/dk), check-in z-skoru (≤ −1 not); günün durumuna girmez | Kabul edildi |

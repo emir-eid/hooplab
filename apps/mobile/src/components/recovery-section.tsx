@@ -1,4 +1,5 @@
 // Bugün ekranının toparlanma bölümleri (maket: .state, .advice, "Gece verisi"); karar 0021.
+// Solunum kişisel bantla okunur ve tek gece notu düşebilir, ama günün durumuna girmez (karar 0028).
 // Sayılar motordan (packages/engine), metinler copy/recovery'den; burada yalnız yerleşim.
 
 import { layout, radius, size, spacing } from "@hooplab/theme";
@@ -24,6 +25,12 @@ import {
   statusReason,
 } from "@/copy/recovery";
 import type { ExplainerId } from "@/copy/explainers";
+import {
+  respirationHighBody,
+  respirationHighFooter,
+  respirationHighTitle,
+  respirationNote,
+} from "@/copy/personal-baseline";
 import type { RecoveryView } from "@/data/recovery-view";
 import { usePalette } from "@/theme/appearance";
 import { formatShortDate } from "@/utils/format-date";
@@ -312,13 +319,30 @@ export function NightData({ view }: { view: RecoveryView }) {
         <Tile
           label="Solunum"
           explain="respiration"
-          value={respiration ? formatDecimal(respiration.value) : dash}
+          value={respiration.latest ? formatDecimal(respiration.latest.value) : dash}
           unit="/dk"
-          note="son gece · yorumlanmıyor"
+          note={respirationNote(respiration)}
           flagged={false}
           state={state}
         />
       </View>
+
+      {respiration.nightHigh ? (
+        <Card>
+          <View style={styles.titleRow}>
+            <Text variant="callout" style={styles.noteTitle}>
+              {respirationHighTitle}
+            </Text>
+            <ExplainButton id="respiration" />
+          </View>
+          <Text variant="footnoteRegular" tone="inkSecondary" style={styles.noteBody}>
+            {respirationHighBody(respiration)}
+          </Text>
+          <Text variant="caption" tone="inkMuted" style={styles.noteBody}>
+            {respirationHighFooter}
+          </Text>
+        </Card>
+      ) : null}
 
       <ListGroup footer="İzleme özeti, tanı değil. Göğüs ağrısı, çarpıntı veya olağandışı nabız gibi bir belirti varsa doktora başvur.">
         <ListRow
@@ -429,4 +453,6 @@ const styles = StyleSheet.create({
     marginTop: spacing[2],
   },
   pressed: { opacity: 0.85 },
+  noteTitle: { flex: 1 },
+  noteBody: { marginTop: spacing[1.5] },
 });

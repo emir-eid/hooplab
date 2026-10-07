@@ -43,7 +43,8 @@ test('her şey bandında, uyku yeterli → Hazır', () => {
   assert.equal(statusReason(v), 'HRV ve dinlenik nabız kendi bandında, uyku yeterli.');
   assert.deepEqual(statusChips(v), ['HRV bandında', 'Uyku yeterli']);
   assert.equal(statusAdvice(v), 'Planlanan antrenmanı yapabilirsin.');
-  assert.deepEqual(v.respiration, { date: today, value: 14.63 });
+  assert.deepEqual(v.respiration.latest, { date: today, value: 14.63 });
+  assert.equal(v.respiration.nightHigh, false);
 });
 
 test('HRV düşük ve nabız yüksek → Toparlan', () => {

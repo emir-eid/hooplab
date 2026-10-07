@@ -118,6 +118,28 @@ export function readMetric(series: readonly DayValue[], today: string, opts: { l
   };
 }
 
+/** rules/toparlanma.json → solunum-tek-gece: son gece, bandın ortalamasının bu kadar (nefes/dk) üstünde. */
+export const respirationNightRule = { aboveBaselineMean: 3 } as const;
+
+export interface RespirationReading extends MetricReading {
+  /** Son gece bandın ortalamasının 3 nefes/dk veya daha fazla üstünde (tanı değil). Bant ya da yakın tarihli gece yoksa null. */
+  nightHigh: boolean | null;
+}
+
+/**
+ * Gece solunum hızı (rules/toparlanma.json → solunum-bant, solunum-tek-gece; karar 0028). Bant HRV ve
+ * nabızla aynı yöntemle, ham değer üzerinden. Tek gece notu yalnız bugünün veya dünün gecesine bakar.
+ */
+export function readRespiration(series: readonly DayValue[], today: string): RespirationReading {
+  const reading = readMetric(series, today, { log: false });
+  const recentNight = reading.latest !== null && reading.latest.date >= addIsoDays(today, -1);
+  const nightHigh =
+    reading.band === null || !recentNight
+      ? null
+      : reading.latest!.value - reading.band.mean >= respirationNightRule.aboveBaselineMean;
+  return { ...reading, nightHigh };
+}
+
 export interface SleepReading {
   /** Son 7 gecenin ortalama uykusu (saat). Yetersizse null. */
   rollingHours: number | null;

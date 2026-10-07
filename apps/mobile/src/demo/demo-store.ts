@@ -1,7 +1,7 @@
 // Demo modunun bellekteki veritabanı (karar 0022): veri fonksiyonlarıyla aynı imzalar, ağ yok.
 // Kayıtlar (check-in, seans, etiketleme) yalnız bellekte; uygulama kapanınca veya senaryo değişince sıfırlanır.
 
-import { addIsoDays } from '@hooplab/engine';
+import { addIsoDays, checkinBaseline, readCheckin, type CheckinReading } from '@hooplab/engine';
 
 import type { Checkin, ExerciseToTag, NewTrainingSession, Result, TrainingSession } from '@/data/daily-log';
 import { linkCandidates, pendingExercises, type ExerciseSession } from '@/data/exercise-tagging';
@@ -33,6 +33,14 @@ export class DemoStore {
     const c = this.db.checkins.find((x) => x.local_date === localDate);
     if (!c) return ok(null);
     return ok({ answers: c.answers, pain: painMapFromRows(this.db.pain.filter((p) => p.local_date === localDate)) });
+  }
+
+  async fetchCheckinReading(today: string): Promise<Result<CheckinReading>> {
+    const from = addIsoDays(today, -checkinBaseline.baselineDays);
+    const days = this.db.checkins
+      .filter((c) => c.local_date >= from && c.local_date <= today)
+      .map((c) => ({ date: c.local_date, answers: c.answers }));
+    return ok(readCheckin(days, today));
   }
 
   async saveCheckin(localDate: string, checkin: Checkin): Promise<Result<null>> {
