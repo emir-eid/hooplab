@@ -15,19 +15,29 @@ import { Tile } from '@/components/recovery-section';
 import { Text } from '@/components/text';
 import { formatDecimal } from '@/copy/recovery';
 import {
+  averagePendingNote,
+  averageWeeksLabel,
+  averageWindowNote,
   estimateLabel,
   formatChange,
   formatLoad,
   formatRatio,
+  lastWeekLabel,
+  lastWeekLegend,
   loadGroupLabels,
   loadMethodNote,
+  loadSectionNote,
+  monotonyEmpty,
   monotonyNote,
+  previousWeekEmpty,
+  previousWeekLabel,
   ratioNote,
   spikeBody,
   spikeTitle,
   strainNote,
   untaggedDetail,
   untaggedLabel,
+  weekPartsLabel,
 } from '@/copy/training-load';
 import type { LoadParts, TrainingLoadView } from '@/data/training-load-view';
 import { usePalette } from '@/theme/appearance';
@@ -98,7 +108,7 @@ export function TrainingLoadSection({ view }: { view: TrainingLoadView }) {
       <View style={styles.sectionHead}>
         <GroupLabel>Antrenman yükü</GroupLabel>
         <Text variant="caption" tone="inkMuted" style={styles.sectionNote}>
-          RPE × dakika · 4 hafta
+          {loadSectionNote}
         </Text>
       </View>
 
@@ -129,7 +139,7 @@ export function TrainingLoadSection({ view }: { view: TrainingLoadView }) {
           <View accessibilityLiveRegion="polite">
             <View style={styles.titleRow}>
               <Text variant="footnote" tone="inkSecondary">
-                {day ? formatShortDate(day.date) : 'Son 7 gün'}
+                {day ? formatShortDate(day.date) : lastWeekLabel}
               </Text>
               <ExplainButton id="loadChart" value={r.week === null ? undefined : `${weekValue} AU`} />
             </View>
@@ -152,7 +162,7 @@ export function TrainingLoadSection({ view }: { view: TrainingLoadView }) {
             ) : (
               <>
                 <Text variant="caption" tone="inkMuted">
-                  {r.previousWeek === null ? 'önceki 7 gün: kayıt az' : `önceki 7 gün ${formatLoad(r.previousWeek)}`}
+                  {r.previousWeek === null ? previousWeekEmpty : `${previousWeekLabel} ${formatLoad(r.previousWeek)}`}
                 </Text>
                 {r.weekChange !== null ? (
                   <Text variant="caption" tone="inkMuted">
@@ -168,16 +178,16 @@ export function TrainingLoadSection({ view }: { view: TrainingLoadView }) {
           reference={r.ratio !== null ? r.chronic : null}
           selected={selected}
           onSelect={setSelected}
-          accessibilityLabel={`Antrenman yükü, son ${view.chart.length} gün. Son 7 gün ${weekValue} AU${r.ratio !== null ? `, alıştığın seviyenin ${formatDecimal(r.ratio)} katı` : ''}.`}
+          accessibilityLabel={`Antrenman yükü, son ${view.chart.length} gün. ${lastWeekLabel} ${weekValue} AU${r.ratio !== null ? `, alıştığın seviyenin ${formatDecimal(r.ratio)} katı` : ''}.`}
         />
-        <View style={styles.groups} accessibilityLabel="Son 7 günün türlere göre yükü">
+        <View style={styles.groups} accessibilityLabel={weekPartsLabel}>
           {loadGroups.map((g) => (
             <GroupValue key={g} group={g} value={view.weekParts[g]} />
           ))}
         </View>
         <View style={styles.legend}>
           <Text variant="caption2" tone="inkMuted">
-            Gölgeli alan ve yukarıdaki değerler: son 7 gün
+            {lastWeekLegend}
           </Text>
           {r.ratio !== null ? (
             <Text variant="caption2" tone="inkMuted">
@@ -198,11 +208,11 @@ export function TrainingLoadSection({ view }: { view: TrainingLoadView }) {
           state={null}
         />
         <Tile
-          label="4 hafta ort."
+          label={averageWeeksLabel}
           explain="weeklyAverage"
           value={r.weeklyAverage === null ? dash : formatLoad(r.weeklyAverage)}
           unit="AU/hafta"
-          note={r.weeklyAverage === null ? '28 günlük kayıttan sonra' : 'son 28 gün / 4'}
+          note={r.weeklyAverage === null ? averagePendingNote : averageWindowNote}
           flagged={false}
           state={null}
         />
@@ -211,7 +221,7 @@ export function TrainingLoadSection({ view }: { view: TrainingLoadView }) {
           explain="monotony"
           value={r.monotony === null ? dash : formatDecimal(r.monotony)}
           unit=""
-          note={r.monotony === null ? 'son 7 günde değişim yok veya kayıt az' : monotonyNote}
+          note={r.monotony === null ? monotonyEmpty : monotonyNote}
           flagged={false}
           state={null}
         />

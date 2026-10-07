@@ -2,7 +2,7 @@
 // Dil izleme dilidir, tanı dili değil (bellenger-2016, CLAUDE.md §3).
 
 import type { DayState } from '@hooplab/theme';
-import { recoveryMinValues, shortSleep, type DayLevel, type MetricReading, type RecoverySignal } from '@hooplab/engine';
+import { recoveryBand, recoveryMinValues, shortSleep, type DayLevel, type MetricReading, type RecoverySignal } from '@hooplab/engine';
 
 import type { RecoveryView } from '@/data/recovery-view';
 
@@ -21,6 +21,17 @@ export const levelStates: Record<DayLevel, DayState | null> = {
   insufficient: null,
 };
 
+/** Takvim haftası; gün pencerelerini "4 hafta" diye yazmak için. */
+export const weeks = (days: number) => days / 7;
+
+/** Toparlanma bölümündeki pencere metinleri (rules/toparlanma.json → toparlanma-bant, uyku-kisa). */
+export const bandSectionNote = `kişisel bant · ${weeks(recoveryBand.baselineDays)} hafta`;
+export const hrvChartTitle = `HRV · derin uyku · ${recoveryBand.rollingDays} günlük ort.`;
+export const rollingSpoken = `${recoveryBand.rollingDays} günlük ortalama`;
+export const hrvLineLegend = `Çizgi: ${recoveryBand.rollingDays} günlük ort.`;
+export const rollingLabel = `${recoveryBand.rollingDays} gün ort.`;
+export const sleepRollingLabel = `${shortSleep.rollingNights} gece ort.`;
+
 const signalChips: Record<RecoverySignal, string> = {
   hrv_low: 'HRV düşük',
   hrv_high: 'HRV yüksek',
@@ -29,8 +40,8 @@ const signalChips: Record<RecoverySignal, string> = {
 };
 
 const signalPhrases: Record<RecoverySignal, string> = {
-  hrv_low: "HRV'nin 7 günlük ortalaması bandının altında",
-  hrv_high: "HRV'nin 7 günlük ortalaması bandının üstünde",
+  hrv_low: `HRV'nin ${recoveryBand.rollingDays} günlük ortalaması bandının altında`,
+  hrv_high: `HRV'nin ${recoveryBand.rollingDays} günlük ortalaması bandının üstünde`,
   rhr_high: 'dinlenik nabız bandının üstünde',
   sleep_short: `son ${shortSleep.rollingNights} gecenin uyku ortalaması ${shortSleep.minHours} saatin altında`,
 };
@@ -51,9 +62,9 @@ export function statusReason(v: RecoveryView): string {
 
   if (level === 'insufficient') {
     if (v.hrv.band === null) {
-      return `Kişisel bant, son 7 günden önceki 4 haftanın en az ${recoveryMinValues.baseline} gecesinden kurulur; şu an ${v.hrv.baselineN} gece var. O zamana kadar değerler yalnız gösterilir.`;
+      return `Kişisel bant, son ${recoveryBand.rollingDays} günden önceki ${weeks(recoveryBand.baselineDays)} haftanın en az ${recoveryMinValues.baseline} gecesinden kurulur; şu an ${v.hrv.baselineN} gece var. O zamana kadar değerler yalnız gösterilir.`;
     }
-    return `7 günlük ortalama için son 7 günde en az ${recoveryMinValues.rolling} gece HRV gerekiyor; şu an ${v.hrv.rollingN} gece var.`;
+    return `${recoveryBand.rollingDays} günlük ortalama için son ${recoveryBand.rollingDays} günde en az ${recoveryMinValues.rolling} gece HRV gerekiyor; şu an ${v.hrv.rollingN} gece var.`;
   }
 
   if (level === 'ready') {
@@ -93,7 +104,7 @@ export function statusChips(v: RecoveryView): string[] {
 
 /** Kart altındaki kısa not. */
 export function bandNote(r: MetricReading): string {
-  if (r.rolling === null) return 'son 7 günde veri az';
+  if (r.rolling === null) return `son ${recoveryBand.rollingDays} günde veri az`;
   switch (r.position) {
     case 'within':
       return 'bandında';

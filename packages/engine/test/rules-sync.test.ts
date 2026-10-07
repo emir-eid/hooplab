@@ -22,7 +22,11 @@ import {
   sweatInputLimits,
   weightLimits,
   checkinBaseline,
+  durationLimits,
   respirationNightRule,
+  sessionLoad,
+  targetWeightDays,
+  wellnessTotalRange,
   contentTags,
   defaultContentTags,
   modeledRegions,
@@ -74,6 +78,8 @@ test('check-in ölçeği kuralla aynı', () => {
   assert.equal(value.min, wellnessScale.min);
   assert.equal(value.max, wellnessScale.max);
   assert.equal(value.step, wellnessScale.step);
+  assert.equal(value.total_min, wellnessTotalRange.min);
+  assert.equal(value.total_max, wellnessTotalRange.max);
 });
 
 test('RPE ölçeği ve çapaları kuralla aynı', () => {
@@ -81,6 +87,8 @@ test('RPE ölçeği ve çapaları kuralla aynı', () => {
   assert.equal(value.min, rpeScale.min);
   assert.equal(value.max, rpeScale.max);
   assert.deepEqual(value.anchors, [...rpeAnchors]);
+  assert.equal(rule('yuk.json', 'seans-yuku').value.formula, 'rpe * duration_min');
+  assert.equal(sessionLoad(6, 90), 6 * 90);
 });
 
 test('ağrı ölçeği kuralla aynı', () => {
@@ -124,11 +132,13 @@ test('beslenme hedefleri ve ter testi kuralla aynı (karar 0029)', () => {
   const carbs = rule('beslenme.json', 'karbonhidrat-gun-tipi').value;
   for (const t of dayTypes) assert.deepEqual(carbs[t], [...carbTargets[t]], t);
   assert.equal(carbs.high_when_minutes_at_least, highDayRule.minutesAtLeast);
+  assert.equal(carbs.weight_days, targetWeightDays);
   assert.deepEqual(carbs.high_when_kind, [...highDayRule.kinds]);
   const protein = rule('beslenme.json', 'protein-gunluk').value;
   assert.deepEqual(protein.range, [...proteinTarget.range]);
   assert.equal(protein.per_meal, proteinTarget.perMeal);
   assert.deepEqual(protein.meal_interval_hours, [...proteinTarget.mealIntervalHours]);
+  assert.equal(protein.no_added_gain_above, proteinTarget.noAddedGainAbove);
   const ea = rule('beslenme.json', 'enerji-yeterliligi').value;
   assert.equal(ea.computed, false);
   assert.equal(ea.alert, false);
@@ -213,6 +223,7 @@ test('veritabanı CHECK aralıkları motorla aynı', () => {
     assert.match(migrations, new RegExp(`${item} smallint not null check \\(${item} between ${wellnessScale.min} and ${wellnessScale.max}\\)`), item);
   }
   assert.match(migrations, new RegExp(`rpe between ${rpeScale.min} and ${rpeScale.max}`));
+  assert.match(migrations, new RegExp(`duration_min between ${durationLimits.min} and ${durationLimits.max}`));
   assert.match(migrations, new RegExp(`pain between ${painScale.min} and ${painScale.max}`));
 });
 

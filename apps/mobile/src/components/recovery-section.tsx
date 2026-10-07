@@ -15,11 +15,17 @@ import { GroupLabel, ListGroup, ListRow } from "@/components/list";
 import { Text } from "@/components/text";
 import {
   bandNote,
+  bandSectionNote,
   formatBand,
   formatDecimal,
   formatSleep,
+  hrvChartTitle,
+  hrvLineLegend,
   levelLabels,
   levelStates,
+  rollingLabel,
+  rollingSpoken,
+  sleepRollingLabel,
   statusAdvice,
   statusChips,
   statusReason,
@@ -202,7 +208,7 @@ export function NightData({ view }: { view: RecoveryView }) {
       <View style={styles.sectionHead}>
         <GroupLabel>Gece verisi</GroupLabel>
         <Text variant="caption" tone="inkMuted" style={styles.sectionNote}>
-          kişisel bant · 4 hafta
+          {bandSectionNote}
         </Text>
       </View>
 
@@ -213,7 +219,7 @@ export function NightData({ view }: { view: RecoveryView }) {
               <Text variant="footnote" tone="inkSecondary">
                 {day
                   ? `${formatShortDate(day.date)} · gece`
-                  : "HRV · derin uyku · 7 günlük ort."}
+                  : hrvChartTitle}
               </Text>
               <ExplainButton id="hrv" value={hrv.rolling === null ? undefined : `${hrvValue} ms`} />
             </View>
@@ -227,7 +233,7 @@ export function NightData({ view }: { view: RecoveryView }) {
           {day ? (
             <View style={styles.chartHeadRight}>
               <Text variant="caption" tone="inkMuted">
-                {`7 gün ort. ${round(day.rolling)}`}
+                {`${rollingLabel} ${round(day.rolling)}`}
               </Text>
               {band ? (
                 <Text variant="caption" tone="inkMuted">
@@ -263,11 +269,11 @@ export function NightData({ view }: { view: RecoveryView }) {
           accent={state ? palette.status[state] : null}
           selected={selected}
           onSelect={setSelected}
-          accessibilityLabel={`HRV, son ${view.chart.length} gün. 7 günlük ortalama ${hrvValue} milisaniye${band ? `, kişisel bant ${band}` : ", bant henüz yok"}.`}
+          accessibilityLabel={`HRV, son ${view.chart.length} gün. ${rollingSpoken} ${hrvValue} milisaniye${band ? `, kişisel bant ${band}` : ", bant henüz yok"}.`}
         />
         <View style={styles.legend}>
           <Text variant="caption2" tone="inkMuted">
-            Çizgi: 7 günlük ort.
+            {hrvLineLegend}
           </Text>
           <Text variant="caption2" tone="inkMuted">
             Nokta: tek gece
@@ -289,7 +295,7 @@ export function NightData({ view }: { view: RecoveryView }) {
           note={
             rhr.rolling === null
               ? bandNote(rhr)
-              : `7 gün ort. · ${bandNote(rhr)}`
+              : `${rollingLabel} · ${bandNote(rhr)}`
           }
           flagged={signals.includes("rhr_high")}
           state={state}
@@ -301,8 +307,8 @@ export function NightData({ view }: { view: RecoveryView }) {
           unit="sa"
           note={
             sleep.rollingHours === null
-              ? "7 gece ort. için veri az"
-              : `7 gece ort. ${formatSleep(sleep.rollingHours * 60)}`
+              ? `${sleepRollingLabel} için veri az`
+              : `${sleepRollingLabel} ${formatSleep(sleep.rollingHours * 60)}`
           }
           flagged={signals.includes("sleep_short")}
           state={state}

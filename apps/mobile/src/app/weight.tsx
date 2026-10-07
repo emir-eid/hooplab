@@ -1,7 +1,7 @@
 // Sabah kilosu (karar 0029, PRODUCT §4): günde bir, isteğe bağlı. Beslenme hedefleri bundan gram olarak hesaplanır.
 // Kilo kişisel veridir: yalnız Supabase'de (RLS) ya da demoda bellekte durur.
 
-import { isValidWeight, weightLimits } from '@hooplab/engine';
+import { isValidWeight, targetWeightDays, weightLimits } from '@hooplab/engine';
 import { layout, spacing } from '@hooplab/theme';
 import { router } from 'expo-router';
 import { useEffect, useState } from 'react';
@@ -68,7 +68,7 @@ export default function WeightScreen() {
           <Text variant="caption" tone="inkMuted" style={styles.note}>
             {text.trim() !== '' && !valid
               ? `${weightLimits.min}-${weightLimits.max} kg arasında bir değer gir.`
-              : 'Karbonhidrat ve protein hedefleri son 7 günün ortalamasıyla hesaplanır. Kilo yalnız senin hesabında saklanır.'}
+              : `Karbonhidrat ve protein hedefleri son ${targetWeightDays} günün ortalamasıyla hesaplanır. Kilo yalnız senin hesabında saklanır.`}
           </Text>
         </FormBlock>
       </GestureScrollView>

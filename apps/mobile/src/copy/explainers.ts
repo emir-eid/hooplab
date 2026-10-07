@@ -5,6 +5,7 @@
 import {
   carbTargets,
   checkinBaseline,
+  fluidQuickAddMl,
   fluidTargetRule,
   highDayRule,
   lossNoteRule,
@@ -15,16 +16,20 @@ import {
   loadSpikeRule,
   loadWeek,
   painMonitoringRule,
+  painScale,
   recoveryBand,
   regionComparison,
   regionWindow,
   recoveryMinValues,
   respirationNightRule,
+  rpeScale,
   shortSleep,
+  targetWeightDays,
   wellnessScale,
   wellnessTotalRange,
 } from '@hooplab/engine';
 
+import { formatDecimal, weeks } from './recovery.ts';
 import type { SourceId } from './sources.ts';
 
 /** Değer nereden geliyor: saatin ölçümü mü, kayıtlardan hesap mı, tahmin mi (CLAUDE.md §3: tahmin etiketlenir). */
@@ -54,8 +59,9 @@ export interface Explainer {
   sources: readonly SourceId[];
 }
 
-const dec = (n: number) => String(n).replace('.', ',');
-const bandWeeks = recoveryBand.baselineDays / loadWeek.days;
+const dec = (n: number) => formatDecimal(n, Number.isInteger(n) ? 0 : 1);
+const bandWeeks = weeks(recoveryBand.baselineDays);
+const regionDays = [regionWindow.tendonHours / 24, regionWindow.muscleHours / 24] as const;
 const bandText = `Senin önceki ${bandWeeks} haftanın ortalaması ± ${dec(recoveryBand.sdMultiplier)} standart sapma: buna kişisel bant diyoruz. Bant her gün yeniden hesaplanır; başkasının değeriyle karşılaştırılmaz.`;
 const bandLimits = `Son ${recoveryBand.rollingDays} günde en az ${recoveryMinValues.rolling}, bant için önceki ${bandWeeks} haftada en az ${recoveryMinValues.baseline} geçerli gece gerekir. Daha azsa değer veya bant gösterilmez.`;
 
@@ -92,7 +98,7 @@ export const explainers = {
   rhr: {
     title: 'Dinlenik nabız',
     basis: 'measured',
-    what: 'Dinlenirken kalbinin dakikadaki atım sayısı. Google Health her gün için bir değer verir; büyük sayı son 7 günün ortalamasıdır.',
+    what: `Dinlenirken kalbinin dakikadaki atım sayısı. Google Health her gün için bir değer verir; büyük sayı son ${recoveryBand.rollingDays} günün ortalamasıdır.`,
     read: [
       'Bandın içi: alıştığın aralık.',
       'Bandın üstü günün durumunu "Kontrollü"ye çeker. HRV de bandın altındaysa durum "Toparlan" olur.',
@@ -107,7 +113,7 @@ export const explainers = {
   sleep: {
     title: 'Uyku',
     basis: 'measured',
-    what: 'Uykuda geçen süre; şekerlemeler sayılmaz. Büyük sayı dün gece, altındaki satır son 7 gecenin ortalaması.',
+    what: `Uykuda geçen süre; şekerlemeler sayılmaz. Büyük sayı dün gece, altındaki satır son ${shortSleep.rollingNights} gecenin ortalaması.`,
     read: [
       `Son ${shortSleep.rollingNights} gecenin ortalaması ${shortSleep.minHours} saatin altındaysa uyku kısa sayılır ve günün durumu "Kontrollü"ye çekilir.`,
       'Tek kötü gece durumu tek başına değiştirmez; ortalama okunur.',
@@ -119,11 +125,11 @@ export const explainers = {
   respiration: {
     title: 'Solunum',
     basis: 'measured',
-    what: 'Uykuda dakikadaki nefes sayısı. Saat bunu gece nabzının nefesle birlikte hafifçe dalgalanmasından hesaplar. Büyük sayı son gece, altındaki satır son 7 gecenin ortalaması ve bandı.',
+    what: `Uykuda dakikadaki nefes sayısı. Saat bunu gece nabzının nefesle birlikte hafifçe dalgalanmasından hesaplar. Büyük sayı son gece, altındaki satır son ${recoveryBand.rollingDays} gecenin ortalaması ve bandı.`,
     read: [
       'Gece solunumu kişiden kişiye çok değişir, ama aynı kişide gece gece çok az oynar. Bu yüzden başkasıyla değil, kendi bandınla karşılaştırılır.',
       'Bandın altı ya da üstü "her zamankinden farklı" demektir; iyi ya da kötü demez. Günün durumuna girmez.',
-      `Son gece önceki 4 haftanın ortalamasından ${respirationNightRule.aboveBaselineMean} nefes/dk veya daha fazla yüksekse ayrı bir not çıkar.`,
+      `Son gece önceki ${bandWeeks} haftanın ortalamasından ${respirationNightRule.aboveBaselineMean} nefes/dk veya daha fazla yüksekse ayrı bir not çıkar.`,
       'Not tanı değil: hastalık başlangıcında da, sıcak, alkol, stres veya yükseklikte de görülebilir.',
     ],
     reference: `${bandText} ${respirationNightRule.aboveBaselineMean} nefes/dk, Fitbit'in kendi çalışmasından: hastalık başlangıcında semptomlu kişilerin yaklaşık üçte birinde en az bir gece olağanın bu kadar üstünde ölçüm görüldü. Sporcularda da gece solunumu, kişisel başlangıç düzeyine göre, diğer ölçümlerden önce değişebilmiş.`,
@@ -145,14 +151,14 @@ export const explainers = {
       'Karta dokununca o sabahın cevaplarını değiştirebilirsin.',
     ],
     reference: "Basketbol çalışmalarında kullanılan kısa iyi oluş anketinden uyarlandı. Sporcunun kendi bildirdiği ölçümler, yükteki değişime kan ya da nabız gibi nesnel ölçümlerden daha duyarlı bulunmuş. Avustralya futbolunda sabah toplamı kendi ortalamasının 1 SD altında olan oyuncuların o günkü antrenman çıktısı küçük ama anlamlı düşük bulundu; futbolda sabah yorgunluğu yüke en duyarlı madde çıktı.",
-    limits: `Kıyas için önceki ${checkinBaseline.baselineDays} günde en az ${checkinBaseline.minValues} check-in gerekir. Doğrulanmış bir psikometrik ölçek değil; bir izleme aracı, tanı aracı değil. 1 SD doğrulanmış bir uyarı eşiği değil; futbol bulgularının basketbola aktarımı varsayım.`,
+    limits: `Kıyas için önceki ${checkinBaseline.baselineDays} günde en az ${checkinBaseline.minValues} check-in gerekir. Doğrulanmış bir psikometrik ölçek değil; bir izleme aracı, tanı aracı değil. ${Math.abs(checkinBaseline.zNoteMax)} SD doğrulanmış bir uyarı eşiği değil; futbol bulgularının basketbola aktarımı varsayım.`,
     rules: ['checkin-olcek', 'checkin-kisisel'],
     sources: ['zhang-2026', 'saw-2016', 'burger-2024', 'gallo-2016', 'gallo-2017', 'thorpe-2015'],
   },
   sessionLoad: {
     title: 'Seans yükü · AU',
     basis: 'computed',
-    what: "Bir seansın seni ne kadar zorladığını tek sayıda toplar: zorluk puanın (RPE, 0-10) × süre (dakika). Birimi AU (arbitrary unit), yani keyfi birim: kilo ya da kalori gibi fiziksel bir karşılığı yok.",
+    what: `Bir seansın seni ne kadar zorladığını tek sayıda toplar: zorluk puanın (RPE, ${rpeScale.min}-${rpeScale.max}) × süre (dakika). Birimi AU (arbitrary unit), yani keyfi birim: kilo ya da kalori gibi fiziksel bir karşılığı yok.`,
     read: [
       'Örnek: RPE 6 ile 90 dakikalık antrenman 540 AU eder.',
       'Sayı yalnız kendi seanslarınla karşılaştırılınca anlamlı.',
@@ -228,7 +234,7 @@ export const explainers = {
   regionLoad: {
     title: 'Bölge yükü',
     basis: 'estimate',
-    what: 'Bir bölgenin son 2-3 günde hangi seanslarla, ne kadar çalıştığı. Seansa işaretlediğin içerik (sıçrama, yön değiştirme, sprint, alt / üst vücut kuvvet) o içeriğin çalıştırdığı bölgelere eşlenir. Bölge yükü, o bölgeyi çalıştıran seansların yükleri toplamıdır (AU).',
+    what: `Bir bölgenin son ${regionDays[0]}-${regionDays[1]} günde hangi seanslarla, ne kadar çalıştığı. Seansa işaretlediğin içerik (sıçrama, yön değiştirme, sprint, alt / üst vücut kuvvet) o içeriğin çalıştırdığı bölgelere eşlenir. Bölge yükü, o bölgeyi çalıştıran seansların yükleri toplamıdır (AU).`,
     read: [
       'Eşleme: sıçrama / iniş → patellar tendon ve Aşil; yön değiştirme / ani duruş → quadriceps ve adduktor; sprint → hamstring, baldır ve Aşil; alt vücut kuvvet → quadriceps, hamstring ve kalça; üst vücut kuvvet → omuz.',
       "Seans yükü bölgeler arasında bölünmez: sıçramalı bir maçın yükünün tamamı hem patellar tendona hem Aşil'e yazılır. Bu dokuya binen yük değil, o bölgeyi çalıştıran seansların yüküdür.",
@@ -262,8 +268,7 @@ export const explainers = {
       'Saatle eşleşen seansta son yüklenmeden bu yana geçen saat ayrıca yazılır.',
       '"Toparlanıyor" hasar var demek değil; aynı bölgeye benzer bir yük için önerilen aranın henüz dolmadığını söyler.',
     ],
-    reference:
-      'Güncel bir derleme çok sıçramalı yüklenmeden sonra tendonda yaklaşık 48 saat, eksantrik kas hasarında 72 saat veya daha uzun ara öneriyor. Tendonda kollajen yapımı egzersizden sonra yaklaşık 24 saatte zirve yapıp üç gün kadar yüksek kalıyor; maç sonrası kas hasarı belirteci (kreatin kinaz) 72 saate kadar normale dönüyor.',
+    reference: `Güncel bir derleme çok sıçramalı yüklenmeden sonra tendonda yaklaşık ${regionWindow.tendonHours} saat, eksantrik kas hasarında ${regionWindow.muscleHours} saat veya daha uzun ara öneriyor. Tendonda kollajen yapımı egzersizden sonra yaklaşık 24 saatte zirve yapıp üç gün kadar yüksek kalıyor; maç sonrası kas hasarı belirteci (kreatin kinaz) ${regionWindow.muscleHours} saate kadar normale dönüyor.`,
     limits: 'Süreler derleme düzeyinde kanıta dayanır ve kişiden kişiye çok değişir. Uyku ve beslenme hesaba girmez.',
     rules: ['bolge-toparlanma-penceresi'],
     sources: ['gabbett-2025', 'magnusson-2010', 'miller-2005', 'doeven-2018'],
@@ -273,7 +278,7 @@ export const explainers = {
     basis: 'estimate',
     what: `Tendon rehabilitasyonunda kullanılan ağrı izleme modelinin sabah ağrısına uyarlanmışı. Bir bölgede sabah ağrısı ${painMonitoringRule.maxNrs}'in üstündeyse ya da bölge dün çalıştıysa ve bu sabahki ağrı dünkünden azalmadıysa not düşer.`,
     read: [
-      `Modelde etkinlik sırasında ve sonrasında 10 üzerinden ${painMonitoringRule.maxNrs}'e kadar ağrı kabul edilebilir sayılır; ertesi sabah ağrının azalmış olması beklenir.`,
+      `Modelde etkinlik sırasında ve sonrasında ${painScale.max} üzerinden ${painMonitoringRule.maxNrs}'e kadar ağrı kabul edilebilir sayılır; ertesi sabah ağrının azalmış olması beklenir.`,
       `Not yalnız bugünkü check-in'den çıkar. Dün ağrı yoksa yeni başlayan ağrı "azalmadı" sayılmaz; yalnız ${painMonitoringRule.maxNrs} sınırına bakılır.`,
       'Not bir uyarı değil, bir dikkat işareti: o bölgeyi ve sonraki sabahları izlemeni söyler.',
     ],
@@ -287,19 +292,19 @@ export const explainers = {
   nutrition: {
     title: 'Beslenme hedefi',
     basis: 'computed',
-    what: 'Bugün için karbonhidrat ve protein hedefi: gün tipine göre gram / kilo × son 7 günün sabah kilosu ortalaması. Öğün kaydedersen günün kayıtlı alımı bu aralığın yanında gösterilir.',
+    what: `Bugün için karbonhidrat ve protein hedefi: gün tipine göre gram / kilo × son ${targetWeightDays} günün sabah kilosu ortalaması. Öğün kaydedersen günün kayıtlı alımı bu aralığın yanında gösterilir.`,
     read: [
       `Gün tipi kayıtlarından çıkar: seans yoksa dinlenme (${carbTargets.rest[0]}-${carbTargets.rest[1]} g/kg karbonhidrat), seans varsa antrenman (${carbTargets.training[0]}-${carbTargets.training[1]}), maç ya da toplam ${highDayRule.minutesAtLeast / 60} saat ve üstü seans varsa yoğun (${carbTargets.high[0]}-${carbTargets.high[1]}). Çiplere dokunarak değiştirebilirsin; kayıtlardan çıkan tipe dokunmak düzeltmeyi kaldırır.`,
-      `Protein her gün ${dec(proteinTarget.range[0])}-${dec(proteinTarget.range[1])} g/kg; öğünlere bölünmüş, ${proteinTarget.mealIntervalHours[0]}-${proteinTarget.mealIntervalHours[1]} saatte bir, öğün başı yaklaşık ${dec(proteinTarget.perMeal)} g/kg. 1,6 g/kg üstü kas kazanımına ek katkı göstermemiş; aralığın ortası iyi bir başlangıç.`,
+      `Protein her gün ${dec(proteinTarget.range[0])}-${dec(proteinTarget.range[1])} g/kg; öğünlere bölünmüş, ${proteinTarget.mealIntervalHours[0]}-${proteinTarget.mealIntervalHours[1]} saatte bir, öğün başı yaklaşık ${dec(proteinTarget.perMeal)} g/kg. ${dec(proteinTarget.noAddedGainAbove)} g/kg üstü kas kazanımına ek katkı göstermemiş; aralığın ortası iyi bir başlangıç.`,
       `Öğün ekle: listeden besine dokun, porsiyonu − / + ile ayarla (${portionMultipliers.map((m) => dec(m)).join(' / ')} porsiyon); paketli ürün için etiketteki gramı gir. Gramları uygulama hesaplar: her besinin ev ölçüsü ve 100 g'daki karbonhidrat ve proteini ABD Tarım Bakanlığı'nın besin veritabanından (FoodData Central). Kalori sayılmaz.`,
       'Kayıtlı alım "aralığın altında / aralıkta / üstünde" diye yerleştirilir. Bu bir tahmindir: sporcular yediklerini ortalama yaklaşık beşte bir eksik kaydediyor, göz kararı karbonhidrat tahmini de eğitimli kişilerde bile belirgin eksik kalıyor. Altında görünmesi uyarı değil; çoğu zaman kayıt eksiktir.',
       'Öğünün proteini öğün dozuna ulaştıysa öğün satırında yazar; öğünler satırı kaç öğünün dozda olduğunu gösterir.',
       'Halkada içteki yay kayıtlı miktarı, dıştaki ince yay hedef aralığını gösterir. Renkler yalnız karbonhidrat, protein ve suyu ayırır; iyi ya da kötü anlamı yok.',
-      'Su: dokunarak 250 / 500 / 750 mL ya da istediğin miktarı ekle. Günlük sabit bir su hedefi yok, çünkü ihtiyaç tere göre kişiden kişiye çok değişiyor; susadıkça iç. Ter testi yaptığın gün seans sonrası sıvı hedefi su halkasının altında yazar.',
+      `Su: dokunarak ${fluidQuickAddMl.join(' / ')} mL ya da istediğin miktarı ekle. Günlük sabit bir su hedefi yok, çünkü ihtiyaç tere göre kişiden kişiye çok değişiyor; susadıkça iç. Ter testi yaptığın gün seans sonrası sıvı hedefi su halkasının altında yazar.`,
       'Yükün gerektirdiğinden uzun süre az yemek (düşük enerji yeterliliği, REDs) sağlığı ve performansı bozar. Uygulama bunu hesaplayamaz: sürekli yorgunluk, sık hastalanma, stres kırığı ya da açıklanamayan performans düşüşü varsa sağlık ekibine danış.',
     ],
     reference:
-      "Antrenman günü aralığı basketbolcular için sezon içi beslenme derlemesinden; dinlenme ve yoğun gün aralıkları uluslararası spor beslenmesi derneğinin (ISSN) derlemesinden. Protein aralığı aynı kaynaklarla ve ISSN'nin protein bildirgesiyle uyumlu; 1,6 g/kg bir meta-analizden. REDs tanımı IOC 2023 konsensüsünden. Öğün kaydının yöntemi: tek ve doğrulanmış bir besin veritabanı kullanıcı girişli veritabanlarından daha geçerli bulundu; el ölçüsü (yumruk, avuç) ve porsiyon birimi daha kaba; kayıt hatası sporcularla yapılan bir sistematik derlemeden. Su için kişisel plan önerisi ACSM ve NATA sıvı bildirgelerinden.",
+      `Antrenman günü aralığı basketbolcular için sezon içi beslenme derlemesinden; dinlenme ve yoğun gün aralıkları uluslararası spor beslenmesi derneğinin (ISSN) derlemesinden. Protein aralığı aynı kaynaklarla ve ISSN'nin protein bildirgesiyle uyumlu; ${dec(proteinTarget.noAddedGainAbove)} g/kg bir meta-analizden. REDs tanımı IOC 2023 konsensüsünden. Öğün kaydının yöntemi: tek ve doğrulanmış bir besin veritabanı kullanıcı girişli veritabanlarından daha geçerli bulundu; el ölçüsü (yumruk, avuç) ve porsiyon birimi daha kaba; kayıt hatası sporcularla yapılan bir sistematik derlemeden. Su için kişisel plan önerisi ACSM ve NATA sıvı bildirgelerinden.`,
     limits:
       'Dinlenme ve yoğun gün aralıkları genel ve dayanıklılık bağlamından basketbola aktarıldı. Sabah kilosu girilmezse hedef yalnız g/kg olarak gösterilir. Besin listesi ABD verisi; Türk yemeklerine yaklaşık eşlenir, tarif ve pişirme yağı hesaba girmez. Kayıtlı alımdan düşük enerji yeterliliği hesaplanmaz. Takviye önerisi yok. Kişisel bir plan için spor diyetisyenine danış.',
     rules: ['karbonhidrat-gun-tipi', 'protein-gunluk', 'ogun-besin-listesi', 'alim-hedef-kiyasi', 'enerji-yeterliligi', 'sivi-alim-kaydi'],
@@ -330,8 +335,7 @@ export const explainers = {
       `Sonraki seansa ${fluidTargetRule.shortRecoveryHoursBelow} saatten az varsa kaybettiğin her kg için ${dec(fluidTargetRule.litersPerKgLost[0])}-${dec(fluidTargetRule.litersPerKgLost[1])} L iç; daha uzun ara varsa öğünlerle, susadıkça.`,
       'Ter oranı sıcaklığa, seans türüne ve yoğunluğa göre değişir; farklı koşullarda tekrarla. NBA oyuncularında maç başına ter kaybı 1 ile 4,6 L arasında değişmiş.',
     ],
-    reference:
-      "Formül ve %2 sınırı Amerikan Atletik Antrenörler Derneği (NATA) ve ACSM'nin sıvı bildirgelerinden. %2'de basketbol becerisindeki düşüş basketbolcularla yapılan randomize bir çalışmadan; sıvı hedefi NATA'dan ve basketbol beslenme derlemesinden.",
+    reference: `Formül ve %${lossNoteRule.lossPercentMin} sınırı Amerikan Atletik Antrenörler Derneği (NATA) ve ACSM'nin sıvı bildirgelerinden. %${lossNoteRule.lossPercentMin}'de basketbol becerisindeki düşüş basketbolcularla yapılan randomize bir çalışmadan; sıvı hedefi NATA'dan ve basketbol beslenme derlemesinden.`,
     limits: 'Tartının hassasiyeti (çoğunlukla 0,1 kg) küçük farkları belirsizleştirir. Seansta yenen ve idrar dışındaki kayıplar hesaba girmez.',
     rules: ['ter-orani', 'kilo-kaybi-notu', 'kilo-artisi-notu', 'sivi-hedefi'],
     sources: ['mcdermott-2017', 'sawka-2007', 'baker-2007', 'osterberg-2009', 'davis-2022'],

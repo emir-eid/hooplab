@@ -38,6 +38,10 @@ import {
   spotName,
   typicalText,
   windowLabel,
+  workedBodyLabel,
+  workedEmpty,
+  workedLegend,
+  workedTitle,
 } from '@/copy/region-load';
 import { formatLoad } from '@/copy/training-load';
 import { fetchPainHistory } from '@/data/daily-log';
@@ -166,7 +170,7 @@ export default function BodyScreen() {
         height={BODY_HEIGHT}
         accessibilityLabel={
           mode === 'load'
-            ? 'Vücut modeli. Son 48-72 saatte çalışan bölgeler aşağıda listeleniyor.'
+            ? workedBodyLabel
             : marked.length > 0
               ? 'Vücut modeli. Ağrı girilen bölgeler aşağıda listeleniyor.'
               : 'Vücut modeli. Bu aralıkta ağrı girilmedi.'
@@ -175,7 +179,7 @@ export default function BodyScreen() {
 
       <View style={styles.legendRow}>
         {mode === 'load' ? (
-          <SwatchLegend color={colors.worked} label="Son 48-72 saatte çalışan" />
+          <SwatchLegend color={colors.worked} label={workedLegend} />
         ) : single ? (
           <PainLegend colors={colors} />
         ) : (
@@ -456,11 +460,11 @@ function RegionLoadSection({
         </Card>
       ) : null}
 
-      <SectionHead title="Son 48-72 saatte çalışan bölgeler" explain="regionLoad" />
+      <SectionHead title={workedTitle} explain="regionLoad" />
       <Card style={styles.listCard}>
         {worked.length === 0 ? (
           <Text variant="subhead" tone="inkSecondary" style={styles.empty}>
-            Son 2-3 günde bölge yüküne giren seans yok.
+            {workedEmpty}
           </Text>
         ) : (
           worked.map((r, i) => (

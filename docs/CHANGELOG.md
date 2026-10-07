@@ -43,6 +43,7 @@ Uygulamaya veya altyapıya görünür değişiklikler. Biçim: [Keep a Changelog
 - Öğün kaydı (karar 0030): + → Öğün ya da Bugün'den; 35 besinlik sabit liste (USDA FoodData Central, ev ölçüsü ve gramı, `research/foods/foods.json`, `tools/research/foods-fdc.mjs` ile doldurulur ve FDC API'siyle doğrulanır), porsiyon 0,5-3, paketli ürün için etiketten gram, son öğünleri tekrarlama. Bugün'de kayıtlı karbonhidrat ve protein hedef aralığına göre (tahmin, uyarı yok), öğün başına protein dozu.
 - Su kaydı (karar 0031): + → Su ya da Bugün'den; 250 / 500 / 750 mL ya da elle, hedefsiz; ter testi yapılan gün seans sonrası sıvı hedefi yanında.
 ### Değişti
+- Faz 2 kapanışı: arayüz metinlerindeki pencere ve eşik sayıları ("son 7 gün", "4 hafta", "1 SD", "%2", "48-72 saat" vb.) motor sabitlerinden üretiliyor; ter testi notu "%2 veya üstünde" (motorla aynı). Yeni bekçi `apps/mobile/src/copy/hardcoded-numbers.test.ts`; kurallara hedef kilo penceresi (`weight_days`) ve protein açıklamasındaki 1,6 g/kg (`no_added_gain_above`) eklendi.
 - Bugün'deki beslenme kartı (karar 0031): karbonhidrat, protein ve su halkaları (içte kayıtlı miktar, dışta hedef aralığı), kategori rengi (pembe / mor / mavi; risk rengi değil), Öğün ve Su hızlı ekleme düğmeleri, katlanır öğün listesi.
 - Öğün ve içişler sağdan sola kaydırılarak silinir; düzeltmede bütün kalemler kaldırılınca "Kaydet ve sil". Açılır liste satırında ok kapalıyken sağa, açıkken aşağı bakar.
 - Bugün'de "Nasıl hesaplanıyor?" satırı gece verisi kutucuklarına yapışmıyor.

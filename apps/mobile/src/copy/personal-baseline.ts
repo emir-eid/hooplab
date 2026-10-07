@@ -1,15 +1,18 @@
 // Solunum ve sabah check-in'in kişisel kıyas metinleri (karar 0028). Tanı yok, risk dili yok;
 // solunum notu olası nedenleri sayar ve belirtide doktora yönlendirir (CLAUDE.md §3).
 
-import { checkinBaseline, type CheckinReading, type RespirationReading } from '@hooplab/engine';
+import { checkinBaseline, recoveryBand, type CheckinReading, type RespirationReading } from '@hooplab/engine';
 
 import { wellnessLabels } from './labels.ts';
-import { bandNote, formatDecimal } from './recovery.ts';
+import { bandNote, formatDecimal, rollingLabel, weeks } from './recovery.ts';
+
+const checkinWeeks = weeks(checkinBaseline.baselineDays);
+const lowSd = formatDecimal(Math.abs(checkinBaseline.zNoteMax), 0);
 
 /** Solunum kartının alt satırı. */
 export function respirationNote(r: RespirationReading): string {
   if (r.rolling === null) return bandNote(r);
-  return `7 gün ort. ${formatDecimal(r.rolling)} · ${bandNote(r)}`;
+  return `${rollingLabel} ${formatDecimal(r.rolling)} · ${bandNote(r)}`;
 }
 
 export const respirationHighTitle = 'Son gece solunum alıştığından belirgin yüksek';
@@ -17,7 +20,7 @@ export const respirationHighTitle = 'Son gece solunum alıştığından belirgin
 export function respirationHighBody(r: RespirationReading): string {
   const last = r.latest ? formatDecimal(r.latest.value) : '–';
   const usual = r.band ? formatDecimal(r.band.mean) : '–';
-  return `Son gece ${last} nefes/dk; önceki 4 haftanın ortalaması ${usual}. Hastalık başlangıcında da, sıcak, alkol, stres veya yükseklikte de görülebilir. Tek gecelik artış tek başına bir şey kanıtlamaz; sonraki gecelere de bak.`;
+  return `Son gece ${last} nefes/dk; önceki ${weeks(recoveryBand.baselineDays)} haftanın ortalaması ${usual}. Hastalık başlangıcında da, sıcak, alkol, stres veya yükseklikte de görülebilir. Tek gecelik artış tek başına bir şey kanıtlamaz; sonraki gecelere de bak.`;
 }
 
 export const respirationHighFooter =
@@ -29,8 +32,8 @@ export function checkinNote(r: CheckinReading): string {
     const left = checkinBaseline.minValues - r.baselineN;
     return `Kendi geçmişinle kıyas ${left} check-in sonra başlar.`;
   }
-  if (r.z === null) return `4 hafta ort. ${formatDecimal(r.baselineMean)} · toplamın hep aynıydı, kıyas yok`;
-  return `4 hafta ort. ${formatDecimal(r.baselineMean)} · bugün ${formatZ(r.z)}`;
+  if (r.z === null) return `${checkinWeeks} hafta ort. ${formatDecimal(r.baselineMean)} · toplamın hep aynıydı, kıyas yok`;
+  return `${checkinWeeks} hafta ort. ${formatDecimal(r.baselineMean)} · bugün ${formatZ(r.z)}`;
 }
 
 /** −1,34 → "−1,3 SD"; 0,5 → "+0,5 SD". */
@@ -44,6 +47,7 @@ export const checkinLowTitle = 'Alıştığından belirgin düşük';
 
 export function checkinLowBody(r: CheckinReading): string {
   const top = r.drops[0];
-  if (!top) return 'Toplamın son 4 haftadaki olağanının 1 SD altında.';
-  return `Toplamın son 4 haftadaki olağanının 1 SD altında. En çok düşen: ${wellnessLabels[top.item].title.toLocaleLowerCase('tr')} (ort. ${formatDecimal(top.mean)}, bugün ${top.today}).`;
+  const lead = `Toplamın son ${checkinWeeks} haftadaki olağanının ${lowSd} SD altında.`;
+  if (!top) return lead;
+  return `${lead} En çok düşen: ${wellnessLabels[top.item].title.toLocaleLowerCase('tr')} (ort. ${formatDecimal(top.mean)}, bugün ${top.today}).`;
 }

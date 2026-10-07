@@ -2,10 +2,14 @@
 // kayıtlı alım bir tahmin ve uyarı değil; ter testi notları tanı değil. Takviye bu kapsamda yok.
 
 import {
+  fluidTargetRule,
   foodById,
+  highDayRule,
+  lossNoteRule,
   mealMacros,
   proteinTarget,
   reachesProteinDose,
+  targetWeightDays,
   type DayIntake,
   type DayType,
   type Food,
@@ -32,7 +36,7 @@ const range = (r: readonly [number, number], digits = 0) =>
 
 export function dayTypeNote(dayType: DayType, inferred: DayType, override: DayType | null): string {
   if (override === null) {
-    return dayType === 'rest' ? 'bugün seans kaydı yok' : dayType === 'high' ? 'maç ya da 3 saat ve üstü seans' : 'bugünkü seanslarından';
+    return dayType === 'rest' ? 'bugün seans kaydı yok' : dayType === 'high' ? `maç ya da ${highDayRule.minutesAtLeast / 60} saat ve üstü seans` : 'bugünkü seanslarından';
   }
   return `senin seçimin · kayıtlardan: ${dayTypeLabels[inferred].toLocaleLowerCase('tr')}`;
 }
@@ -61,7 +65,7 @@ export function weightValue(w: TargetWeight | null): string {
 
 export function weightDetail(w: TargetWeight | null, todayWeight: number | null): string {
   if (!w) return 'hedefler gram olarak görünsün';
-  const basis = w.basis === 'average' ? `son 7 gün ort. (${w.n} ölçüm)` : 'son ölçüm, 7 günde ölçüm yok';
+  const basis = w.basis === 'average' ? `son ${targetWeightDays} gün ort. (${w.n} ölçüm)` : `son ölçüm, ${targetWeightDays} günde ölçüm yok`;
   return todayWeight === null ? `${basis} · bugün girilmedi` : basis;
 }
 
@@ -184,7 +188,7 @@ export function sweatLossText(r: SweatTestResult): string {
   return `Ter kaybı ${formatDecimal(r.lossL)} L, ter oranı ${formatDecimal(r.rateLPerH)} L/saat.`;
 }
 
-export const sweatLossNote = "Seans boyunca kilo kaybın %2'nin üstünde. Bu düzeyde basketbol becerisi düşebiliyor; sonraki seansta daha sık iç.";
+export const sweatLossNote = `Seans boyunca kilo kaybın %${lossNoteRule.lossPercentMin} veya üstünde. Bu düzeyde basketbol becerisi düşebiliyor; sonraki seansta daha sık iç.`;
 
 export const sweatGainNote =
   'Seansta kilon arttı: ihtiyacından fazla içmiş olabilirsin. Fazla içmek yarar sağlamaz; baş ağrısı, bulantı veya kafa karışıklığı olursa sağlık ekibine başvur. Tartı farkı küçükse ölçüm hatası da olabilir.';
@@ -192,7 +196,7 @@ export const sweatGainNote =
 export function fluidTargetText(r: SweatTestResult): string | null {
   if (!r.shortRecoveryFluidL) return null;
   const [a, b] = r.shortRecoveryFluidL;
-  return `Sonraki seansa 4 saatten az varsa ${formatDecimal(a)}–${formatDecimal(b)} L iç. Daha uzun ara varsa öğünlerle birlikte, susadıkça.`;
+  return `Sonraki seansa ${fluidTargetRule.shortRecoveryHoursBelow} saatten az varsa ${formatDecimal(a)}–${formatDecimal(b)} L iç. Daha uzun ara varsa öğünlerle birlikte, susadıkça.`;
 }
 
 // --- Bugün'deki halkalar ve su (karar 0031) ---

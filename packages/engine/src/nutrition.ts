@@ -18,10 +18,15 @@ export const carbTargets: Readonly<Record<DayType, readonly [number, number]>> =
 /** rules/beslenme.json → karbonhidrat-gun-tipi: yoğun gün koşulu. */
 export const highDayRule = { minutesAtLeast: 180, kinds: ['game'] as readonly SessionKind[] } as const;
 
-/** rules/beslenme.json → protein-gunluk */
-export const proteinTarget = { range: [1.2, 2.0] as readonly [number, number], perMeal: 0.3, mealIntervalHours: [4, 5] } as const;
+/** rules/beslenme.json → protein-gunluk. noAddedGainAbove: meta-analizde bu değerin üstü ek kas kazanımı getirmedi (açıklamada anılır, tavan değil). */
+export const proteinTarget = {
+  range: [1.2, 2.0] as readonly [number, number],
+  perMeal: 0.3,
+  mealIntervalHours: [4, 5],
+  noAddedGainAbove: 1.6,
+} as const;
 
-/** Hedefte kullanılan kilo penceresi (gün): son 7 günün sabah kilosu ortalaması. */
+/** rules/beslenme.json → karbonhidrat-gun-tipi (weight_days): hedefte son 7 günün sabah kilosu ortalaması. */
 export const targetWeightDays = 7;
 
 /** Sabah kilosu girişi sınırı (kg); veritabanındaki CHECK ile aynı, bilimsel eşik değil. */

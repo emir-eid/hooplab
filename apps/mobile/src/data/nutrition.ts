@@ -4,6 +4,7 @@
 
 import {
   addIsoDays,
+  fluidEntryLimits,
   isValidFluidMl,
   isValidWeight,
   itemMacros,
@@ -140,7 +141,7 @@ export async function deleteMeal(id: string): Promise<Result<null>> {
 
 /** Bir içiş (mL); hedefsiz kayıt (karar 0031). */
 export async function addFluid(localDate: string, ml: number): Promise<Result<null>> {
-  if (!isValidFluidMl(ml)) return { ok: false, message: 'Miktar 50-2000 mL arasında olmalı.' };
+  if (!isValidFluidMl(ml)) return { ok: false, message: `Miktar ${fluidEntryLimits.minMl}-${fluidEntryLimits.maxMl} mL arasında olmalı.` };
   const demo = demoStore();
   if (demo) return demo.addFluid(localDate, ml);
   if (!supabase) return { ok: false, message: failed };
