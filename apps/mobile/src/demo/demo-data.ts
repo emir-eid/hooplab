@@ -2,7 +2,7 @@
 // yalnız ekranların üç durumu (Hazır / Kontrollü / Toparlan) inandırıcı göstermesi için seçildi.
 // Saf modül: veritabanı satırlarıyla aynı biçimde üretir, motor ve ekranlar gerçek veriyle aynı yoldan okur.
 
-import { addIsoDays, defaultContentTags, type ContentTag, type WellnessAnswers } from '@hooplab/engine';
+import { addIsoDays, defaultContentTags, type ContentTag, type DayType, type WellnessAnswers } from '@hooplab/engine';
 import type { DayState } from '@hooplab/theme';
 
 import type { TrainingSession } from '@/data/daily-log';
@@ -32,6 +32,10 @@ export interface DemoDb {
   pain: DemoPainRow[];
   sessions: TrainingSession[];
   exercises: ExerciseSession[];
+  /** Sentetik sabah kiloları (kg). */
+  weights: { local_date: string; weight_kg: number }[];
+  /** Gün tipi düzeltmeleri; başta boş. */
+  dayTypes: Record<string, DayType>;
   syncStatus: SyncStatusRow;
 }
 
@@ -87,6 +91,7 @@ function historySessions(scenario: DemoScenario, today: string): TrainingSession
       // (sütundan önceki kayıtlar gibi), türün hazır etiketleriyle sayılır ve ekran bunu söyler.
       contentTags: daysAgo >= 14 || daysAgo === 2 ? null : demoTags(kind, daysAgo),
       startedAt: null,
+      sweat: null,
       id: `demo-session-${daysAgo}-${kind}`,
       localDate: addIsoDays(today, -daysAgo),
       kind,
@@ -224,10 +229,20 @@ export function createDemoDb(scenario: DemoScenario, today: string, now: Date): 
       contentTags: ['jump', 'cod', 'sprint'],
       exerciseSessionId: 'demo-ex-yesterday-practice',
       startedAt: at(yesterday, 10, 0),
+      // Ter testi (karar 0029): kırmızıda kayıp %2'nin üstünde, diğerlerinde altında.
+      sweat: { preKg: 92.4, postKg: scenario === 'red' ? 90.2 : 91.1, fluidL: scenario === 'red' ? 0.6 : 1.2, urineL: null },
     },
   ];
 
   sessions.push(...historySessions(scenario, today));
+
+  // Sabah kiloları: son 4 hafta, bazı sabahlar boş; bugün girilmemiş (Bugün'de giriş çağrısı görünsün).
+  const wr = rng(20261007);
+  const weights: DemoDb['weights'] = [];
+  for (let i = 27; i >= 1; i--) {
+    if (wr() < 0.25) continue;
+    weights.push({ local_date: addIsoDays(today, -i), weight_kg: Math.round((92.2 + 0.4 * noise(wr)) * 10) / 10 });
+  }
 
   const connectedAt = new Date(now.getTime() - 2 * 86_400_000).toISOString();
   return {
@@ -237,6 +252,8 @@ export function createDemoDb(scenario: DemoScenario, today: string, now: Date): 
     pain,
     sessions,
     exercises,
+    weights,
+    dayTypes: {},
     syncStatus: {
       state: 'connected',
       connected_at: connectedAt,

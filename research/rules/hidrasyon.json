@@ -1,0 +1,37 @@
+{
+  "module": "hidrasyon",
+  "rules": [
+    {
+      "id": "ter-orani",
+      "description": "Ter testi: ter kaybı (L) = seans öncesi kilo − seans sonrası kilo + seansta içilen sıvı − (girildiyse) idrar; ter oranı (L/saat) = ter kaybı / seans süresi. Kilolar kg, sıvı L (1 kg ≈ 1 L).",
+      "value": { "formula": "pre_kg - post_kg + fluid_l - urine_l", "rate": "loss_l / duration_h", "urine_default": 0, "unit": "L/saat" },
+      "applies_to": "seans kaydına bağlı ter testi; seans süresi seanstan",
+      "sources": ["mcdermott-2017", "sawka-2007", "osterberg-2009"],
+      "notes": "Formül NATA bildirgesinin ter oranı denkleminden (mcdermott-2017, tam metin); tartıyla ter oranı tahmini ACSM bildirgesinde de var (sawka-2007). Basketbolda maç başına ter kaybı 1-4,6 L arasında değişti (osterberg-2009): kişisel test bu yüzden. Ter testi kişisel ve koşula bağlı bir ölçüm; farklı sıcaklık ve seans türünde tekrarlanır."
+    },
+    {
+      "id": "kilo-kaybi-notu",
+      "description": "Seans boyunca kilo kaybı (seans öncesi kilonun yüzdesi olarak, içilen sıvı hesaba katılmadan net değişim) %2 veya üstündeyse not: kayıp önerilen sınırın üstünde.",
+      "value": { "loss_percent_min": 2, "unit": "%" },
+      "applies_to": "ter testi sonucu",
+      "sources": ["mcdermott-2017", "sawka-2007", "baker-2007"],
+      "notes": "%2 sınırı NATA (mcdermott-2017, öneri gücü A) ve ACSM (sawka-2007) bildirgelerinde. Basketbolda becerinin anlamlı düştüğü ilk düzey %2 (baker-2007, randomize çapraz). Net kilo değişimi kullanılır (içilen sıvı zaten vücutta): (öncesi − sonrası) / öncesi."
+    },
+    {
+      "id": "kilo-artisi-notu",
+      "description": "Seans sonrası kilo seans öncesinden fazlaysa not: seansta kilo artmamalı, fazla içmek yarar sağlamaz ve hiponatremiye yol açabilir. Tanı değil; baş ağrısı, bulantı, kafa karışıklığı varsa sağlık ekibine.",
+      "value": { "gain_kg_above": 0, "unit": "kg" },
+      "applies_to": "ter testi sonucu",
+      "sources": ["mcdermott-2017"],
+      "notes": "NATA öneri 6 (öneri gücü A): seansta kilo artmamalı, istisna seansa kaçınılmaz bir sıvı açığıyla başlamak (mcdermott-2017). Tartı hassasiyeti nedeniyle küçük artışlar ölçüm hatası olabilir; not bunu söyler."
+    },
+    {
+      "id": "sivi-hedefi",
+      "description": "Seans sonrası sıvı hedefi: sonraki seansa 4 saatten az varsa kaybedilen her 1 kg için 1,0-1,5 L; daha uzun ara varsa öğünlerle birlikte, susadıkça.",
+      "value": { "short_recovery_hours_below": 4, "liters_per_kg_lost": [1.0, 1.5], "unit": "L" },
+      "applies_to": "ter testinde net kilo kaybı varsa",
+      "sources": ["mcdermott-2017", "davis-2022"],
+      "notes": "NATA: 4 saatten kısa toparlanmada kaybın %100-150'si (mcdermott-2017). Basketbol derlemesi: kısa arada kg başına 1,0-1,5 L, 24 saat ve üstünde öğünlerle istendiği kadar (davis-2022). Aradaki (4-24 saat) için iki kaynak da sayı vermiyor; HoopLab 4 saatten uzun her arada öğünlerle içmeyi söyler. Sonraki seansa kalan süre bilinmediği için sonuçta iki durum da yazılır (kısa ara: L aralığı; uzun ara: öğünlerle)."
+    }
+  ]
+}

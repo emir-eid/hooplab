@@ -31,6 +31,14 @@ export interface Checkin {
   pain: PainMap;
 }
 
+/** Seansa bağlı ter testi (karar 0029): kilolar kg, sıvı ve idrar L. Sonuç packages/engine'de (sweatTest). */
+export interface SweatEntry {
+  preKg: number;
+  postKg: number;
+  fluidL: number;
+  urineL: number | null;
+}
+
 export interface TrainingSession {
   id: string;
   localDate: string;
@@ -44,6 +52,7 @@ export interface TrainingSession {
   exerciseSessionId: string | null;
   /** Saat oturumundan gelen başlangıç (ISO); elle girilende null. */
   startedAt: string | null;
+  sweat: SweatEntry | null;
 }
 
 export interface NewTrainingSession {
@@ -53,6 +62,7 @@ export interface NewTrainingSession {
   rpe: number;
   minutesPlayed: number | null;
   contentTags: ContentTag[];
+  sweat: SweatEntry | null;
   /** Saat oturumundan etiketleniyorsa: bağlanacak oturum ve başlangıç zamanı. */
   exercise?: Pick<ExerciseSession, 'id' | 'startTime'>;
 }
@@ -120,6 +130,10 @@ export async function insertSession(session: NewTrainingSession): Promise<Result
     rpe: session.rpe,
     minutes_played: session.kind === 'game' ? session.minutesPlayed : null,
     content_tags: session.contentTags,
+    sweat_pre_kg: session.sweat?.preKg ?? null,
+    sweat_post_kg: session.sweat?.postKg ?? null,
+    sweat_fluid_l: session.sweat ? session.sweat.fluidL : null,
+    sweat_urine_l: session.sweat?.urineL ?? null,
     exercise_session_id: session.exercise?.id ?? null,
     started_at: session.exercise?.startTime ?? null,
   });
@@ -137,9 +151,14 @@ interface SessionRow {
   content_tags: ContentTag[] | null;
   exercise_session_id: string | null;
   started_at: string | null;
+  sweat_pre_kg: number | null;
+  sweat_post_kg: number | null;
+  sweat_fluid_l: number | null;
+  sweat_urine_l: number | null;
 }
 
-const sessionColumns = 'id, local_date, kind, duration_min, rpe, minutes_played, content_tags, exercise_session_id, started_at';
+const sessionColumns =
+  'id, local_date, kind, duration_min, rpe, minutes_played, content_tags, exercise_session_id, started_at, sweat_pre_kg, sweat_post_kg, sweat_fluid_l, sweat_urine_l';
 
 function sessionFromRow(r: SessionRow): TrainingSession {
   return {
@@ -152,6 +171,10 @@ function sessionFromRow(r: SessionRow): TrainingSession {
     contentTags: r.content_tags,
     exerciseSessionId: r.exercise_session_id,
     startedAt: r.started_at,
+    sweat:
+      r.sweat_pre_kg !== null && r.sweat_post_kg !== null
+        ? { preKg: Number(r.sweat_pre_kg), postKg: Number(r.sweat_post_kg), fluidL: Number(r.sweat_fluid_l ?? 0), urineL: r.sweat_urine_l === null ? null : Number(r.sweat_urine_l) }
+        : null,
   };
 }
 

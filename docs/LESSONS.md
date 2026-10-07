@@ -64,6 +64,8 @@ Tekrar yaşanabilecek hatalar ve önceden bilinen tuzaklar. Her madde: **ders**,
 
 ## Önizleme ve maketler
 
+- **[ölçüldü] Başsız Chrome betiğinde modal açıkken arkadaki ekran DOM'da kalır:** metne göre kaydırma ya da tıklama (ör. "Ter testi") arkadaki ekrandaki aynı metne gidebilir. Modalda benzersiz bir metin seçilir. RN-web metin alanına `Input.insertText` göndermeden önce alana `element.focus()` ile odaklanılır; yalnız tıklama üçüncü alanda yetmedi. Kanıt: 2026-10-07 seans formu ter testi. Bekçi: yok (yöntem).
+
 - **[ölçüldü] Tarayıcı paneli `file://` ile açılan HTML'i statik kopya olarak gösterir; bağlı CSS ve JS dosyaları yüklenmez.** Maketler yerel sunucuyla açılır: `.claude/launch.json` içindeki `maketler` yapılandırması (`python -m http.server 4173`). Kanıt: 2026-10-03 Faz 0.5 oturumu. Bekçi: yok (launch.json kayıtlı).
 - **[ölçüldü] Panel daralınca öykünülen telefon görünümü küçültülür ve tıklama koordinatları kayar** (çipe yapılan tıklama başlığa düştü; `elementFromPoint` doğru öğeyi gösterirken). Etkileşimden önce `resize_window` yeniden çağrılır; şüphede `document` düzeyinde olay hedefi dinlenir. Kanıt: 2026-10-04 Vücut sekmesi denemesi.
 - **[ölçüldü] Gesture Handler jesti olan bir bileşen web önizlemesinde sıcak yenilemeyle (HMR) değişince jest bayat kalabilir: dokunma hiçbir şey yapmaz, konsolda hata yoktur.** Tıklama doğru öğeye düşse de (`elementFromPoint`) seçim olmaz; sayfa tam yenilenince çalışır. Jestli bir bileşen düzenlendikten sonra etkileşim denemesi tam yenilemeyle yapılır (demo modu bellekte olduğu için yeniden açılır). Kanıt: 2026-10-06 yük grafiği (`load-chart.tsx`). Bekçi: yok.
@@ -87,6 +89,11 @@ Tekrar yaşanabilecek hatalar ve önceden bilinen tuzaklar. Her madde: **ders**,
 - **[ölçüldü] Adım ve mesafede `google-wearables` ile `all-sources` farklıdır:** 15 günün 9'unda değer farklı çıktı (iPhone katkısı). Senkron bileklik ailesini kullanır ([0019](decisions/0019-google-health-senkronu.md)). Kanıt: 2026-10-04, yalnız farklı gün sayısı ölçüldü (değer okunmadı).
 - **[kaynaklı] Liste süzgeçleri tipe göre farklıdır:** günlük tipler `{tip_snake}.date`, uyku yalnız bitiş (`sleep.interval.civil_end_time`), egzersiz `exercise.interval.civil_start_time`; yalnız `>=` ve `<`. Uyku ve egzersizde sayfa en fazla 25. Yanıt en yeniden eskiye sıralı.
 - **[doğrulanacak] Google Health'ten Apple Health'e senkron HRV'yi aktarmıyor.** Bu yüzden Apple Health yalnız B planı.
+
+## Literatür ve kaynaklar
+
+- **[ölçüldü] Açık erişimli tam metin Europe PMC'den alınır** (`/europepmc/webservices/rest/PMC…/fullTextXML`; PMCID için `search?query=EXT_ID:<PMID> AND SRC:MED`). PMC'de olmayan kaynakların yayıncı sayfaları otomatik isteğe kapalı olabilir: MSSE 402, JAND 403, BMJ güvenlik doğrulaması (tarayıcı panelinde de). Bot doğrulaması aşılmaz. Kaynak yalnız özetle kullanılır ve kaynak dosyasında "yalnız özet okundu" yazar; sayı gerekiyorsa açık erişimli bir kaynaktan alınır. Kanıt: 2026-10-07 beslenme taraması (thomas-2016, mountjoy-2023). Bekçi: yok (yöntem).
+- **[ölçüldü] WebFetch sayfayı küçük bir modelle özetler; verdiği alıntılar kaynak dosyasına girmeden ham metinde doğrulanır** (`curl` + etiketleri ayıklama + `grep`). NATA 2017'nin dört ifadesi bu yolla birebir doğrulandı. Kanıt: 2026-10-07. Bekçi: yok (yöntem).
 
 ## Supabase
 

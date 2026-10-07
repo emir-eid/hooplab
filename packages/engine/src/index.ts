@@ -7,3 +7,5 @@ export * from './wellness.ts';
 export * from './recovery.ts';
 export * from './training-load.ts';
 export * from './region-load.ts';
+export * from './nutrition.ts';
+export * from './hydration.ts';

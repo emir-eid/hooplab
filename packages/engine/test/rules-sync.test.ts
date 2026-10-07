@@ -7,6 +7,15 @@ import { readdirSync, readFileSync } from 'node:fs';
 
 import {
   bodyRegions,
+  carbTargets,
+  dayTypes,
+  fluidTargetRule,
+  gainNoteRule,
+  highDayRule,
+  lossNoteRule,
+  proteinTarget,
+  sweatInputLimits,
+  weightLimits,
   checkinBaseline,
   respirationNightRule,
   contentTags,
@@ -104,6 +113,36 @@ test('solunum bandı, tek gece notu ve check-in kişisel kıyası kuralla aynı 
   assert.equal(checkin.z_note_max, checkinBaseline.zNoteMax);
   assert.equal(checkin.sd, 'sample');
   assert.equal(checkin.in_day_status, false);
+});
+
+test('beslenme hedefleri ve ter testi kuralla aynı (karar 0029)', () => {
+  const carbs = rule('beslenme.json', 'karbonhidrat-gun-tipi').value;
+  for (const t of dayTypes) assert.deepEqual(carbs[t], [...carbTargets[t]], t);
+  assert.equal(carbs.high_when_minutes_at_least, highDayRule.minutesAtLeast);
+  assert.deepEqual(carbs.high_when_kind, [...highDayRule.kinds]);
+  const protein = rule('beslenme.json', 'protein-gunluk').value;
+  assert.deepEqual(protein.range, [...proteinTarget.range]);
+  assert.equal(protein.per_meal, proteinTarget.perMeal);
+  assert.deepEqual(protein.meal_interval_hours, [...proteinTarget.mealIntervalHours]);
+  const ea = rule('beslenme.json', 'enerji-yeterliligi').value;
+  assert.equal(ea.computed, false);
+  assert.equal(ea.alert, false);
+  assert.equal(rule('hidrasyon.json', 'kilo-kaybi-notu').value.loss_percent_min, lossNoteRule.lossPercentMin);
+  assert.equal(rule('hidrasyon.json', 'kilo-artisi-notu').value.gain_kg_above, gainNoteRule.gainKgAbove);
+  const fluid = rule('hidrasyon.json', 'sivi-hedefi').value;
+  assert.equal(fluid.short_recovery_hours_below, fluidTargetRule.shortRecoveryHoursBelow);
+  assert.deepEqual(fluid.liters_per_kg_lost, [...fluidTargetRule.litersPerKgLost]);
+  assert.equal(rule('hidrasyon.json', 'ter-orani').value.urine_default, 0);
+});
+
+test('veritabanındaki kilo, gün tipi ve ter testi giriş aralıkları motorla aynı', () => {
+  assert.match(migrations, new RegExp(`weight_kg between ${weightLimits.min} and ${weightLimits.max}`));
+  assert.match(migrations, new RegExp(`sweat_pre_kg between ${weightLimits.min} and ${weightLimits.max}`));
+  assert.match(migrations, new RegExp(`sweat_fluid_l between 0 and ${sweatInputLimits.fluidMaxL}`));
+  assert.match(migrations, new RegExp(`sweat_urine_l between 0 and ${sweatInputLimits.urineMaxL}`));
+  const m = migrations.match(/check \(day_type in \(([^)]*)\)\)/);
+  assert.ok(m, 'day_type CHECK bulunamadı');
+  assert.deepEqual([...m[1]!.matchAll(/'([a-z_]+)'/g)].map((x) => x[1]), [...dayTypes]);
 });
 
 test('günün durumu birleşimi kuralla aynı', () => {

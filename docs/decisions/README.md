@@ -61,3 +61,4 @@ Hangisi seçildi ve tek paragrafta neden.
 | [0026](0026-aciklama-sayfalari-ve-tur-rengi.md) | Açıklama sayfaları (Bu ne? · Nasıl okunur? · Neye göre? · Kaynaklar) ve yük grafiğinde seans türü rengi | Kabul edildi |
 | [0027](0027-kas-tendon-bolge-yuku.md) | Kas ve tendon bölge yükü: içerik etiketleri, katsayısız eşleme, toparlanma penceresi (tendon 48, kas 72 saat), ağrı izleme | Kabul edildi |
 | [0028](0028-solunum-ve-checkin-kisisel.md) | Solunum ve check-in için kişisel kıyas: solunum bandı ve tek gece notu (+3 nefes/dk), check-in z-skoru (≤ −1 not); günün durumuna girmez | Kabul edildi |
+| [0029](0029-beslenme-ve-hidrasyon.md) | Beslenme ve hidrasyon: gün tipine göre karbonhidrat (3-5 / 5-7 / 8-10 g/kg), protein 1,2-2,0 g/kg, seansa bağlı ter testi (%2 kayıp, kilo artışı notu, sıvı hedefi); REDs için uyarı yok | Kabul edildi |

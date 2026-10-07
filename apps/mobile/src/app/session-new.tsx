@@ -2,11 +2,20 @@
 // Seans yükü (RPE × dakika) @hooplab/engine'de hesaplanır, saklanmaz.
 // İçerik etiketleri (sıçrama, yön değiştirme...) kas / tendon bölge yükü içindir (karar 0027): tür seçilince
 // türün hazır etiketleri seçili gelir, kullanıcı düzeltir.
+// İsteğe bağlı ter testi (karar 0029): ön / son tartı ve içilen sıvı; süre seanstan, sonuç packages/engine'de.
 //
 // `?exercise=<id>` ile açılırsa saatin kaydettiği oturumu etiketler (karar 0020): gün ve süre saatten gelir,
 // tür ve RPE kullanıcıdan. O güne elle girilmiş bir kayıt varsa ona bağlanabilir veya oturum "Seans değil" olur.
 
-import { contentTags, defaultContentTags, durationLimits, rpeScale, sessionLoad, type ContentTag } from '@hooplab/engine';
+import {
+  contentTags,
+  defaultContentTags,
+  durationLimits,
+  rpeScale,
+  sessionLoad,
+  sweatTest,
+  type ContentTag,
+} from '@hooplab/engine';
 import { layout, radius, size, spacing } from '@hooplab/theme';
 import { router, useLocalSearchParams } from 'expo-router';
 import { useEffect, useState } from 'react';
@@ -18,6 +27,8 @@ import { GestureScrollView } from '@/components/gesture-scroll';
 import { ScaleSlider } from '@/components/scale-slider';
 import { Stepper } from '@/components/stepper';
 import { Text } from '@/components/text';
+import { TextFieldRow } from '@/components/text-field';
+import { fluidTargetText, sweatGainNote, sweatLossNote, sweatLossText } from '@/copy/nutrition';
 import { contentTagLabels, rpeLabel, sessionKindLabels, sessionKinds, type SessionKind } from '@/copy/labels';
 import {
   dismissExercise,
@@ -25,10 +36,12 @@ import {
   insertSession,
   linkSession,
   type ExerciseToTag,
+  type SweatEntry,
   type TrainingSession,
 } from '@/data/daily-log';
 import { exerciseSummary, suggestDurationMin, suggestKind } from '@/data/exercise-tagging';
 import { usePalette } from '@/theme/appearance';
+import { parseDecimal } from '@/utils/decimal';
 import { addDays, toLocalDate } from '@/utils/local-date';
 
 /** Maçta oynanan dakika için giriş sınırı; veritabanındaki CHECK ile aynı (uzatmalar dahil). */
@@ -54,6 +67,8 @@ export default function SessionNewScreen() {
   const [durationMin, setDurationMin] = useState(90);
   const [rpe, setRpe] = useState<number | null>(null);
   const [minutesPlayed, setMinutesPlayed] = useState(20);
+  const [sweatOn, setSweatOn] = useState(false);
+  const [sweatText, setSweatText] = useState({ pre: '', post: '', fluid: '', urine: '' });
   const [busy, setBusy] = useState<Busy>(null);
   const [error, setError] = useState<string | null>(null);
   // Saatten etiketlemede: undefined = yükleniyor, null = oturum bulunamadı.
@@ -92,6 +107,21 @@ export default function SessionNewScreen() {
     setTags((current) => (current.includes(tag) ? current.filter((t) => t !== tag) : contentTags.filter((t) => t === tag || current.includes(t))));
   }
 
+  // Ter testi: alanlar sayıya çevrilir; ön ve son kilo zorunlu, sıvı boşsa 0, idrar boşsa girilmemiş.
+  const sweatEntry: SweatEntry | null = (() => {
+    if (!sweatOn) return null;
+    const preKg = parseDecimal(sweatText.pre);
+    const postKg = parseDecimal(sweatText.post);
+    const fluidL = sweatText.fluid.trim() === '' ? 0 : parseDecimal(sweatText.fluid);
+    const urineL = sweatText.urine.trim() === '' ? null : parseDecimal(sweatText.urine);
+    if (preKg === null || postKg === null || fluidL === null || (sweatText.urine.trim() !== '' && urineL === null)) return null;
+    return { preKg, postKg, fluidL, urineL };
+  })();
+  const sweatResult = sweatEntry
+    ? sweatTest({ ...sweatEntry, urineL: sweatEntry.urineL ?? 0, durationMin })
+    : null;
+  const sweatInvalid = sweatOn && sweatResult === null;
+
   const tagging = exerciseId !== null;
   const exercise = tag?.exercise ?? null;
   const load = rpe === null ? null : sessionLoad(rpe, durationMin);
@@ -121,6 +151,7 @@ export default function SessionNewScreen() {
         rpe,
         minutesPlayed: kind === 'game' ? minutesPlayed : null,
         contentTags: [...tags],
+        sweat: sweatResult ? sweatEntry : null,
         ...(exercise ? { exercise } : {}),
       }),
     );
@@ -310,6 +341,85 @@ export default function SessionNewScreen() {
           </FormBlock>
         ) : null}
 
+        <FormBlock title="Ter testi" note="isteğe bağlı">
+          {sweatOn ? (
+            <>
+              <Text variant="caption" tone="inkMuted">
+                Seanstan hemen önce ve sonra, aynı kıyafetle ya da çıplak tartıl. Süre seanstan alınır.
+              </Text>
+              <View style={styles.sweatFields}>
+                <TextFieldRow
+                  label="Önce"
+                  accessibilityLabel="Seans öncesi kilo"
+                  value={sweatText.pre}
+                  onChangeText={(pre) => setSweatText((t) => ({ ...t, pre }))}
+                  keyboardType="decimal-pad"
+                  placeholder="kg, ör. 92,4"
+                />
+                <TextFieldRow
+                  label="Sonra"
+                  accessibilityLabel="Seans sonrası kilo"
+                  value={sweatText.post}
+                  onChangeText={(post) => setSweatText((t) => ({ ...t, post }))}
+                  keyboardType="decimal-pad"
+                  placeholder="kg, ör. 91,1"
+                />
+                <TextFieldRow
+                  label="İçilen"
+                  accessibilityLabel="Seansta içilen sıvı, litre"
+                  value={sweatText.fluid}
+                  onChangeText={(fluid) => setSweatText((t) => ({ ...t, fluid }))}
+                  keyboardType="decimal-pad"
+                  placeholder="L, ör. 0,8"
+                />
+                <TextFieldRow
+                  label="İdrar"
+                  accessibilityLabel="Seansta idrar, litre, isteğe bağlı"
+                  value={sweatText.urine}
+                  onChangeText={(urine) => setSweatText((t) => ({ ...t, urine }))}
+                  keyboardType="decimal-pad"
+                  placeholder="L, yoksa boş bırak"
+                />
+              </View>
+              {sweatResult ? (
+                <View style={styles.sweatResult} accessibilityLiveRegion="polite">
+                  <Text variant="subhead">{sweatLossText(sweatResult)}</Text>
+                  {sweatResult.lossNote ? (
+                    <Text variant="footnoteRegular" tone="inkSecondary">
+                      {sweatLossNote}
+                    </Text>
+                  ) : null}
+                  {sweatResult.gainNote ? (
+                    <Text variant="footnoteRegular" tone="inkSecondary">
+                      {sweatGainNote}
+                    </Text>
+                  ) : null}
+                  {fluidTargetText(sweatResult) ? (
+                    <Text variant="footnoteRegular" tone="inkSecondary">
+                      {fluidTargetText(sweatResult)}
+                    </Text>
+                  ) : null}
+                </View>
+              ) : (
+                <Text variant="caption" tone="inkMuted" style={styles.sweatResult}>
+                  Önce ve sonra kilonu 30-250 kg arasında gir; sıvı 0-10 L.
+                </Text>
+              )}
+              <Pressable
+                onPress={() => setSweatOn(false)}
+                accessibilityRole="button"
+                hitSlop={spacing[2]}
+                style={({ pressed }) => [styles.dismiss, { backgroundColor: palette.cardMuted }, pressed && styles.pressed]}>
+                <Text variant="chip" tone="inkSecondary">
+                  Ter testini kaldır
+                </Text>
+              </Pressable>
+            </>
+          ) : (
+            <Chip label="Ter testi ekle" role="button" selected={false} onPress={() => setSweatOn(true)} />
+          )}
+        </FormBlock>
+
         <View style={[styles.result, { backgroundColor: palette.result }]}>
           <View>
             <Text variant="footnote" tone="onResult" style={styles.dim}>
@@ -339,7 +449,7 @@ export default function SessionNewScreen() {
       <FormDock
         label="Kaydet"
         onPress={save}
-        disabled={kind === null || rpe === null || (busy !== null && busy !== 'save')}
+        disabled={kind === null || rpe === null || sweatInvalid || (busy !== null && busy !== 'save')}
         loading={busy === 'save'}
         error={error}
       />
@@ -366,6 +476,8 @@ const styles = StyleSheet.create({
   candidateText: { flex: 1, gap: spacing[0.5] },
   candidateNote: { marginTop: spacing[2] },
   tagNote: { marginTop: spacing[2.5] },
+  sweatFields: { marginTop: spacing[2], marginHorizontal: -layout.cardPadding },
+  sweatResult: { marginTop: spacing[2], gap: spacing[1.5] },
   pressed: { opacity: 0.6 },
   rpeHead: {
     flexDirection: 'row',

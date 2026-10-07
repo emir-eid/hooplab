@@ -1,7 +1,7 @@
 // Demo modunun bellekteki veritabanı (karar 0022): veri fonksiyonlarıyla aynı imzalar, ağ yok.
 // Kayıtlar (check-in, seans, etiketleme) yalnız bellekte; uygulama kapanınca veya senaryo değişince sıfırlanır.
 
-import { addIsoDays, checkinBaseline, readCheckin, type CheckinReading } from '@hooplab/engine';
+import { addIsoDays, checkinBaseline, readCheckin, type CheckinReading, type DayType } from '@hooplab/engine';
 
 import type { Checkin, ExerciseToTag, NewTrainingSession, Result, TrainingSession } from '@/data/daily-log';
 import { linkCandidates, pendingExercises, type ExerciseSession } from '@/data/exercise-tagging';
@@ -9,6 +9,7 @@ import type { SyncStatusRow } from '@/data/google-health-status';
 import { buildPainHistory, type PainHistory } from '@/data/pain-history';
 import { painEntries, painMapFromRows } from '@/data/pain-map';
 import { buildRecoveryView, recoveryFrom, type RecoveryView } from '@/data/recovery-view';
+import { buildNutritionView, weightFrom, type NutritionView } from '@/data/nutrition-view';
 import { buildRegionLoadView, regionFrom, type RegionLoadView } from '@/data/region-load-view';
 import { buildTrainingLoadView, loadChartDays, type TrainingLoadView } from '@/data/training-load-view';
 import { createDemoDb, type DemoDb, type DemoScenario } from '@/demo/demo-data';
@@ -67,6 +68,7 @@ export class DemoStore {
         rpe: session.rpe,
         minutesPlayed: session.kind === 'game' ? session.minutesPlayed : null,
         contentTags: session.contentTags,
+        sweat: session.sweat,
         exerciseSessionId: exerciseId,
         startedAt: session.exercise?.startTime ?? null,
       },
@@ -143,6 +145,24 @@ export class DemoStore {
       return map ? painEntries(map) : null;
     };
     return ok(buildRegionLoadView(rows, today, { earliest, now, painToday: readings(today), painYesterday: readings(yesterday) }));
+  }
+
+  async fetchNutrition(today: string): Promise<Result<NutritionView>> {
+    const from = weightFrom(today);
+    const weights = this.db.weights.filter((w) => w.local_date >= from && w.local_date <= today);
+    const sessions = this.db.sessions.filter((s) => s.localDate === today);
+    return ok(buildNutritionView(today, weights, sessions, this.db.dayTypes[today] ?? null));
+  }
+
+  async saveWeight(localDate: string, kg: number): Promise<Result<null>> {
+    this.db.weights = [...this.db.weights.filter((w) => w.local_date !== localDate), { local_date: localDate, weight_kg: kg }];
+    return ok(null);
+  }
+
+  async saveDayType(localDate: string, dayType: DayType | null): Promise<Result<null>> {
+    const { [localDate]: _removed, ...rest } = this.db.dayTypes;
+    this.db.dayTypes = dayType === null ? rest : { ...rest, [localDate]: dayType };
+    return ok(null);
   }
 
   async fetchSyncStatus(): Promise<Result<SyncStatusRow | null>> {

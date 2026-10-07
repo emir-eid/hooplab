@@ -1,6 +1,8 @@
 import assert from 'node:assert/strict';
 import { test } from 'node:test';
 
+import { sweatTest } from '@hooplab/engine';
+
 import { buildRecoveryView } from '../data/recovery-view.ts';
 import { buildTrainingLoadView } from '../data/training-load-view.ts';
 import { createDemoDb, demoScenarios } from './demo-data.ts';
@@ -36,6 +38,19 @@ test('solunum: yalnız kırmızıda son gece notu; günün durumunu değiştirme
       const view = buildRecoveryView(db.healthDaily, db.sleep, today);
       assert.equal(view.respiration.nightHigh, scenario === 'red', `${scenario} @ ${today}`);
     }
+  }
+});
+
+test('beslenme ve ter testi: bugün kilo yok, kilolar giriş aralığında; kırmızıda ter testi %2 üstü', () => {
+  for (const scenario of demoScenarios) {
+    const today = days[0]!;
+    const db = createDemoDb(scenario, today, now);
+    assert.ok(!db.weights.some((w) => w.local_date === today));
+    assert.ok(db.weights.length >= 10 && db.weights.every((w) => w.weight_kg >= 30 && w.weight_kg <= 250));
+    const tested = db.sessions.find((s) => s.sweat);
+    assert.ok(tested?.sweat);
+    const r = sweatTest({ ...tested.sweat, urineL: tested.sweat.urineL ?? 0, durationMin: tested.durationMin });
+    assert.equal(r?.lossNote, scenario === 'red', scenario);
   }
 });
 

@@ -3,7 +3,12 @@
 // (explainers.test.ts denetler). Sayılar motor sabitlerinden; metinde eşik uydurulmaz.
 
 import {
+  carbTargets,
   checkinBaseline,
+  fluidTargetRule,
+  highDayRule,
+  lossNoteRule,
+  proteinTarget,
   loadEwma,
   loadRatioRule,
   loadSpikeRule,
@@ -277,6 +282,39 @@ export const explainers = {
     medical: true,
     rules: ['bolge-agri-izleme'],
     sources: ['silbernagel-2007', 'seidler-2025'],
+  },
+  nutrition: {
+    title: 'Beslenme hedefi',
+    basis: 'computed',
+    what: 'Bugün için karbonhidrat ve protein hedefi: gün tipine göre gram / kilo × son 7 günün sabah kilosu ortalaması.',
+    read: [
+      `Gün tipi kayıtlarından çıkar: seans yoksa dinlenme (${carbTargets.rest[0]}-${carbTargets.rest[1]} g/kg karbonhidrat), seans varsa antrenman (${carbTargets.training[0]}-${carbTargets.training[1]}), maç ya da toplam ${highDayRule.minutesAtLeast / 60} saat ve üstü seans varsa yoğun (${carbTargets.high[0]}-${carbTargets.high[1]}). Çiplere dokunarak değiştirebilirsin; kayıtlardan çıkan tipe dokunmak düzeltmeyi kaldırır.`,
+      `Protein her gün ${dec(proteinTarget.range[0])}-${dec(proteinTarget.range[1])} g/kg; öğünlere bölünmüş, ${proteinTarget.mealIntervalHours[0]}-${proteinTarget.mealIntervalHours[1]} saatte bir, öğün başı yaklaşık ${dec(proteinTarget.perMeal)} g/kg. 1,6 g/kg üstü kas kazanımına ek katkı göstermemiş; aralığın ortası iyi bir başlangıç.`,
+      'Hedef ne kadar yemen gerektiğini söyler; ne kadar yediğini bilmez (öğün kaydı henüz yok).',
+      'Yükün gerektirdiğinden uzun süre az yemek (düşük enerji yeterliliği, REDs) sağlığı ve performansı bozar. Uygulama bunu hesaplayamaz: sürekli yorgunluk, sık hastalanma, stres kırığı ya da açıklanamayan performans düşüşü varsa sağlık ekibine danış.',
+    ],
+    reference:
+      "Antrenman günü aralığı basketbolcular için sezon içi beslenme derlemesinden; dinlenme ve yoğun gün aralıkları uluslararası spor beslenmesi derneğinin (ISSN) derlemesinden. Protein aralığı aynı kaynaklarla ve ISSN'nin protein bildirgesiyle uyumlu; 1,6 g/kg bir meta-analizden. REDs tanımı IOC 2023 konsensüsünden.",
+    limits:
+      'Dinlenme ve yoğun gün aralıkları genel ve dayanıklılık bağlamından basketbola aktarıldı. Sabah kilosu girilmezse hedef yalnız g/kg olarak gösterilir. Takviye önerisi yok. Kişisel bir plan için spor diyetisyenine danış.',
+    rules: ['karbonhidrat-gun-tipi', 'protein-gunluk', 'enerji-yeterliligi'],
+    sources: ['davis-2022', 'kerksick-2018', 'thomas-2016', 'jager-2017', 'morton-2018', 'mountjoy-2023'],
+  },
+  sweatTest: {
+    title: 'Ter testi',
+    basis: 'computed',
+    what: 'Seanstan önce ve sonra tartılarak terle ne kadar sıvı kaybettiğin. Ter kaybı = önce − sonra + içilen − idrar (1 kg yaklaşık 1 L); ter oranı = kayıp ÷ seans süresi.',
+    read: [
+      `Seans boyunca kilo kaybın %${lossNoteRule.lossPercentMin} veya üstündeyse not çıkar: basketbolcularda beceri bu düzeyde anlamlı düşmüş.`,
+      'Kilon arttıysa ihtiyacından fazla içmiş olabilirsin; fazla içmek yarar sağlamaz ve kandaki sodyumu düşürebilir.',
+      `Sonraki seansa ${fluidTargetRule.shortRecoveryHoursBelow} saatten az varsa kaybettiğin her kg için ${dec(fluidTargetRule.litersPerKgLost[0])}-${dec(fluidTargetRule.litersPerKgLost[1])} L iç; daha uzun ara varsa öğünlerle, susadıkça.`,
+      'Ter oranı sıcaklığa, seans türüne ve yoğunluğa göre değişir; farklı koşullarda tekrarla. NBA oyuncularında maç başına ter kaybı 1 ile 4,6 L arasında değişmiş.',
+    ],
+    reference:
+      "Formül ve %2 sınırı Amerikan Atletik Antrenörler Derneği (NATA) ve ACSM'nin sıvı bildirgelerinden. %2'de basketbol becerisindeki düşüş basketbolcularla yapılan randomize bir çalışmadan; sıvı hedefi NATA'dan ve basketbol beslenme derlemesinden.",
+    limits: 'Tartının hassasiyeti (çoğunlukla 0,1 kg) küçük farkları belirsizleştirir. Seansta yenen ve idrar dışındaki kayıplar hesaba girmez.',
+    rules: ['ter-orani', 'kilo-kaybi-notu', 'kilo-artisi-notu', 'sivi-hedefi'],
+    sources: ['mcdermott-2017', 'sawka-2007', 'baker-2007', 'osterberg-2009', 'davis-2022'],
   },
 } as const satisfies Record<string, Explainer>;
 

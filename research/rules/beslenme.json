@@ -1,0 +1,29 @@
+{
+  "module": "beslenme",
+  "rules": [
+    {
+      "id": "karbonhidrat-gun-tipi",
+      "description": "Günlük karbonhidrat hedefi gün tipine göre (g/kg/gün, sabah kilosuyla): dinlenme 3-5, antrenman 5-7, yoğun 8-10. Gün tipi o günün seans kayıtlarından: seans yoksa dinlenme, seans varsa antrenman, maç varsa ya da seansların toplam süresi 180 dakika veya üstüyse yoğun. Kullanıcı gün tipini değiştirebilir.",
+      "value": { "rest": [3, 5], "training": [5, 7], "high": [8, 10], "high_when_minutes_at_least": 180, "high_when_kind": ["game"], "unit": "g/kg/gün" },
+      "applies_to": "her gün; kilo son 7 günün sabah kilosu ortalamasından (yoksa son ölçüm)",
+      "sources": ["davis-2022", "kerksick-2018", "thomas-2016"],
+      "notes": "Antrenman günü 5-7 basketbol derlemesinden (davis-2022). Dinlenme 3-5 ve yoğun 8-10 ISSN derlemesinden (kerksick-2018): 3-5 genel fitness için, 8-10 günde 3-6 saat yoğun antrenman için; sporcunun dinlenme gününe ve basketbolda maç gününe aktarım varsayım. davis-2022 takım sporlarında 5-12 aralığı veriyor, üst ucu çok dakika oynayan oyuncu için. 180 dakika eşiği kerksick-2018'in '3-6 saat' alt ucu. Ortak bildirgenin (thomas-2016) tam metnine erişilemedi; aralıklar ondan doğrudan alınmadı. Hedef bir rehber aralık, eşik ya da uyarı değil; kişisel plan için spor diyetisyeni (thomas-2016)."
+    },
+    {
+      "id": "protein-gunluk",
+      "description": "Günlük protein hedefi 1,2-2,0 g/kg/gün (gün tipinden bağımsız), 4-5 saatte bir öğüne bölünmüş, öğün başına yaklaşık 0,3 g/kg.",
+      "value": { "range": [1.2, 2.0], "per_meal": 0.3, "meal_interval_hours": [4, 5], "unit": "g/kg/gün" },
+      "applies_to": "her gün; kilo karbonhidrat hedefiyle aynı",
+      "sources": ["davis-2022", "jager-2017", "morton-2018", "thomas-2016"],
+      "notes": "Aralık ve öğün dozu basketbol derlemesinden (davis-2022: 1,2-2,0 g/kg/gün, 0,31 g/kg her 4-5 saatte; ortak bildirgeye, thomas-2016, dayanıyor). Bağımsız ISSN bildirgesi 1,4-2,0 veriyor (jager-2017). Meta-analizde 1,6 g/kg/gün üstü ek kas kazanımı getirmedi (morton-2018; güven aralığı geniş); açıklamada aralığın ortası olarak anılır, tavan değil. 0,31 yuvarlanarak 0,3."
+    },
+    {
+      "id": "enerji-yeterliligi",
+      "description": "Düşük enerji yeterliliği (REDs) hesaplanmaz ve otomatik uyarı verilmez: enerji alımı ve yağsız kütle kaydedilmiyor. Hedef sayfasında REDs anlatılır ve belirtilerde sağlık ekibine yönlendirilir. Sabah kilosu eşiksiz trend olarak gösterilir.",
+      "value": { "computed": false, "alert": false, "weight_trend_threshold": null },
+      "applies_to": "beslenme hedefi sayfası ve açıklaması",
+      "sources": ["mountjoy-2023"],
+      "notes": "IOC 2023 konsensüsü REDs'i egzersiz harcamasına göre yetersiz enerji alımının sonuçları olarak tanımlıyor; tanı klinik bir araçla (CAT2) klinisyen tarafından konuyor (mountjoy-2023). Konsensüsün tam metnine erişilemedi; eşik kullanılmadı. Öğün kaydı geldiğinde (karar 0029) yeniden değerlendirilir. CLAUDE.md §3 tıbbi sınır: tanı yok."
+    }
+  ]
+}
