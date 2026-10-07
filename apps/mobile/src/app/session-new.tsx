@@ -1,11 +1,12 @@
 // Seans kaydı (maket ekran 3): gün, tür, süre, RPE (0-10, değiştirilmiş CR-10) ve maçta oynanan dakika.
 // Seans yükü (RPE × dakika) @hooplab/engine'de hesaplanır, saklanmaz.
-// İçerik etiketleri (sıçrama, yön değiştirme...) Faz 2'de kas / tendon modeliyle gelir (karar 0015).
+// İçerik etiketleri (sıçrama, yön değiştirme...) kas / tendon bölge yükü içindir (karar 0027): tür seçilince
+// türün hazır etiketleri seçili gelir, kullanıcı düzeltir.
 //
 // `?exercise=<id>` ile açılırsa saatin kaydettiği oturumu etiketler (karar 0020): gün ve süre saatten gelir,
 // tür ve RPE kullanıcıdan. O güne elle girilmiş bir kayıt varsa ona bağlanabilir veya oturum "Seans değil" olur.
 
-import { durationLimits, rpeScale, sessionLoad } from '@hooplab/engine';
+import { contentTags, defaultContentTags, durationLimits, rpeScale, sessionLoad, type ContentTag } from '@hooplab/engine';
 import { layout, radius, size, spacing } from '@hooplab/theme';
 import { router, useLocalSearchParams } from 'expo-router';
 import { useEffect, useState } from 'react';
@@ -17,7 +18,7 @@ import { GestureScrollView } from '@/components/gesture-scroll';
 import { ScaleSlider } from '@/components/scale-slider';
 import { Stepper } from '@/components/stepper';
 import { Text } from '@/components/text';
-import { rpeLabel, sessionKindLabels, sessionKinds, type SessionKind } from '@/copy/labels';
+import { contentTagLabels, rpeLabel, sessionKindLabels, sessionKinds, type SessionKind } from '@/copy/labels';
 import {
   dismissExercise,
   fetchExerciseToTag,
@@ -49,6 +50,7 @@ export default function SessionNewScreen() {
   const [now] = useState(() => new Date());
   const [dayOffset, setDayOffset] = useState<0 | -1>(0);
   const [kind, setKind] = useState<SessionKind | null>(null);
+  const [tags, setTags] = useState<readonly ContentTag[]>([]);
   const [durationMin, setDurationMin] = useState(90);
   const [rpe, setRpe] = useState<number | null>(null);
   const [minutesPlayed, setMinutesPlayed] = useState(20);
@@ -70,7 +72,7 @@ export default function SessionNewScreen() {
       setTag(result.value);
       if (result.value) {
         const { exercise } = result.value;
-        setKind(suggestKind(exercise.exerciseType));
+        chooseKind(suggestKind(exercise.exerciseType));
         const suggested = suggestDurationMin(exercise);
         if (suggested !== null) setDurationMin(suggested);
       }
@@ -79,6 +81,16 @@ export default function SessionNewScreen() {
       cancelled = true;
     };
   }, [exerciseId]);
+
+  /** Tür değişince içerik türün hazır etiketlerine döner. */
+  function chooseKind(next: SessionKind | null) {
+    setKind(next);
+    setTags(next ? defaultContentTags[next] : []);
+  }
+
+  function toggleTag(tag: ContentTag) {
+    setTags((current) => (current.includes(tag) ? current.filter((t) => t !== tag) : contentTags.filter((t) => t === tag || current.includes(t))));
+  }
 
   const tagging = exerciseId !== null;
   const exercise = tag?.exercise ?? null;
@@ -108,6 +120,7 @@ export default function SessionNewScreen() {
         durationMin,
         rpe,
         minutesPlayed: kind === 'game' ? minutesPlayed : null,
+        contentTags: [...tags],
         ...(exercise ? { exercise } : {}),
       }),
     );
@@ -226,10 +239,25 @@ export default function SessionNewScreen() {
         <FormBlock title="Tür">
           <ChipSet label="Seans türü">
             {sessionKinds.map((k) => (
-              <Chip key={k} label={sessionKindLabels[k]} selected={kind === k} onPress={() => setKind(k)} />
+              <Chip key={k} label={sessionKindLabels[k]} selected={kind === k} onPress={() => chooseKind(k)} />
             ))}
           </ChipSet>
         </FormBlock>
+
+        {kind !== null ? (
+          <FormBlock title="İçerik" note="türe göre seçili">
+            <ChipSet>
+              {contentTags.map((t) => (
+                <Chip key={t} label={contentTagLabels[t]} role="checkbox" selected={tags.includes(t)} onPress={() => toggleTag(t)} />
+              ))}
+            </ChipSet>
+            <Text variant="caption" tone="inkMuted" style={styles.tagNote}>
+              {tags.length === 0
+                ? 'Hiçbiri seçili değil: seans bölge yüküne girmez.'
+                : 'Seansta olmayanı kaldır. Vücut sekmesindeki bölge yükü (tahmin) bunlara göre.'}
+            </Text>
+          </FormBlock>
+        ) : null}
 
         <FormBlock title="Süre" {...(tagging ? { note: 'saatten, ısınma dahil' } : {})}>
           <Stepper
@@ -337,6 +365,7 @@ const styles = StyleSheet.create({
   },
   candidateText: { flex: 1, gap: spacing[0.5] },
   candidateNote: { marginTop: spacing[2] },
+  tagNote: { marginTop: spacing[2.5] },
   pressed: { opacity: 0.6 },
   rpeHead: {
     flexDirection: 'row',

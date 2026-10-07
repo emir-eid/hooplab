@@ -27,3 +27,13 @@ test('ölçek sıralı: değer arttıkça zeminden uzaklaşır (iki temada)', ()
     }
   }
 });
+
+test('çalışan bölge rengi pedden ayrışır ve kırmızı ölçekten değil (iki temada)', () => {
+  for (const palette of [palettes.light, palettes.dark]) {
+    const colors = bodyColors(palette);
+    assert.ok(contrastRatio(colors.worked, colors.pad) >= 1.6, `${palette.scheme} ped`);
+    assert.ok(contrastRatio(colors.worked, colors.background) >= 3, `${palette.scheme} zemin`);
+    const [r, g, b] = [1, 3, 5].map((i) => parseInt(colors.worked.slice(i, i + 2), 16));
+    assert.ok(Math.max(r!, g!, b!) - Math.min(r!, g!, b!) < 24, `${palette.scheme} nötr: ${colors.worked}`);
+  }
+});

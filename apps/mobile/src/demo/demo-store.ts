@@ -9,6 +9,7 @@ import type { SyncStatusRow } from '@/data/google-health-status';
 import { buildPainHistory, type PainHistory } from '@/data/pain-history';
 import { painEntries, painMapFromRows } from '@/data/pain-map';
 import { buildRecoveryView, recoveryFrom, type RecoveryView } from '@/data/recovery-view';
+import { buildRegionLoadView, regionFrom, type RegionLoadView } from '@/data/region-load-view';
 import { buildTrainingLoadView, loadChartDays, type TrainingLoadView } from '@/data/training-load-view';
 import { createDemoDb, type DemoDb, type DemoScenario } from '@/demo/demo-data';
 
@@ -57,7 +58,9 @@ export class DemoStore {
         durationMin: session.durationMin,
         rpe: session.rpe,
         minutesPlayed: session.kind === 'game' ? session.minutesPlayed : null,
+        contentTags: session.contentTags,
         exerciseSessionId: exerciseId,
+        startedAt: session.exercise?.startTime ?? null,
       },
     ];
     return ok(null);
@@ -110,6 +113,28 @@ export class DemoStore {
     const earliest = rows.reduce<string | null>((min, r) => (min === null || r.local_date < min ? r.local_date : min), null);
     const pending = await this.fetchPendingExercises(addIsoDays(today, -(loadChartDays - 1)), today);
     return ok(buildTrainingLoadView(rows, today, { earliest, untagged: pending.ok ? pending.value : [] }));
+  }
+
+  async fetchRegionLoad(today: string, now: Date): Promise<Result<RegionLoadView>> {
+    const from = regionFrom(today);
+    const rows = this.db.sessions
+      .filter((s) => s.localDate >= from && s.localDate <= today)
+      .map((s) => ({
+        local_date: s.localDate,
+        rpe: s.rpe,
+        duration_min: s.durationMin,
+        kind: s.kind,
+        content_tags: s.contentTags,
+        started_at: s.startedAt,
+      }));
+    const earliest = this.db.sessions.reduce<string | null>((min, s) => (min === null || s.localDate < min ? s.localDate : min), null);
+    const yesterday = addIsoDays(today, -1);
+    const history = buildPainHistory([yesterday, today], this.db.checkins, this.db.pain);
+    const readings = (date: string) => {
+      const map = history.byDate[date];
+      return map ? painEntries(map) : null;
+    };
+    return ok(buildRegionLoadView(rows, today, { earliest, now, painToday: readings(today), painYesterday: readings(yesterday) }));
   }
 
   async fetchSyncStatus(): Promise<Result<SyncStatusRow | null>> {

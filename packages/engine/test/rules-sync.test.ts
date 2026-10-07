@@ -7,6 +7,15 @@ import { readdirSync, readFileSync } from 'node:fs';
 
 import {
   bodyRegions,
+  contentTags,
+  defaultContentTags,
+  modeledRegions,
+  notModeledRegions,
+  painMonitoringRule,
+  regionComparison,
+  regionWindow,
+  sessionKinds,
+  tagRegions,
   dayStatusRule,
   hrvTransform,
   loadEwma,
@@ -107,6 +116,35 @@ test('veritabanı CHECK aralıkları motorla aynı', () => {
   }
   assert.match(migrations, new RegExp(`rpe between ${rpeScale.min} and ${rpeScale.max}`));
   assert.match(migrations, new RegExp(`pain between ${painScale.min} and ${painScale.max}`));
+});
+
+test('kas / tendon etiketleri, eşleme, pencereler ve ağrı izleme kuralla aynı', () => {
+  const tags = rule('bolge.json', 'bolge-icerik-etiketleri').value;
+  assert.deepEqual(tags.tags, [...contentTags]);
+  assert.deepEqual(tags.defaults_by_kind, Object.fromEntries(Object.entries(defaultContentTags).map(([k, v]) => [k, [...v]])));
+  const map = rule('bolge.json', 'bolge-esleme').value;
+  const { not_modeled, ...byTag } = map;
+  assert.deepEqual(byTag, Object.fromEntries(Object.entries(tagRegions).map(([k, v]) => [k, [...v]])));
+  assert.deepEqual(not_modeled, [...notModeledRegions]);
+  const win = rule('bolge.json', 'bolge-toparlanma-penceresi').value;
+  assert.equal(win.tendon_hours, regionWindow.tendonHours);
+  assert.equal(win.muscle_hours, regionWindow.muscleHours);
+  assert.deepEqual(win.tendon_regions, [...regionWindow.tendonRegions]);
+  assert.deepEqual(win.muscle_regions, [...regionWindow.muscleRegions]);
+  assert.deepEqual([...(win.tendon_regions as string[]), ...(win.muscle_regions as string[])].sort(), [...modeledRegions].sort());
+  const load = rule('bolge.json', 'bolge-yuku').value;
+  assert.equal(load.comparison_days, regionComparison.days);
+  assert.equal(load.threshold, null);
+  assert.equal(rule('bolge.json', 'bolge-agri-izleme').value.max_nrs, painMonitoringRule.maxNrs);
+});
+
+test('veritabanındaki seans türleri ve içerik etiketleri motorla aynı', () => {
+  const kinds = [...migrations.matchAll(/check \(kind in \(([^)]*)\)\)/g)].at(-1);
+  assert.ok(kinds, 'kind CHECK bulunamadı');
+  assert.deepEqual([...kinds[1]!.matchAll(/'([a-z_]+)'/g)].map((x) => x[1]).sort(), [...sessionKinds].sort());
+  const tags = migrations.match(/content_tags <@ array\[([^\]]*)\]/);
+  assert.ok(tags, 'content_tags CHECK bulunamadı');
+  assert.deepEqual([...tags[1]!.matchAll(/'([a-z_]+)'/g)].map((x) => x[1]), [...contentTags]);
 });
 
 test('veritabanındaki bölge listesi motorla aynı', () => {

@@ -1,6 +1,8 @@
 // Kayıt formlarının Türkçe etiketleri. Ölçekler @hooplab/engine'de, burada yalnız metin.
 
-import type { BodyRegion, BodySide, RpeAnchor, WellnessItem } from '@hooplab/engine';
+import type { BodyRegion, BodySide, ContentTag, RpeAnchor, SessionKind, WellnessItem } from '@hooplab/engine';
+
+export { sessionKinds, type SessionKind } from '@hooplab/engine';
 
 export const wellnessLabels: Record<WellnessItem, { title: string; low: string; high: string }> = {
   sleep_quality: { title: 'Uyku kalitesi', low: 'Çok kötü', high: 'Çok iyi' },
@@ -29,9 +31,6 @@ export const sideLabels: Record<BodySide, string> = {
   center: 'Orta',
 };
 
-export const sessionKinds = ['team_practice', 'game', 'shooting', 'strength', 'conditioning', 'mobility', 'rehab'] as const;
-export type SessionKind = (typeof sessionKinds)[number];
-
 export const sessionKindLabels: Record<SessionKind, string> = {
   team_practice: 'Takım antrenmanı',
   game: 'Maç',
@@ -40,6 +39,15 @@ export const sessionKindLabels: Record<SessionKind, string> = {
   shooting: 'Şut',
   mobility: 'Mobilite / yoga',
   rehab: 'Rehabilitasyon',
+};
+
+/** Seans içerik etiketleri (karar 0027): seansın hangi dokuları çalıştırdığı. */
+export const contentTagLabels: Record<ContentTag, string> = {
+  jump: 'Sıçrama / iniş',
+  cod: 'Yön değiştirme / ani duruş',
+  sprint: 'Sprint',
+  lower_strength: 'Alt vücut kuvvet',
+  upper_strength: 'Üst vücut kuvvet',
 };
 
 /** Değiştirilmiş CR-10'un sözel çapaları (Foster 2001; haddad-2017 tablo 1). 6, 8 ve 9'un karşılığı yok. */

@@ -20,7 +20,7 @@ Kod public ve MIT lisanslı. Başkası kendi Supabase ve Google Cloud hesabıyla
 |---|---|---|---|---|
 | 1 | **Toparlanma** | HRV, dinlenik nabız, uyku, solunum hızı, SpO2; sabah check-in | Kişisel banda göre günün durumu (yeşil / sarı / kırmızı) ve nedeni | 1 (temel), 2 |
 | 2 | **Antrenman yükü** | Seans türü, süre, RPE, oynanan dakika | Seans yükü, akut ve kronik yük, monotonluk; yük artışı uyarısı | 2 |
-| 3 | **Kas ve tendon yorgunluğu** (tahmin) | Seans içeriği (sıçrama, yön değiştirme, sprint, temas, kuvvet), bölgesel ağrı haritası | Bölge bazında tahmini yük ve toparlanma durumu; arayüzde "tahmin" etiketli | 2 |
+| 3 | **Kas ve tendon yorgunluğu** (tahmin) | Seans içeriği (sıçrama / iniş, yön değiştirme / ani duruş, sprint, alt / üst vücut kuvvet; temas alınmadı, [0027](decisions/0027-kas-tendon-bolge-yuku.md)), bölgesel ağrı haritası | Bölge bazında tahmini yük ve toparlanma durumu; arayüzde "tahmin" etiketli | 2 |
 | 4 | **Uyku** | Süre, düzen, evreler; maç ve seyahat takvimi | Uyku borcu, düzen sapmaları; maç öncesi ve seyahat önerileri | 2-3 |
 | 5 | **Beslenme** | Gün tipi (dinlenme / antrenman / maç), kilo, basit öğün kaydı | Günlük karbonhidrat ve protein hedefi (g/kg); düşük enerji yeterliliği uyarısı | 2 |
 | 6 | **Hidrasyon** | Antrenman öncesi ve sonrası tartı, içilen sıvı, süre | Ter oranı, antrenman sonrası sıvı hedefi; %2'den fazla kilo kaybı uyarısı | 2 |
@@ -36,7 +36,7 @@ Basketbola özgü odak: sıçrama yükü ve patellar / Aşil tendonu, ani duruş
 | Girdi | Ne zaman | Süre hedefi | Not |
 |---|---|---|---|
 | **Sabah check-in:** uyku kalitesi, yorgunluk, kas ağrısı, stres, ruh hali | Her sabah | 30 saniye | Hooper / McLean tipi öznel iyi oluş ölçeği; her madde 1-5, 5 = en iyi, toplam 5-25 ([0017](decisions/0017-sabah-check-in-olcegi.md)) |
-| **Seans kaydı:** tür (takım antrenmanı, maç, şut, kuvvet, kondisyon, mobilite / yoga, rehabilitasyon), süre, RPE (0-10), maçta oynanan dakika, içerik etiketleri | Her seanstan sonra | 30 saniye | Seans yükü = RPE × dakika. Saatin kaydettiği oturum Bugün ekranında "Saatten gelenler"de çıkar; gün ve süre saatten, tür ve RPE kullanıcıdan ([0020](decisions/0020-seans-etiketleme.md)) |
+| **Seans kaydı:** tür (takım antrenmanı, maç, şut, kuvvet, kondisyon, mobilite / yoga, rehabilitasyon), süre, RPE (0-10), maçta oynanan dakika, içerik etiketleri | Her seanstan sonra | 30 saniye | Seans yükü = RPE × dakika. Saatin kaydettiği oturum Bugün ekranında "Saatten gelenler"de çıkar; gün ve süre saatten, tür ve RPE kullanıcıdan ([0020](decisions/0020-seans-etiketleme.md)). İçerik etiketleri türe göre hazır seçili gelir ([0027](decisions/0027-kas-tendon-bolge-yuku.md)) |
 | **Ağrı haritası:** bölge ve taraf bazında 0-10 ağrı / sertlik (NRS) | Check-in içinde | 15 saniye | Bölgeler: baldır, Aşil, ayak bileği, patellar tendon, quadriceps, hamstring, adduktor, kalça, bel, omuz; bel dışında sol / sağ ayrı ([0017](decisions/0017-sabah-check-in-olcegi.md)) |
 | **Sabah kilo** | Her sabah (isteğe bağlı) | 5 saniye | |
 | **Ter testi:** öncesi / sonrası tartı, içilen sıvı | Ara sıra (farklı koşullarda) | 1 dakika | |

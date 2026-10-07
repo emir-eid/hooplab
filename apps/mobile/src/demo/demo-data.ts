@@ -2,7 +2,7 @@
 // yalnız ekranların üç durumu (Hazır / Kontrollü / Toparlan) inandırıcı göstermesi için seçildi.
 // Saf modül: veritabanı satırlarıyla aynı biçimde üretir, motor ve ekranlar gerçek veriyle aynı yoldan okur.
 
-import { addIsoDays, type WellnessAnswers } from '@hooplab/engine';
+import { addIsoDays, defaultContentTags, type ContentTag, type WellnessAnswers } from '@hooplab/engine';
 import type { DayState } from '@hooplab/theme';
 
 import type { TrainingSession } from '@/data/daily-log';
@@ -83,6 +83,10 @@ function historySessions(scenario: DemoScenario, today: string): TrainingSession
   const out: TrainingSession[] = [];
   const add = (daysAgo: number, kind: TrainingSession['kind'], durationMin: number, rpe: number, minutesPlayed: number | null = null) =>
     out.push({
+      // İçerik etiketleri (karar 0027): son iki haftada girilmiş; daha eskisi ve iki gün öncesi etiketsiz
+      // (sütundan önceki kayıtlar gibi), türün hazır etiketleriyle sayılır ve ekran bunu söyler.
+      contentTags: daysAgo >= 14 || daysAgo === 2 ? null : demoTags(kind, daysAgo),
+      startedAt: null,
       id: `demo-session-${daysAgo}-${kind}`,
       localDate: addIsoDays(today, -daysAgo),
       kind,
@@ -114,6 +118,12 @@ function historySessions(scenario: DemoScenario, today: string): TrainingSession
     if (day === 5) add(i, 'mobility', 30, 2); // maç ertesi
   }
   return out;
+}
+
+/** Girilmiş etiketler: türün hazır seçimi; haftada iki kuvvetten biri üst vücut da içerir. */
+function demoTags(kind: TrainingSession['kind'], daysAgo: number): ContentTag[] {
+  if (kind === 'strength' && daysAgo % 7 === 4) return ['lower_strength', 'upper_strength'];
+  return [...defaultContentTags[kind]];
 }
 
 /** Senaryo ve bugün için demo veritabanı. `now` yalnız senkron zaman damgası içindir. */
@@ -209,7 +219,9 @@ export function createDemoDb(scenario: DemoScenario, today: string, now: Date): 
       durationMin: 110,
       rpe: scenario === 'green' ? 6 : 7,
       minutesPlayed: null,
+      contentTags: ['jump', 'cod', 'sprint'],
       exerciseSessionId: 'demo-ex-yesterday-practice',
+      startedAt: at(yesterday, 10, 0),
     },
   ];
 

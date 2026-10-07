@@ -13,6 +13,8 @@ export interface BodyColors {
   painHigh: Hex;
   /** Çok günlü aralıkta "bu bölgede ağrı girildi" işareti (derece göstermez). */
   marked: Hex;
+  /** Bölge yükü görünümü: "toparlanma penceresinde çalıştı" (tahmin). Nötr ton; kırmızı ve risk anlamı yok. */
+  worked: Hex;
   /** Seçili bölgenin ton kaydığı renk (metin rengi). */
   selected: Hex;
   /** Zemin gölgesi ve opaklık çarpanı (koyu zeminde siyah gölge daha yoğun olmalı). */
@@ -32,6 +34,7 @@ export function bodyColors(palette: Palette): BodyColors {
     painLow: mix(palette.status.red, skin, 0.4),
     painHigh: red,
     marked: mix(palette.status.red, skin, 0.75),
+    worked: mix(palette.ink, skin, dark ? 0.62 : 0.55),
     selected: palette.ink,
     shadow: dark ? '#000000' : palette.ink,
     shadowStrength: dark ? 3 : 1,

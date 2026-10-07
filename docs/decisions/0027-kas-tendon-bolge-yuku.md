@@ -1,6 +1,6 @@
 # 0027. Kas ve tendon bölge yükü: içerik etiketleri, katsayısız eşleme, toparlanma penceresi, ağrı izleme
 
-- **Durum:** Kabul edildi (yöntem ve kaynaklar); motor ve arayüz sonraki blokta
+- **Durum:** Kabul edildi; yöntem ve kaynaklar 2026-10-07, motor ve arayüz 2026-10-07 (aşağıda Uygulama)
 - **Tarih:** 2026-10-07
 - **İlgili:** [0017](0017-sabah-check-in-olcegi.md), [0018](0018-vucut-gorunumu.md), [0025](0025-antrenman-yuku.md), [0026](0026-aciklama-sayfalari-ve-tur-rengi.md), PRODUCT modül 3 ve Vücut görünümü, ROADMAP Faz 2, `research/rules/bolge.json`
 
@@ -41,3 +41,11 @@ Kullanıcı üçünde de önerileni seçti: **A**, ağrı izleme modeli, türe g
 - Futbol ve voleybol kaynaklarının basketbola aktarımı varsayımdır.
 - Sonraki blok: migration (`training_sessions.content_tags`), motor (`packages/engine`), seans formunda etiket çipleri, Vücut görünümünde bölge yükü, açıklama sayfaları.
 - **Yeniden değerlendirme tetikleyicisi:** basketbolda bölgeye özgü yük ölçümünü (ör. sıçrama sayısı, ivmeölçer) sakatlık veya ağrıyla ilişkilendiren doğrulanmış bir çalışma; HoopLab'e sıçrama sayısı gibi doğrudan bir ölçüm girerse; not gerçek hissiyatla sürekli çelişirse.
+
+## Uygulama (2026-10-07)
+- **Veri:** `training_sessions.content_tags text[]`, izinli değerler CHECK ile (migration `seans_icerik_etiketleri`). `null` = girilmemiş (sütundan önceki kayıtlar), türün hazır etiketleri sayılır; boş dizi = "bu içeriklerin hiçbiri yoktu". pgTAP: `seans_icerik_etiketleri.test.sql`.
+- **Motor:** `packages/engine/src/region-load.ts` (`readRegionLoad`, `painNotes`); sabitler `rules/bolge.json` ile ve veritabanı CHECK'iyle `rules-sync` testinde eşleşir. Seans türleri motora taşındı (`sessionKinds`).
+- **Kıyas tanımı:** pencereden önceki 28 gün içinde kalan, aynı uzunluktaki bütün kayan pencerelerin ortalaması. Bu 28 günün hepsi kayıt geçmişinde değilse (ilk seans kaydından önceki günler bilinmiyor sayılır) "olağan" gösterilmez.
+- **Son yüklenme:** o günün bölgeyi çalıştıran seanslarının hepsinin saati biliniyorsa saat (bitişten bu yana), değilse gün.
+- **Ağrı izleme:** yalnız bugünkü check-in'den; ayak bileği ve bel için de 5 üstü kuralı geçerli, "dün yüklendi" kuralı yalnız modeldeki bölgelerde.
+- **Arayüz:** seans formunda "İçerik" çipleri (türe göre seçili). Vücut sekmesinde "Ağrı / Bölge yükü" anahtarı; bölge yükünde son 48-72 saatte çalışan bölgeler nötr gri tonla işaretlenir (kırmızı ölçekten ayrı, `bodyColors.worked`), listede yük, seans sayısı, son yüklenme ve olağan değer. Ağrı görünümünde not varsa "Ağrı izleme" kartı. Üç açıklama sayfası: bölge yükü, toparlanma penceresi, ağrı izleme (hepsi "Tahmin").

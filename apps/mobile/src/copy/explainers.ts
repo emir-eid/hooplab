@@ -1,4 +1,4 @@
-// Bugün ve Trend'deki ölçüm ve hesapların açıklamaları (karar 0026): dokununca açılan alt sayfanın metni.
+// Bugün, Trend ve Vücut'taki ölçüm ve hesapların açıklamaları (karar 0026, 0027): dokununca açılan alt sayfanın metni.
 // Her açıklama research/rules'taki kurallara bağlıdır; kaynaklar o kuralların kaynaklarından seçilir
 // (explainers.test.ts denetler). Sayılar motor sabitlerinden; metinde eşik uydurulmaz.
 
@@ -7,7 +7,10 @@ import {
   loadRatioRule,
   loadSpikeRule,
   loadWeek,
+  painMonitoringRule,
   recoveryBand,
+  regionComparison,
+  regionWindow,
   recoveryMinValues,
   shortSleep,
   wellnessScale,
@@ -204,6 +207,65 @@ export const explainers = {
     reference: "Foster'ın çalışmasında hastalıklar en çok gerilimle ilişkiliydi, ama eşikler kişiye özgüydü. Burada eşik yok; kendi geçmişinle karşılaştırma haftalar biriktikçe gelecek.",
     rules: ['yuk-monotonluk'],
     sources: ['foster-1998'],
+  },
+  regionLoad: {
+    title: 'Bölge yükü',
+    basis: 'estimate',
+    what: 'Bir bölgenin son 2-3 günde hangi seanslarla, ne kadar çalıştığı. Seansa işaretlediğin içerik (sıçrama, yön değiştirme, sprint, alt / üst vücut kuvvet) o içeriğin çalıştırdığı bölgelere eşlenir. Bölge yükü, o bölgeyi çalıştıran seansların yükleri toplamıdır (AU).',
+    read: [
+      'Eşleme: sıçrama / iniş → patellar tendon ve Aşil; yön değiştirme / ani duruş → quadriceps ve adduktor; sprint → hamstring, baldır ve Aşil; alt vücut kuvvet → quadriceps, hamstring ve kalça; üst vücut kuvvet → omuz.',
+      "Seans yükü bölgeler arasında bölünmez: sıçramalı bir maçın yükünün tamamı hem patellar tendona hem Aşil'e yazılır. Bu dokuya binen yük değil, o bölgeyi çalıştıran seansların yüküdür.",
+      `Yanındaki "olağan", kendi son ${regionComparison.days} gününde aynı uzunluktaki pencerelerin ortalaması. Eşik ve renk yok; yüksek değer risk demek değil.`,
+      'İçerik girmediğin seanslar türün hazır etiketleriyle sayılır; ekranda kaç seans olduğu yazar.',
+    ],
+    reference:
+      "Fizyolojik yük (ne kadar zorlandın) ile mekanik yük (hangi doku ne kadar çalıştı) ayrı şeyler; RPE × dakika ikincisini göstermez, bu yüzden içerik ayrıca işaretlenir. Eşlemeler basketbol, voleybol ve futbol çalışmalarından: sıçrama patellar tendonu ve Aşil'i, ani duruş quadricepsi, yön değiştirme adduktoru, sprint hamstring ve baldırı yükler. Sıçrama yükünün diz şikayetine nedensel etkisi ise bulunamamış: eşleme maruziyettir, risk değil.",
+    limits:
+      'Doku yükünü ölçmez; doğrulanmış bir ölçüm değil. Ayak bileği (burkulma çoğunlukla anlık bir travma) ve bel için kaynaklı bir eşleme yok; ikisi yalnız ağrı haritasında. Futbol ve voleybol bulgularının basketbola aktarımı bir varsayım.',
+    rules: ['bolge-icerik-etiketleri', 'bolge-esleme', 'bolge-yuku'],
+    sources: [
+      'vanrenterghem-2017',
+      'kalkhoven-2021',
+      'lian-2005',
+      'silbernagel-2007',
+      'harper-2022',
+      'serner-2019',
+      'danielsson-2020',
+      'finnern-2026',
+      'bache-mathiesen-2024',
+      'panagiotakis-2017',
+    ],
+  },
+  regionWindow: {
+    title: 'Toparlanma penceresi',
+    basis: 'estimate',
+    what: `Benzer bir yükten önce önerilen ara: tendonlarda (patellar tendon, Aşil) ${regionWindow.tendonHours} saat, kaslarda ${regionWindow.muscleHours} saat. Bu pencere içinde çalışmış bölge "toparlanıyor" olarak gösterilir.`,
+    read: [
+      `Elle girilen seansın saati yok; pencere takvim günüyle uygulanır: ${regionWindow.tendonHours} saat bugün ve dün, ${regionWindow.muscleHours} saat bugün ve önceki iki gün.`,
+      'Saatle eşleşen seansta son yüklenmeden bu yana geçen saat ayrıca yazılır.',
+      '"Toparlanıyor" hasar var demek değil; aynı bölgeye benzer bir yük için önerilen aranın henüz dolmadığını söyler.',
+    ],
+    reference:
+      'Güncel bir derleme çok sıçramalı yüklenmeden sonra tendonda yaklaşık 48 saat, eksantrik kas hasarında 72 saat veya daha uzun ara öneriyor. Tendonda kollajen yapımı egzersizden sonra yaklaşık 24 saatte zirve yapıp üç gün kadar yüksek kalıyor; maç sonrası kas hasarı belirteci (kreatin kinaz) 72 saate kadar normale dönüyor.',
+    limits: 'Süreler derleme düzeyinde kanıta dayanır ve kişiden kişiye çok değişir. Uyku ve beslenme hesaba girmez.',
+    rules: ['bolge-toparlanma-penceresi'],
+    sources: ['gabbett-2025', 'magnusson-2010', 'miller-2005', 'doeven-2018'],
+  },
+  painMonitoring: {
+    title: 'Ağrı izleme',
+    basis: 'estimate',
+    what: `Tendon rehabilitasyonunda kullanılan ağrı izleme modelinin sabah ağrısına uyarlanmışı. Bir bölgede sabah ağrısı ${painMonitoringRule.maxNrs}'in üstündeyse ya da bölge dün çalıştıysa ve bu sabahki ağrı dünkünden azalmadıysa not düşer.`,
+    read: [
+      `Modelde etkinlik sırasında ve sonrasında 10 üzerinden ${painMonitoringRule.maxNrs}'e kadar ağrı kabul edilebilir sayılır; ertesi sabah ağrının azalmış olması beklenir.`,
+      `Not yalnız bugünkü check-in'den çıkar. Dün ağrı yoksa yeni başlayan ağrı "azalmadı" sayılmaz; yalnız ${painMonitoringRule.maxNrs} sınırına bakılır.`,
+      'Not bir uyarı değil, bir dikkat işareti: o bölgeyi ve sonraki sabahları izlemeni söyler.',
+    ],
+    reference:
+      'Aşil ve patellar tendinopati rehabilitasyonunda kullanılan model; elit sporcularda da uygulanmış. HoopLab yalnız sabah ağrısını kaydettiği için model sabah değerine uyarlandı; bu uyarlama doğrulanmadı.',
+    limits: 'Tanı değil. Ağrı şiddetliyse, aniden başladıysa veya şişlikle geldiyse doktora ya da fizyoterapiste başvur.',
+    medical: true,
+    rules: ['bolge-agri-izleme'],
+    sources: ['silbernagel-2007', 'seidler-2025'],
   },
 } as const satisfies Record<string, Explainer>;
 

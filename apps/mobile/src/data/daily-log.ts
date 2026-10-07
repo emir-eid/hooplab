@@ -2,7 +2,7 @@
 // Erişimi RLS korur (karar 0015); user_id veritabanında oturumdan yazılır, istemci göndermez.
 // Demo modu açıksa her fonksiyon bellekteki demo deposuna gider (karar 0022).
 
-import { isCompleteWellness, wellnessItems, type WellnessAnswers } from '@hooplab/engine';
+import { isCompleteWellness, wellnessItems, type ContentTag, type WellnessAnswers } from '@hooplab/engine';
 
 import type { SessionKind } from '@/copy/labels';
 import { linkCandidates, pendingExercises, type ExerciseSession } from '@/data/exercise-tagging';
@@ -29,8 +29,12 @@ export interface TrainingSession {
   durationMin: number;
   rpe: number;
   minutesPlayed: number | null;
+  /** İçerik etiketleri (karar 0027); null = girilmemiş (eski kayıt), türün hazır etiketleri sayılır. */
+  contentTags: ContentTag[] | null;
   /** Eşleşen saat oturumu; yoksa seans yalnız elle girilmiştir. */
   exerciseSessionId: string | null;
+  /** Saat oturumundan gelen başlangıç (ISO); elle girilende null. */
+  startedAt: string | null;
 }
 
 export interface NewTrainingSession {
@@ -39,6 +43,7 @@ export interface NewTrainingSession {
   durationMin: number;
   rpe: number;
   minutesPlayed: number | null;
+  contentTags: ContentTag[];
   /** Saat oturumundan etiketleniyorsa: bağlanacak oturum ve başlangıç zamanı. */
   exercise?: Pick<ExerciseSession, 'id' | 'startTime'>;
 }
@@ -87,6 +92,7 @@ export async function insertSession(session: NewTrainingSession): Promise<Result
     duration_min: session.durationMin,
     rpe: session.rpe,
     minutes_played: session.kind === 'game' ? session.minutesPlayed : null,
+    content_tags: session.contentTags,
     exercise_session_id: session.exercise?.id ?? null,
     started_at: session.exercise?.startTime ?? null,
   });
@@ -101,10 +107,12 @@ interface SessionRow {
   duration_min: number;
   rpe: number;
   minutes_played: number | null;
+  content_tags: ContentTag[] | null;
   exercise_session_id: string | null;
+  started_at: string | null;
 }
 
-const sessionColumns = 'id, local_date, kind, duration_min, rpe, minutes_played, exercise_session_id';
+const sessionColumns = 'id, local_date, kind, duration_min, rpe, minutes_played, content_tags, exercise_session_id, started_at';
 
 function sessionFromRow(r: SessionRow): TrainingSession {
   return {
@@ -114,7 +122,9 @@ function sessionFromRow(r: SessionRow): TrainingSession {
     durationMin: r.duration_min,
     rpe: r.rpe,
     minutesPlayed: r.minutes_played,
+    contentTags: r.content_tags,
     exerciseSessionId: r.exercise_session_id,
+    startedAt: r.started_at,
   };
 }
 

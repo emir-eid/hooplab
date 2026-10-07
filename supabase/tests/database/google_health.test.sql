@@ -41,7 +41,9 @@ select is(
   '17 * * * *',
   'saatlik senkron işi kurulu'
 );
-select is(private.trigger_google_health_sync(), null, 'Vault''ta adres ve sır yoksa tetikleyici hiçbir şey yapmaz');
+-- Yerel kurulum (npm run setup -- --local) Vault'a değer yazmış olabilir; işlem sonunda geri alınır.
+delete from vault.secrets where name in ('project_url', 'ghealth_cron_secret');
+select is(private.trigger_google_health_sync(), null,'Vault''ta adres ve sır yoksa tetikleyici hiçbir şey yapmaz');
 select ok(
   not has_function_privilege('authenticated', 'private.trigger_google_health_sync()', 'execute')
   and not has_function_privilege('anon', 'private.trigger_google_health_sync()', 'execute'),
