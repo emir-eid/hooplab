@@ -39,6 +39,15 @@ const paths = {
   close: <Path d="M6 6l12 12M18 6L6 18" />,
   chevron: <Path d="M9 5l7 7-7 7" />,
   chevronBack: <Path d="M15 5l-7 7 7 7" />,
+  chevronDown: <Path d="M5 9l7 7 7-7" />,
+  drop: <Path d="M12 3.2c3.3 4 5.6 7.2 5.6 10.4a5.6 5.6 0 0 1-11.2 0C6.4 10.4 8.7 7.2 12 3.2z" />,
+  meal: (
+    <>
+      <Path d="M3.5 11.5h17a8.5 8.5 0 0 1-17 0z" />
+      <Path d="M8.5 8.2c0-1.3 1-1.5 1-2.8M12 8.2c0-1.3 1-1.5 1-2.8M15.5 8.2c0-1.3 1-1.5 1-2.8" />
+    </>
+  ),
+  trash: <Path d="M4.5 7h15M9.5 7V4.8h5V7M6.5 7l.9 12.2h9.2L17.5 7M10.2 10.5v5.5M13.8 10.5v5.5" />,
 } as const;
 
 export type IconName = keyof typeof paths;

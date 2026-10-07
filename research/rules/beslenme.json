@@ -18,12 +18,28 @@
       "notes": "Aralık ve öğün dozu basketbol derlemesinden (davis-2022: 1,2-2,0 g/kg/gün, 0,31 g/kg her 4-5 saatte; ortak bildirgeye, thomas-2016, dayanıyor). Bağımsız ISSN bildirgesi 1,4-2,0 veriyor (jager-2017). Meta-analizde 1,6 g/kg/gün üstü ek kas kazanımı getirmedi (morton-2018; güven aralığı geniş); açıklamada aralığın ortası olarak anılır, tavan değil. 0,31 yuvarlanarak 0,3."
     },
     {
+      "id": "ogun-besin-listesi",
+      "description": "Öğün kaydı sabit bir besin listesinden yapılır: her besinin ev ölçüsü (ör. 1 kase) ve gramı, 100 g'daki karbonhidrat ve proteini USDA FoodData Central'dan (SR Legacy), FDC kimliğiyle research/foods/foods.json'da. Porsiyon çarpanı 0,5 / 1 / 1,5 / 2 / 3; gramı kod hesaplar. Paketli ürün için etiketten elle karbonhidrat ve protein (gram). Serbest besin araması, kalori ve yapay zeka tahmini yok.",
+      "value": { "database": "FDC SR Legacy 2018-04", "foods_file": "research/foods/foods.json", "multipliers": [0.5, 1, 1.5, 2, 3], "custom_entry": true, "energy": false, "ai_estimate": false, "unit": "g" },
+      "applies_to": "öğün kaydı (Bugün → Beslenme → Öğün ekle)",
+      "sources": ["fukagawa-2022", "morello-2025", "gibson-2016", "wheeler-1996", "amoutzopoulos-2020", "goncalves-2026"],
+      "notes": "Değerler FDC'den betikle alınır ve FDC API'siyle yeniden doğrulanabilir (tools/research/foods-fdc.mjs --online); kaynak kamu malı (CC0). Doğrulanmış tek bir veritabanı, kullanıcı girişli veritabanlarından daha geçerli sonuç veriyor (morello-2025, dayanıklılık sporcuları). El ölçüsü (yumruk, avuç) şekilsiz besinde fazla tahmin ettiriyor ve kişiye göre değişiyor (gibson-2016, sporcu değil); değişim listesinde grup ortalaması tutsa da besinden besine sapma büyük (wheeler-1996). Ev ölçüsünün yanında gram gösterilir (amoutzopoulos-2020). Fotoğraftan yapay zeka tahmini diyetisyenden belirgin hatalı (goncalves-2026) ve CLAUDE.md §3'e aykırı. ABD besinleri Türk yemeklerine yaklaşık eşlenir; çarpanlar görsel seçim, eşik değil."
+    },
+    {
+      "id": "alim-hedef-kiyasi",
+      "description": "Günün kayıtlı karbonhidrat ve proteini gün hedefinin (karbonhidrat-gun-tipi, protein-gunluk) aralığıyla yan yana gösterilir: aralığın altında, içinde, üstünde. Değer 'Tahmin' etiketli; eşik ve uyarı yok. Bugün'de halka olarak gösterilir: içte kayıtlı miktar, dışta ince bir yayla hedef aralığı; renk yalnız kategoriyi söyler (karbonhidrat / protein), risk rengi yok (karar 0031). Öğünün proteini öğün dozuna (protein-gunluk: ≈ 0,3 g/kg) ulaştıysa öğün satırında belirtilir. Kilo yoksa kıyas yapılmaz, yalnız gram gösterilir.",
+      "value": { "label": "Tahmin", "risk_color": false, "category_color": true, "alert": false, "positions": ["below", "within", "above"], "per_meal_dose_from": "protein-gunluk" },
+      "applies_to": "Bugün → Beslenme (kayıtlı öğün varsa)",
+      "sources": ["capling-2017", "buck-2022", "amoutzopoulos-2020", "davis-2022"],
+      "notes": "Kayıt genellikle gerçek alımın altında kalır: sporcularda enerji ortalama %19 eksik bildiriliyor (capling-2017), eğitimli kişiler bile öğün karbonhidratını ortanca %28 eksik tahmin ediyor (buck-2022, tip 1 diyabet). Bu yüzden 'aralığın altında' kayıt eksikliği de olabilir ve bir uyarı değildir. Öğün dozu davis-2022'den (protein-gunluk); tek öğünün dozu aşmaması bir hata değil."
+    },
+    {
       "id": "enerji-yeterliligi",
-      "description": "Düşük enerji yeterliliği (REDs) hesaplanmaz ve otomatik uyarı verilmez: enerji alımı ve yağsız kütle kaydedilmiyor. Hedef sayfasında REDs anlatılır ve belirtilerde sağlık ekibine yönlendirilir. Sabah kilosu eşiksiz trend olarak gösterilir.",
-      "value": { "computed": false, "alert": false, "weight_trend_threshold": null },
+      "description": "Düşük enerji yeterliliği (REDs) hesaplanmaz ve otomatik uyarı verilmez: öğün kaydı yalnız karbonhidrat ve protein tutar (enerji yok), egzersiz harcaması ve yağsız kütle ölçülmez, kayıt gerçek alımın altında kalabilir. Hedef sayfasında REDs anlatılır ve belirtilerde sağlık ekibine yönlendirilir. Sabah kilosu eşiksiz trend olarak gösterilir.",
+      "value": { "computed": false, "alert": false, "weight_trend_threshold": null, "intake_based_note": false },
       "applies_to": "beslenme hedefi sayfası ve açıklaması",
-      "sources": ["mountjoy-2023"],
-      "notes": "IOC 2023 konsensüsü REDs'i egzersiz harcamasına göre yetersiz enerji alımının sonuçları olarak tanımlıyor; tanı klinik bir araçla (CAT2) klinisyen tarafından konuyor (mountjoy-2023). Konsensüsün tam metnine erişilemedi; eşik kullanılmadı. Öğün kaydı geldiğinde (karar 0029) yeniden değerlendirilir. CLAUDE.md §3 tıbbi sınır: tanı yok."
+      "sources": ["mountjoy-2023", "ackerman-2023", "capling-2017"],
+      "notes": "IOC 2023 konsensüsü REDs'i egzersiz harcamasına göre yetersiz enerji alımının sonuçları olarak tanımlıyor; tanı klinik bir araçla (CAT2) klinisyen tarafından konuyor (mountjoy-2023). Enerji yeterliliği için alım, egzersiz harcaması ve yağsız kütle gerekir; IOC alt grubu bunların ölçümünün araştırmada bile standart olmadığını yazıyor (ackerman-2023). Sporcuların bildirdiği enerji alımı ortalama %19 eksik (capling-2017). Öğün kaydı eklendiğinde (karar 0030) yeniden değerlendirildi: uyarı ve alıma dayalı not yine yok. Konsensüsün tam metnine erişilemedi; eşik kullanılmadı. CLAUDE.md §3 tıbbi sınır: tanı yok."
     }
   ]
 }

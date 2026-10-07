@@ -80,6 +80,8 @@ function RootNavigator() {
           <Stack.Screen name="checkin" options={{ presentation: 'modal' }} />
           <Stack.Screen name="session-new" options={{ presentation: 'modal' }} />
           <Stack.Screen name="weight" options={{ presentation: 'modal' }} />
+          <Stack.Screen name="meal-new" options={{ presentation: 'modal' }} />
+          <Stack.Screen name="water" options={{ presentation: 'modal' }} />
           <Stack.Screen name="recovery-method" />
           <Stack.Screen
             name="explain/[id]"

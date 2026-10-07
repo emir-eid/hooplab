@@ -64,9 +64,11 @@ interface ListRowProps {
   /** Sağdaki kontrol (ör. Switch). Verilirse satır dokunulabilir olmaz. */
   accessory?: ReactNode;
   onPress?: () => void;
+  /** Açılır satır: kapalıyken ok sağa, açıkken aşağı bakar; ekran okuyucuya açık / kapalı söylenir. */
+  expanded?: boolean;
 }
 
-export function ListRow({ label, detail, value, accessory, onPress }: ListRowProps) {
+export function ListRow({ label, detail, value, accessory, onPress, expanded }: ListRowProps) {
   const palette = usePalette();
   const content = (
     <>
@@ -84,7 +86,9 @@ export function ListRow({ label, detail, value, accessory, onPress }: ListRowPro
       {accessory ? <View>{accessory}</View> : (
         <View style={styles.value}>
           {value ? <Text variant="subhead" tone="inkMuted">{value}</Text> : null}
-          {onPress ? <Icon name="chevron" color={palette.inkMuted} size={16} strokeWidth={2.2} /> : null}
+          {onPress ? (
+            <Icon name={expanded ? 'chevronDown' : 'chevron'} color={palette.inkMuted} size={16} strokeWidth={2.2} />
+          ) : null}
         </View>
       )}
     </>
@@ -96,6 +100,7 @@ export function ListRow({ label, detail, value, accessory, onPress }: ListRowPro
     <Pressable
       onPress={onPress}
       accessibilityRole="button"
+      accessibilityState={expanded === undefined ? undefined : { expanded }}
       accessibilityLabel={detail ? `${label}, ${detail}` : undefined}
       accessibilityHint={value && !detail ? `Şu an: ${value}` : undefined}
       style={({ pressed }) => [styles.row, pressed && { backgroundColor: palette.cardMuted }]}>

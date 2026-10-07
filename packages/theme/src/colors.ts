@@ -17,6 +17,13 @@ type ByState<T> = Record<DayState, T>;
  */
 export type LoadGroup = 'game' | 'court' | 'gym' | 'light';
 export const loadGroups = ['game', 'court', 'gym', 'light'] as const satisfies readonly LoadGroup[];
+
+/**
+ * Bugün'deki beslenme göstergeleri (karar 0031): karbonhidrat, protein, su. Kategorik renk, risk anlamı taşımaz;
+ * durum renkleri (yeşil / sarı / kırmızı) ve turuncu bu yüzden kullanılmaz (turuncu, durum kırmızısıyla karışıyor).
+ */
+export type Nutrient = 'carbs' | 'protein' | 'water';
+export const nutrients = ['carbs', 'protein', 'water'] as const satisfies readonly Nutrient[];
 type AuraColors = readonly [Hex, Hex, Hex];
 
 export interface BasePalette {
@@ -66,6 +73,14 @@ export interface BasePalette {
    * kart zemininde denetlendi (karar 0026). Yanında her zaman açıklama satırı olur; renk tek başına anlam taşımaz.
    */
   loadGroup: Record<LoadGroup, Hex>;
+  /**
+   * Beslenme göstergeleri (karbonhidrat, protein, su). Makette yok; dataviz doğrulayıcısıyla kart zemininde, üçü
+   * birlikte (tüm çiftler) denetlendi (karar 0031). Değerler yük grubunun doğrulanmış tonları; yanında her zaman ad ve sayı.
+   */
+  nutrient: Record<Nutrient, Hex>;
+  /** Kaydırarak silmedeki eylem zemini ve üstündeki yazı (iOS yıkıcı eylem). Makette yok; en az 4,5:1 (karar 0031). */
+  destructive: Hex;
+  onDestructive: Hex;
   /** Hale lekelerinin renkleri (3 leke) ve katman opaklığı. */
   aura: { opacity: number; colors: ByState<AuraColors> };
   /** boxShadow dizeleri (RN 0.76+ web sözdizimi). */
@@ -129,6 +144,9 @@ const light: BasePalette = {
   status: { green: '#1FA874', yellow: '#E8930C', red: '#E8492F' },
   statusInk: { green: '#077A52', yellow: '#9A6004', red: '#C82709' },
   loadGroup: { game: '#D6528F', court: '#2A78D6', gym: '#4A3AA7', light: '#8B8E95' },
+  nutrient: { carbs: '#D6528F', protein: '#4A3AA7', water: '#2A78D6' },
+  destructive: '#C82709',
+  onDestructive: '#FFFFFF',
   aura: {
     opacity: 0.95,
     colors: {
@@ -169,6 +187,9 @@ const dark: BasePalette = {
   status: { green: '#3CCB92', yellow: '#FFAE33', red: '#FF6B52' },
   statusInk: { green: '#3CCB92', yellow: '#FFAE33', red: '#FF6B52' },
   loadGroup: { game: '#D9539A', court: '#3B9AE6', gym: '#7D55D9', light: '#7D8088' },
+  nutrient: { carbs: '#D9539A', protein: '#7D55D9', water: '#3B9AE6' },
+  destructive: '#C9311A',
+  onDestructive: '#FFFFFF',
   aura: {
     opacity: 0.5,
     colors: {

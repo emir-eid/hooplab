@@ -62,3 +62,5 @@ Hangisi seçildi ve tek paragrafta neden.
 | [0027](0027-kas-tendon-bolge-yuku.md) | Kas ve tendon bölge yükü: içerik etiketleri, katsayısız eşleme, toparlanma penceresi (tendon 48, kas 72 saat), ağrı izleme | Kabul edildi |
 | [0028](0028-solunum-ve-checkin-kisisel.md) | Solunum ve check-in için kişisel kıyas: solunum bandı ve tek gece notu (+3 nefes/dk), check-in z-skoru (≤ −1 not); günün durumuna girmez | Kabul edildi |
 | [0029](0029-beslenme-ve-hidrasyon.md) | Beslenme ve hidrasyon: gün tipine göre karbonhidrat (3-5 / 5-7 / 8-10 g/kg), protein 1,2-2,0 g/kg, seansa bağlı ter testi (%2 kayıp, kilo artışı notu, sıvı hedefi); REDs için uyarı yok | Kabul edildi |
+| [0030](0030-ogun-kaydi.md) | Öğün kaydı: FDC'den sabit besin listesi (ev ölçüsü, gram) ve etiketten gram; alım hedef aralığa yerleştirilir (tahmin, renksiz); REDs için yine uyarı yok | Kabul edildi |
+| [0031](0031-su-kaydi-ve-renkli-bugun.md) | Su kaydı (hedefsiz, + ve Bugün'den hızlı ekleme), Bugün'de beslenme halkaları ve kategori rengi (karbonhidrat / protein / su), kaydırarak silme | Kabul edildi |

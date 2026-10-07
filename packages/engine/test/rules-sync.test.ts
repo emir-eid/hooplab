@@ -9,9 +9,14 @@ import {
   bodyRegions,
   carbTargets,
   dayTypes,
+  fluidEntryLimits,
+  fluidQuickAddMl,
   fluidTargetRule,
   gainNoteRule,
   highDayRule,
+  mealLimits,
+  mealSlots,
+  portionMultipliers,
   lossNoteRule,
   proteinTarget,
   sweatInputLimits,
@@ -143,6 +148,41 @@ test('veritabanındaki kilo, gün tipi ve ter testi giriş aralıkları motorla 
   const m = migrations.match(/check \(day_type in \(([^)]*)\)\)/);
   assert.ok(m, 'day_type CHECK bulunamadı');
   assert.deepEqual([...m[1]!.matchAll(/'([a-z_]+)'/g)].map((x) => x[1]), [...dayTypes]);
+});
+
+test('öğün kaydı kuralla ve veritabanıyla aynı (karar 0030)', () => {
+  const list = rule('beslenme.json', 'ogun-besin-listesi').value;
+  assert.deepEqual(list.multipliers, [...portionMultipliers]);
+  assert.equal(list.foods_file, 'research/foods/foods.json');
+  assert.equal(list.energy, false);
+  assert.equal(list.ai_estimate, false);
+  const cmp = rule('beslenme.json', 'alim-hedef-kiyasi').value;
+  assert.equal(cmp.risk_color, false);
+  assert.equal(cmp.category_color, true);
+  assert.equal(cmp.alert, false);
+  assert.equal(cmp.per_meal_dose_from, 'protein-gunluk');
+  assert.equal(rule('beslenme.json', 'enerji-yeterliligi').value.intake_based_note, false);
+
+  const m = migrations.match(/check \(slot in \(([^)]*)\)\)/);
+  assert.ok(m, 'meals.slot CHECK bulunamadı');
+  assert.deepEqual([...m[1]!.matchAll(/'([a-z_]+)'/g)].map((x) => x[1]), [...mealSlots]);
+  for (const fragment of [
+    `'portions')::numeric in (${portionMultipliers.join(', ')})`,
+    `jsonb_array_length(items) between 1 and ${mealLimits.items}`,
+    `'carbs_g')::numeric between 0 and ${mealLimits.customGramsMax}`,
+    `'protein_g')::numeric between 0 and ${mealLimits.customGramsMax}`,
+    `length(e.item ->> 'label'), 0) <= ${mealLimits.labelMax}`,
+  ]) {
+    assert.ok(migrations.includes(fragment), `migration'da yok: ${fragment}`);
+  }
+});
+
+test('su kaydı kuralla ve veritabanıyla aynı (karar 0031)', () => {
+  const v = rule('hidrasyon.json', 'sivi-alim-kaydi').value;
+  assert.equal(v.daily_target, null);
+  assert.equal(v.alert, false);
+  assert.deepEqual(v.quick_add_ml, [...fluidQuickAddMl]);
+  assert.ok(migrations.includes(`volume_ml between ${fluidEntryLimits.minMl} and ${fluidEntryLimits.maxMl}`));
 });
 
 test('günün durumu birleşimi kuralla aynı', () => {

@@ -69,3 +69,20 @@ export function sweatTest(input: SweatTestInput): SweatTestResult | null {
       lostKg > 0 ? [round(lostKg * fluidTargetRule.litersPerKgLost[0], 1), round(lostKg * fluidTargetRule.litersPerKgLost[1], 1)] : null,
   };
 }
+
+// --- Su kaydı (karar 0031, rules/hidrasyon.json → sivi-alim-kaydi): hedefsiz; yalnız günün toplamı. ---
+
+/** rules/hidrasyon.json → sivi-alim-kaydi: hızlı ekleme miktarları (mL); kolaylık, eşik değil. */
+export const fluidQuickAddMl = [250, 500, 750] as const;
+
+/** Tek içiş girişi sınırı (mL); veritabanı CHECK'iyle aynı, bilimsel eşik değil. */
+export const fluidEntryLimits = { minMl: 50, maxMl: 2000 } as const;
+
+export function isValidFluidMl(ml: number): boolean {
+  return Number.isInteger(ml) && ml >= fluidEntryLimits.minMl && ml <= fluidEntryLimits.maxMl;
+}
+
+/** Günün içtiği sıvı (L); geçersiz girişler sayılmaz. Hedefle kıyaslanmaz. */
+export function dayFluidL(entries: readonly { ml: number }[]): number {
+  return entries.reduce((sum, e) => (isValidFluidMl(e.ml) ? sum + e.ml : sum), 0) / 1000;
+}

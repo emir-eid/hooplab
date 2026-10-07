@@ -8,6 +8,7 @@ import type { DayState } from '@hooplab/theme';
 import type { TrainingSession } from '@/data/daily-log';
 import type { ExerciseSession } from '@/data/exercise-tagging';
 import type { SyncStatusRow } from '@/data/google-health-status';
+import type { FluidRow, MealRow } from '@/data/nutrition-view';
 import type { HealthDailyRow, SleepRow } from '@/data/recovery-view';
 
 export type DemoScenario = DayState;
@@ -36,6 +37,10 @@ export interface DemoDb {
   weights: { local_date: string; weight_kg: number }[];
   /** Gün tipi düzeltmeleri; başta boş. */
   dayTypes: Record<string, DayType>;
+  /** Sentetik öğünler (karar 0030): bugün kahvaltı, dün üç öğün; satır biçiminde. */
+  meals: MealRow[];
+  /** Sentetik içişler (karar 0031): bugün sabah üç içiş. */
+  fluids: FluidRow[];
   syncStatus: SyncStatusRow;
 }
 
@@ -244,6 +249,45 @@ export function createDemoDb(scenario: DemoScenario, today: string, now: Date): 
     weights.push({ local_date: addIsoDays(today, -i), weight_kg: Math.round((92.2 + 0.4 * noise(wr)) * 10) / 10 });
   }
 
+  // Öğünler: bugün kahvaltı ve ara öğün (alım hedefin altında görünsün), dün üç öğün (tekrar listesi dolsun).
+  const meals: MealRow[] = [
+    {
+      id: 'demo-meal-1',
+      local_date: yesterday,
+      slot: 'breakfast',
+      created_at: at(yesterday, 6, 0),
+      items: [{ food: 'yulaf', portions: 2 }, { food: 'sut', portions: 1 }, { food: 'muz', portions: 1 }, { food: 'yumurta', portions: 2 }],
+    },
+    {
+      id: 'demo-meal-2',
+      local_date: yesterday,
+      slot: 'lunch',
+      created_at: at(yesterday, 10, 0),
+      items: [{ food: 'pilav-pirinc', portions: 2 }, { food: 'tavuk-gogsu', portions: 2 }, { food: 'yogurt', portions: 1 }],
+    },
+    {
+      id: 'demo-meal-3',
+      local_date: yesterday,
+      slot: 'dinner',
+      created_at: at(yesterday, 16, 0),
+      items: [{ food: 'makarna', portions: 2 }, { food: 'kofte', portions: 1.5 }, { food: 'ekmek-tam', portions: 1 }],
+    },
+    {
+      id: 'demo-meal-4',
+      local_date: today,
+      slot: 'breakfast',
+      created_at: at(today, 5, 0),
+      items: [{ food: 'yulaf', portions: 2 }, { food: 'sut', portions: 1 }, { food: 'muz', portions: 1 }, { food: 'yumurta', portions: 2 }],
+    },
+    {
+      id: 'demo-meal-5',
+      local_date: today,
+      slot: 'snack',
+      created_at: at(today, 7, 0),
+      items: [{ label: 'Protein bar', carbs_g: 24, protein_g: 20 }],
+    },
+  ];
+
   const connectedAt = new Date(now.getTime() - 2 * 86_400_000).toISOString();
   return {
     healthDaily,
@@ -254,6 +298,12 @@ export function createDemoDb(scenario: DemoScenario, today: string, now: Date): 
     exercises,
     weights,
     dayTypes: {},
+    meals,
+    fluids: [
+      { id: 'demo-fluid-1', local_date: today, volume_ml: 500, created_at: at(today, 5, 0) },
+      { id: 'demo-fluid-2', local_date: today, volume_ml: 250, created_at: at(today, 6, 30) },
+      { id: 'demo-fluid-3', local_date: today, volume_ml: 750, created_at: at(today, 8, 0) },
+    ],
     syncStatus: {
       state: 'connected',
       connected_at: connectedAt,

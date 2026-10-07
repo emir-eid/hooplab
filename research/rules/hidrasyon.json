@@ -32,6 +32,14 @@
       "applies_to": "ter testinde net kilo kaybı varsa",
       "sources": ["mcdermott-2017", "davis-2022"],
       "notes": "NATA: 4 saatten kısa toparlanmada kaybın %100-150'si (mcdermott-2017). Basketbol derlemesi: kısa arada kg başına 1,0-1,5 L, 24 saat ve üstünde öğünlerle istendiği kadar (davis-2022). Aradaki (4-24 saat) için iki kaynak da sayı vermiyor; HoopLab 4 saatten uzun her arada öğünlerle içmeyi söyler. Sonraki seansa kalan süre bilinmediği için sonuçta iki durum da yazılır (kısa ara: L aralığı; uzun ara: öğünlerle)."
+    },
+    {
+      "id": "sivi-alim-kaydi",
+      "description": "Gün içinde içilen sıvı hedefsiz kaydedilir: hızlı ekleme 250 / 500 / 750 mL ya da elle mL. Bugün'de günün toplamı (L) gösterilir; o gün ter testi yapıldıysa seans sonrası sıvı hedefi (sivi-hedefi) yanında yazar. Günlük sabit bir su hedefi, renk ya da uyarı yok.",
+      "value": { "daily_target": null, "quick_add_ml": [250, 500, 750], "alert": false, "unit": "mL" },
+      "applies_to": "su kaydı (+ → Su, Bugün → Beslenme)",
+      "sources": ["sawka-2007", "mcdermott-2017"],
+      "notes": "Ter oranı ve elektrolit kaybı kişiden kişiye çok değiştiği için bildirgeler kişisel bir sıvı planı öneriyor (sawka-2007); ter oranını bilmeyen biri için susadıkça içmek fazla içmeyi önleyen güvenli yol (mcdermott-2017). Genel nüfus için verilen günlük su değerleri sporcuya özgü değil (CLAUDE.md §3: popülasyon referansı yalnız sporcu kaynağıyla), bu yüzden hedef olarak kullanılmadı. Hızlı ekleme miktarları bardak / şişe kolaylığı, bilimsel eşik değil."
     }
   ]
 }

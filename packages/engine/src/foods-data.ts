@@ -1,0 +1,42 @@
+// OTOMATİK ÜRETİLDİ: node tools/research/foods-fdc.mjs. Elle değiştirme; kaynak research/foods/foods.json
+// (USDA FoodData Central, SR Legacy (FoodData_Central_sr_legacy_food_csv_2018-04), CC0 1.0). Karar 0030, rules/beslenme.json → ogun-besin-listesi.
+
+import type { Food } from './meals.ts';
+
+export const foods: readonly Food[] = [
+  { id: 'ekmek-beyaz', name: 'Beyaz ekmek', group: 'grain', fdcId: 174924, portionLabel: '1 dilim', portionGrams: 29, carbsPer100g: 49.42, proteinPer100g: 8.85 },
+  { id: 'ekmek-tam', name: 'Tam buğday ekmeği', group: 'grain', fdcId: 172688, portionLabel: '1 dilim', portionGrams: 32, carbsPer100g: 42.71, proteinPer100g: 12.45 },
+  { id: 'lavas', name: 'Lavaş / dürüm', group: 'grain', fdcId: 175037, portionLabel: '1 adet', portionGrams: 48, carbsPer100g: 49.38, proteinPer100g: 8.2 },
+  { id: 'pilav-pirinc', name: 'Pirinç pilavı', group: 'grain', fdcId: 168878, portionLabel: '1 kase', portionGrams: 158, carbsPer100g: 28.17, proteinPer100g: 2.69 },
+  { id: 'pilav-esmer', name: 'Esmer pirinç', group: 'grain', fdcId: 169704, portionLabel: '1 kase', portionGrams: 202, carbsPer100g: 25.58, proteinPer100g: 2.74 },
+  { id: 'bulgur', name: 'Bulgur pilavı', group: 'grain', fdcId: 170287, portionLabel: '1 kase', portionGrams: 182, carbsPer100g: 18.58, proteinPer100g: 3.08 },
+  { id: 'makarna', name: 'Makarna', group: 'grain', fdcId: 169737, portionLabel: '1 kase', portionGrams: 124, carbsPer100g: 30.86, proteinPer100g: 5.8 },
+  { id: 'patates', name: 'Haşlanmış patates', group: 'grain', fdcId: 170440, portionLabel: '1 orta boy', portionGrams: 167, carbsPer100g: 20.01, proteinPer100g: 1.71 },
+  { id: 'yulaf', name: 'Yulaf ezmesi (kuru)', group: 'grain', fdcId: 173904, portionLabel: '1/3 kase', portionGrams: 27, carbsPer100g: 67.7, proteinPer100g: 13.15 },
+  { id: 'mercimek', name: 'Mercimek (pişmiş)', group: 'legume', fdcId: 172421, portionLabel: '1 kase', portionGrams: 198, carbsPer100g: 20.13, proteinPer100g: 9.02 },
+  { id: 'nohut', name: 'Nohut (pişmiş)', group: 'legume', fdcId: 173757, portionLabel: '1 kase', portionGrams: 164, carbsPer100g: 27.42, proteinPer100g: 8.86 },
+  { id: 'kuru-fasulye', name: 'Kuru fasulye (pişmiş)', group: 'legume', fdcId: 175203, portionLabel: '1 kase', portionGrams: 179, carbsPer100g: 25.09, proteinPer100g: 9.73 },
+  { id: 'muz', name: 'Muz', group: 'fruit', fdcId: 173944, portionLabel: '1 orta boy', portionGrams: 118, carbsPer100g: 22.84, proteinPer100g: 1.09 },
+  { id: 'elma', name: 'Elma', group: 'fruit', fdcId: 171688, portionLabel: '1 orta boy', portionGrams: 182, carbsPer100g: 13.81, proteinPer100g: 0.26 },
+  { id: 'hurma', name: 'Hurma', group: 'fruit', fdcId: 168191, portionLabel: '1 adet', portionGrams: 24, carbsPer100g: 74.97, proteinPer100g: 1.81 },
+  { id: 'kuru-uzum', name: 'Kuru üzüm', group: 'fruit', fdcId: 168165, portionLabel: '1 küçük paket', portionGrams: 43, carbsPer100g: 79.32, proteinPer100g: 3.3 },
+  { id: 'bal', name: 'Bal', group: 'fruit', fdcId: 169640, portionLabel: '1 yemek kaşığı', portionGrams: 21, carbsPer100g: 82.4, proteinPer100g: 0.3 },
+  { id: 'portakal-suyu', name: 'Portakal suyu', group: 'fruit', fdcId: 169098, portionLabel: '1 bardak', portionGrams: 248, carbsPer100g: 10.4, proteinPer100g: 0.7 },
+  { id: 'spor-icecegi', name: 'Spor içeceği', group: 'fruit', fdcId: 173660, portionLabel: '1 şişe', portionGrams: 609, carbsPer100g: 6.43, proteinPer100g: 0 },
+  { id: 'yumurta', name: 'Yumurta', group: 'protein', fdcId: 173424, portionLabel: '1 büyük', portionGrams: 50, carbsPer100g: 1.12, proteinPer100g: 12.58 },
+  { id: 'tavuk-gogsu', name: 'Tavuk göğsü', group: 'protein', fdcId: 171477, portionLabel: '1/2 göğüs', portionGrams: 86, carbsPer100g: 0, proteinPer100g: 31.02 },
+  { id: 'hindi-gogsu', name: 'Hindi göğsü', group: 'protein', fdcId: 174516, portionLabel: '1 porsiyon', portionGrams: 85, carbsPer100g: 0, proteinPer100g: 29.51 },
+  { id: 'kofte', name: 'Köfte / kıyma', group: 'protein', fdcId: 174032, portionLabel: '1 porsiyon', portionGrams: 85, carbsPer100g: 0, proteinPer100g: 25.93 },
+  { id: 'somon', name: 'Somon', group: 'protein', fdcId: 175168, portionLabel: '1 porsiyon', portionGrams: 85, carbsPer100g: 0, proteinPer100g: 22.1 },
+  { id: 'levrek', name: 'Levrek', group: 'protein', fdcId: 173694, portionLabel: '1 fileto', portionGrams: 101, carbsPer100g: 0, proteinPer100g: 23.63 },
+  { id: 'ton-baligi', name: 'Ton balığı (konserve)', group: 'protein', fdcId: 173709, portionLabel: '1 kutu', portionGrams: 165, carbsPer100g: 0, proteinPer100g: 19.44 },
+  { id: 'beyaz-peynir', name: 'Beyaz peynir', group: 'dairy', fdcId: 173420, portionLabel: '1 dilim', portionGrams: 28.35, carbsPer100g: 3.88, proteinPer100g: 14.21 },
+  { id: 'kasar', name: 'Kaşar', group: 'dairy', fdcId: 173414, portionLabel: '1 dilim', portionGrams: 28.35, carbsPer100g: 3.37, proteinPer100g: 22.87 },
+  { id: 'yogurt', name: 'Yoğurt', group: 'dairy', fdcId: 171284, portionLabel: '1 kase', portionGrams: 245, carbsPer100g: 4.66, proteinPer100g: 3.47 },
+  { id: 'suzme-yogurt', name: 'Süzme yoğurt (yağsız)', group: 'dairy', fdcId: 170894, portionLabel: '1 kap', portionGrams: 170, carbsPer100g: 3.6, proteinPer100g: 10.19 },
+  { id: 'sut', name: 'Süt', group: 'dairy', fdcId: 171265, portionLabel: '1 bardak', portionGrams: 244, carbsPer100g: 4.8, proteinPer100g: 3.15 },
+  { id: 'lor', name: 'Lor peyniri', group: 'dairy', fdcId: 172182, portionLabel: '1 porsiyon', portionGrams: 113, carbsPer100g: 4.76, proteinPer100g: 10.45 },
+  { id: 'fistik-ezmesi', name: 'Fıstık ezmesi', group: 'nut', fdcId: 172470, portionLabel: '2 yemek kaşığı', portionGrams: 32, carbsPer100g: 22.31, proteinPer100g: 22.21 },
+  { id: 'badem', name: 'Badem', group: 'nut', fdcId: 170567, portionLabel: '1 avuç (23 tane)', portionGrams: 28.35, carbsPer100g: 21.55, proteinPer100g: 21.15 },
+  { id: 'ceviz', name: 'Ceviz', group: 'nut', fdcId: 170187, portionLabel: '7 bütün', portionGrams: 28, carbsPer100g: 13.71, proteinPer100g: 15.23 },
+];

@@ -3,7 +3,7 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
 
-import { addIsoDays, inferDayType, nutritionTargets, sweatTest, targetWeight } from '../src/index.ts';
+import { addIsoDays, dayFluidL, inferDayType, isValidFluidMl, nutritionTargets, sweatTest, targetWeight } from '../src/index.ts';
 
 const today = '2026-10-31';
 
@@ -75,4 +75,12 @@ test('ter testi: geçersiz girdi null döner', () => {
   assert.equal(sweatTest({ ...ok, fluidL: 11 }), null);
   assert.equal(sweatTest({ ...ok, urineL: 6 }), null);
   assert.equal(sweatTest({ ...ok, durationMin: 0 }), null);
+});
+
+test('su: günün toplamı litre, geçersiz giriş sayılmaz (karar 0031)', () => {
+  assert.equal(dayFluidL([{ ml: 500 }, { ml: 250 }, { ml: 750 }]), 1.5);
+  assert.equal(dayFluidL([{ ml: 20 }, { ml: 500.5 }, { ml: 500 }]), 0.5);
+  assert.equal(dayFluidL([]), 0);
+  assert.equal(isValidFluidMl(2000), true);
+  assert.equal(isValidFluidMl(2001), false);
 });

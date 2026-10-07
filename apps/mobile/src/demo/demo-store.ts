@@ -1,7 +1,7 @@
 // Demo modunun bellekteki veritabanı (karar 0022): veri fonksiyonlarıyla aynı imzalar, ağ yok.
 // Kayıtlar (check-in, seans, etiketleme) yalnız bellekte; uygulama kapanınca veya senaryo değişince sıfırlanır.
 
-import { addIsoDays, checkinBaseline, readCheckin, type CheckinReading, type DayType } from '@hooplab/engine';
+import { addIsoDays, checkinBaseline, readCheckin, type CheckinReading, type DayType, type Meal } from '@hooplab/engine';
 
 import type { Checkin, ExerciseToTag, NewTrainingSession, Result, TrainingSession } from '@/data/daily-log';
 import { linkCandidates, pendingExercises, type ExerciseSession } from '@/data/exercise-tagging';
@@ -9,7 +9,8 @@ import type { SyncStatusRow } from '@/data/google-health-status';
 import { buildPainHistory, type PainHistory } from '@/data/pain-history';
 import { painEntries, painMapFromRows } from '@/data/pain-map';
 import { buildRecoveryView, recoveryFrom, type RecoveryView } from '@/data/recovery-view';
-import { buildNutritionView, weightFrom, type NutritionView } from '@/data/nutrition-view';
+import type { MealInput } from '@/data/nutrition';
+import { buildNutritionView, distinctRecent, recentMealDays, toMeals, toStoredItems, weightFrom, type NutritionView } from '@/data/nutrition-view';
 import { buildRegionLoadView, regionFrom, type RegionLoadView } from '@/data/region-load-view';
 import { buildTrainingLoadView, loadChartDays, type TrainingLoadView } from '@/data/training-load-view';
 import { createDemoDb, type DemoDb, type DemoScenario } from '@/demo/demo-data';
@@ -151,7 +152,47 @@ export class DemoStore {
     const from = weightFrom(today);
     const weights = this.db.weights.filter((w) => w.local_date >= from && w.local_date <= today);
     const sessions = this.db.sessions.filter((s) => s.localDate === today);
-    return ok(buildNutritionView(today, weights, sessions, this.db.dayTypes[today] ?? null));
+    return ok(buildNutritionView(today, weights, sessions, this.db.dayTypes[today] ?? null, this.db.meals, this.db.fluids));
+  }
+
+  async fetchRecentMeals(today: string): Promise<Result<Meal[]>> {
+    const from = addIsoDays(today, -recentMealDays);
+    return ok(distinctRecent(toMeals(this.db.meals.filter((m) => m.local_date >= from && m.local_date <= today))));
+  }
+
+  async fetchMeal(id: string): Promise<Result<Meal | null>> {
+    return ok(toMeals(this.db.meals.filter((m) => m.id === id))[0] ?? null);
+  }
+
+  async saveMeal(meal: MealInput): Promise<Result<null>> {
+    const old = meal.id ? this.db.meals.find((m) => m.id === meal.id) : undefined;
+    const row = {
+      id: old?.id ?? `demo-meal-new-${this.nextId++}`,
+      local_date: meal.localDate,
+      slot: meal.slot,
+      items: toStoredItems(meal.items),
+      created_at: old?.created_at ?? new Date().toISOString(),
+    };
+    this.db.meals = [...this.db.meals.filter((m) => m.id !== row.id), row];
+    return ok(null);
+  }
+
+  async addFluid(localDate: string, ml: number): Promise<Result<null>> {
+    this.db.fluids = [
+      ...this.db.fluids,
+      { id: `demo-fluid-new-${this.nextId++}`, local_date: localDate, volume_ml: ml, created_at: new Date().toISOString() },
+    ];
+    return ok(null);
+  }
+
+  async deleteFluid(id: string): Promise<Result<null>> {
+    this.db.fluids = this.db.fluids.filter((f) => f.id !== id);
+    return ok(null);
+  }
+
+  async deleteMeal(id: string): Promise<Result<null>> {
+    this.db.meals = this.db.meals.filter((m) => m.id !== id);
+    return ok(null);
   }
 
   async saveWeight(localDate: string, kg: number): Promise<Result<null>> {

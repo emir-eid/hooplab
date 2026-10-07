@@ -33,7 +33,7 @@ import {
   type TrainingSession,
 } from '@/data/daily-log';
 import { exerciseSummary, type ExerciseSession } from '@/data/exercise-tagging';
-import { fetchNutrition, saveDayType } from '@/data/nutrition';
+import { deleteMeal, fetchNutrition, saveDayType } from '@/data/nutrition';
 import type { NutritionView } from '@/data/nutrition-view';
 import { fetchRecovery } from '@/data/recovery';
 import type { RecoveryView } from '@/data/recovery-view';
@@ -123,6 +123,19 @@ function TodayScreen({ demo }: { demo: DemoScenario | null }) {
   const today = toLocalDate(new Date());
   const yesterday = toLocalDate(addDays(new Date(), -1));
   const auraState = recovery ? levelStates[recovery.status.level] : null;
+
+  async function removeMeal(id: string) {
+    const r = await deleteMeal(id);
+    if (!r.ok) return setError(r.message);
+    const n = await fetchNutrition(today);
+    if (n.ok) setNutrition(n.value);
+  }
+
+  // Bugünkü ter testinin seans sonrası sıvı hedefi; su halkasının altında yazar (karar 0031).
+  const sweatFluidL =
+    log?.sessions
+      .map((s) => (s.sweat ? sweatTest({ ...s.sweat, urineL: s.sweat.urineL ?? 0, durationMin: s.durationMin }) : null))
+      .find((r) => r?.shortRecoveryFluidL)?.shortRecoveryFluidL ?? null;
 
   async function changeDayType(dayType: DayType | null) {
     const r = await saveDayType(today, dayType);
@@ -215,7 +228,9 @@ function TodayScreen({ demo }: { demo: DemoScenario | null }) {
 
       {load ? <LoadSpikeRow view={load} /> : null}
 
-      {nutrition ? <NutritionSection view={nutrition} onDayType={changeDayType} /> : null}
+      {nutrition ? (
+        <NutritionSection view={nutrition} onDayType={changeDayType} onDeleteMeal={(id) => void removeMeal(id)} sweatFluidL={sweatFluidL} />
+      ) : null}
 
       {log ? <SweatResults sessions={[...log.sessions, ...log.yesterdaySessions]} today={today} /> : null}
 

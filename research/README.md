@@ -6,6 +6,7 @@ HoopLab'in beslendiği bilim burada durur. Uygulamadaki her sayısal eşik veya 
 research/
 ├── sources/    kaynak başına bir dosya (künye, DOI/PMID, kanıt düzeyi, kendi özetimiz)
 ├── rules/      makinenin okuduğu kurallar (JSON); her kural kaynak kimliklerine işaret eder
+├── foods/      öğün kaydının besin listesi (USDA FDC değerleri, FDC kimliğiyle; betikle doldurulur, karar 0030)
 ├── inbox/      aylık literatür taramasının önerileri (onaysız kütüphaneye girmez)
 └── WATCHLIST.md  literatür taramasının konu ve sorgu listesi
 ```

@@ -40,7 +40,12 @@ Uygulamaya veya altyapıya görünür değişiklikler. Biçim: [Keep a Changelog
 - EAS hazırlığı (karar 0024): EAS projesi, tek üretim profili (`eas.json`), `expo-updates` (runtimeVersion `fingerprint`), `app.config.ts` ile paket kimliği / EAS proje kimliği / sahip ortamdan (`build-identity`, testli), şifreleme beyanı, EAS "production" ortam değişkenleri, `npm run eas` sarmalayıcısı. İlk derleme Apple üyeliğini bekliyor.
 - Açıklama sayfaları (karar 0026): Bugün ve Trend'deki her ölçüm ve hesap dokunulabilir; alttan açılan sayfa değerin türünü (saatin ölçümü / kayıtlarından hesap / tahmin), güncel değeri, "Bu ne?", "Nasıl okunur?", "Neye göre?", sınırları ve kaynakları gösterir. Metinler `research/rules` kurallarına bağlı (`copy/explainers.ts`, testli); künyeler kaynak dosyalarından (`copy/sources.ts`, testli).
 
+- Öğün kaydı (karar 0030): + → Öğün ya da Bugün'den; 35 besinlik sabit liste (USDA FoodData Central, ev ölçüsü ve gramı, `research/foods/foods.json`, `tools/research/foods-fdc.mjs` ile doldurulur ve FDC API'siyle doğrulanır), porsiyon 0,5-3, paketli ürün için etiketten gram, son öğünleri tekrarlama. Bugün'de kayıtlı karbonhidrat ve protein hedef aralığına göre (tahmin, uyarı yok), öğün başına protein dozu.
+- Su kaydı (karar 0031): + → Su ya da Bugün'den; 250 / 500 / 750 mL ya da elle, hedefsiz; ter testi yapılan gün seans sonrası sıvı hedefi yanında.
 ### Değişti
+- Bugün'deki beslenme kartı (karar 0031): karbonhidrat, protein ve su halkaları (içte kayıtlı miktar, dışta hedef aralığı), kategori rengi (pembe / mor / mavi; risk rengi değil), Öğün ve Su hızlı ekleme düğmeleri, katlanır öğün listesi.
+- Öğün ve içişler sağdan sola kaydırılarak silinir; düzeltmede bütün kalemler kaldırılınca "Kaydet ve sil". Açılır liste satırında ok kapalıyken sağa, açıkken aşağı bakar.
+- Bugün'de "Nasıl hesaplanıyor?" satırı gece verisi kutucuklarına yapışmıyor.
 - Trend'deki yük grafiği seans türüne göre yığılmış ve renkli (maç, saha, kuvvet / kondisyon, hafif); renk risk değil yalnız tür gösterir, altında türlerin son 7 günlük toplamı, güne dokununca o günün dağılımı. Son 7 gün soluk zemin şeridiyle ayrılır. Renkler `packages/theme` `loadGroup` token'ı (karar 0026).
 - Sekme ekranlarının kabı (`Screen`) Gesture Handler'ın ScrollView'unu kullanıyor: içindeki sürüklemeli kontroller sayfa kaydırmasını bekletebiliyor.
 - Kaydırıcı (ağrı / sertlik, RPE) Gesture Handler'a taşındı: yatay sürükleme kaydırıcıyı, dikey hareket sayfayı kaydırır; kaydırıcı sürüklenirken form kaymaz. Kök düzende `GestureHandlerRootView`, formlarda `GestureScrollView`.

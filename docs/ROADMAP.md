@@ -51,11 +51,11 @@ Her faz, bitiş kriteri karşılanınca `/kapat` ile kapanır: faz özeti `docs/
 
 ## Faz 2: Hesap motoru (`packages/engine`)
 
-- [ ] Kişisel baseline'lar: HRV, dinlenik nabız ve uyku Faz 1'de geldi ([0021](decisions/0021-toparlanma-kisisel-bant.md)); kalanlar solunum ve check-in
+- [x] Kişisel baseline'lar: HRV, dinlenik nabız ve uyku Faz 1'de geldi ([0021](decisions/0021-toparlanma-kisisel-bant.md)); solunum ve check-in 2026-10-07 ([0028](decisions/0028-solunum-ve-checkin-kisisel.md))
 - [x] Antrenman yükü: seans yükü (RPE × dakika), akut/kronik yük, monotonluk (2026-10-06, [0025](decisions/0025-antrenman-yuku.md); 17 yeni kaynak, 6 kural; motor testli, Trend ve Bugün arayüzü web önizlemesinde ve iPhone'da doğrulandı)
 - [x] Kas ve tendon bölge yükü modeli (tahmin olarak etiketli), ağrı haritasıyla kalibrasyon (2026-10-07, [0027](decisions/0027-kas-tendon-bolge-yuku.md); ağrı izleme notu ile; kalibrasyon yok, katsayısız eşleme)
 - [x] Beslenme hedefleri (yük gününe göre karbonhidrat/protein g/kg) (2026-10-07, [0029](decisions/0029-beslenme-ve-hidrasyon.md)); enerji yetersizliği uyarısı bilinçli olarak yok (hesaplanamaz), öğün kaydıyla yeniden bakılacak
-- [ ] Öğün kaydı (karbonhidrat / protein kaba tahmini) ve alım-hedef kıyası
+- [x] Öğün kaydı (karbonhidrat / protein kaba tahmini) ve alım-hedef kıyası (2026-10-07, [0030](decisions/0030-ogun-kaydi.md)); REDs için yine uyarı yok; su kaydı (hedefsiz) ve Bugün'de beslenme halkaları (2026-10-07, [0031](decisions/0031-su-kaydi-ve-renkli-bugun.md))
 - [x] Hidrasyon: ter oranı testi, sıvı hedefi (2026-10-07, [0029](decisions/0029-beslenme-ve-hidrasyon.md))
 - [x] Solunum ve sabah check-in için kişisel kıyas (2026-10-07, [0028](decisions/0028-solunum-ve-checkin-kisisel.md))
 - [ ] Her eşik `research/rules` + doğrulanmış `research/sources` kaydına bağlı

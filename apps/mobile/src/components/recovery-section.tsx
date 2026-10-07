@@ -344,13 +344,16 @@ export function NightData({ view }: { view: RecoveryView }) {
         </Card>
       ) : null}
 
-      <ListGroup footer="İzleme özeti, tanı değil. Göğüs ağrısı, çarpıntı veya olağandışı nabız gibi bir belirti varsa doktora başvur.">
-        <ListRow
-          label="Nasıl hesaplanıyor?"
-          detail="Yöntem ve kaynaklar"
-          onPress={openMethod}
-        />
-      </ListGroup>
+      {/* Etiketsiz liste grubunun üst boşluğu yok; kutucuk ızgarasına yapışmasın. */}
+      <View style={styles.methodGap}>
+        <ListGroup footer="İzleme özeti, tanı değil. Göğüs ağrısı, çarpıntı veya olağandışı nabız gibi bir belirti varsa doktora başvur.">
+          <ListRow
+            label="Nasıl hesaplanıyor?"
+            detail="Yöntem ve kaynaklar"
+            onPress={openMethod}
+          />
+        </ListGroup>
+      </View>
     </>
   );
 }
@@ -418,6 +421,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: spacing[1],
     marginTop: spacing[1.5],
   },
+  methodGap: { marginTop: layout.cardGap },
   grid: {
     flexDirection: "row",
     flexWrap: "wrap",

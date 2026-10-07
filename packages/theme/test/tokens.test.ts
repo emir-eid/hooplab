@@ -10,6 +10,7 @@ import {
   defaultAppearance,
   isHex,
   loadGroups,
+  nutrients,
   mix,
   over,
   palettes,
@@ -154,5 +155,25 @@ test('seans türü renkleri kartta en az 3:1 ve hepsi farklı', () => {
       assert.ok(contrastRatio(p.loadGroup[g], p.card) >= 3, `${scheme} ${g} ${contrastRatio(p.loadGroup[g], p.card).toFixed(2)}`);
       for (const s of dayStates) assert.notEqual(p.loadGroup[g], p.status[s], `${scheme} ${g} = durum ${s}`);
     }
+  }
+});
+
+// Beslenme göstergesi renkleri (karar 0031): kartta en az 3:1, birbirinden ve durum renklerinden ayrı.
+// Renk körlüğü ve normal görüş ayrımı (tüm çiftler) dataviz doğrulayıcısıyla denetlendi; burada yalnız değişmezler.
+test('beslenme renkleri kartta en az 3:1 ve hepsi farklı', () => {
+  for (const scheme of ['light', 'dark'] as const) {
+    const p = palettes[scheme];
+    assert.equal(new Set(nutrients.map((n) => p.nutrient[n])).size, nutrients.length, scheme);
+    for (const n of nutrients) {
+      assert.ok(contrastRatio(p.nutrient[n], p.card) >= 3, `${scheme} ${n}`);
+      for (const s of dayStates) assert.notEqual(p.nutrient[n], p.status[s], `${scheme} ${n} = durum ${s}`);
+    }
+  }
+});
+
+test('yıkıcı eylem yazısı zemininde en az 4,5:1', () => {
+  for (const scheme of ['light', 'dark'] as const) {
+    const p = palettes[scheme];
+    assert.ok(contrastRatio(p.onDestructive, p.destructive) >= 4.5, `${scheme} ${contrastRatio(p.onDestructive, p.destructive).toFixed(2)}`);
   }
 });
