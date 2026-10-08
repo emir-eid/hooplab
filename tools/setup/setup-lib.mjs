@@ -13,6 +13,8 @@ export const FUNCTION_SLUGS = ['ghealth-connect', 'ghealth-callback', 'ghealth-s
 export const CRON_JOB = 'google-health-senkron';
 export const GOOGLE_SECRET_NAMES = ['GOOGLE_HEALTH_CLIENT_ID', 'GOOGLE_HEALTH_CLIENT_SECRET'];
 export const CRON_SECRET_NAME = 'GHEALTH_CRON_SECRET';
+/** AI koçun Claude API anahtarı (karar 0032); değeri yalnız kullanıcı girer, sihirbaz üretemez. */
+export const ANTHROPIC_SECRET_NAME = 'ANTHROPIC_API_KEY';
 export const VAULT_URL = 'project_url';
 export const VAULT_CRON = 'ghealth_cron_secret';
 
@@ -132,6 +134,18 @@ export const googleClientProblems = {
 // --- Supabase ---
 
 /** Projenin publishable anahtarları (`projects api-keys` çıktısı). Gizli ve eski anahtarlar alınmaz. */
+/**
+ * Gizli girişle alınan Anthropic anahtarının biçim denetimi; değer hiçbir yere yazdırılmaz.
+ * @returns {string | null} sorun varsa Türkçe açıklama
+ */
+export function anthropicKeyProblem(value) {
+  if (!value) return 'Anahtar boş.';
+  if (/\s/.test(value)) return 'Anahtarda boşluk var; yalnız anahtarı yapıştır.';
+  if (!value.startsWith('sk-ant-')) return "Anthropic API anahtarı 'sk-ant-' ile başlar; Console → API keys'ten kopyala.";
+  if (value.startsWith('sk-ant-admin')) return 'Bu bir Admin anahtarı; koç için çalışma alanına bağlı normal bir API anahtarı gerekir.';
+  return null;
+}
+
 export function publishableKeys(apiKeys) {
   return apiKeys
     .filter((k) => k?.type === 'publishable' && typeof k.api_key === 'string' && k.api_key.startsWith('sb_publishable_'))
@@ -271,6 +285,15 @@ export function evaluate(f) {
     } else {
       add('google-secrets', 'Google istemci sırları', 'ok', f.googleClient ? 'JSON dosyasıyla aynı.' : undefined);
     }
+  }
+
+  // AI koçun Claude API anahtarı (karar 0032). Yalnız bulutta: yerelde koç sahte sunucuyla denenir.
+  if (!local) {
+    const label = 'Anthropic API anahtarı (koç)';
+    if (secrets == null) add('anthropic-key', label, 'blocked', 'Supabase secrets okunamadı.');
+    else if (!secrets.has(ANTHROPIC_SECRET_NAME)) {
+      add('anthropic-key', label, 'fix', `${ANTHROPIC_SECRET_NAME} yok; Anthropic Console → API keys'ten aldığın anahtar gizli girişle istenecek.`);
+    } else add('anthropic-key', label, 'ok');
   }
 
   // Google Cloud'daki geri dönüş adresi: yalnız JSON dosyası verildiyse denetlenebilir.

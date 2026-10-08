@@ -5,6 +5,7 @@ Uygulamaya veya altyapıya görünür değişiklikler. Biçim: [Keep a Changelog
 ## [Yayınlanmamış]
 
 ### Eklendi
+- AI koç hazırlığı (karar 0032): kanıt tabanı paketi (`npm run research:kb` → `supabase/functions/_shared/coach/kb-data.ts`, testle `research/`'e eşit) ve kural grafiğiyle kaynak seçimi; kurulum sihirbazı `ANTHROPIC_API_KEY`'i denetler ve eksikse gizli girişle ister.
 - Proje iskeleti: `code` (repo) ve `private` (repo dışı) ayrımı.
 - Oturum sistemi: `/ac` ve `/kapat` komutları; SessionStart, PreCompact ve SessionEnd hook'ları.
 - Gizlilik bekçisi (`tools/guard`) ve negatif testleri; pre-commit ve pre-push kapıları.

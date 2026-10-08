@@ -18,6 +18,7 @@
     "backup": "node tools/backup/backup-private.mjs",
     "research:check": "node tools/research/validate-sources.mjs",
     "research:check:online": "node tools/research/validate-sources.mjs --online",
+    "research:kb": "node tools/research/coach-kb.mjs",
     "check": "npm run test:tools && npm run typecheck && npm run test:packages && npm run test:apps && npm run test:functions && npm run guard:all && npm run guard:history && npm run research:check",
     "typecheck": "tsc -p packages/theme && tsc -p packages/theme/tsconfig.test.json && tsc -p packages/engine && tsc -p packages/engine/tsconfig.test.json && tsc -p apps/mobile && tsc -p apps/mobile/tsconfig.test.json && tsc -p supabase/functions && tsc -p supabase/functions/tsconfig.test.json",
     "test:packages": "node --test \"packages/**/*.test.ts\"",

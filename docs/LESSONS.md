@@ -51,6 +51,8 @@ Tekrar yaşanabilecek hatalar ve önceden bilinen tuzaklar. Her madde: **ders**,
 - **[ölçüldü] Bash aracında uzun, Türkçe ve tek tırnaklı içerik taşıyan heredoc (`<<'EOF'`) kabuk tarafından "unexpected EOF while looking for matching `''" ile reddedilebiliyor; hiçbir dosya yazılmadan.** İki oturumda tekrarladı (kaynak dosyaları). Çok satırlı ve tırnaklı içerik Write aracıyla bir betik dosyasına yazılır, sonra çalıştırılır. Kanıt: 2026-10-05 ve 2026-10-07 kaynak yazımı. Bekçi: yok.
 - **[ölçüldü] Kaynak taraması PubMed E-utilities ile hızlı ve doğrulanabilir:** `esearch` (aday PMID), `esummary` (başlık, yazarlar, dergi, DOI), `efetch rettype=abstract` (özet); açık erişimli tam metin Europe PMC `.../{PMCID}/fullTextXML` ile. Künye alanları elle değil `esummary`'den doldurulur. Kanıt: 2026-10-07 kas / tendon kaynakları (17 kaynak, `research:check:online` ilk denemede temiz).
 
+- **[ölçüldü] Kaçış karakteri (`\n`, `\r`, `\u0003`) içeren kod Python dize düzenlemesiyle (heredoc içinde `replace`) yazılmaz:** kaçışlar gerçek kontrol karakterine dönüşüp JS'i bozar ve dosyada görünmez kalır. Kod Write / Edit aracıyla ya da ayrı bir dosyadan aynen yazılır; sonra `node --check`. Kanıt: 2026-10-09 `tools/setup/setup.mjs` `askHidden` ([oturum raporu](sessions/2026-10-08-1206-takip-bant-ve-token.md) Blok 3).
+
 ## Windows
 
 - **[ölçüldü] PowerShell'in çalıştırma ilkesi npm'in `.ps1` sarmalayıcılarını engeller: `npm`, `npx` "running scripts is disabled" der.** Kullanıcıya verilen komutlarda `npm.cmd` / `npx.cmd` yazılır; ilkeyi değiştirmeye gerek yok. Kanıt: 2026-10-04 `supabase login`.

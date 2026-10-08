@@ -64,8 +64,8 @@ Her faz, bitiş kriteri karşılanınca `/kapat` ile kapanır: faz özeti `docs/
 
 - [x] Tasarım ve model kararı (2026-10-08, [0032](decisions/0032-ai-koc-tasarimi.md)): Claude Sonnet 5.5; pgvector yerine kural grafiğiyle seçim ve önbellekli tam taban; citations ile kaynak zorunluluğu, sayıları kod denetler; güvenlik yönlendirmesi kodda
 - [x] Anthropic Console: HoopLab çalışma alanı, ön ödemeli 10 $ (otomatik yükleme kapalı), anahtar `hooplab-koc` (bitiş 2027-10-09), `ANTHROPIC_API_KEY` Supabase secrets'ta (2026-10-09)
-- [ ] Kurulum sihirbazı `ANTHROPIC_API_KEY`'i tanır (`setup:check` ve gizli girişle yazma)
-- [ ] Kanıt tabanı paketi (`research/` → Edge Function, testle eşit) ve kural grafiğiyle kaynak seçimi
+- [x] Kurulum sihirbazı `ANTHROPIC_API_KEY`'i tanır (`setup:check` ve gizli girişle yazma) (2026-10-09; bulutta 13/13)
+- [x] Kanıt tabanı paketi (`research/` → Edge Function, testle eşit) ve kural grafiğiyle kaynak seçimi (2026-10-09): `npm run research:kb` → `supabase/functions/_shared/coach/kb-data.ts` (78 kaynak, 33 kural, ~150 KB); `selectForRules` / `fullKb` (`_shared/coach/kb.ts`), testli. Ölçüm → kural kimliği eşlemesi anlık değerlerle (günlük özet maddesi)
 - [ ] Günlük özet: anlık değerler + ilgili kaynaklar → Claude, alıntı denetçisi, `coach_summaries`; Bugün'de koç kartı; demo için sentetik özetler
 - [ ] "Bugün maç var" işareti ve koçta maç günü dili
 - [ ] Soru-cevap: soru sınıflandırma (Haiku), tam taban önbellekte, kaynak yoksa sabit metin, `coach_messages`

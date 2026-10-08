@@ -98,7 +98,7 @@ Proje kullanıcının kendi Supabase hesabındadır (0009). Bu makinede bir kez:
    - **Allow new users to sign up** kapalı
 
    Ayrıntı: [0015](decisions/0015-veritabani-tek-sahip-rls.md).
-4. Denetim: `npm run setup:check` (salt-okur, 12 madde). Migration veya fonksiyon dağıtımından sonra da çalıştırılır.
+4. Denetim: `npm run setup:check` (salt-okur, bulutta 13 madde; Anthropic API anahtarı 2026-10-09'da eklendi). Migration veya fonksiyon dağıtımından sonra da çalıştırılır.
 5. Yerel test için Docker Desktop açık olmalı: `npm run db:start`, `npm run test:db`, `npm run db:stop`.
 
 Sıfırdan, başka birinin hesabıyla kurulum: [guides/kurulum.md](guides/kurulum.md).

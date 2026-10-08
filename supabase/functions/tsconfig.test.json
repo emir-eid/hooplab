@@ -3,5 +3,5 @@
   "compilerOptions": {
     "types": ["node"]
   },
-  "include": ["_shared/google-health", "tests"]
+  "include": ["_shared/google-health", "_shared/coach", "tests"]
 }

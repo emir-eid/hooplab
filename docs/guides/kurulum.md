@@ -12,6 +12,7 @@ Yalnız denemek istiyorsan kuruluma gerek yok: uygulamayı aç ve giriş ekranı
 - Supabase hesabı (ücretsiz plan yeter; hesap başına en fazla 2 aktif ücretsiz proje)
 - Fitbit cihazının bağlı olduğu Google hesabı
 - iPhone ve App Store'dan **Expo Go**
+- AI koç için (isteğe bağlı): Anthropic Console hesabı ve bir API anahtarı ([platform.claude.com](https://platform.claude.com)). Kullanım kadar ödenir, Claude aboneliğinden ayrıdır; ön ödemeli kredi ve kapalı otomatik yükleme harcamaya kesin bir tavan koyar
 
 ## 1. Repo
 
@@ -70,9 +71,10 @@ Sonra eksikleri tek tek onayına sunarak kurar:
 2. Uygulamanın bağlantı değerlerini `apps/mobile/.env.local` dosyasına yazar. Yalnız publishable anahtar yazılır, gizli anahtar asla.
 3. Veritabanı şemasını kurar. Önce neyin uygulanacağını gösterir.
 4. Google istemci kimliğini ve sırrını Supabase secrets'a yazar.
-5. Saatlik senkronun paylaşılan sırrını üretir ve hem Supabase secrets'a hem Vault'a yazar.
-6. Vault'a proje adresini yazar.
-7. Edge Functions'ı dağıtır (Docker gerekmez).
+5. AI koçun Anthropic API anahtarını gizli girişle ister (yazarken yıldız görünür; boş bırakırsan atlanır) ve Supabase secrets'a `ANTHROPIC_API_KEY` olarak yazar. Etkileşimli bir terminal gerekir.
+6. Saatlik senkronun paylaşılan sırrını üretir ve hem Supabase secrets'a hem Vault'a yazar.
+7. Vault'a proje adresini yazar.
+8. Edge Functions'ı dağıtır (Docker gerekmez).
 
 Sır değerleri ekrana basılmaz. Sihirbazı istediğin kadar yeniden çalıştırabilirsin; yalnız eksik olanı kurar.
 

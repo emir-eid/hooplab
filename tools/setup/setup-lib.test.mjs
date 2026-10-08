@@ -1,6 +1,7 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import {
+  anthropicKeyProblem,
   callbackUrl,
   chooseGoogleJson,
   evaluate,
@@ -42,6 +43,7 @@ function healthyRemote(overrides = {}) {
       ['GOOGLE_HEALTH_CLIENT_ID', sha256Hex(CLIENT.clientId)],
       ['GOOGLE_HEALTH_CLIENT_SECRET', sha256Hex(CLIENT.clientSecret)],
       ['GHEALTH_CRON_SECRET', sha256Hex(cron)],
+      ['ANTHROPIC_API_KEY', sha256Hex('sk-ant-ornek')],
     ]),
     vaultDigests: new Map([
       ['project_url', sha256Hex(URL)],
@@ -163,12 +165,30 @@ test('zamanlayıcı yoksa veya kapalıysa kullanıcıya bırakılır', () => {
   assert.equal(status(evaluate(healthyRemote({ cronActive: false })), 'cron-job'), 'manual');
 });
 
+test('Anthropic anahtarı yoksa gizli girişle istenecek adım olur; sırlar okunamazsa bekler (karar 0032)', () => {
+  const missing = healthyRemote();
+  missing.secretDigests.delete('ANTHROPIC_API_KEY');
+  const item = evaluate(missing).find((i) => i.id === 'anthropic-key');
+  assert.equal(item?.status, 'fix');
+  assert.match(item?.detail ?? '', /gizli girişle/);
+  assert.equal(status(evaluate(healthyRemote({ secretDigests: null })), 'anthropic-key'), 'blocked');
+  assert.equal(status(evaluate(healthyRemote()), 'anthropic-key'), 'ok');
+});
+
+test('Anthropic anahtar biçimi: boş, boşluklu, yanlış önekli ve Admin anahtarı reddedilir', () => {
+  assert.equal(anthropicKeyProblem('sk-ant-api03-ornek'), null);
+  for (const bad of ['', 'sk-ant-api03 ornek', 'sb_secret_ornek', 'sk-ornek', 'sk-ant-admin01-ornek']) {
+    assert.ok(anthropicKeyProblem(bad), bad);
+  }
+  assert.doesNotMatch(anthropicKeyProblem('sk-ant-admin01-gizliDeger') ?? '', /gizliDeger/, 'mesaj değeri içermez');
+});
+
 test('yerel hedefte .env.local, fonksiyon dağıtımı ve geri dönüş adresi denetlenmez', () => {
   const local = healthyRemote({ target: 'local', localRunning: true, vaultUrl: 'http://supabase_kong_hooplab:8000' });
   local.vaultDigests.set('project_url', sha256Hex('http://supabase_kong_hooplab:8000'));
   const items = evaluate(local);
   assert.ok(summarize(items).done, JSON.stringify(items.filter((i) => i.status !== 'ok')));
-  for (const id of ['app-env', 'functions', 'google-redirect', 'cli', 'project']) assert.equal(status(items, id), undefined, id);
+  for (const id of ['app-env', 'functions', 'google-redirect', 'cli', 'project', 'anthropic-key']) assert.equal(status(items, id), undefined, id);
   assert.equal(status(items, 'stack'), 'ok');
 });
 

@@ -59,6 +59,12 @@ Hesap motoru (`packages/engine`) eşikleri bu dosyalardan okur; kodda sabit say�
 - Yerelde: `npm run research:check` (biçim ve kural-kaynak bağları), `npm run research:check:online` (DOI/PMID, başlık/yıl, geri çekilme).
 - CI: her push'ta ve her pazartesi çevrimiçi doğrulama. Geri çekilen bir makale CI'ı kırmızıya çevirir.
 
+## Koç paketi
+
+AI koç (karar 0032) kanıt tabanını vektör aramasıyla değil, paket olarak okur: `npm run research:kb` (`tools/research/coach-kb.mjs`) kaynak özetlerini ve kuralları `supabase/functions/_shared/coach/kb-data.ts` dosyasına yazar. Kaynak gövdesinden yalnız kendi özetimiz alınır ("Bağlı kurallar" bölümü hariç). Günlük özette motorun o gün kullandığı kuralların kaynakları, soru-cevapta tabanın tamamı modele gider.
+
+**Bir kaynak veya kural eklenince ya da değişince paket yeniden üretilir**; üretilmezse `npm run check` içindeki fonksiyon testi kırılır (`supabase/functions/tests/coach/kb.test.ts`). Paket elle değiştirilmez.
+
 ## Literatür takibi
 
 Aylık zamanlanmış görev, [WATCHLIST.md](WATCHLIST.md) konularında yeni konsensüs bildirgesi, sistematik derleme ve meta-analizleri arar, DOI'lerini doğrular ve `inbox/<tarih>.md` dosyasına öneri olarak yazar. Öneriler `/ac` sırasında gösterilir; kullanıcı onaylarsa kaynak dosyası açılır.

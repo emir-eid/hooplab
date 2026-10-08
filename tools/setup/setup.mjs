@@ -14,7 +14,8 @@
 //   --yes                                 onay sorularını evet say
 //
 // Gizlilik: sır değerleri ekrana, komut satırına veya repoya yazılmaz. Sunucuya giden sırlar geçici bir
-// dosyadan okunur (CLI --env-file / --file) ve dosya hemen silinir. `projects api-keys` çıktısı eski
+// dosyadan okunur (CLI --env-file / --file) ve dosya hemen silinir. Anthropic API anahtarı (karar 0032)
+// yalnız etkileşimli terminalde gizli girişle istenir: yazılırken yıldız görünür, değer yazdırılmaz. `projects api-keys` çıktısı eski
 // service_role anahtarını açık verir (ölçüldü); bu çıktı hiçbir koşulda yazdırılmaz.
 
 import { spawnSync } from 'node:child_process';
@@ -26,6 +27,8 @@ import { createInterface } from 'node:readline/promises';
 import { fileURLToPath } from 'node:url';
 
 import {
+  ANTHROPIC_SECRET_NAME,
+  anthropicKeyProblem,
   callbackUrl,
   chooseGoogleJson,
   CRON_SECRET_NAME,
@@ -148,6 +151,53 @@ async function confirm(question) {
     return false;
   }
   return /^(e|evet|y|yes)$/i.test(await ask(`${question} [e/h] `));
+}
+
+/**
+ * Gizli giriş: terminal ham kipte okunur, her karakter için yıldız yazılır. Yapıştırma tek parça gelir.
+ * Boş giriş = atla. Ctrl+C iptal eder.
+ */
+async function askHidden(question) {
+  rl?.close();
+  rl = undefined;
+  const stdin = process.stdin;
+  process.stdout.write(question);
+  stdin.setRawMode(true);
+  stdin.setEncoding('utf8');
+  stdin.resume();
+  return new Promise((resolve, reject) => {
+    let value = '';
+    const cleanup = () => {
+      stdin.off('data', onData);
+      stdin.setRawMode(false);
+      stdin.pause();
+      process.stdout.write('\n');
+    };
+    const onData = (chunk) => {
+      for (const ch of chunk) {
+        if (ch === '\r' || ch === '\n') {
+          cleanup();
+          resolve(value.trim());
+          return;
+        }
+        if (ch === '\u0003') {
+          cleanup();
+          reject(new Error('İptal edildi.'));
+          return;
+        }
+        if (ch === '\u007f' || ch === '\b') {
+          if (value) {
+            value = value.slice(0, -1);
+            process.stdout.write('\b \b');
+          }
+        } else if (ch >= ' ') {
+          value += ch;
+          process.stdout.write('*');
+        }
+      }
+    };
+    stdin.on('data', onData);
+  });
 }
 
 // --- Olgular ---
@@ -396,6 +446,28 @@ async function applyFixes(items, facts, google) {
     if (client && (await confirm(`Google istemci kimliği ve sırrı ${where} içine yazılsın mı?`))) {
       if (writeSecrets(facts, { GOOGLE_HEALTH_CLIENT_ID: client.clientId, GOOGLE_HEALTH_CLIENT_SECRET: client.clientSecret })) {
         console.log(`Google istemci sırları ${where} içine yazıldı.`);
+      }
+    }
+  }
+
+  if (todo.has('anthropic-key')) {
+    if (!process.stdin.isTTY) {
+      console.log(`${ANTHROPIC_SECRET_NAME} gizli girişle istenir; etkileşimli bir terminalde npm run setup çalıştır.`);
+    } else {
+      console.log('\nAI koç için Anthropic API anahtarı (Console → API keys). Yazarken yıldız görünür; boş bırakırsan atlanır.');
+      for (let attempt = 0; attempt < 3; attempt++) {
+        const key = await askHidden('Anahtar: ');
+        if (!key) {
+          console.log('Atlandı.');
+          break;
+        }
+        const problem = anthropicKeyProblem(key);
+        if (problem) {
+          console.log(problem);
+          continue;
+        }
+        if (writeSecrets(facts, { [ANTHROPIC_SECRET_NAME]: key })) console.log(`${ANTHROPIC_SECRET_NAME} ${where} içine yazıldı.`);
+        break;
       }
     }
   }
