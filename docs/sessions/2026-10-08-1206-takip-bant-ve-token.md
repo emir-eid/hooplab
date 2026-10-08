@@ -1,9 +1,9 @@
 # 2026-10-08 12:06 — Takip: kişisel bant ve token süreleri
 
 - **Faz:** 2 tamam, 3 başladı (Blok 2) (Faz 1'in TestFlight maddesi Apple'ı bekliyor; 2026-10-08'de hâlâ yanıt yok)
-- **Durum:** açık (/rep)
+- **Durum:** kapandı (/kapat, 2026-10-09 00:57)
 - **Model / efor:** Opus 5.5, düşük (Blok 1); Opus 5.5, yüksek (Blok 2); Opus 5.5, orta (Blok 3)
-- **Commit'ler:** `3f24adf` (Blok 1), `1685a03` (Blok 2), Blok 3'ün `/rep` commit'i
+- **Commit'ler:** `3f24adf` (Blok 1), `1685a03` (Blok 2), `a801935` (Blok 3), bu raporun kapanış commit'i
 
 ## Blok 1 — Takip: kişisel bant cihazda, token süreleri (12:06)
 
