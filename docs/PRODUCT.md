@@ -98,3 +98,4 @@ Planlama sırasında anılan çalışmalar. Doğrulanıp `research/sources`'a gi
 | Kas / tendon modelinin bölge listesi ve hareket → bölge eşlemesi | Faz 2 başı |
 | Maç takvimi elle mi girilecek, otomatik bir kaynak var mı? | Faz 1 |
 | Takım staff'ıyla paylaşım isteniyor mu? | Faz 4 |
+| Günün durumu maç gününü bilmeli mi? Maç günü "Toparlan" uygulanamaz (maç atlanmaz); o gün işe yarayan dil başka (ısınma, karbonhidrat ve sıvı, maç sonrası toparlanma). İlk cihaz takibinde fark edildi. | Faz 3 (koç bağlamı), Faz 4 (maç günü protokolü) |
