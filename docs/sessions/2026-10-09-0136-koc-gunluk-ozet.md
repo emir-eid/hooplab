@@ -1,9 +1,9 @@
 # 2026-10-09 01:36 — Koçun günlük özeti: şema, denetçi, `coach_summaries` ve `coach-daily`
 
 - **Faz:** 3 (Faz 1'in TestFlight maddesi Apple onayını bekliyor)
-- **Durum:** açık (/rep)
+- **Durum:** kapandı (/kapat, 2026-10-09 01:39)
 - **Model / efor:** Opus 5.5, yüksek
-- **Commit'ler:** bu raporun `rep` commit'i
+- **Commit'ler:** `4aa58e9` (Blok 1 ve 2), bu raporun kapanış commit'i
 
 ## Blok 1 — Anlık değerler, günün sayıları belgesi, denetçi ve `coach_summaries` (01:22)
 
