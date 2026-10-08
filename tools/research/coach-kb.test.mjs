@@ -38,7 +38,7 @@ test('özet gövdesi: frontmatter ve "Bağlı kurallar" atılır, diğer bölüm
   assert.doesNotMatch(body, /Bağlı kurallar|rules\/a\.json|\r|^---/m);
 });
 
-test('geçerli set paketlenir: alanlar, sayı türünde yıl, kural modülü', () => {
+test('geçerli set paketlenir: alanlar, sayı türünde yıl, kural modülü ve değeri', () => {
   const kb = buildKb(fixture('gecerli'));
   assert.equal(kb.sources.length, 1);
   const [source] = kb.sources;
@@ -48,7 +48,9 @@ test('geçerli set paketlenir: alanlar, sayı türünde yıl, kural modülü', (
   assert.equal(source.doi, '10.1234/ornek.2020.001');
   assert.equal('pmid' in source, false, 'olmayan alan yazılmaz');
   assert.equal(source.summary, "Test fixture'ı. Gerçek bir yayın değildir.");
-  assert.deepEqual(kb.rules, [{ id: 'ornek-esik', module: 'ornek', description: "Test fixture'ı kuralı", sources: ['ornek-2020'] }]);
+  assert.deepEqual(kb.rules, [
+    { id: 'ornek-esik', module: 'ornek', description: "Test fixture'ı kuralı", value: { min: 1, max: 2, unit: 'g/kg/gün' }, sources: ['ornek-2020'] },
+  ]);
 });
 
 test('doğrulanmayan research/ paketlenmez', () => {

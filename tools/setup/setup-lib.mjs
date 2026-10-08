@@ -9,7 +9,7 @@
 
 import { createHash, randomBytes } from 'node:crypto';
 
-export const FUNCTION_SLUGS = ['ghealth-connect', 'ghealth-callback', 'ghealth-sync'];
+export const FUNCTION_SLUGS = ['ghealth-connect', 'ghealth-callback', 'ghealth-sync', 'coach-daily'];
 export const CRON_JOB = 'google-health-senkron';
 export const GOOGLE_SECRET_NAMES = ['GOOGLE_HEALTH_CLIENT_ID', 'GOOGLE_HEALTH_CLIENT_SECRET'];
 export const CRON_SECRET_NAME = 'GHEALTH_CRON_SECRET';

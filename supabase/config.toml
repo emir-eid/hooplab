@@ -426,3 +426,6 @@ verify_jwt = false
 
 [functions.ghealth-sync]
 verify_jwt = false
+
+[functions.coach-daily]
+verify_jwt = false

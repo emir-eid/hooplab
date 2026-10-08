@@ -109,7 +109,7 @@ Bulut tarafını kurulum sihirbazı kurar (yukarıda). Kurduğu değerler:
 
 - Supabase secrets: `GOOGLE_HEALTH_CLIENT_ID`, `GOOGLE_HEALTH_CLIENT_SECRET`, `GHEALTH_CRON_SECRET`
 - Vault: `project_url`, `ghealth_cron_secret`
-- Fonksiyonlar: `ghealth-connect`, `ghealth-callback`, `ghealth-sync`
+- Fonksiyonlar: `ghealth-connect`, `ghealth-callback`, `ghealth-sync`, `coach-daily` (koçun günlük özeti; `ANTHROPIC_API_KEY` ister)
 
 Fonksiyon kodu değiştiğinde yeniden dağıtım: `npm run setup -- --redeploy --yes`. Web istemcisinin kurulumu: [rehber](guides/google-health-baglantisi.md) §4.
 
@@ -118,6 +118,8 @@ Yerel uçtan uca deneme (sentetik, gerçek Google'a gidilmez):
 1. `node tools/dev/fake-google-health.ts` (sahte Google, port 54399).
 2. `supabase/functions/.env` (gitignore'lu): istemci değerleri sahte (zamanlayıcı sırrı ve yerel Vault için `npm run setup -- --local --yes`; yerel mod gerçek Google dosyasını okumaz), `GHEALTH_REDIRECT_URI=http://127.0.0.1:54321/functions/v1/ghealth-callback`, `GHEALTH_AUTH_URL=http://127.0.0.1:54399/auth`, `GHEALTH_TOKEN_URL` / `GHEALTH_REVOKE_URL` / `GHEALTH_API_BASE` `http://host.docker.internal:54399/...`, `GHEALTH_CRON_SECRET`.
 3. `npx supabase functions serve --env-file supabase/functions/.env`, sonra `npm run web:local` ile Ben → Google Health. `npm run db:reset` yerel senkron verisini siler.
+
+Koçun günlük özeti yerelde (sentetik, gerçek Anthropic API'sine gidilmez, ücret yok): `node tools/dev/fake-anthropic.mjs` (port 54398), `supabase/functions/.env`'e `ANTHROPIC_API_KEY=sk-ant-yerel-sahte` ve `COACH_ANTHROPIC_BASE_URL=http://host.docker.internal:54398`, sonra `functions serve`. Demo kullanıcısıyla (seed) giriş yapıp `POST /functions/v1/coach-daily` gövdesinde anlık değerler (`supabase/functions/_shared/coach/snapshot.ts`); `?regenerate=1` elle yeniden üretme.
 
 ## 10. EAS (iOS derleme ve güncelleme)
 

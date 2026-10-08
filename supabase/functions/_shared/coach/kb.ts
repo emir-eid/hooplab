@@ -29,10 +29,14 @@ export interface KbSource {
   summary: string;
 }
 
+export type KbRuleValue = string | number | boolean | null | readonly KbRuleValue[] | { readonly [key: string]: KbRuleValue };
+
 export interface KbRule {
   id: string;
   module: string;
   description: string;
+  /** Kuralın sayısal değerleri (research/rules'taki `value`); motor sabitleri rules-sync testiyle bunlara eşit. */
+  value?: KbRuleValue;
   appliesTo?: string;
   notes?: string;
   sources: readonly string[];

@@ -43,7 +43,7 @@ Her faz, bitiş kriteri karşılanınca `/kapat` ile kapanır: faz özeti `docs/
 - [x] Vücut görünümü: döndürülebilir 3D manken, ağrı haritası, 1 gün / 3 gün / 1 hafta (2026-10-04, [0018](decisions/0018-vucut-gorunumu.md); iPhone'da doğrulandı). Filtrenin bölge yükü raporu Faz 2'de
 - [x] Toparlanma ekranı (HRV / dinlenik nabız / uyku, kişisel banda göre) (2026-10-05, [0021](decisions/0021-toparlanma-kisisel-bant.md); Bugün'de durum, hale, HRV grafiği; web önizlemesinde ve iPhone'da doğrulandı)
 - [x] Demo modu (sentetik "demo sporcu") (2026-10-05, [0022](decisions/0022-demo-modu.md); uygulama içi, çevrimdışı; Hazır / Kontrollü / Toparlan seçici)
-- [ ] Apple Developer Programı, EAS Build, TestFlight. EAS hazır (2026-10-05, [0024](decisions/0024-eas-derleme-ve-guncelleme.md)): proje, `eas.json`, `expo-updates` (fingerprint), kimlik ortamdan, EAS ortam değişkenleri; yerelde doğrulandı. Bekleyen: Apple üyeliği (kimlik doğrulaması reddedildi, destek vakası açık), API anahtarı, ilk derleme ve TestFlight
+- [ ] Apple Developer Programı, EAS Build, TestFlight. EAS hazır (2026-10-05, [0024](decisions/0024-eas-derleme-ve-guncelleme.md)): proje, `eas.json`, `expo-updates` (fingerprint), kimlik ortamdan, EAS ortam değişkenleri; yerelde doğrulandı. Bekleyen: Apple üyeliği (kimlik doğrulaması reddedildi, destek vakası açık; Apple destek vakası yanıt verdi; istenen kimlik ve adres belgeleri 2026-10-09'da e-postayla gönderildi, onay bekleniyor), API anahtarı, ilk derleme ve TestFlight
 - [x] Public'e geçiş öncesi denetim: `npm run guard:history` temiz (denylist dosyası ve secret ile), README hikayesi, LICENSE (MIT) (2026-10-05, [denetim raporu](audits/2026-10-05-public-oncesi.md)). Secret scanning + push protection private kişisel repoda açılamıyor (422), "Repo public" maddesine taşındı
 - [x] Repo public (2026-10-05 01:57): son geçmiş ve log taraması temiz; görünürlük değişti; secret scanning + push protection açık (ilk taramada uyarı 0); Wiki ve Projects kapatıldı ([denetim raporu](audits/2026-10-05-public-oncesi.md))
 
@@ -67,6 +67,10 @@ Her faz, bitiş kriteri karşılanınca `/kapat` ile kapanır: faz özeti `docs/
 - [x] Kurulum sihirbazı `ANTHROPIC_API_KEY`'i tanır (`setup:check` ve gizli girişle yazma) (2026-10-09; bulutta 13/13)
 - [x] Kanıt tabanı paketi (`research/` → Edge Function, testle eşit) ve kural grafiğiyle kaynak seçimi (2026-10-09): `npm run research:kb` → `supabase/functions/_shared/coach/kb-data.ts` (78 kaynak, 33 kural, ~150 KB); `selectForRules` / `fullKb` (`_shared/coach/kb.ts`), testli. Ölçüm → kural kimliği eşlemesi anlık değerlerle (günlük özet maddesi)
 - [ ] Günlük özet: anlık değerler + ilgili kaynaklar → Claude, alıntı denetçisi, `coach_summaries`; Bugün'de koç kartı; demo için sentetik özetler
+  - [x] Anlık değerlerin şeması ve doğrulaması, ölçüm → kural kimliği eşlemesi, "Günün sayıları" belgesi (eşikler kural paketinden), alıntı ve sayı denetçisi, `coach_summaries` (bulutta) (2026-10-09; `_shared/coach/snapshot.ts`, `documents.ts`, `audit.ts`, testli; uygulamanın açıklama sayfalarıyla eşleme testle bağlı)
+  - [x] `coach-daily` Edge Function (2026-10-09, bulutta): `_shared/coach/daily.ts` (SDK 0.128.0, Sonnet 5.5, citations, `fallbacks: "default"`, aynı gün önbellek, günde 3 deneme, hata kodları, kodla yönlendirme notları); testler gerçek SDK + sahte Anthropic sunucusuyla, yerelde Deno'da uçtan uca (`tools/dev/fake-anthropic.mjs`)
+  - [ ] İlk gerçek çağrı ve `usage` ölçümü (kullanıcı oturumu gerektiği için uygulama tarafıyla birlikte)
+  - [ ] Uygulamada anlık değerleri kuran modül, Bugün'de koç kartı, demo özetleri
 - [ ] "Bugün maç var" işareti ve koçta maç günü dili
 - [ ] Soru-cevap: soru sınıflandırma (Haiku), tam taban önbellekte, kaynak yoksa sabit metin, `coach_messages`
 - [ ] Kırmızı bayrak ve doping güvenlik kuralları (kodla yönlendirme ve sabit metinler)

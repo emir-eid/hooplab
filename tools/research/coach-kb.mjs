@@ -68,6 +68,7 @@ export function buildKb(root) {
         id: r.id,
         module: doc.module,
         description: r.description,
+        ...(r.value !== undefined ? { value: r.value } : {}),
         ...(r.applies_to ? { appliesTo: r.applies_to } : {}),
         ...(r.notes ? { notes: r.notes } : {}),
         sources: r.sources,
