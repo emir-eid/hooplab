@@ -64,3 +64,4 @@ Hangisi seçildi ve tek paragrafta neden.
 | [0029](0029-beslenme-ve-hidrasyon.md) | Beslenme ve hidrasyon: gün tipine göre karbonhidrat (3-5 / 5-7 / 8-10 g/kg), protein 1,2-2,0 g/kg, seansa bağlı ter testi (%2 kayıp, kilo artışı notu, sıvı hedefi); REDs için uyarı yok | Kabul edildi |
 | [0030](0030-ogun-kaydi.md) | Öğün kaydı: FDC'den sabit besin listesi (ev ölçüsü, gram) ve etiketten gram; alım hedef aralığa yerleştirilir (tahmin, renksiz); REDs için yine uyarı yok | Kabul edildi |
 | [0031](0031-su-kaydi-ve-renkli-bugun.md) | Su kaydı (hedefsiz, + ve Bugün'den hızlı ekleme), Bugün'de beslenme halkaları ve kategori rengi (karbonhidrat / protein / su), kaydırarak silme | Kabul edildi |
+| [0032](0032-ai-koc-tasarimi.md) | AI koç: Claude Sonnet 5.5, vektör araması yok (kural grafiğiyle seçim + önbellekli tam taban), citations ile kaynak zorunluluğu ve sayı denetimi, kodla güvenlik yönlendirmesi, maç günü işareti | Kabul edildi |

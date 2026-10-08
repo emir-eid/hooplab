@@ -1,9 +1,9 @@
 # 2026-10-08 12:06 — Takip: kişisel bant ve token süreleri
 
-- **Faz:** 2 tamam, 3 başlamadı (Faz 1'in TestFlight maddesi Apple'ı bekliyor; 2026-10-08'de hâlâ yanıt yok)
+- **Faz:** 2 tamam, 3 başladı (Blok 2) (Faz 1'in TestFlight maddesi Apple'ı bekliyor; 2026-10-08'de hâlâ yanıt yok)
 - **Durum:** açık (/rep)
-- **Model / efor:** Opus 5.5, düşük
-- **Commit'ler:** bu bloğun `/rep` commit'i
+- **Model / efor:** Opus 5.5, düşük (Blok 1); Opus 5.5, yüksek (Blok 2)
+- **Commit'ler:** `3f24adf` (Blok 1), Blok 2'nin `/rep` commit'i
 
 ## Blok 1 — Takip: kişisel bant cihazda, token süreleri (12:06)
 
@@ -28,10 +28,34 @@ STATE'teki 1. iş: gerçek hesapta kişisel bant oluştu mu, Bugün'de renk ve h
 ### Öğrenilenler
 - LESSONS: 7 günlük sürenin tam sınır saatleri ve ölçüm zamanı (yukarıda). Yeni ders yok.
 
+## Blok 2 — Faz 3: AI koç tasarımı, sağlayıcı kıyası, Anthropic Console (2026-10-09 00:28)
+
+### Amaç
+STATE'teki Faz 3 başlangıcı: koçun mimarisi (hangi model, kanıtlar nasıl seçilir, kaynak nasıl zorunlu kılınır, ne gider, maliyet), karar kaydı ve API hesabı.
+
+### Yapılanlar
+- **Ölçüm:** kanıt tabanı `research/sources` 79 dosya + `research/rules` 7 dosya ≈ 150 KB (tahminen ~50 bin token; ilk çağrıda ölçülecek). ROADMAP'in pgvector planı bu boyutta gereksiz bulundu.
+- **Sağlayıcı kıyası** (kullanıcı isteği: Claude Sonnet 5.5 ve Gemini, Kimi, ChatGPT karşılıkları): resmi fiyat sayfaları ve veri politikaları 2026-10-08'de okundu (Anthropic, ai.google.dev, developers.openai.com, platform.kimi.ai; gizlilik sayfaları). Aynı senaryoyla aylık tahmin: Sonnet 5.5 ~3,4 $, Gemini 3.1 Pro ~3,5 $, GPT-5.6 terra ~3,5 $, Kimi K3 ~4,9 $, Opus 5.5 ~6,8 $. Kimi veri politikası (Singapur, eğitimde kullanılabilir, kapatma yok) nedeniyle elendi. Tablo karar kaydında.
+- **Karar:** [0032](../decisions/0032-ai-koc-tasarimi.md). Kullanıcı kararları: Claude Sonnet 5.5 (masraf artarsa yeniden tartışılır), özet uygulama açılınca, "Bugün maç var" işareti Faz 3'te.
+- **Belgeler:** [ROADMAP](../ROADMAP.md) Faz 3 uygulama adımlarına bölündü; [PRODUCT](../PRODUCT.md) koç satırı, takvim girdisi, §10 maç günü sorusu kapandı; [COSTS](../COSTS.md) fiyatlar, tahmin, hesap ve sır; [DATA-INVENTORY](../DATA-INVENTORY.md) gidenler / gitmeyenler, `coach_*` tabloları, Anthropic saklama (30 gün, eğitimde yok); karar dizini.
+- **Anthropic Console** (kullanıcı, adım adım): 10 $ ön ödemeli kredi, otomatik yükleme kapalı (ayrı aylık sınır gereksiz bulundu); çalışma alanı HoopLab; anahtar `hooplab-koc` (bağlı hesap kullanıcı, kapsam HoopLab, bitiş 2027-10-09; kimlik federasyonu Supabase'de yok). Anahtar kullanıcının PowerShell'inde gizli girişle `supabase secrets set --env-file` ile yazıldı; Claude yalnız adın listede olduğunu denetledi.
+
+### Kararlar
+- [0032 AI koç](../decisions/0032-ai-koc-tasarimi.md) — Sonnet 5.5 (sınıflandırma Haiku 5.5), vektör araması yok (kural grafiğiyle seçim + önbellekli tam taban), citations ve sunucuda alıntı / sayı denetçisi, kırmızı bayrak ve takviye kodla yönlendirilir, anlık değerler uygulamadan gelir, demo API çağırmaz.
+
+### Sorunlar ve hatalar
+- İlk model sorusuna kullanıcı "koça API ile mi bağlanacak?" diye yanıt verdi; API ile şablon (AI'sız) yol açıklandı, ardından kullanıcı çok sağlayıcılı fiyat kıyası istedi.
+- OpenAI ve Kimi fiyat sayfaları yeni alan adlarına yönleniyordu (developers.openai.com, platform.kimi.ai); yönlendirme izlendi.
+
+### Öğrenilenler
+- LESSONS "Supabase": sırrı sohbete ve komut geçmişine sokmadan yazma yöntemi (gizli giriş → geçici dosya → `--env-file`).
+
 ## Açık kalanlar
 - Token düşüşü: CLI 10 Ekim 01:17, uygulama 11 Ekim 17:18 sonrası ölçülecek (STATE 2. iş).
 - Bandın hissiyatla uyumu tek günle değerlendirilmez; birkaç hafta gözlenir.
 - Apple Developer yanıtı bekleniyor.
+- Faz 3 uygulaması: kurulum sihirbazının `ANTHROPIC_API_KEY`'i tanıması, kanıt tabanı paketi, günlük özet, maç günü işareti, soru-cevap, güvenlik kuralları (ROADMAP Faz 3).
+- Anahtarın çalıştığı ilk koç fonksiyonu dağıtılınca görülecek.
 
 ## Sıradaki adım
-Faz 3 başlangıcı: AI koç tasarımı (PRODUCT koç bölümü ve karar kaydı).
+Faz 3: kanıt tabanı paketi ve kural grafiğiyle kaynak seçimi (saf fonksiyonlar, testli).

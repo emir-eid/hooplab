@@ -62,10 +62,15 @@ Her faz, bitiş kriteri karşılanınca `/kapat` ile kapanır: faz özeti `docs/
 
 ## Faz 3: AI koç
 
-- [ ] Kanıt tabanının Supabase'e (pgvector) yüklenmesi
-- [ ] Günlük özet: hesaplanmış sayılar + ilgili kanıtlar → Claude, her iddia kaynaklı
-- [ ] Soru-cevap: yalnız kanıt tabanından, kaynak yoksa "yeterli kanıt yok"
-- [ ] Kırmızı bayrak ve doping güvenlik kuralları
+- [x] Tasarım ve model kararı (2026-10-08, [0032](decisions/0032-ai-koc-tasarimi.md)): Claude Sonnet 5.5; pgvector yerine kural grafiğiyle seçim ve önbellekli tam taban; citations ile kaynak zorunluluğu, sayıları kod denetler; güvenlik yönlendirmesi kodda
+- [x] Anthropic Console: HoopLab çalışma alanı, ön ödemeli 10 $ (otomatik yükleme kapalı), anahtar `hooplab-koc` (bitiş 2027-10-09), `ANTHROPIC_API_KEY` Supabase secrets'ta (2026-10-09)
+- [ ] Kurulum sihirbazı `ANTHROPIC_API_KEY`'i tanır (`setup:check` ve gizli girişle yazma)
+- [ ] Kanıt tabanı paketi (`research/` → Edge Function, testle eşit) ve kural grafiğiyle kaynak seçimi
+- [ ] Günlük özet: anlık değerler + ilgili kaynaklar → Claude, alıntı denetçisi, `coach_summaries`; Bugün'de koç kartı; demo için sentetik özetler
+- [ ] "Bugün maç var" işareti ve koçta maç günü dili
+- [ ] Soru-cevap: soru sınıflandırma (Haiku), tam taban önbellekte, kaynak yoksa sabit metin, `coach_messages`
+- [ ] Kırmızı bayrak ve doping güvenlik kuralları (kodla yönlendirme ve sabit metinler)
+- [ ] Maliyet ölçümü: token kullanımı raporu, COSTS tahminiyle kıyas
 
 ## Faz 4: Son rötuşlar
 

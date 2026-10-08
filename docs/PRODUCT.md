@@ -25,7 +25,7 @@ Kod public ve MIT lisanslı. Başkası kendi Supabase ve Google Cloud hesabıyla
 | 5 | **Beslenme** | Gün tipi (dinlenme / antrenman / maç), kilo, basit öğün kaydı | Günlük karbonhidrat ve protein hedefi (g/kg); düşük enerji yeterliliği uyarısı | 2 |
 | 6 | **Hidrasyon** | Antrenman öncesi ve sonrası tartı, içilen sıvı, süre | Ter oranı, antrenman sonrası sıvı hedefi; %2'den fazla kilo kaybı uyarısı | 2 |
 | 7 | **Takviye** | Kullanıcının sorusu veya mevcut takviyeleri | Yalnız kanıtı güçlü olanlar hakkında bilgi; her zaman doping riski uyarısı | 3 |
-| 8 | **AI koç** | Hesaplanmış değerler ve kanıt tabanı | Günlük özet; soru-cevap; her iddia kaynaklı, kaynak yoksa "yeterli kanıt yok" | 3 |
+| 8 | **AI koç** | Hesaplanmış değerler, maç günü işareti ve kanıt tabanı | Günlük özet (uygulama günün ilk açılışında); soru-cevap; her cümle kaynağa veya hesaplanmış değere alıntılı, kaynak yoksa "yeterli kanıt yok"; kırmızı bayrak ve takviyede kodla sabit metin ([0032](decisions/0032-ai-koc-tasarimi.md)) | 3 |
 
 **Vücut görünümü** (Faz 1'de ağrı haritasıyla, [0018](decisions/0018-vucut-gorunumu.md)): döndürülebilir manken; 1 gün / 3 gün / 1 hafta. Hedef (kullanıcı tarifi, Faz 2-3): 3 gün ve 1 haftada o dönemdeki aktivitelerin türü ve yoğunluğu, hangi bölgeleri ne kadar etkilemiş olabileceği, kullanıcı girdileri ve cihaz verisiyle birlikte değerlendirilir ve bölge bazında bir rapor çıkar. Bölge yükünü modül 3 (motor) hesaplar, raporun metnini koç (modül 8) yazar; her ikisi "tahmin" etiketli.
 
@@ -41,7 +41,7 @@ Basketbola özgü odak: sıçrama yükü ve patellar / Aşil tendonu, ani duruş
 | **Sabah kilo** | Her sabah (isteğe bağlı) | 5 saniye | |
 | **Ter testi:** öncesi / sonrası tartı, içilen sıvı | Ara sıra (farklı koşullarda) | 1 dakika | |
 | **Beslenme ve su** | Gün içinde (basit) | Öğün başına 15 saniye | Kalori sayacı değil; karbonhidrat / protein kaba tahmini |
-| **Takvim:** maç günleri, seyahat (saat dilimi) | Haftalık | | Faz 1'de elle; otomatik kaynak açık soru |
+| **Takvim:** maç günleri, seyahat (saat dilimi) | Haftalık | | Faz 1'de elle; otomatik kaynak açık soru. Faz 3'te Bugün'de tek dokunuşluk "Bugün maç var" işareti ([0032](decisions/0032-ai-koc-tasarimi.md)) |
 
 İlke: girdi yükü düşük kalmalı. Her ekran tek elle, birkaç dokunuşla doldurulabilmeli.
 
@@ -98,4 +98,4 @@ Planlama sırasında anılan çalışmalar. Doğrulanıp `research/sources`'a gi
 | Kas / tendon modelinin bölge listesi ve hareket → bölge eşlemesi | Faz 2 başı |
 | Maç takvimi elle mi girilecek, otomatik bir kaynak var mı? | Faz 1 |
 | Takım staff'ıyla paylaşım isteniyor mu? | Faz 4 |
-| Günün durumu maç gününü bilmeli mi? Maç günü "Toparlan" uygulanamaz (maç atlanmaz); o gün işe yarayan dil başka (ısınma, karbonhidrat ve sıvı, maç sonrası toparlanma). İlk cihaz takibinde fark edildi. | Faz 3 (koç bağlamı), Faz 4 (maç günü protokolü) |
+| ~~Günün durumu maç gününü bilmeli mi?~~ Durumun kendisi değişmez; Bugün'e "Bugün maç var" işareti gelir, koç maç günü hazırlık dilini kullanır ([0032](decisions/0032-ai-koc-tasarimi.md)). Ayrıntılı protokol Faz 4'te | Faz 3 ✓ (koç), Faz 4 (protokol) |

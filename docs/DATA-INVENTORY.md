@@ -13,8 +13,8 @@ Hangi veri nerede durur, hangi servise ne gider, ne kadar saklanır, nasıl sili
 | Oturum: erişim ve yenileme token'ı, kullanıcı kimliği ve e-postası | Supabase Auth | iPhone Keychain (`expo-secure-store`, parçalı); web önizlemesinde tarayıcının localStorage'ı | Yalnız uygulama |
 | Profil: boy, kilo, doğum tarihi, sakatlık geçmişi | Uygulama | Yalnız Supabase | Sahibi; hesap motoru |
 | Hesaplanmış değerler: baseline, yük, tahminler, hedefler | Hesap motoru | Şimdilik saklanmaz: toparlanma bandı ve antrenman yükü her gösterimde cihazda, Supabase satırlarından hesaplanır ([0021](decisions/0021-toparlanma-kisisel-bant.md), [0025](decisions/0025-antrenman-yuku.md)); ileride koç için Supabase | Sahibi; AI koç (özet olarak) |
-| AI özetleri ve cevapları | Anthropic API | Supabase | Sahibi |
-| Kanıt tabanı: kaynak özetleri, kurallar | Bu repo (`research/`) | GitHub; Supabase (Faz 3, arama için) | Herkese açık (kişisel veri içermez) |
+| AI koç: gönderilen anlık değerler (snapshot), günlük özet, sorular, yanıtlar, alıntılar, sınıf, token kullanımı, denetim sonucu | Uygulama (snapshot, soru) ve Anthropic API (yanıt) | Supabase `coach_summaries`, `coach_messages` (Faz 3, [0032](decisions/0032-ai-koc-tasarimi.md)) | Sahibi okur (RLS); yazan yalnız koç Edge Function'ı |
+| Kanıt tabanı: kaynak özetleri, kurallar | Bu repo (`research/`) | GitHub; Faz 3'te koç Edge Function'ının içine paketlenir (veritabanına ve vektör aramasına girmez, [0032](decisions/0032-ai-koc-tasarimi.md)) | Herkese açık (kişisel veri içermez) |
 | Kişisel notlar | `/kapat` | `private/journal` + Drive yedeği | Sahibi |
 | Claude Code oturum dökümleri | Hook'lar | `private/transcripts` + Drive yedeği | Sahibi |
 | Google OAuth istemci sırrı ve token'ları (Faz 0) | `ghealth` setup | `private/ghealth` + Drive yedeği | `ghealth` CLI |
@@ -30,7 +30,7 @@ Hangi veri nerede durur, hangi servise ne gider, ne kadar saklanır, nasıl sili
 |---|---|---|
 | Google (Health API, OAuth) | Edge Functions'tan salt okuma istekleri (4 kapsam: aktivite, sağlık ölçümleri, uyku, ayarlar); token yenileme ve iptal (sahibinin kendi Google Cloud projesi, [0009](decisions/0009-herkes-kendi-hesabiyla.md), [0019](decisions/0019-google-health-senkronu.md)) | Uygulama girdileri, Supabase verisi |
 | Supabase (Frankfurt) | Uygulamanın tüm verisi | — |
-| Anthropic API (Faz 3) | Hesaplanmış özet sayılar, ilgili kanıt metinleri, kullanıcının sorusu | Ad, e-posta, doğum tarihi, kimlik bilgileri, ham zaman serileri |
+| Anthropic API (Faz 3, [0032](decisions/0032-ai-koc-tasarimi.md)) | Koç Edge Function'ından: motorun hesapladığı anlık değerler (bant, yük, g/kg hedefleri ve kayıtlı alım, notlar, kural kimlikleri), maç günü işareti, kanıt tabanı özetleri, kullanıcının yazdığı soru (olduğu gibi). Soru sınıflandırma için yalnız soru metni | Ad, e-posta, doğum tarihi, boy, sakatlık geçmişi, kimlik bilgileri, ham zaman serileri, Google verisinin kendisi. Kilo doğrudan gitmez (g/kg hedeflerinde dolaylı) |
 | GitHub | Kod ve belgeler; denylist (şifreli secret olarak) | Sağlık verisi, `private` klasörü |
 | Google Drive | `private` klasörünün kopyası | — |
 | claude.ai Artifacts | Tasarım maketleri (yalnız sentetik veri), sahibine özel bağlantı | Gerçek sağlık verisi, kişisel bilgi |
@@ -53,7 +53,7 @@ Son satıra dikkat: geliştirme sırasında sohbete yazılan veya Claude'a okutu
 | Google'daki kaynak veri | Google'ın politikası | Google Health / Google hesabı ayarlarından |
 | `private` klasörü ve Drive yedeği | Süresiz | Elle. Yedek eklemelidir: kaynakta silinen dosya yedekte kalır, ayrıca Drive'dan silinmelidir |
 | GitHub secret `GUARD_DENYLIST` | Süresiz | Repo ayarları → Secrets |
-| Anthropic API'ye giden istekler | Anthropic'in API veri politikası (Faz 3'te güncel haliyle buraya yazılacak) | — |
+| Anthropic API'ye giden istekler | Varsayılan olarak 30 gün içinde silinir; kullanım politikası ihlali işaretlenirse 2 yıla kadar. Varsayılan olarak model eğitiminde kullanılmaz (privacy.claude.com, 2026-10-08 okundu). Geri bildirim (beğen / beğenme) gönderilmez | Anthropic tarafında elle silme yok; saklama süresi dolunca. Supabase'deki kopya uygulamadan veya panodan |
 
 ## İlkeler
 
