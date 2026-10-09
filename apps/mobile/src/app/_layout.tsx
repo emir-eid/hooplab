@@ -93,6 +93,16 @@ function RootNavigator() {
               contentStyle: { backgroundColor: palette.bg },
             }}
           />
+          <Stack.Screen
+            name="coach-basis"
+            options={{
+              presentation: 'formSheet',
+              sheetAllowedDetents: [0.6, 1],
+              sheetGrabberVisible: true,
+              sheetCornerRadius: 24,
+              contentStyle: { backgroundColor: palette.bg },
+            }}
+          />
         </Stack.Protected>
         <Stack.Protected guard={!signedIn}>
           <Stack.Screen name="sign-in" />

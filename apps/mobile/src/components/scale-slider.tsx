@@ -38,6 +38,7 @@ export function ScaleSlider({ value, onChange, min, max, label, valueText, low, 
   const ratio = ((value ?? min) - min) / (max - min);
   // Topuz izin içinde kalır: merkezi yarıçap kadar içeride başlar ve biter.
   const knobLeft = ratio * (width - size.knob);
+  const fillWidth = knobLeft + size.knob;
 
   // Hareket nesnesi bir kez kurulur; geri çağrılar en güncel değerleri bu ref'ten okur.
   const latest = useRef({ width, value, onChange, min, max });
@@ -99,14 +100,16 @@ export function ScaleSlider({ value, onChange, min, max, label, valueText, low, 
           style={styles.track}>
           <View style={[styles.rail, { backgroundColor: palette.cardMuted }]} />
           {width > 0 && value !== null ? (
-            <Svg style={[styles.fill, { width: knobLeft + size.knob }]}>
+            // Boyut prop'la ve sayıyla: yalnız stil genişliği değişince iOS'ta "100%" dikdörtgen ilk ölçüde
+            // kalıyordu (dolgu başparmağı izlemedi, 2026-10-09 iPhone; LESSONS).
+            <Svg width={fillWidth} height={size.meter} style={styles.fill}>
               <Defs>
                 <LinearGradient id={gradientId} x1="0" y1="0" x2="1" y2="0">
                   <Stop offset="0" stopColor={palette.dot} />
                   <Stop offset="1" stopColor={palette.ink} />
                 </LinearGradient>
               </Defs>
-              <Rect width="100%" height="100%" rx={size.meter / 2} fill={`url(#${gradientId})`} />
+              <Rect x={0} y={0} width={fillWidth} height={size.meter} rx={size.meter / 2} fill={`url(#${gradientId})`} />
             </Svg>
           ) : null}
           {value !== null ? (

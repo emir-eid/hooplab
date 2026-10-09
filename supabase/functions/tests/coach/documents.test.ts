@@ -20,7 +20,7 @@ test('bloklar: önce maç günü, sonra ölçümler sabit sırayla; tahminler i�
     blocks.filter((b) => b.estimate).map((b) => b.id),
     ['load.ratio', 'regions.0', 'regions.1', 'pain.0', 'nutrition.intake'],
   );
-  for (const b of blocks.filter((x) => x.estimate)) assert.match(b.text, /tahmin|öğün kaydı yok/i, b.id);
+  for (const b of blocks.filter((x) => x.estimate)) assert.match(b.text, /tahmin/i, b.id);
 });
 
 test('sayılar uygulamadaki gibi yuvarlanır; eşikler kural değerlerinden', () => {
@@ -82,6 +82,7 @@ test('eksik değerler: bant yok, kilo yok, öğün yok, oran yok', () => {
   assert.equal(text(s, 'status'), 'Günün durumu: Bant oluşuyor. Kişisel bant için henüz yeterli gece yok.');
   assert.match(text(s, 'nutrition')!, /Sabah kilosu girilmediği için gram hedefi yok\.$/);
   assert.equal(text(s, 'nutrition.intake'), 'Bugün öğün kaydı yok.');
+  assert.equal(numbersBlocks(s, kb).find((b) => b.id === 'nutrition.intake')?.estimate, false, 'kayıt yokluğu tahmin değil');
   assert.equal(text(s, 'load.ratio'), 'Alıştığın seviyeye göre oran (tahmin): 28 günlük kayıt geçmişi olmadan hesaplanmaz.');
   assert.equal(text(s, 'checkin'), 'Sabah check-in toplamı: 20 / 25. Kişisel kıyas için henüz yeterli check-in yok.');
 });

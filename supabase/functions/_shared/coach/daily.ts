@@ -8,6 +8,7 @@
 import type Anthropic from 'npm:@anthropic-ai/sdk@0.128.0';
 
 import { auditResponse, type AuditResult, type ResponseBlock, type ResponseCitation } from './audit.ts';
+import { dailyAttemptLimit, routingNotes, type DailyResponse, type RoutingNote } from './contract.ts';
 import { dailyDocuments } from './documents.ts';
 import { selectForRules, type Kb } from './kb.ts';
 import { parseSnapshot, snapshotRuleIds, type CoachSnapshot } from './snapshot.ts';
@@ -18,21 +19,22 @@ export const coachEffort = 'medium';
 export const fallbackBeta = 'server-side-fallback-2026-07-01';
 /** Düşünme yanıtla aynı sınırı paylaşır; özet kısa olsa da kesilmesin. */
 export const coachMaxTokens = 16_000;
-/** Bir gün için en fazla deneme (ilk üretim dahil). Maliyet ayarı, bilimsel eşik değil. */
-export const dailyAttemptLimit = 3;
+export { dailyAttemptLimit, routingNotes, type DailyResponse, type RoutingNote };
 
 export const systemPrompt = `Sen HoopLab'in koçusun. Kullanıcı profesyonel bir basketbolcu; uygulamayı yalnız kendisi kullanıyor.
 Görevin: "Günün sayıları" belgesindeki değerleri kanıt tabanındaki kaynak özetlerine dayanarak yorumlayan kısa bir günlük özet yazmak.
 
 Kurallar:
 - Sayıları sen hesaplamazsın. Yalnız "Günün sayıları" belgesinde yazan sayıları, yazıldığı gibi kullan; yuvarlama, toplama, yüzde hesabı yapma. Belgede olmayan sayı yazma.
-- Rakam içeren her cümlede o sayının geçtiği bloğa alıntı yap.
+- Rakam içeren her cümlede o sayının geçtiği "Günün sayıları" bloğuna alıntı yap. Kaynak özetlerindeki sayıları (saat, gün, g/kg, yüzde) cümleye yazma: bir kaynağın sayısı gerekiyorsa aynı değer günün sayıları bloğunda varsa onu alıntıla, yoksa sayısız anlat.
 - Her öneri ve yorum cümlesi en az bir kaynak belgesine alıntı yapsın. Kaynaklarda dayanağı olmayan öneri yazma; dayanak yoksa "kanıt tabanında bunun için yeterli kaynak yok" de.
 - "Tahmin" yazan değerlerden söz ederken aynı cümlede "tahmin" sözcüğünü kullan.
 - Teşhis koyma, hastalık adı verme. Ölçülmeyen bir şeyi ölçülmüş gibi sunma. Risk ve sakatlık tahmini dili kullanma.
 - Maç günüyse toparlanma dili yerine maça hazırlık dili kullan: ısınma, karbonhidrat ve sıvı, maç sonrası toparlanma; her biri kaynaklı.
 - Türkçe yaz; "â" harfini kullanma (hala, zeka, kar). Sen diye hitap et.
-- Biçim: başlıksız, listesiz, 4-7 cümlelik tek paragraf. Önce günün durumu, sonra en önemli bir iki değer, sonra bugün için bir iki öneri. Belge adlarını ve kural kimliklerini yazma.`;
+- Biçim: başlıksız, listesiz düz cümleler; toplam 5-7 cümle, her cümle en fazla 22 kelime ve tek bir fikir. Uygulama cümleleri konularına göre (toparlanma, yük ve vücut, beslenme) kendisi gruplar.
+- İlk cümle yalnız günün durumu ve nedeni. Sonra her konu için en fazla iki cümle: en önemli değer ve varsa bugün için bir öneri. Her şeyi anlatmaya çalışma; bandın içindeki, olağan değerleri atla.
+- Parantez içinde açıklama yazma, kaynak metnini cümlede tekrar etme, "yani" ile aynı şeyi yeniden söyleme. Belge adlarını ve kural kimliklerini yazma.`;
 
 export const userInstruction = 'Bugünün özetini yaz.';
 
@@ -68,30 +70,9 @@ export interface MessagesApi {
   create(params: Anthropic.Beta.Messages.MessageCreateParamsNonStreaming): Promise<Anthropic.Beta.Messages.BetaMessage>;
 }
 
-/** Uygulamaya dönen sonuç. Reddedilen ve başarısız denemede model metni yoktur; uygulama açıklama metinlerini gösterir. */
-export type DailyResponse =
-  | { status: 'accepted'; cached: boolean; sentences: AuditResult['sentences']; notes: RoutingNote[] }
-  | { status: 'rejected'; cached: boolean; notes: RoutingNote[] }
-  | { status: 'failed'; cached: boolean; error: string; notes: RoutingNote[] }
-  | { status: 'invalid'; errors: string[] }
-  | { status: 'limit' };
-
 export interface DailyResult {
   httpStatus: number;
   body: DailyResponse;
-}
-
-/**
- * Kodla yönlendirme (karar 0032): motorun tanı koymayan notları varsa uygulama kendi sabit yönlendirme
- * metnini gösterir. Metin modele bırakılmaz; burada yalnız hangi notun gösterileceği belirlenir.
- */
-export type RoutingNote = 'respiration_high' | 'pain_high';
-
-export function routingNotes(snapshot: CoachSnapshot): RoutingNote[] {
-  const notes: RoutingNote[] = [];
-  if (snapshot.respiration?.nightHigh === true) notes.push('respiration_high');
-  if (snapshot.pain?.some((p) => p.reasons.includes('high'))) notes.push('pain_high');
-  return notes;
 }
 
 /** Sporcunun yerel günü, sunucunun UTC gününden en fazla bir gün sapabilir (saat dilimi payı). */
@@ -142,6 +123,8 @@ export interface DailyInput {
   userId: string;
   body: unknown;
   regenerate: boolean;
+  /** Yalnız bak: o gün deneme yoksa model çağrılmaz, `none` döner (uygulama check-in'i bekliyor). */
+  peek?: boolean;
   now: Date;
 }
 
@@ -160,6 +143,7 @@ export async function runDaily(input: DailyInput, deps: { store: CoachStore; mes
     // Günün kabul edilmiş özeti varsa o gösterilir; yoksa en son denemenin sonucu.
     return present(rows.find((r) => r.status === 'accepted') ?? latest, true, notes);
   }
+  if (!latest && input.peek) return { httpStatus: 200, body: { status: 'none', notes } };
   if (rows.length >= dailyAttemptLimit) return { httpStatus: 429, body: { status: 'limit' } };
 
   const { params, layout } = buildRequest(snapshot, deps.kb);

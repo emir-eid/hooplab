@@ -66,15 +66,15 @@ Her faz, bitiş kriteri karşılanınca `/kapat` ile kapanır: faz özeti `docs/
 - [x] Anthropic Console: HoopLab çalışma alanı, ön ödemeli 10 $ (otomatik yükleme kapalı), anahtar `hooplab-koc` (bitiş 2027-10-09), `ANTHROPIC_API_KEY` Supabase secrets'ta (2026-10-09)
 - [x] Kurulum sihirbazı `ANTHROPIC_API_KEY`'i tanır (`setup:check` ve gizli girişle yazma) (2026-10-09; bulutta 13/13)
 - [x] Kanıt tabanı paketi (`research/` → Edge Function, testle eşit) ve kural grafiğiyle kaynak seçimi (2026-10-09): `npm run research:kb` → `supabase/functions/_shared/coach/kb-data.ts` (78 kaynak, 33 kural, ~150 KB); `selectForRules` / `fullKb` (`_shared/coach/kb.ts`), testli. Ölçüm → kural kimliği eşlemesi anlık değerlerle (günlük özet maddesi)
-- [ ] Günlük özet: anlık değerler + ilgili kaynaklar → Claude, alıntı denetçisi, `coach_summaries`; Bugün'de koç kartı; demo için sentetik özetler
+- [x] Günlük özet: anlık değerler + ilgili kaynaklar → Claude, alıntı denetçisi, `coach_summaries`; Bugün'de koç kartı; demo için sentetik özetler (2026-10-09)
   - [x] Anlık değerlerin şeması ve doğrulaması, ölçüm → kural kimliği eşlemesi, "Günün sayıları" belgesi (eşikler kural paketinden), alıntı ve sayı denetçisi, `coach_summaries` (bulutta) (2026-10-09; `_shared/coach/snapshot.ts`, `documents.ts`, `audit.ts`, testli; uygulamanın açıklama sayfalarıyla eşleme testle bağlı)
   - [x] `coach-daily` Edge Function (2026-10-09, bulutta): `_shared/coach/daily.ts` (SDK 0.128.0, Sonnet 5.5, citations, `fallbacks: "default"`, aynı gün önbellek, günde 3 deneme, hata kodları, kodla yönlendirme notları); testler gerçek SDK + sahte Anthropic sunucusuyla, yerelde Deno'da uçtan uca (`tools/dev/fake-anthropic.mjs`)
-  - [ ] İlk gerçek çağrı ve `usage` ölçümü (kullanıcı oturumu gerektiği için uygulama tarafıyla birlikte)
-  - [ ] Uygulamada anlık değerleri kuran modül, Bugün'de koç kartı, demo özetleri
+  - [x] İlk gerçek çağrı ve `usage` ölçümü (2026-10-09, iPhone): dolu günde ~60 bin girdi token'ı, çağrı başına ~0,15 $; ilk deneme denetçi hatasıyla reddedildi, düzeltildi (LESSONS)
+  - [x] Uygulamada anlık değerleri kuran modül, Bugün'de koç kartı, demo özetleri (2026-10-09; [0033](decisions/0033-koc-ozeti-check-in-sonrasi.md): check-in'den sonra yazılır, kart konu başlıklarıyla gruplar)
 - [ ] "Bugün maç var" işareti ve koçta maç günü dili
 - [ ] Soru-cevap: soru sınıflandırma (Haiku), tam taban önbellekte, kaynak yoksa sabit metin, `coach_messages`
 - [ ] Kırmızı bayrak ve doping güvenlik kuralları (kodla yönlendirme ve sabit metinler)
-- [ ] Maliyet ölçümü: token kullanımı raporu, COSTS tahminiyle kıyas
+- [ ] Maliyet ölçümü ve düşürme: token kullanımı raporu, COSTS tahminiyle kıyas; kaliteden ödün vermeden düşürme seçenekleri (ilk ölçüm 2026-10-09: tahminin 4 katı)
 
 ## Faz 4: Son rötuşlar
 

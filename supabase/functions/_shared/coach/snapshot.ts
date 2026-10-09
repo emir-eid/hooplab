@@ -317,7 +317,8 @@ class Checker {
 }
 
 // Veri doğrulama aralıkları (bilimsel eşik değil): fizyolojik olarak olanaksız ya da biçimce bozuk değerleri ayıklar.
-const limits = {
+// Uygulama da anlık değerleri kurarken aynı aralıkları kullanır (aralık dışı seçmeli değer gönderilmez).
+export const snapshotLimits = {
   hrvMs: [1, 300],
   rhrBpm: [20, 200],
   respirationBpm: [4, 60],
@@ -369,24 +370,24 @@ const parsers: { [K in MetricKey]: (c: Checker, value: unknown, path: string) =>
     return { level: c.oneOf(o.level, `${path}.level`, dayLevels), signals: c.uniqueOneOf(o.signals, `${path}.signals`, recoverySignals) };
   },
   hrv(c, value, path) {
-    const m = bandMetric(c, value, path, limits.hrvMs);
+    const m = bandMetric(c, value, path, snapshotLimits.hrvMs);
     return m && { rolling: m.rolling, lastNight: m.lastNight, band: m.band, position: m.position };
   },
   rhr(c, value, path) {
-    const m = bandMetric(c, value, path, limits.rhrBpm);
+    const m = bandMetric(c, value, path, snapshotLimits.rhrBpm);
     return m && { rolling: m.rolling, lastNight: m.lastNight, band: m.band, position: m.position };
   },
   sleep(c, value, path) {
     const o = c.object(value, path, ['rollingHours', 'lastNightHours', 'short']);
     if (!o) return null;
     return {
-      rollingHours: c.nullableNumber(o.rollingHours, `${path}.rollingHours`, ...limits.sleepHours),
-      lastNightHours: c.nullableNumber(o.lastNightHours, `${path}.lastNightHours`, ...limits.sleepHours),
+      rollingHours: c.nullableNumber(o.rollingHours, `${path}.rollingHours`, ...snapshotLimits.sleepHours),
+      lastNightHours: c.nullableNumber(o.lastNightHours, `${path}.lastNightHours`, ...snapshotLimits.sleepHours),
       short: c.nullableBoolean(o.short, `${path}.short`),
     };
   },
   respiration(c, value, path) {
-    const m = bandMetric(c, value, path, limits.respirationBpm, ['nightHigh']);
+    const m = bandMetric(c, value, path, snapshotLimits.respirationBpm, ['nightHigh']);
     if (!m) return null;
     return {
       rolling: m.rolling,
@@ -400,9 +401,9 @@ const parsers: { [K in MetricKey]: (c: Checker, value: unknown, path: string) =>
     const o = c.object(value, path, ['total', 'baselineMean', 'z', 'low', 'topDrop']);
     if (!o) return null;
     return {
-      total: c.number(o.total, `${path}.total`, ...limits.checkinTotal, { integer: true }),
-      baselineMean: c.nullableNumber(o.baselineMean, `${path}.baselineMean`, ...limits.checkinTotal),
-      z: c.nullableNumber(o.z, `${path}.z`, ...limits.z),
+      total: c.number(o.total, `${path}.total`, ...snapshotLimits.checkinTotal, { integer: true }),
+      baselineMean: c.nullableNumber(o.baselineMean, `${path}.baselineMean`, ...snapshotLimits.checkinTotal),
+      z: c.nullableNumber(o.z, `${path}.z`, ...snapshotLimits.z),
       low: c.boolean(o.low, `${path}.low`),
       topDrop: c.nullableOneOf(o.topDrop, `${path}.topDrop`, wellnessItems),
     };
@@ -411,14 +412,14 @@ const parsers: { [K in MetricKey]: (c: Checker, value: unknown, path: string) =>
     const o = c.object(value, path, ['week', 'previousWeek', 'weekChange', 'weeklyAverage', 'ratio', 'spike', 'monotony', 'strain']);
     if (!o) return null;
     return {
-      week: c.nullableNumber(o.week, `${path}.week`, ...limits.loadAu),
-      previousWeek: c.nullableNumber(o.previousWeek, `${path}.previousWeek`, ...limits.loadAu),
-      weekChange: c.nullableNumber(o.weekChange, `${path}.weekChange`, ...limits.weekChange),
-      weeklyAverage: c.nullableNumber(o.weeklyAverage, `${path}.weeklyAverage`, ...limits.loadAu),
-      ratio: c.nullableNumber(o.ratio, `${path}.ratio`, ...limits.ratio),
+      week: c.nullableNumber(o.week, `${path}.week`, ...snapshotLimits.loadAu),
+      previousWeek: c.nullableNumber(o.previousWeek, `${path}.previousWeek`, ...snapshotLimits.loadAu),
+      weekChange: c.nullableNumber(o.weekChange, `${path}.weekChange`, ...snapshotLimits.weekChange),
+      weeklyAverage: c.nullableNumber(o.weeklyAverage, `${path}.weeklyAverage`, ...snapshotLimits.loadAu),
+      ratio: c.nullableNumber(o.ratio, `${path}.ratio`, ...snapshotLimits.ratio),
       spike: c.boolean(o.spike, `${path}.spike`),
-      monotony: c.nullableNumber(o.monotony, `${path}.monotony`, ...limits.monotony),
-      strain: c.nullableNumber(o.strain, `${path}.strain`, ...limits.strainAu),
+      monotony: c.nullableNumber(o.monotony, `${path}.monotony`, ...snapshotLimits.monotony),
+      strain: c.nullableNumber(o.strain, `${path}.strain`, ...snapshotLimits.strainAu),
     };
   },
   regions(c, value, path) {
@@ -428,11 +429,11 @@ const parsers: { [K in MetricKey]: (c: Checker, value: unknown, path: string) =>
       if (!o) return null;
       return {
         region: c.oneOf(o.region, `${p}.region`, bodyRegions),
-        load: c.number(o.load, `${p}.load`, ...limits.loadAu),
-        sessions: c.number(o.sessions, `${p}.sessions`, ...limits.sessions, { integer: true }),
-        hoursSinceLoaded: c.nullableNumber(o.hoursSinceLoaded, `${p}.hoursSinceLoaded`, ...limits.hours),
-        windowHours: c.number(o.windowHours, `${p}.windowHours`, ...limits.hours),
-        typical: c.nullableNumber(o.typical, `${p}.typical`, ...limits.loadAu),
+        load: c.number(o.load, `${p}.load`, ...snapshotLimits.loadAu),
+        sessions: c.number(o.sessions, `${p}.sessions`, ...snapshotLimits.sessions, { integer: true }),
+        hoursSinceLoaded: c.nullableNumber(o.hoursSinceLoaded, `${p}.hoursSinceLoaded`, ...snapshotLimits.hours),
+        windowHours: c.number(o.windowHours, `${p}.windowHours`, ...snapshotLimits.hours),
+        typical: c.nullableNumber(o.typical, `${p}.typical`, ...snapshotLimits.loadAu),
       };
     });
     const regions = items.filter((r) => r !== null);
@@ -447,8 +448,8 @@ const parsers: { [K in MetricKey]: (c: Checker, value: unknown, path: string) =>
       return {
         region: c.oneOf(o.region, `${p}.region`, bodyRegions),
         side: c.oneOf(o.side, `${p}.side`, bodySides),
-        pain: c.number(o.pain, `${p}.pain`, ...limits.nrs, { integer: true }),
-        yesterdayPain: c.nullableNumber(o.yesterdayPain, `${p}.yesterdayPain`, ...limits.nrs, { integer: true }),
+        pain: c.number(o.pain, `${p}.pain`, ...snapshotLimits.nrs, { integer: true }),
+        yesterdayPain: c.nullableNumber(o.yesterdayPain, `${p}.yesterdayPain`, ...snapshotLimits.nrs, { integer: true }),
         reasons: c.uniqueOneOf(o.reasons, `${p}.reasons`, painNoteReasons),
       };
     });
@@ -461,32 +462,32 @@ const parsers: { [K in MetricKey]: (c: Checker, value: unknown, path: string) =>
     if (!o) return null;
     return {
       dayType: c.oneOf(o.dayType, `${path}.dayType`, dayTypes),
-      carbsPerKg: c.range(o.carbsPerKg, `${path}.carbsPerKg`, ...limits.perKg),
-      proteinPerKg: c.range(o.proteinPerKg, `${path}.proteinPerKg`, ...limits.perKg),
-      carbsG: c.nullableRange(o.carbsG, `${path}.carbsG`, ...limits.grams),
-      proteinG: c.nullableRange(o.proteinG, `${path}.proteinG`, ...limits.grams),
-      intakeCarbsG: c.nullableNumber(o.intakeCarbsG, `${path}.intakeCarbsG`, ...limits.grams),
-      intakeProteinG: c.nullableNumber(o.intakeProteinG, `${path}.intakeProteinG`, ...limits.grams),
+      carbsPerKg: c.range(o.carbsPerKg, `${path}.carbsPerKg`, ...snapshotLimits.perKg),
+      proteinPerKg: c.range(o.proteinPerKg, `${path}.proteinPerKg`, ...snapshotLimits.perKg),
+      carbsG: c.nullableRange(o.carbsG, `${path}.carbsG`, ...snapshotLimits.grams),
+      proteinG: c.nullableRange(o.proteinG, `${path}.proteinG`, ...snapshotLimits.grams),
+      intakeCarbsG: c.nullableNumber(o.intakeCarbsG, `${path}.intakeCarbsG`, ...snapshotLimits.grams),
+      intakeProteinG: c.nullableNumber(o.intakeProteinG, `${path}.intakeProteinG`, ...snapshotLimits.grams),
       carbsPosition: c.nullableOneOf(o.carbsPosition, `${path}.carbsPosition`, rangePositions),
       proteinPosition: c.nullableOneOf(o.proteinPosition, `${path}.proteinPosition`, rangePositions),
-      meals: c.number(o.meals, `${path}.meals`, ...limits.meals, { integer: true }),
+      meals: c.number(o.meals, `${path}.meals`, ...snapshotLimits.meals, { integer: true }),
     };
   },
   fluid(c, value, path) {
     const o = c.object(value, path, ['totalL']);
     if (!o) return null;
-    return { totalL: c.number(o.totalL, `${path}.totalL`, ...limits.liters) };
+    return { totalL: c.number(o.totalL, `${path}.totalL`, ...snapshotLimits.liters) };
   },
   sweatTest(c, value, path) {
     const o = c.object(value, path, ['lossL', 'rateLPerH', 'changePercent', 'lossNote', 'gainNote', 'fluidTargetL']);
     if (!o) return null;
     return {
-      lossL: c.number(o.lossL, `${path}.lossL`, ...limits.liters),
-      rateLPerH: c.number(o.rateLPerH, `${path}.rateLPerH`, ...limits.litersPerHour),
-      changePercent: c.number(o.changePercent, `${path}.changePercent`, ...limits.percent),
+      lossL: c.number(o.lossL, `${path}.lossL`, ...snapshotLimits.liters),
+      rateLPerH: c.number(o.rateLPerH, `${path}.rateLPerH`, ...snapshotLimits.litersPerHour),
+      changePercent: c.number(o.changePercent, `${path}.changePercent`, ...snapshotLimits.percent),
       lossNote: c.boolean(o.lossNote, `${path}.lossNote`),
       gainNote: c.boolean(o.gainNote, `${path}.gainNote`),
-      fluidTargetL: c.nullableRange(o.fluidTargetL, `${path}.fluidTargetL`, ...limits.liters),
+      fluidTargetL: c.nullableRange(o.fluidTargetL, `${path}.fluidTargetL`, ...snapshotLimits.liters),
     };
   },
 };

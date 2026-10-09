@@ -4,7 +4,7 @@
 import { loadEwma, loadRatioRule, loadSpikeRule, loadWeek, monotonyRule, type TrainingLoadReading } from '@hooplab/engine';
 import type { LoadGroup } from '@hooplab/theme';
 
-import { formatDecimal, weeks } from '@/copy/recovery';
+import { formatDecimal, weeks } from './recovery.ts';
 
 /** Binlik ayırıcılı tam sayı: 8027 → "8.027". */
 export function formatLoad(value: number): string {

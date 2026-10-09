@@ -3,6 +3,10 @@
 
 import { addIsoDays, checkinBaseline, readCheckin, type CheckinReading, type DayType, type Meal } from '@hooplab/engine';
 
+import { routingNotes } from '../../../../supabase/functions/_shared/coach/contract.ts';
+
+import type { CoachReply } from '@/data/coach';
+import type { CoachSnapshot } from '@/data/coach-snapshot';
 import type { Checkin, ExerciseToTag, NewTrainingSession, Result, TrainingSession } from '@/data/daily-log';
 import { linkCandidates, pendingExercises, type ExerciseSession } from '@/data/exercise-tagging';
 import type { SyncStatusRow } from '@/data/google-health-status';
@@ -13,6 +17,7 @@ import type { MealInput } from '@/data/nutrition';
 import { buildNutritionView, distinctRecent, recentMealDays, toMeals, toStoredItems, weightFrom, type NutritionView } from '@/data/nutrition-view';
 import { buildRegionLoadView, regionFrom, type RegionLoadView } from '@/data/region-load-view';
 import { buildTrainingLoadView, loadChartDays, type TrainingLoadView } from '@/data/training-load-view';
+import { demoCoachSummary } from '@/demo/demo-coach';
 import { createDemoDb, type DemoDb, type DemoScenario } from '@/demo/demo-data';
 
 export const demoUnavailable = 'Demoda Google Health bağlantısı yok; veriler sentetik.';
@@ -204,6 +209,14 @@ export class DemoStore {
     const { [localDate]: _removed, ...rest } = this.db.dayTypes;
     this.db.dayTypes = dayType === null ? rest : { ...rest, [localDate]: dayType };
     return ok(null);
+  }
+
+  /** Koçun özeti: önceden yazılmış sentetik metin, o anki demo değerlerinden (karar 0032); API çağrılmaz. */
+  async fetchCoachDaily(snapshot: CoachSnapshot): Promise<Result<CoachReply>> {
+    return ok({
+      response: { status: 'accepted', cached: true, sentences: demoCoachSummary(this.scenario, snapshot), notes: routingNotes(snapshot) },
+      demo: true,
+    });
   }
 
   async fetchSyncStatus(): Promise<Result<SyncStatusRow | null>> {

@@ -65,3 +65,4 @@ Hangisi seçildi ve tek paragrafta neden.
 | [0030](0030-ogun-kaydi.md) | Öğün kaydı: FDC'den sabit besin listesi (ev ölçüsü, gram) ve etiketten gram; alım hedef aralığa yerleştirilir (tahmin, renksiz); REDs için yine uyarı yok | Kabul edildi |
 | [0031](0031-su-kaydi-ve-renkli-bugun.md) | Su kaydı (hedefsiz, + ve Bugün'den hızlı ekleme), Bugün'de beslenme halkaları ve kategori rengi (karbonhidrat / protein / su), kaydırarak silme | Kabul edildi |
 | [0032](0032-ai-koc-tasarimi.md) | AI koç: Claude Sonnet 5.5, vektör araması yok (kural grafiğiyle seçim + önbellekli tam taban), citations ile kaynak zorunluluğu ve sayı denetimi, kodla güvenlik yönlendirmesi, maç günü işareti | Kabul edildi |
+| [0033](0033-koc-ozeti-check-in-sonrasi.md) | Koçun günlük özeti check-in'den sonra yazılır (öncesinde yalnız bakılır, elle yazdırılabilir); kart cümleleri alıntıladıkları ölçümün konusuna göre gruplar | Kabul edildi |

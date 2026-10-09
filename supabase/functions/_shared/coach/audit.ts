@@ -117,7 +117,8 @@ const adviceStems = [
   'hedefle',
   'tüket',
   'göster',
-  'işaret',
+  // "işaret ediyor" yorumdur; "işaretlenmedi" değil (2026-10-09 ilk gerçek yanıt).
+  'işaret ed',
   'anlam',
   'demek',
   'çünkü',
@@ -251,14 +252,29 @@ export function auditResponse(content: readonly ResponseBlock[], layout: readonl
   const sentences = splitSentences(full);
   if (sentences.length === 0) problems.push({ code: 'empty', sentence: null });
 
+  // Metni boş (ya da harf ve rakam içermeyen) alıntılı parça önündeki cümleye aittir: Sonnet 5.5 cümleyi alıntısız
+  // yazıp alıntıları hemen ardından boş metinli ayrı bir blokta verebiliyor (LESSONS, 2026-10-09 ilk gerçek çağrı).
+  const anchored = new Map<number, ResponseCitation[]>();
+  for (const seg of segments) {
+    if (seg.citations.length === 0 || /[\p{L}\d]/u.test(full.slice(seg.start, seg.end))) continue;
+    let owner = 0;
+    sentences.forEach((s, i) => {
+      if (s.start < seg.start) owner = i;
+    });
+    anchored.set(owner, [...(anchored.get(owner) ?? []), ...seg.citations]);
+  }
+
   const audited: AuditSentence[] = [];
   const estimateCited: boolean[] = [];
   sentences.forEach((sentence, i) => {
     // Parça cümleyle yalnız harf ya da rakam paylaşıyorsa sayılır: sonraki alıntılı parçanın başındaki nokta
     // önceki cümleye o parçanın alıntısını taşımasın.
-    const citations = segments
-      .filter((seg) => seg.start < sentence.end && seg.end > sentence.start && /[\p{L}\d]/u.test(full.slice(Math.max(seg.start, sentence.start), Math.min(seg.end, sentence.end))))
-      .flatMap((seg) => seg.citations);
+    const citations = [
+      ...segments
+        .filter((seg) => seg.start < sentence.end && seg.end > sentence.start && /[\p{L}\d]/u.test(full.slice(Math.max(seg.start, sentence.start), Math.min(seg.end, sentence.end))))
+        .flatMap((seg) => seg.citations),
+      ...(anchored.get(i) ?? []),
+    ];
 
     const numberBlocks: NumbersBlock[] = [];
     const sourceIds: string[] = [];

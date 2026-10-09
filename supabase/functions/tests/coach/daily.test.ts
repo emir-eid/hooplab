@@ -143,6 +143,24 @@ test('aynı gün yeniden açılış: model çağrılmaz, saklanan özet döner',
   assert.ok(again.body.status === 'accepted' && again.body.cached);
 });
 
+test('yalnız bakma: deneme yoksa model çağrılmaz ve kayıt açılmaz; varsa saklanan sonuç döner', async () => {
+  const { fake, rows } = setup();
+  const { store } = memoryStore();
+  const client = new Anthropic({ apiKey: 'sk-ant-test', baseURL: 'https://anthropic.test', fetch: fake.fetch, maxRetries: 0 });
+  const peek = () =>
+    runDaily({ userId: USER, body: asRequestBody(fullSnapshot()), regenerate: false, peek: true, now: NOW }, { store, messages: client.beta.messages, kb });
+  const empty = await peek();
+  assert.deepEqual(empty, { httpStatus: 200, body: { status: 'none', notes: [] } });
+  assert.equal(fake.requests.length, 0);
+  assert.equal(rows.length, 0);
+
+  fake.reply({ kind: 'message', message: message(goodContent()) });
+  await runDaily({ userId: USER, body: asRequestBody(fullSnapshot()), regenerate: false, now: NOW }, { store, messages: client.beta.messages, kb });
+  const saved = await peek();
+  assert.ok(saved.body.status === 'accepted' && saved.body.cached);
+  assert.equal(fake.requests.length, 1);
+});
+
 test('uydurma sayı: yanıt reddedilir, metin uygulamaya gitmez ama denetim için saklanır', async () => {
   const { fake, rows, run } = setup();
   fake.reply({

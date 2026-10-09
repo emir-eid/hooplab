@@ -5,6 +5,7 @@ Uygulamaya veya altyapıya görünür değişiklikler. Biçim: [Keep a Changelog
 ## [Yayınlanmamış]
 
 ### Eklendi
+- AI koç günlük özeti, uygulama tarafı (karar 0032, 0033): Bugün'de koç kartı (check-in'den sonra yazılır, konu başlıklarıyla gruplu, dayanak rozetleri ve Dayanaklar sayfası, kodla yönlendirme notları), uygulamada anlık değerler (sunucunun şemasıyla doğrulanır), demo için sentetik özetler; `coach-daily` `?peek=1`.
 - AI koç günlük özeti, sunucu tarafı (karar 0032): `coach-daily` Edge Function (Claude Sonnet 5.5, citations, sunucu taraflı yedek, aynı gün önbellek, günde 3 deneme), anlık değer şeması ve "Günün sayıları" belgesi (eşikler kural paketinden), alıntı ve sayı denetçisi, `coach_summaries` tablosu (sahibi okur, yazan yalnız fonksiyon); yerel deneme için sahte Anthropic sunucusu (`tools/dev/fake-anthropic.mjs`). Kanıt tabanı paketi kural değerlerini de taşıyor.
 - AI koç hazırlığı (karar 0032): kanıt tabanı paketi (`npm run research:kb` → `supabase/functions/_shared/coach/kb-data.ts`, testle `research/`'e eşit) ve kural grafiğiyle kaynak seçimi; kurulum sihirbazı `ANTHROPIC_API_KEY`'i denetler ve eksikse gizli girişle ister.
 - Proje iskeleti: `code` (repo) ve `private` (repo dışı) ayrımı.

@@ -149,3 +149,35 @@ test('alıntının kapsadığı birden çok blok birlikte sayılır', () => {
   const span: ResponseCitation = { type: 'content_block_location', document_index: 0, start_block_index: hrv, end_block_index: hrv + 2 };
   assert.deepEqual(codes([t('HRV ortalaman 48 ms, dinlenik nabzın 52 atım/dk.', [span])]), []);
 });
+
+test('alıntı ayrı boş blokta gelirse önündeki cümleye bağlanır (Sonnet 5.5, 2026-10-09 ilk gerçek yanıt)', () => {
+  // Gerçek yanıtın yapısı (sentetik metinle): cümle alıntısız blok, alıntılar hemen ardından metni boş blok.
+  const content = [
+    t('Günün durumu Kontrollü.'),
+    t('', num('status')),
+    t(' HRV ortalaman 48 ms ile bandının altında.'),
+    t('', num('hrv')),
+    t(' HRV tek gece yerine ortalamayla okunmalı.'),
+    t('', [src('plews-2013')]),
+  ];
+  const a = auditResponse(content, layout);
+  assert.deepEqual(a.problems, []);
+  assert.deepEqual(
+    a.sentences.map((s) => [s.numbers, s.sources]),
+    [
+      [['status'], []],
+      [['hrv'], []],
+      [[], ['plews-2013']],
+    ],
+  );
+});
+
+test('boş alıntı bloğu sonraki cümleye taşınmaz: alıntısız cümle yine yakalanır', () => {
+  const content = [t('HRV ortalaman 48 ms ile bandının altında.'), t('', num('hrv')), t(' Uyku ortalaman 6,4 saat.')];
+  assert.deepEqual(codes(content), ['number_uncited']);
+});
+
+test('"işaretlenmedi" yorum sayılmaz, "işaret ediyor" sayılır', () => {
+  assert.equal(isAdviceOrInterpretation('Bugün maç günü işaretlenmedi.'), false);
+  assert.equal(isAdviceOrInterpretation('Bu düşüş birikmiş yüke işaret ediyor.'), true);
+});

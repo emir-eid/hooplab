@@ -1,6 +1,7 @@
 // Koçun günlük özeti (karar 0032). Uygulama günün ilk açılışında motorun anlık değerlerini POST eder;
 // fonksiyon doğrular, gerekiyorsa Claude'u çağırır, denetler ve `coach_summaries`'e yazar.
-// Yalnız oturum açmış kullanıcı (auth: 'user'). `?regenerate=1` elle yeniden üretmedir (günde sınırlı).
+// Yalnız oturum açmış kullanıcı (auth: 'user'). `?regenerate=1` elle yeniden üretmedir (günde sınırlı);
+// `?peek=1` yalnız saklanan sonuca bakar, o gün deneme yoksa model çağrılmaz.
 // Yanıtta model metni yalnız denetimden geçtiyse bulunur. Anahtar yalnız Supabase secrets'ta.
 
 import Anthropic from 'npm:@anthropic-ai/sdk@0.128.0';
@@ -31,8 +32,9 @@ export default {
 
     // Ücretsiz planda fonksiyon süresi 150 sn; tek yeniden deneme bu sınırın içinde kalır.
     const client = new Anthropic({ apiKey: env.apiKey, ...(env.baseURL ? { baseURL: env.baseURL } : {}), timeout: 60_000, maxRetries: 1 });
+    const params = new URL(req.url).searchParams;
     const result = await runDaily(
-      { userId, body, regenerate: new URL(req.url).searchParams.get('regenerate') === '1', now: new Date() },
+      { userId, body, regenerate: params.get('regenerate') === '1', peek: params.get('peek') === '1', now: new Date() },
       { store: supabaseCoachStore(ctx.supabaseAdmin), messages: client.beta.messages, kb },
     );
     return Response.json(result.body, { status: result.httpStatus });

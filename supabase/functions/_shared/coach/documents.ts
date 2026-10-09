@@ -309,7 +309,8 @@ function blocksFor(snapshot: CoachSnapshot, key: MetricKey, kb: Kb): NumbersBloc
       const blocks = [block(text)];
 
       if (n.meals === 0) {
-        blocks.push(block('Bugün öğün kaydı yok.', true, 'nutrition.intake'));
+        // Kayıt yokluğu bir tahmin değil, olgu: "tahmin" sözü istenmez.
+        blocks.push(block('Bugün öğün kaydı yok.', false, 'nutrition.intake'));
       } else {
         let intake = `Bugün kayıtlı alım (tahmin; kayıt gerçek alımın altında kalabilir): ${n.meals} öğün`;
         if (n.intakeCarbsG !== null) intake += `, karbonhidrat ${Math.round(n.intakeCarbsG)} g`;

@@ -2,6 +2,7 @@
 // saatten gelen ve etiket bekleyen oturumlar (karar 0020), bugünün seansları; yük notu yalnız oran 1,5'i geçince (karar 0025).
 // Check-in kendi son 4 haftasıyla z-skoruyla kıyaslanır; z ≤ −1 ise not, günün durumuna girmez (karar 0028).
 // Beslenme hedefi (gün tipine göre) ve bugün / dünün ter testleri (karar 0029).
+// Koçun günlük özeti (karar 0032): bütün görünümler gelince anlık değerler kurulur; kart check-in'in altında.
 
 import { sessionLoad, sweatTest, wellnessTotal, wellnessTotalRange, type CheckinReading, type DayType } from '@hooplab/engine';
 import { layout, radius, size, spacing } from '@hooplab/theme';
@@ -11,6 +12,7 @@ import { Pressable, StyleSheet, View } from 'react-native';
 
 import { Aura } from '@/components/aura';
 import { Card } from '@/components/card';
+import { CoachCard } from '@/components/coach-card';
 import { DemoBar } from '@/components/demo-bar';
 import { ExplainButton } from '@/components/info-button';
 import { GroupLabel, ListGroup, ListRow } from '@/components/list';
@@ -24,6 +26,7 @@ import { sessionKindLabels } from '@/copy/labels';
 import { sweatSummary } from '@/copy/nutrition';
 import { checkinLowBody, checkinLowTitle, checkinNote, formatZ } from '@/copy/personal-baseline';
 import { levelStates } from '@/copy/recovery';
+import { buildCoachSnapshot, type CoachSnapshot } from '@/data/coach-snapshot';
 import {
   fetchCheckin,
   fetchCheckinReading,
@@ -36,6 +39,7 @@ import { exerciseSummary, type ExerciseSession } from '@/data/exercise-tagging';
 import { deleteMeal, fetchNutrition, saveDayType } from '@/data/nutrition';
 import type { NutritionView } from '@/data/nutrition-view';
 import { fetchRecovery } from '@/data/recovery';
+import { fetchRegionLoad } from '@/data/region-load';
 import type { RecoveryView } from '@/data/recovery-view';
 import { fetchTrainingLoad } from '@/data/training-load';
 import type { TrainingLoadView } from '@/data/training-load-view';
@@ -69,6 +73,7 @@ function TodayScreen({ demo }: { demo: DemoScenario | null }) {
   const [load, setLoad] = useState<TrainingLoadView | null>(null);
   const [checkinReading, setCheckinReading] = useState<CheckinReading | null>(null);
   const [nutrition, setNutrition] = useState<NutritionView | null>(null);
+  const [coachSnapshot, setCoachSnapshot] = useState<CoachSnapshot | null>(null);
 
   // Form kapanınca ekran yeniden odaklanır ve günün kaydı tazelenir.
   useFocusEffect(
@@ -76,7 +81,13 @@ function TodayScreen({ demo }: { demo: DemoScenario | null }) {
       let cancelled = false;
       const today = toLocalDate(new Date());
       const yesterday = toLocalDate(addDays(new Date(), -1));
-      Promise.all([fetchCheckin(today), fetchSessions(today), fetchPendingExercises(yesterday, today), fetchSessions(yesterday)]).then(
+      const checkinP = fetchCheckin(today);
+      const sessionsP = fetchSessions(today);
+      const recoveryP = fetchRecovery(today);
+      const nutritionP = fetchNutrition(today);
+      const readingP = fetchCheckinReading(today);
+      const loadP = fetchTrainingLoad(today);
+      Promise.all([checkinP, sessionsP, fetchPendingExercises(yesterday, today), fetchSessions(yesterday)]).then(
         ([checkin, sessions, pending, yesterdaySessions]) => {
           if (cancelled) return;
           if (checkin.ok && sessions.ok && pending.ok) {
@@ -92,7 +103,7 @@ function TodayScreen({ demo }: { demo: DemoScenario | null }) {
           }
         },
       );
-      fetchRecovery(today).then((r) => {
+      recoveryP.then((r) => {
         if (cancelled) return;
         if (r.ok) {
           setRecovery(r.value);
@@ -102,17 +113,35 @@ function TodayScreen({ demo }: { demo: DemoScenario | null }) {
         }
       });
       // Beslenme hedefi ikincil: alınamazsa bölüm görünmez.
-      fetchNutrition(today).then((r) => {
+      nutritionP.then((r) => {
         if (!cancelled) setNutrition(r.ok ? r.value : null);
       });
       // Check-in kıyası ikincil: alınamazsa kart yalnız toplamı gösterir.
-      fetchCheckinReading(today).then((r) => {
+      readingP.then((r) => {
         if (!cancelled) setCheckinReading(r.ok ? r.value : null);
       });
       // Yük notu ikincil: alınamazsa Bugün hata göstermez, not yalnız görünmez.
-      fetchTrainingLoad(today).then((r) => {
+      loadP.then((r) => {
         if (!cancelled) setLoad(r.ok ? r.value : null);
       });
+      // Koçun anlık değerleri: hepsi gelince bir kez. Alınamayan bölüm gönderilmez (özet eksik değerle yazılır).
+      Promise.all([checkinP, sessionsP, recoveryP, nutritionP, readingP, loadP, fetchRegionLoad(today, new Date())]).then(
+        ([checkin, sessions, recoveryR, nutritionR, reading, loadR, regions]) => {
+          if (cancelled || !checkin.ok) return;
+          setCoachSnapshot(
+            buildCoachSnapshot({
+              today,
+              matchDay: false,
+              recovery: recoveryR.ok ? recoveryR.value : null,
+              checkin: reading.ok ? reading.value : null,
+              load: loadR.ok ? loadR.value : null,
+              regions: regions.ok ? regions.value : null,
+              nutrition: nutritionR.ok ? nutritionR.value : null,
+              sweat: sessions.ok ? todaySweat(sessions.value) : null,
+            }),
+          );
+        },
+      );
       return () => {
         cancelled = true;
       };
@@ -134,7 +163,7 @@ function TodayScreen({ demo }: { demo: DemoScenario | null }) {
   // Bugünkü ter testinin seans sonrası sıvı hedefi; su halkasının altında yazar (karar 0031).
   const sweatFluidL =
     log?.sessions
-      .map((s) => (s.sweat ? sweatTest({ ...s.sweat, urineL: s.sweat.urineL ?? 0, durationMin: s.durationMin }) : null))
+      .map(sweatResult)
       .find((r) => r?.shortRecoveryFluidL)?.shortRecoveryFluidL ?? null;
 
   async function changeDayType(dayType: DayType | null) {
@@ -220,6 +249,8 @@ function TodayScreen({ demo }: { demo: DemoScenario | null }) {
         </Card>
       ) : null}
 
+      {coachSnapshot && log ? <CoachCard snapshot={coachSnapshot} checkinDone={log.checkin !== null} /> : null}
+
       {error ? (
         <Text variant="footnoteMedium" style={[styles.error, { color: palette.statusInk.red }]} accessibilityRole="alert">
           {error}
@@ -278,10 +309,18 @@ function TodayScreen({ demo }: { demo: DemoScenario | null }) {
   );
 }
 
+function sweatResult(s: TrainingSession) {
+  return s.sweat ? sweatTest({ ...s.sweat, urineL: s.sweat.urineL ?? 0, durationMin: s.durationMin }) : null;
+}
+
+/** Bugünkü ter testlerinden en yenisi (koçun anlık değerleri için). */
+function todaySweat(sessions: readonly TrainingSession[]) {
+  return sessions.map(sweatResult).filter((r) => r !== null).at(-1) ?? null;
+}
+
 /** Seans satırına ter testinin kısa özeti. */
 function sweatNote(s: TrainingSession): string {
-  if (!s.sweat) return '';
-  const r = sweatTest({ ...s.sweat, urineL: s.sweat.urineL ?? 0, durationMin: s.durationMin });
+  const r = sweatResult(s);
   return r ? ` · ${sweatSummary(r)}` : '';
 }
 
