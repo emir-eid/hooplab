@@ -1,9 +1,9 @@
 # 2026-10-09 14:41 — Koçun günlük özeti, uygulama tarafı ve ilk gerçek çağrı
 
 - **Faz:** 3 (Faz 1'in TestFlight maddesi Apple onayını bekliyor)
-- **Durum:** açık (/rep)
+- **Durum:** kapandı (/kapat, 2026-10-11 02:46)
 - **Model / efor:** Opus 5.5
-- **Commit'ler:** `bc657c6` (Blok 1), Blok 2'nin `/rep` commit'i
+- **Commit'ler:** `bc657c6` (Blok 1), `927645a` (Blok 2), bu raporun kapanış commit'i
 
 ## Blok 1 — Günlük özet: uygulama tarafı, ilk gerçek çağrı, denetçi düzeltmesi (14:41)
 
