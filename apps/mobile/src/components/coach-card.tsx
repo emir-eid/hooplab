@@ -28,6 +28,7 @@ import {
   coachFooter,
   coachInvalidBody,
   coachLimitBody,
+  coachOmittedNote,
   coachRegenerateAction,
   coachRejectedBody,
   coachRejectedTitle,
@@ -133,6 +134,7 @@ export function CoachCard({ snapshot, checkinDone }: { snapshot: CoachSnapshot; 
           <>
             <Text variant="caption" tone="inkMuted" style={styles.footer}>
               {demo ? coachDemoNote : coachFooter}
+              {response.omitted > 0 ? ` ${coachOmittedNote(response.omitted)}` : ''}
             </Text>
             <Actions>
               <Action label={coachBasisAction} onPress={() => openBasis(response.sentences, null)} />

@@ -1,7 +1,14 @@
 {
   "extends": "./tsconfig.json",
   "compilerOptions": {
-    "types": ["node"]
+    "types": ["node"],
+    // Testler koçun sunucu akışını (supabase/functions/_shared/coach/daily.ts) da içe aktarır; onun `npm:` SDK adresi
+    // Edge Functions tsconfig'indeki gibi repodaki pakete eşlenir. `paths` devralınmadığı için takma adlar yinelenir.
+    "paths": {
+      "@/*": ["./src/*"],
+      "@/assets/*": ["./assets/*"],
+      "npm:@anthropic-ai/sdk@0.128.0": ["../../node_modules/@anthropic-ai/sdk"]
+    }
   },
   "include": ["src/**/*.test.ts"],
   "exclude": []

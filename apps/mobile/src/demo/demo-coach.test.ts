@@ -9,10 +9,11 @@ import type { WellnessAnswers } from '@hooplab/engine';
 
 import { auditResponse, type ResponseBlock } from '../../../../supabase/functions/_shared/coach/audit.ts';
 import { routingNotes } from '../../../../supabase/functions/_shared/coach/contract.ts';
-import { dailyDocuments, type DocumentEntry } from '../../../../supabase/functions/_shared/coach/documents.ts';
+import { buildRequest } from '../../../../supabase/functions/_shared/coach/daily.ts';
+import type { DocumentEntry } from '../../../../supabase/functions/_shared/coach/documents.ts';
 import { kbRules, kbSources } from '../../../../supabase/functions/_shared/coach/kb-data.ts';
-import { selectForRules, type Kb } from '../../../../supabase/functions/_shared/coach/kb.ts';
-import { parseSnapshot, snapshotRuleIds, type CoachSnapshot } from '../../../../supabase/functions/_shared/coach/snapshot.ts';
+import type { Kb } from '../../../../supabase/functions/_shared/coach/kb.ts';
+import { parseSnapshot, type CoachSnapshot } from '../../../../supabase/functions/_shared/coach/snapshot.ts';
 import { buildCoachSnapshot, checkCoachSnapshot } from '../data/coach-snapshot.ts';
 import { demoCoachSummary } from './demo-coach.ts';
 import { createDemoDb, demoScenarios, type DemoScenario } from './demo-data.ts';
@@ -24,8 +25,8 @@ const days = ['2026-10-05', '2026-11-01', '2027-01-03', '2028-03-01'];
 
 /** Demo özetini Messages API'nin citations biçimine çevirir: her cümle bir metin bloğu, aralarda alıntısız boşluk. */
 function asResponse(snapshot: CoachSnapshot, scenario: DemoScenario) {
-  const { sources } = selectForRules(kb, snapshotRuleIds(snapshot));
-  const { layout } = dailyDocuments(snapshot, kb, sources);
+  // Üretimdeki istekle aynı belgeler (coachSourceOptions): demo yalnız gerçekten gönderilen kaynaklara alıntı yapabilir.
+  const { layout } = buildRequest(snapshot, kb);
   const blocks = (layout[0] as Extract<DocumentEntry, { kind: 'numbers' }>).blocks;
   const summary = demoCoachSummary(scenario, snapshot);
   const content: ResponseBlock[] = summary.flatMap((s) => [
@@ -107,8 +108,7 @@ test('demo özeti: her senaryoda sunucunun denetçisinden geçer, cümleler alı
 test('denetçi bu yolda gerçekten kırılır: demo cümlesindeki sayı değişince özet reddedilir', () => {
   const today = days[0]!;
   const snapshot = buildCoachSnapshot(demoInputs(createDemoDb('green', today, now), today, now));
-  const { sources } = selectForRules(kb, snapshotRuleIds(snapshot));
-  const { layout } = dailyDocuments(snapshot, kb, sources);
+  const { layout } = buildRequest(snapshot, kb);
   const blocks = (layout[0] as Extract<DocumentEntry, { kind: 'numbers' }>).blocks;
   const hrv = blocks.findIndex((b) => b.id === 'hrv');
   const text = demoCoachSummary('green', snapshot).find((s) => s.numbers.includes('hrv'))!.text.replace(/(\d+) ms,/, (_, n: string) => `${Number(n) + 1} ms,`);

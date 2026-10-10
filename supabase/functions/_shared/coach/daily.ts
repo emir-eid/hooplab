@@ -1,4 +1,5 @@
-// Koçun günlük özeti (karar 0032): anlık değerler → doğrulama → Claude (citations) → denetçi → kayıt.
+// Koçun günlük özeti (karar 0032): anlık değerler → doğrulama → Claude (citations) → denetçi (gerekirse kısmi kabul,
+// karar 0034) → kayıt.
 // Ağ ve veritabanı dışarıdan verilir (CoachStore, MessagesApi); bu modül saf akıştır ve testlidir
 // (tests/coach/daily.test.ts, SDK sahte bir Anthropic sunucusuyla çalışır).
 //
@@ -7,11 +8,11 @@
 
 import type Anthropic from 'npm:@anthropic-ai/sdk@0.128.0';
 
-import { auditResponse, type AuditResult, type ResponseBlock, type ResponseCitation } from './audit.ts';
+import { auditResponse, salvageAudit, type AuditResult, type ResponseBlock, type ResponseCitation } from './audit.ts';
 import { dailyAttemptLimit, routingNotes, type DailyResponse, type RoutingNote } from './contract.ts';
 import { dailyDocuments } from './documents.ts';
-import { selectForRules, type Kb } from './kb.ts';
-import { parseSnapshot, snapshotRuleIds, type CoachSnapshot } from './snapshot.ts';
+import { selectForRules, withoutAppNumbers, type Kb } from './kb.ts';
+import { attentionMetrics, parseSnapshot, presentMetrics, snapshotRuleIds, type CoachSnapshot } from './snapshot.ts';
 
 export const coachModel = 'claude-sonnet-5-5';
 /** Başlangıç eforu (karar 0032); ilk ölçümle ayarlanır. */
@@ -82,11 +83,29 @@ export function isPlausibleDate(localDate: string, now: Date): boolean {
   return Math.abs(day - today) <= 86_400_000;
 }
 
-export function buildRequest(snapshot: CoachSnapshot, kb: Kb): {
+/**
+ * Kaynak gönderimi ayarları (maliyet ölçümü, 2026-10-09; ölçüm `tools/coach-eval/`). Değiştirilmesi kullanıcı kararıdır.
+ */
+export interface SourceOptions {
+  /** 'all': bulunan her ölçüm; 'attention': yalnız dikkat isteyenler (snapshot.ts attentionMetrics). */
+  selection?: 'all' | 'attention';
+  /** false: özetlerden "Uygulamada kullanılan sayılar" bölümü çıkarılır. */
+  appNumbers?: boolean;
+}
+
+/**
+ * Üretimdeki kaynak ayarı (kullanıcı kararı, 2026-10-10; karar 0035): yalnız dikkat isteyen ölçümlerin kaynakları,
+ * özetler tam. Ölçüm: çağrı başına ~%21 daha az, denetimden geçme oranı aynı düzeyde.
+ */
+export const coachSourceOptions: SourceOptions = { selection: 'attention' };
+
+export function buildRequest(snapshot: CoachSnapshot, kb: Kb, options: SourceOptions = coachSourceOptions): {
   params: Anthropic.Beta.Messages.MessageCreateParamsNonStreaming;
   layout: ReturnType<typeof dailyDocuments>['layout'];
 } {
-  const { sources } = selectForRules(kb, snapshotRuleIds(snapshot));
+  const metrics = options.selection === 'attention' ? attentionMetrics(snapshot) : presentMetrics(snapshot);
+  const selected = selectForRules(kb, snapshotRuleIds(snapshot, metrics)).sources;
+  const sources = options.appNumbers === false ? selected.map(withoutAppNumbers) : selected;
   const { documents, layout } = dailyDocuments(snapshot, kb, sources);
   return {
     layout,
@@ -111,7 +130,9 @@ export function errorCode(error: unknown): string {
 
 function present(row: SummaryRow, cached: boolean, notes: RoutingNote[]): DailyResult {
   if (row.status === 'accepted' && row.audit) {
-    return { httpStatus: 200, body: { status: 'accepted', cached, sentences: row.audit.sentences, notes } };
+    const { sentences, shown } = row.audit;
+    const visible = shown ? shown.flatMap((i) => (sentences[i] ? [sentences[i]] : [])) : sentences;
+    return { httpStatus: 200, body: { status: 'accepted', cached, sentences: visible, omitted: sentences.length - visible.length, notes } };
   }
   if (row.status === 'failed') {
     return { httpStatus: cached ? 200 : 502, body: { status: 'failed', cached, error: row.error ?? 'unknown', notes } };
@@ -172,8 +193,13 @@ export async function runDaily(input: DailyInput, deps: { store: CoachStore; mes
   const content = message.content.flatMap((b): ResponseBlock[] =>
     b.type === 'text' ? [{ type: 'text', text: b.text, citations: (b.citations ?? null) as readonly ResponseCitation[] | null }] : [],
   );
-  const audit = auditResponse(content, layout);
-  const status = audit.ok ? 'accepted' : 'rejected';
+  const checked = auditResponse(content, layout);
+  // Kısmi kabul (karar 0034): geçmeyen cümleler atılır; kalan özet koşulları sağlamıyorsa ret.
+  // Tam geçen yanıtta da alıntısız kopyalar ayıklanır; `shown` yalnız bir cümle atıldıysa kaydedilir.
+  const shown = salvageAudit(checked, layout);
+  const trimmed = shown !== null && shown.length < checked.sentences.length;
+  const audit: AuditResult = trimmed ? { ...checked, shown } : checked;
+  const status = checked.ok || shown ? 'accepted' : 'rejected';
   await deps.store.insert({ ...base, status, content, audit, error: null, model: message.model, fallback, usage });
   return present({ status, created_at: input.now.toISOString(), audit, error: null }, false, notes);
 }

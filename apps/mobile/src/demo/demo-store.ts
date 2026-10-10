@@ -214,7 +214,7 @@ export class DemoStore {
   /** Koçun özeti: önceden yazılmış sentetik metin, o anki demo değerlerinden (karar 0032); API çağrılmaz. */
   async fetchCoachDaily(snapshot: CoachSnapshot): Promise<Result<CoachReply>> {
     return ok({
-      response: { status: 'accepted', cached: true, sentences: demoCoachSummary(this.scenario, snapshot), notes: routingNotes(snapshot) },
+      response: { status: 'accepted', cached: true, sentences: demoCoachSummary(this.scenario, snapshot), omitted: 0, notes: routingNotes(snapshot) },
       demo: true,
     });
   }

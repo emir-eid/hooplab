@@ -17,7 +17,7 @@ import {
 } from '../../_shared/coach/daily.ts';
 import { kbRules, kbSources } from '../../_shared/coach/kb-data.ts';
 import { selectForRules, type Kb } from '../../_shared/coach/kb.ts';
-import { snapshotRuleIds } from '../../_shared/coach/snapshot.ts';
+import { attentionMetrics, snapshotRuleIds } from '../../_shared/coach/snapshot.ts';
 import { createFakeAnthropic, message } from './fake-anthropic.ts';
 import { asRequestBody, fullSnapshot } from './fixtures.ts';
 
@@ -53,7 +53,8 @@ function setup() {
 
 // İstekteki belge düzeni: 0 günün sayıları, sonra seçilen kaynaklar.
 const snapshot = fullSnapshot();
-const sources = selectForRules(kb, snapshotRuleIds(snapshot)).sources;
+// Üretimdeki ayar: yalnız dikkat isteyen ölçümlerin kaynakları (coachSourceOptions, karar 0035).
+const sources = selectForRules(kb, snapshotRuleIds(snapshot, attentionMetrics(snapshot))).sources;
 // Fonksiyonun kuracağı günün sayıları blokları; sahte yanıtın alıntıları bunlara göre yazılır.
 const blocks = (dailyDocuments(snapshot, kb, sources).layout[0] as Extract<DocumentEntry, { kind: 'numbers' }>).blocks;
 
@@ -256,4 +257,34 @@ test('tarih payı: sunucunun UTC gününden bir gün', () => {
   assert.ok(isPlausibleDate('2026-01-14', NOW));
   assert.ok(isPlausibleDate('2026-01-16', NOW));
   assert.ok(!isPlausibleDate('2026-01-17', NOW));
+});
+
+test('kaynak ayarları: üretimde "attention"; olağan ölçümlerin kaynakları gitmez, günün sayıları belgesi değişmez', async () => {
+  const { buildRequest, coachSourceOptions } = await import('../../_shared/coach/daily.ts');
+  const s = fullSnapshot();
+  // Fixture: HRV bandın altında, nabız içinde, uyku kısa, solunum içinde ve notsuz, check-in düşük, yük artışı yok.
+  assert.deepEqual(attentionMetrics(s), ['status', 'hrv', 'sleep', 'checkin', 'regions', 'pain', 'nutrition', 'sweatTest']);
+  assert.deepEqual(coachSourceOptions, { selection: 'attention' });
+  const all = buildRequest(s, kb, { selection: 'all' });
+  const prod = buildRequest(s, kb);
+  const lean = buildRequest(s, kb, { selection: 'attention', appNumbers: false });
+  assert.ok(prod.layout.length < all.layout.length);
+  assert.deepEqual(prod.layout[0], all.layout[0], 'günün sayıları aynı');
+  assert.ok(JSON.stringify(lean.params).length < JSON.stringify(prod.params).length);
+});
+
+test('kısmi kabul: geçmeyen cümle atılır, kayıtta tanı için kalır; uygulamaya yalnız geçenler ve atılan sayısı gider', async () => {
+  const { fake, rows, run } = setup();
+  const content = goodContent();
+  content.push({ type: 'text', text: ' Bugün yoğun sıçrama yapma.' }, { type: 'text', text: ' Uykun 7,9 saat.' });
+  fake.reply({ kind: 'message', message: message(content) });
+  const first = await run();
+  assert.ok(first.body.status === 'accepted');
+  assert.equal(first.body.omitted, 2);
+  assert.deepEqual(first.body.sentences.map((s) => s.text), ['Günün durumu Kontrollü.', 'HRV ortalaman 48 ms ile bandının altında ve uyku ortalaman 6,4 saat.', 'Bugün yüklenmeyi hafifletmen önerilir.']);
+  assert.equal(rows[0]!.status, 'accepted');
+  assert.equal(rows[0]!.audit!.ok, false);
+  assert.equal(rows[0]!.audit!.sentences.length, 5);
+  const again = await run();
+  assert.deepEqual(again.body, { ...first.body, cached: true });
 });

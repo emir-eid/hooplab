@@ -74,7 +74,8 @@ Her faz, bitiş kriteri karşılanınca `/kapat` ile kapanır: faz özeti `docs/
 - [ ] "Bugün maç var" işareti ve koçta maç günü dili
 - [ ] Soru-cevap: soru sınıflandırma (Haiku), tam taban önbellekte, kaynak yoksa sabit metin, `coach_messages`
 - [ ] Kırmızı bayrak ve doping güvenlik kuralları (kodla yönlendirme ve sabit metinler)
-- [ ] Maliyet ölçümü ve düşürme: token kullanımı raporu, COSTS tahminiyle kıyas; kaliteden ödün vermeden düşürme seçenekleri (ilk ölçüm 2026-10-09: tahminin 4 katı)
+- [x] Maliyet ölçümü ve düşürme (2026-10-10): ölçüm betiği `tools/coach-eval/run.ts` (Batch API), kısmi kabul ([0034](decisions/0034-koc-kismi-kabul.md)), yalnız dikkat isteyen ölçümlerin kaynakları ([0035](decisions/0035-koc-kaynak-secimi-dikkat.md)); çağrı başına ~0,15 → ~0,11 $
+- [ ] Aylık token kullanımı raporu (`coach_summaries.usage`), COSTS tahminiyle kıyas
 
 ## Faz 4: Son rötuşlar
 

@@ -6,6 +6,7 @@ import {
   extractNumbers,
   isAdviceOrInterpretation,
   numberCandidates,
+  salvageAudit,
   type AuditProblemCode,
   type ResponseBlock,
   type ResponseCitation,
@@ -180,4 +181,49 @@ test('boş alıntı bloğu sonraki cümleye taşınmaz: alıntısız cümle yine
 test('"işaretlenmedi" yorum sayılmaz, "işaret ediyor" sayılır', () => {
   assert.equal(isAdviceOrInterpretation('Bugün maç günü işaretlenmedi.'), false);
   assert.equal(isAdviceOrInterpretation('Bu düşüş birikmiş yüke işaret ediyor.'), true);
+});
+
+// --- Kısmi kabul (karar 0034) ---
+
+const salvage = (content: ResponseBlock[]) => {
+  const a = auditResponse(content, layout);
+  return { a, shown: salvageAudit(a, layout) };
+};
+const good = [
+  t('Günün durumu Kontrollü.', num('status')),
+  t(' HRV ortalaman 48 ms ile bandının altında.', num('hrv')),
+  t(' Uyku ortalaman 6,4 saat.', num('sleep')),
+];
+
+test('kısmi kabul: dayanaksız öneri atılır, kalan denetlenmiş cümleler gösterilir', () => {
+  const { a, shown } = salvage([...good, t(' Bugün yüklenmeyi hafiflet.')]);
+  assert.equal(a.ok, false);
+  assert.deepEqual(shown, [0, 1, 2]);
+});
+
+test('kısmi kabul: alıntısız kopya atılır, alıntılı asıl kalır', () => {
+  const { shown } = salvage([t('Günün durumu Kontrollü. '), t('Günün durumu Kontrollü.', num('status')), ...good.slice(1)]);
+  assert.deepEqual(shown, [1, 2, 3]);
+});
+
+test('kısmi kabul yok: durum cümlesi geçmezse ya da üç cümleden az kalırsa', () => {
+  assert.equal(salvage([t('Günün durumu Kontrollü, HRV 49 ms.', num('status')), ...good.slice(1), t(' Ek bir 5 sayı.', num('sleep'))]).shown, null);
+  assert.equal(salvage([...good.slice(0, 2), t(' Bugün yüklenmeyi hafiflet.')]).shown, null);
+});
+
+test('kısmi kabul: atılan cümleyle "tahmin" etiketini kaybeden tahmin cümlesi de atılır', () => {
+  const ratio = numbers.blocks.find((b) => b.id === 'load.ratio')!;
+  const value = ratio.text.match(/\d+,\d+/)![0];
+  const { a, shown } = salvage([
+    ...good,
+    t(' Yük oranı bir tahmin ve 99 kat.', num('load.ratio')),
+    t(` Oran ${value}.`, num('load.ratio')),
+  ]);
+  assert.deepEqual(a.problems.map((p) => [p.code, p.sentence]), [['number_mismatch', 3]]);
+  assert.deepEqual(shown, [0, 1, 2]);
+});
+
+test('kısmi kabul yok: yanıt düzeyinde geçersiz alıntı', () => {
+  const bad: ResponseCitation = { type: 'content_block_location', document_index: 99, start_block_index: 0, end_block_index: 1 };
+  assert.equal(salvage([...good, t(' Ek.', [bad])]).shown, null);
 });

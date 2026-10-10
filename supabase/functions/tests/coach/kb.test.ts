@@ -3,7 +3,7 @@ import { execFileSync } from 'node:child_process';
 import { test } from 'node:test';
 import { fileURLToPath } from 'node:url';
 
-import { fullKb, selectForRules, UnknownRuleError, type Kb } from '../../_shared/coach/kb.ts';
+import { fullKb, selectForRules, UnknownRuleError, withoutAppNumbers, type Kb } from '../../_shared/coach/kb.ts';
 import { kbRules, kbSources } from '../../_shared/coach/kb-data.ts';
 
 const repo = fileURLToPath(new URL('../../../../', import.meta.url));
@@ -74,4 +74,15 @@ test('tam taban: bütün kaynaklar ve kurallar, sabit sırada', () => {
   assert.equal(all.sources.length, kbSources.length);
   assert.equal(all.rules.length, kbRules.length);
   assert.deepEqual(fullKb(kb), all);
+});
+
+test('"Uygulamada kullanılan sayılar" bölümü çıkarılınca öbür bölümler kalır', () => {
+  const withTable = kbSources.filter((s) => s.summary.includes('## Uygulamada kullanılan sayılar'));
+  assert.ok(withTable.length > 0);
+  for (const s of withTable) {
+    const out = withoutAppNumbers(s).summary;
+    assert.ok(!out.includes('Uygulamada kullanılan sayılar'), s.id);
+    for (const h of ['## Ne söylüyor', '## Sınırlılıklar']) if (s.summary.includes(h)) assert.ok(out.includes(h), `${s.id} ${h}`);
+    assert.ok(out.length < s.summary.length);
+  }
 });

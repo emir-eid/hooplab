@@ -28,7 +28,14 @@ export function routingNotes(snapshot: CoachSnapshot): RoutingNote[] {
  * `refusal_<kategori>`, `max_tokens`.
  */
 export type DailyResponse =
-  | { status: 'accepted'; cached: boolean; sentences: AuditSentence[]; notes: RoutingNote[] }
+  | {
+      status: 'accepted';
+      cached: boolean;
+      sentences: AuditSentence[];
+      /** Denetimden geçmediği için gösterilmeyen cümle sayısı (kısmi kabul, karar 0034); tam kabulde 0. */
+      omitted: number;
+      notes: RoutingNote[];
+    }
   | { status: 'rejected'; cached: boolean; notes: RoutingNote[] }
   | { status: 'failed'; cached: boolean; error: string; notes: RoutingNote[] }
   | { status: 'none'; notes: RoutingNote[] }

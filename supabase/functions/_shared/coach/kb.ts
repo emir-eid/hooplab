@@ -87,3 +87,11 @@ export function selectForRules(kb: Kb, ruleIds: readonly string[]): KbSelection 
 export function fullKb(kb: Kb): KbSelection {
   return { rules: kb.rules, sources: kb.sources };
 }
+
+/**
+ * Kaynak özetinden "Uygulamada kullanılan sayılar" bölümü çıkarılmış hali (maliyet ölçümü, 2026-10-09; varsayılan
+ * değil). Bölüm uygulamanın eşiklerini anlatır; koçun sayıları zaten günün sayıları belgesinden gelir.
+ */
+export function withoutAppNumbers(source: KbSource): KbSource {
+  return { ...source, summary: source.summary.replace(/\n?## Uygulamada kullanılan sayılar[\s\S]*?(?=\n## |$)/, '') };
+}

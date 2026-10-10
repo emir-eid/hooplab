@@ -66,3 +66,5 @@ Hangisi seçildi ve tek paragrafta neden.
 | [0031](0031-su-kaydi-ve-renkli-bugun.md) | Su kaydı (hedefsiz, + ve Bugün'den hızlı ekleme), Bugün'de beslenme halkaları ve kategori rengi (karbonhidrat / protein / su), kaydırarak silme | Kabul edildi |
 | [0032](0032-ai-koc-tasarimi.md) | AI koç: Claude Sonnet 5.5, vektör araması yok (kural grafiğiyle seçim + önbellekli tam taban), citations ile kaynak zorunluluğu ve sayı denetimi, kodla güvenlik yönlendirmesi, maç günü işareti | Kabul edildi |
 | [0033](0033-koc-ozeti-check-in-sonrasi.md) | Koçun günlük özeti check-in'den sonra yazılır (öncesinde yalnız bakılır, elle yazdırılabilir); kart cümleleri alıntıladıkları ölçümün konusuna göre gruplar | Kabul edildi |
+| [0034](0034-koc-kismi-kabul.md) | Koç özetinde kısmi kabul: denetimden geçmeyen cümle atılır, gerisi gösterilir (durum cümlesi ve en az 3 cümle şartıyla); atılan sayısı kartta yazar | Kabul edildi |
+| [0035](0035-koc-kaynak-secimi-dikkat.md) | Günlük özette yalnız dikkat isteyen ölçümlerin kaynakları (bandın dışı, not, bölge / ağrı / ter testi; durum ve beslenme her zaman); ölçüme dayalı, çağrı başına ~%21 daha az | Kabul edildi |

@@ -3,7 +3,7 @@
 - **Faz:** 3 (Faz 1'in TestFlight maddesi Apple onayını bekliyor)
 - **Durum:** açık (/rep)
 - **Model / efor:** Opus 5.5
-- **Commit'ler:** bu bloğun `/rep` commit'i
+- **Commit'ler:** `bc657c6` (Blok 1), Blok 2'nin `/rep` commit'i
 
 ## Blok 1 — Günlük özet: uygulama tarafı, ilk gerçek çağrı, denetçi düzeltmesi (14:41)
 
@@ -38,11 +38,42 @@ STATE'teki 1. iş ([0032](../decisions/0032-ai-koc-tasarimi.md)): uygulamada anl
 - LESSONS "Claude API (koç)": Sonnet 5.5'in alıntıyı boş ayrı blokta vermesi ([ölçüldü], bekçi `audit.test.ts`); dolu günde özet ~60 bin girdi token'ı, çağrı başına ~0,15 $ ([ölçüldü]).
 - LESSONS "Expo / React Native": iOS'ta yalnız `style` genişliği değişen SVG'nin `100%` şekli ilk ölçüde kalıyor ([ölçüldü]).
 
+## Blok 2 — Koç maliyeti: ölçüm, kısmi kabul, kaynak seçimi (2026-10-10 21:32)
+
+### Amaç
+STATE'teki 1. iş (kullanıcı isteği): koçun maliyetini, kaliteden ve doğruluktan ödün vermeden düşürme seçeneklerini araştırmak; aynı oturumda kullanıcı "beslenme halkalarından gram girişi" ve "maliyet araştırması" işlerini sıraya aldırdı, maliyet ilkesini (kaynaksız / saçma beyan riski artırılmaz) hafızaya ve STATE'e yazdırdı.
+
+### Yapılanlar
+- **Gerçekler resmi kaynaktan:** fiyat, önbellek ve Batch kuralları platform.claude.com pricing / prompt-caching / optimizing-for-cost sayfalarından (2026-10-09). Sonnet 5.5: girdi 2 $, çıktı 10 $, önbellek okuma 0,10 $ / MTok; en kısa önbelleklenebilir önek 512 token; Batch %50. Günde tek özet için önbellek ertesi güne kalmıyor (en çok 1 saat), Batch kullanıcı beklerken uygun değil, efor tasarrufu tavanı ~%10.
+- **Token profili:** gerçek istekte girdinin ~%95'i kaynak özetleri (78'in 71'i); yönerge ve günün sayıları ~2,6 bin token.
+- **Kaynak ayarları kodda:** `attentionMetrics` ([snapshot.ts](../../supabase/functions/_shared/coach/snapshot.ts)), `withoutAppNumbers` ([kb.ts](../../supabase/functions/_shared/coach/kb.ts)), `SourceOptions` / `coachSourceOptions` ([daily.ts](../../supabase/functions/_shared/coach/daily.ts)); testli.
+- **Ölçüm** ([tools/coach-eval/run.ts](../../tools/coach-eval/run.ts)): 4 gün × 3 ayar × 2 deneme, Batch API, ~1,42 $ (kullanıcı onaylı bütçe ~1,5 $). Anahtar kullanıcının kendi PowerShell'inde gizli girişle gitignore'lu dosyaya yazıldı (3 saatlik `hooplab-eval`), ölçümden sonra dosya silindi. Sonuçlar ve yan yana metinler repo dışında (`private/data/coach-eval/`). Bütün ölçümler 0,143 $ / 6 geçti, dikkat isteyenler 0,113 $ / 5, tablosuz 0,098 $ / 6 (8'de; fark gürültü).
+- **Retlerin hepsi gerçek kural ihlali** (alıntısız sayı cümlesi, alıntısız kopya + alıntılı asıl, dayanağın sonraki cümlede olması); ölçüm boyunca ~%25.
+- **Kısmi kabul** ([0034](../decisions/0034-koc-kismi-kabul.md); `salvageAudit`, [audit.ts](../../supabase/functions/_shared/coach/audit.ts)): geçmeyen cümle atılır, gösterilen her cümle denetimden geçer; alıntısız kopya her yanıtta ayıklanır; durum cümlesi ve en az 3 cümle şartı; atılanlar `audit.shown` ile kayıtta, uygulamaya `omitted` sayısı; kart "Kaynak denetiminden geçmeyen N cümle gösterilmedi." yazar. Ölçümün zamandan bağımsız iki gününde 4 retten 3'ü artık gösteriliyor.
+- **Kaynak seçimi** ([0035](../decisions/0035-koc-kaynak-secimi-dikkat.md)): üretimde yalnız dikkat isteyen ölçümlerin kaynakları (kullanıcı kararı, yan yana metinleri okuduktan sonra); demo testi üretimdeki isteği kurar.
+- Uygulamanın test tsconfig'ine `npm:` SDK eşlemesi (testler `daily.ts`'i içe aktarıyor).
+- Doğrulama: fonksiyon testleri 78, uygulama 126, `npm run check` yeşil; `coach-daily` iki kez dağıtıldı (kısmi kabul, sonra kaynak seçimi), oturumsuz istek 401.
+
+### Kararlar
+- [0034 Koç özetinde kısmi kabul](../decisions/0034-koc-kismi-kabul.md) — kullanıcı kararı (b seçeneği).
+- [0035 Günlük özette yalnız dikkat isteyen ölçümlerin kaynakları](../decisions/0035-koc-kaynak-secimi-dikkat.md) — kullanıcı kararı ("yalnız A yeterli"); tablo çıkarma kapalı ayar olarak kaldı.
+- Maliyet ilkesi hafızada (`maliyet-kaliteyi-bozmaz`): kalite ve doğruluk pazarlık konusu değil.
+
+### Sorunlar ve hatalar
+- Python ile yapılan düzenlemelerde dosyaların bir kısmı çalışma kopyasında CRLF'ydi; `
+` ile arama eşleşmedi, bir alan eklenmedi (tip denetimi yakaladı). Çalışma kopyasındaki CRLF dosyalar LF'ye çevrildi; içerik aynı (blob karmaları eşit).
+- İlk kopya ayıklama yalnız reddedilen yanıtta çalışıyordu; tam geçen yanıttaki kısa alıntısız kopya kartta iki kez görünürdü. Test yakaladı, her yanıtta çalışacak biçimde düzeltildi.
+- Ölçümün ham yanıtları ilk koşuda saklanmadı; retleri incelemek için sonuçlar toplu istekten yeniden çekildi. Demo günleri saate bağlı (bölgenin son yüklenmeden bu yana saati); yeniden oynatmada farklı `now` sayı uyuşmazlığı üretti, bu satırlar sayılmadı.
+
+### Öğrenilenler
+- LESSONS "Claude API (koç)": özetlerin ~%25'i kural ihlaliyle reddediliyor, kısmi kabul ([ölçüldü]); Batch ile ölçüm ve demo günlerinin saate bağlılığı ([ölçüldü]).
+- LESSONS "Git ve süreç": çalışma kopyasında CRLF kalmış dosyalar betikle düzenlenirken eşleşmeyi bozuyor ([ölçüldü]).
+
 ## Açık kalanlar
-- Koç maliyeti 0032 tahmininin 4 katı; araştırma STATE'te 1. iş (kalite pazarlık konusu değil).
-- Yeni yönergenin (kısa cümle) gerçek yanıttaki etkisi henüz görülmedi.
-- "Bugün maç var" işareti henüz yok; anlık değerlerde `matchDay` şimdilik hep false.
-- Token takibi (10 Ekim 01:17 ve 11 Ekim 17:18'den sonra); Apple onayı.
+- Kısa cümle yönergesinin ve kısmi kabulün gerçek yanıttaki etkisi bir sonraki gerçek özette görülecek; atılan cümle oranı izlenir.
+- "Bugün maç var" işareti yok; anlık değerlerde `matchDay` hep false.
+- Özetteki kaynak tablosunu çıkarma seçeneği kodda kapalı; kaynaktan sayı alma retleri sürerse yeniden ölçülür.
+- Token takibi: CLI tarafı (10 Ekim 01:17 sonrası) artık bakılabilir, uygulama tarafı 11 Ekim 17:18'den sonra; Apple onayı.
 
 ## Sıradaki adım
-- Koç maliyetini düşürme araştırması (STATE 1. iş).
+- Beslenme halkalarından doğrudan gram girişi (STATE 1. iş).

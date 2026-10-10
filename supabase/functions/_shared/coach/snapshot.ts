@@ -212,9 +212,34 @@ export function presentMetrics(snapshot: CoachSnapshot): MetricKey[] {
   });
 }
 
+/**
+ * Dikkat isteyen ölçümler (maliyet ölçümü, 2026-10-09; varsayılan değil, kullanıcı kararı bekliyor): günün durumu ve
+ * beslenme hedefi her zaman; HRV, nabız, uyku, solunum, check-in ve yük yalnız bandın dışındaysa ya da notu varsa;
+ * bölge ve ağrı varsa. Olağan ölçümlerin sayıları belgeye yine girer; yalnız kaynakları gönderilmez.
+ */
+export function attentionMetrics(snapshot: CoachSnapshot): MetricKey[] {
+  const s = snapshot;
+  const outside = (m: BandMetric | undefined) => m !== undefined && m.position !== null && m.position !== 'within';
+  const keep: Record<MetricKey, boolean> = {
+    status: s.status !== undefined,
+    hrv: outside(s.hrv),
+    rhr: outside(s.rhr),
+    sleep: s.sleep?.short === true,
+    respiration: s.respiration?.nightHigh === true || s.respiration?.position === 'above',
+    checkin: s.checkin?.low === true,
+    load: s.load?.spike === true,
+    regions: (s.regions?.length ?? 0) > 0,
+    pain: (s.pain?.length ?? 0) > 0,
+    nutrition: s.nutrition !== undefined,
+    fluid: false,
+    sweatTest: s.sweatTest !== undefined,
+  };
+  return presentMetrics(snapshot).filter((key) => keep[key]);
+}
+
 /** Anlık değerlerin kullandığı kurallar: ölçüm sırasıyla, tekrarsız. */
-export function snapshotRuleIds(snapshot: CoachSnapshot): string[] {
-  return [...new Set(presentMetrics(snapshot).flatMap((key) => metricRules[key]))];
+export function snapshotRuleIds(snapshot: CoachSnapshot, metrics: readonly MetricKey[] = presentMetrics(snapshot)): string[] {
+  return [...new Set(metrics.flatMap((key) => metricRules[key]))];
 }
 
 // --- Doğrulama ---

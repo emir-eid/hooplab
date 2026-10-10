@@ -32,6 +32,11 @@ export const coachOffline = 'Koça ulaşılamadı. İnternetini kontrol edip yen
 export const coachNotConfigured = 'Koç kurulmamış: sunucuda Anthropic API anahtarı yok (npm run setup:check).';
 export const coachDemoNote = 'Demo: önceden yazılmış sentetik özet; yapay zeka çağrılmadı.';
 
+/** Kısmi kabul (karar 0034): kaynak denetiminden geçmeyen cümleler gösterilmez; kullanıcıya söylenir. */
+export function coachOmittedNote(count: number): string {
+  return `Kaynak denetiminden geçmeyen ${count} cümle gösterilmedi.`;
+}
+
 /**
  * Başarısız denemenin kodu (contract.ts DailyResponse) → kullanıcıya söylenen neden. Kod kişisel veri içermez.
  * Anthropic'in hata türleri: platform.claude.com/docs/en/api/errors (400 kredi bitince de döner).

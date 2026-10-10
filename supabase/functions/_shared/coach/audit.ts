@@ -60,6 +60,11 @@ export interface AuditResult {
   ok: boolean;
   sentences: AuditSentence[];
   problems: AuditProblem[];
+  /**
+   * Kısmi kabul (karar 0034): denetimden geçmeyen cümleler atılınca gösterilen cümlelerin sırası. Yalnız `ok` false
+   * iken ve kalan özet koşulları sağlıyorsa dolu; atılan cümleler ve sorunları tanı için `sentences` / `problems`'ta kalır.
+   */
+  shown?: number[];
 }
 
 export const auditOptions = {
@@ -320,4 +325,50 @@ export function auditResponse(content: readonly ResponseBlock[], layout: readonl
 
   problems.sort((a, b) => (a.sentence ?? -1) - (b.sentence ?? -1));
   return { ok: problems.length === 0, sentences: audited, problems };
+}
+
+// --- Kısmi kabul (karar 0034) ---
+
+export const salvageOptions = {
+  /** Kalan özetin en az cümle sayısı. Bilimsel eşik değil, okunabilirlik ayarı. */
+  minSentences: 3,
+};
+
+const normalize = (t: string) => trLower(t).replace(/\s+/g, ' ').trim();
+
+/**
+ * Gösterilecek cümleleri seçer; gösterilecek özet yoksa null. Tam geçen yanıtta da çalışır (alıntısız kopya ayıklanır).
+ * Gösterilen her cümle denetimin bütün kurallarını sağlar (güvence değişmez):
+ *   - Yanıt düzeyindeki sorun (geçersiz alıntı, boş yanıt) varsa özetin tamamı reddedilir.
+ *   - Sorunlu cümle atılır; alıntılı bir kopyası olan alıntısız cümle de (aynı cümleyi iki kez yazma) atılır.
+ *   - Atılan cümle yüzünden "tahmin" sözünü kaybeden tahmin cümlesi de atılır (kural 4 kalan sırayla yeniden bakılır).
+ *   - Günün durumu bloğu varsa ona alıntı yapan bir cümle kalmalı; en az `minSentences` cümle kalmalı.
+ */
+export function salvageAudit(result: AuditResult, layout: readonly DocumentEntry[]): number[] | null {
+  if (result.problems.some((p) => p.sentence === null)) return null;
+
+  const numbers = layout[0]?.kind === 'numbers' ? layout[0].blocks : [];
+  const estimateIds = new Set(numbers.filter((b) => b.estimate).map((b) => b.id));
+  const cited = (s: AuditSentence) => s.numbers.length + s.sources.length > 0;
+  const citedTexts = new Set(result.sentences.filter(cited).map((s) => normalize(s.text)));
+  const bad = new Set(result.problems.map((p) => p.sentence!));
+
+  let kept = result.sentences
+    .map((s, i) => ({ s, i }))
+    .filter(({ s, i }) => !bad.has(i) && !(!cited(s) && citedTexts.has(normalize(s.text))));
+
+  // Kural 4'ü kalan sırayla yeniden uygula; bir cümle düşünce sonrakinin komşusu değişir, kararlı olana dek tekrar.
+  for (let changed = true; changed; ) {
+    changed = false;
+    kept = kept.filter(({ s }, k) => {
+      if (!s.numbers.some((id) => estimateIds.has(id))) return true;
+      const ok = [s.text, kept[k - 1]?.s.text ?? ''].some((t) => /tahmin/iu.test(t));
+      if (!ok) changed = true;
+      return ok;
+    });
+  }
+
+  if (numbers.some((b) => b.id === 'status') && !kept.some(({ s }) => s.numbers.includes('status'))) return null;
+  if (kept.length < salvageOptions.minSentences) return null;
+  return kept.map(({ i }) => i);
 }

@@ -121,6 +121,8 @@ Yerel uçtan uca deneme (sentetik, gerçek Google'a gidilmez):
 
 Koçun günlük özeti yerelde (sentetik, gerçek Anthropic API'sine gidilmez, ücret yok): `node tools/dev/fake-anthropic.mjs` (port 54398), `supabase/functions/.env`'e `ANTHROPIC_API_KEY=sk-ant-yerel-sahte` ve `COACH_ANTHROPIC_BASE_URL=http://host.docker.internal:54398`, sonra `functions serve`. Demo kullanıcısıyla (seed) giriş yapıp `POST /functions/v1/coach-daily` gövdesinde anlık değerler (`supabase/functions/_shared/coach/snapshot.ts`); `?regenerate=1` elle yeniden üretme.
 
+Koçun maliyet / kalite ölçümü (gerçek API, **ücretli, önce kullanıcı onayı**): kullanıcı Console'da kısa süreli ayrı bir anahtar açar ve kendi PowerShell'inde gizli girişle `tools/coach-eval/.env.local`'a (gitignore'lu) `ANTHROPIC_API_KEY=...` olarak yazar. `node tools/coach-eval/run.ts --dry` ücretsiz tahmin verir, `node tools/coach-eval/run.ts` Batch API ile (%50) koşar, sonuçlar ve yan yana metinler `private/data/coach-eval/<batch>/` altına yazılır. İş bitince anahtar dosyası silinir ([0035](decisions/0035-koc-kaynak-secimi-dikkat.md), LESSONS).
+
 ## 10. EAS (iOS derleme ve güncelleme)
 
 Proje mevcut kişisel Expo hesabında ([0024](decisions/0024-eas-derleme-ve-guncelleme.md)). Bu bilgisayarda EAS CLI o hesapla girişli. Yeni makinede kullanıcı bir kez `npx.cmd eas-cli@24.10.0 login` yapar.
