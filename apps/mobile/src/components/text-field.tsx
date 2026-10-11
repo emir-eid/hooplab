@@ -10,14 +10,19 @@ import { usePalette } from '@/theme/appearance';
 
 interface TextFieldRowProps extends Omit<TextInputProps, 'style' | 'placeholderTextColor'> {
   label: string;
+  /** Etiket sütunu (pt); uzun etiketli formda bütün satırlara aynı değer verilir ki alanlar hizalı kalsın. */
+  labelWidth?: number;
   ref?: Ref<TextInput>;
 }
 
-export function TextFieldRow({ label, accessibilityLabel, ref, ...rest }: TextFieldRowProps) {
+/** "Karbonhidrat" gibi uzun etiketler varsayılan sütuna (72 pt) sığmaz. */
+export const wideLabelWidth = 104;
+
+export function TextFieldRow({ label, labelWidth, accessibilityLabel, ref, ...rest }: TextFieldRowProps) {
   const palette = usePalette();
   return (
     <View style={styles.row}>
-      <Text variant="rowLabel" style={styles.label} importantForAccessibility="no" accessibilityElementsHidden>
+      <Text variant="rowLabel" style={[styles.label, labelWidth !== undefined && { width: labelWidth }]} importantForAccessibility="no" accessibilityElementsHidden>
         {label}
       </Text>
       <TextInput

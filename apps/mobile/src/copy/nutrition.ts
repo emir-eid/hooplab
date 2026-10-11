@@ -136,8 +136,11 @@ export function intakeFooter(i: DayIntake): string {
   return `${estimateLabel}: kayıt çoğu zaman gerçek alımın altında kalır; düşük görünmesi bir uyarı değil. Kişisel bir plan için spor diyetisyenine danış.`;
 }
 
+/** Adı girilmemiş gram kalemi (etiketten ya da halkadan doğrudan). */
+export const customItemFallback = 'Elle girilen';
+
 function itemName(item: MealItem): string {
-  if (!('food' in item)) return item.label ?? 'Etiketten';
+  if (!('food' in item)) return item.label ?? customItemFallback;
   const food = foodById(item.food);
   const name = food?.name ?? 'Listede yok';
   return item.portions === 1 ? name : `${name} ${portionsText(item.portions)}`;

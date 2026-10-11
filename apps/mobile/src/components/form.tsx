@@ -2,8 +2,8 @@
 
 import { layout, radius, size, spacing } from '@hooplab/theme';
 import { router } from 'expo-router';
-import type { ReactNode } from 'react';
-import { Pressable, StyleSheet, View } from 'react-native';
+import { useEffect, useState, type ReactNode } from 'react';
+import { Keyboard, LayoutAnimation, Platform, Pressable, StyleSheet, View, type KeyboardEvent } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import Svg, { Defs, LinearGradient, Rect, Stop } from 'react-native-svg';
 
@@ -60,7 +60,32 @@ export function FormBlock({ title, note, children }: { title: string; note?: str
   );
 }
 
-/** Ekranın altına sabit ana düğme yuvası; içerik arkasından geçerken zemine karışır. */
+/**
+ * iOS klavyesinin ekranın altından kapladığı yükseklik (kapalıyken 0). Form modalının alt kenarı ekranın alt
+ * kenarıyla aynı olduğundan yuva bu kadar yukarı kalkar. Klavyeyle aynı süre ve eğriyle kayar
+ * (KeyboardAvoidingView'un yöntemi). Android ve web'de 0.
+ */
+function useKeyboardInset(): number {
+  const [inset, setInset] = useState(0);
+  useEffect(() => {
+    if (Platform.OS !== 'ios') return;
+    const move = (e: KeyboardEvent, height: number) => {
+      // RCTLayoutAnimation 10 ms altını kabul etmez.
+      const duration = Math.max(e.duration, 10);
+      LayoutAnimation.configureNext({ duration, update: { duration, type: LayoutAnimation.Types.keyboard } });
+      setInset(height);
+    };
+    const show = Keyboard.addListener('keyboardWillShow', (e) => move(e, e.endCoordinates.height));
+    const hide = Keyboard.addListener('keyboardWillHide', (e) => move(e, 0));
+    return () => {
+      show.remove();
+      hide.remove();
+    };
+  }, []);
+  return inset;
+}
+
+/** Ekranın altına sabit ana düğme yuvası; klavye açıkken onun üstüne kalkar; içerik arkasından geçerken zemine karışır. */
 export function FormDock({
   label,
   onPress,
@@ -76,8 +101,10 @@ export function FormDock({
 }) {
   const palette = usePalette();
   const insets = useSafeAreaInsets();
+  const keyboard = useKeyboardInset();
+  // Klavye açıkken ev çubuğu boşluğu gerekmez.
   return (
-    <View style={[styles.dock, { paddingBottom: Math.max(insets.bottom, spacing[4]) }]}>
+    <View style={[styles.dock, { bottom: keyboard, paddingBottom: keyboard > 0 ? spacing[4] : Math.max(insets.bottom, spacing[4]) }]}>
       <Svg width="100%" height="100%" style={[StyleSheet.absoluteFill, styles.noTouch]}>
         <Defs>
           <LinearGradient id="dock-fade" x1="0" y1="0" x2="0" y2="1">
@@ -102,10 +129,11 @@ export function FormDock({
   );
 }
 
-/** Kaydırılan form içeriğinin altında yuvaya bırakılan boşluk. */
+/** Kaydırılan form içeriğinin altında yuvaya (ve açıksa klavyeye) bırakılan boşluk. */
 export function useDockSpace(): number {
   const insets = useSafeAreaInsets();
-  return size.primaryButton + Math.max(insets.bottom, spacing[4]) + spacing[10];
+  const keyboard = useKeyboardInset();
+  return size.primaryButton + (keyboard > 0 ? keyboard + spacing[4] : Math.max(insets.bottom, spacing[4])) + spacing[10];
 }
 
 const styles = StyleSheet.create({

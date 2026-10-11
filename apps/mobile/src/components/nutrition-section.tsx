@@ -58,6 +58,7 @@ function RingColumn({
   amount,
   range,
   onPress,
+  hint,
 }: {
   nutrient: Nutrient;
   text: RingText;
@@ -65,6 +66,8 @@ function RingColumn({
   amount: number;
   range: readonly [number, number] | null;
   onPress?: () => void;
+  /** Dokununca ne açıldığı (ekran okuyucu). */
+  hint?: string;
 }) {
   const palette = usePalette();
   const body = (
@@ -102,7 +105,7 @@ function RingColumn({
       onPress={onPress}
       accessibilityRole="button"
       accessibilityLabel={text.label}
-      accessibilityHint="Su kaydını açar"
+      accessibilityHint={hint}
       style={({ pressed }) => [styles.ringCol, pressed && styles.pressed]}>
       {body}
     </Pressable>
@@ -145,8 +148,24 @@ export function NutritionSection({ view, onDayType, onDeleteMeal, sweatFluidL }:
       <SectionHead title="Beslenme · bugün" explain="nutrition" />
       <Card>
         <View style={styles.rings}>
-          <RingColumn nutrient="carbs" text={carbsRing(i, t)} unit="g" amount={i.carbsG} range={t.carbsG} />
-          <RingColumn nutrient="protein" text={proteinRing(i, t)} unit="g" amount={i.proteinG} range={t.proteinG} />
+          <RingColumn
+            nutrient="carbs"
+            text={carbsRing(i, t)}
+            unit="g"
+            amount={i.carbsG}
+            range={t.carbsG}
+            onPress={() => router.push({ pathname: '/grams', params: { focus: 'carbs' } })}
+            hint="Gram girişini açar"
+          />
+          <RingColumn
+            nutrient="protein"
+            text={proteinRing(i, t)}
+            unit="g"
+            amount={i.proteinG}
+            range={t.proteinG}
+            onPress={() => router.push({ pathname: '/grams', params: { focus: 'protein' } })}
+            hint="Gram girişini açar"
+          />
           <RingColumn
             nutrient="water"
             text={waterRing(view.fluidL, sweatFluidL)}
@@ -154,6 +173,7 @@ export function NutritionSection({ view, onDayType, onDeleteMeal, sweatFluidL }:
             amount={view.fluidL}
             range={null}
             onPress={() => router.push('/water')}
+            hint="Su kaydını açar"
           />
         </View>
         <View style={styles.quickRow}>

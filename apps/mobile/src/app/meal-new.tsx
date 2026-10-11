@@ -25,8 +25,9 @@ import { FormBlock, FormDock, FormHeader, useDockSpace } from '@/components/form
 import { GestureScrollView } from '@/components/gesture-scroll';
 import { Icon } from '@/components/icon';
 import { Text } from '@/components/text';
-import { TextFieldRow } from '@/components/text-field';
+import { TextFieldRow, wideLabelWidth } from '@/components/text-field';
 import {
+  customItemFallback,
   customItemText,
   defaultSlot,
   foodGroupLabels,
@@ -206,7 +207,7 @@ export default function MealScreen() {
           ) : (
             items.map((item, index) => {
               const food = 'food' in item ? foodById(item.food) : undefined;
-              const name = 'food' in item ? (food?.name ?? 'Listede yok') : (item.label ?? 'Etiketten');
+              const name = 'food' in item ? (food?.name ?? 'Listede yok') : (item.label ?? customItemFallback);
               const detail = 'food' in item ? (food ? foodPortionText(food) : '') : customItemText(item);
               return (
                 <View key={itemKey(item, index)} style={[styles.selected, index > 0 && { borderTopColor: palette.line, borderTopWidth: 1 }]}>
@@ -270,6 +271,7 @@ export default function MealScreen() {
         <FormBlock title="Etiketten" note="paketli ürün, gram">
           <View style={styles.field}>
             <TextFieldRow
+              labelWidth={wideLabelWidth}
               label="Ad"
               accessibilityLabel="Ürün adı, isteğe bağlı"
               value={custom.label}
@@ -278,6 +280,7 @@ export default function MealScreen() {
               maxLength={mealLimits.labelMax}
             />
             <TextFieldRow
+              labelWidth={wideLabelWidth}
               label="Karbonhidrat"
               accessibilityLabel="Karbonhidrat, gram"
               value={custom.carbs}
@@ -286,6 +289,7 @@ export default function MealScreen() {
               placeholder="g"
             />
             <TextFieldRow
+              labelWidth={wideLabelWidth}
               label="Protein"
               accessibilityLabel="Protein, gram"
               value={custom.protein}

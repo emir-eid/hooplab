@@ -5,6 +5,7 @@ Uygulamaya veya altyapıya görünür değişiklikler. Biçim: [Keep a Changelog
 ## [Yayınlanmamış]
 
 ### Eklendi
+- Beslenme halkalarından doğrudan gram (kullanıcı isteği, karar 0030 / 0031): Bugün'de karbonhidrat ya da protein halkasına dokununca "Gram ekle" açılır (dokunulan alan klavyeyle), giriş tek kalemli öğün olarak kaydedilir; adsız gram kalemi "Elle girilen" yazar.
 - AI koç maliyeti (karar 0034, 0035): kısmi kabul (denetimden geçmeyen cümle atılır, kart atılan sayısını yazar; alıntısız kopyalar ayıklanır), günlük özette yalnız dikkat isteyen ölçümlerin kaynakları, ölçüm betiği `tools/coach-eval/run.ts` (Batch API, `--dry`).
 - AI koç günlük özeti, uygulama tarafı (karar 0032, 0033): Bugün'de koç kartı (check-in'den sonra yazılır, konu başlıklarıyla gruplu, dayanak rozetleri ve Dayanaklar sayfası, kodla yönlendirme notları), uygulamada anlık değerler (sunucunun şemasıyla doğrulanır), demo için sentetik özetler; `coach-daily` `?peek=1`.
 - AI koç günlük özeti, sunucu tarafı (karar 0032): `coach-daily` Edge Function (Claude Sonnet 5.5, citations, sunucu taraflı yedek, aynı gün önbellek, günde 3 deneme), anlık değer şeması ve "Günün sayıları" belgesi (eşikler kural paketinden), alıntı ve sayı denetçisi, `coach_summaries` tablosu (sahibi okur, yazan yalnız fonksiyon); yerel deneme için sahte Anthropic sunucusu (`tools/dev/fake-anthropic.mjs`). Kanıt tabanı paketi kural değerlerini de taşıyor.
@@ -47,6 +48,7 @@ Uygulamaya veya altyapıya görünür değişiklikler. Biçim: [Keep a Changelog
 - Öğün kaydı (karar 0030): + → Öğün ya da Bugün'den; 35 besinlik sabit liste (USDA FoodData Central, ev ölçüsü ve gramı, `research/foods/foods.json`, `tools/research/foods-fdc.mjs` ile doldurulur ve FDC API'siyle doğrulanır), porsiyon 0,5-3, paketli ürün için etiketten gram, son öğünleri tekrarlama. Bugün'de kayıtlı karbonhidrat ve protein hedef aralığına göre (tahmin, uyarı yok), öğün başına protein dozu.
 - Su kaydı (karar 0031): + → Su ya da Bugün'den; 250 / 500 / 750 mL ya da elle, hedefsiz; ter testi yapılan gün seans sonrası sıvı hedefi yanında.
 ### Değişti
+- Kayıt formlarında Kaydet yuvası iOS klavyesinin üstüne kalkar (klavyeyle aynı süre ve eğriyle); önceden klavyenin altında kalıyordu. "Karbonhidrat" etiketli alanlar tek satır.
 - Faz 2 kapanışı: arayüz metinlerindeki pencere ve eşik sayıları ("son 7 gün", "4 hafta", "1 SD", "%2", "48-72 saat" vb.) motor sabitlerinden üretiliyor; ter testi notu "%2 veya üstünde" (motorla aynı). Yeni bekçi `apps/mobile/src/copy/hardcoded-numbers.test.ts`; kurallara hedef kilo penceresi (`weight_days`) ve protein açıklamasındaki 1,6 g/kg (`no_added_gain_above`) eklendi.
 - Bugün'deki beslenme kartı (karar 0031): karbonhidrat, protein ve su halkaları (içte kayıtlı miktar, dışta hedef aralığı), kategori rengi (pembe / mor / mavi; risk rengi değil), Öğün ve Su hızlı ekleme düğmeleri, katlanır öğün listesi.
 - Öğün ve içişler sağdan sola kaydırılarak silinir; düzeltmede bütün kalemler kaldırılınca "Kaydet ve sil". Açılır liste satırında ok kapalıyken sağa, açıkken aşağı bakar.
