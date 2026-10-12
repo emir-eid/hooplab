@@ -82,9 +82,19 @@ export function statusReason(v: RecoveryView): string {
   return sentence;
 }
 
-/** Bugün için tek öneri. Kural: bant içinde planlanan yoğunluk, dışında düşük yoğunluk (vesterinen-2016). */
-export function statusAdvice(v: RecoveryView): string | null {
+/** Maç günü önerisi (karar 0036, rules/mac.json → mac-gunu): ısınma, karbonhidrat ve sıvı, maç sonrası toparlanma. */
+export const matchDayAdvice = 'Maç günü: ısınmaya zaman ayır, karbonhidrat ve sıvıyı maça göre planla, maçtan sonra toparlanmayı öne al.';
+
+/**
+ * Bugün için tek öneri. Kural: bant içinde planlanan yoğunluk, dışında düşük yoğunluk (vesterinen-2016).
+ * Maç günü yoğunluk önerilmez, maça hazırlık dili kullanılır (karar 0032, 0036); durumun kendisi değişmez.
+ */
+export function statusAdvice(v: RecoveryView, matchDay = false): string | null {
   const sleepShort = v.status.signals.includes('sleep_short');
+  if (matchDay) {
+    const care = v.status.level === 'recover' ? ' Belirti varsa sağlık ekibine danış.' : '';
+    return `${matchDayAdvice}${care}${sleepShort ? ' Bu gece uykuyu öne çek.' : ''}`;
+  }
   switch (v.status.level) {
     case 'ready':
       return 'Planlanan antrenmanı yapabilirsin.';

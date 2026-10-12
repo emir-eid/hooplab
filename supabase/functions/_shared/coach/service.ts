@@ -28,7 +28,7 @@ export function supabaseCoachStore(db: SupabaseClient): CoachStore {
     async listDay(userId, localDate) {
       const { data, error } = await db
         .from('coach_summaries')
-        .select('status, created_at, audit, error')
+        .select('status, created_at, audit, error, match_day:snapshot->matchDay')
         .eq('user_id', userId)
         .eq('local_date', localDate)
         .order('created_at', { ascending: false });

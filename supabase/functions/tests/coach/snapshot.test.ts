@@ -5,11 +5,13 @@ import * as engine from '@hooplab/engine';
 
 import { kbRules } from '../../_shared/coach/kb-data.ts';
 import {
+  attentionMetrics,
   bandPositions,
   bodyRegions,
   bodySides,
   dayLevels,
   dayTypes,
+  matchDayRules,
   metricKeys,
   metricRules,
   painNoteReasons,
@@ -60,7 +62,8 @@ test('yalnız zorunlu alanlar: ölçümsüz gün', () => {
   const result = parseSnapshot({ version: 1, date: '2026-01-15', matchDay: true });
   assert.ok(result.ok);
   assert.deepEqual(presentMetrics(result.snapshot), []);
-  assert.deepEqual(snapshotRuleIds(result.snapshot), []);
+  // Ölçüm yoksa da maç günü kuralı gider (karar 0036).
+  assert.deepEqual(snapshotRuleIds(result.snapshot), ['mac-gunu']);
 });
 
 test('şemada olmayan alan reddedilir (ad, kilo gibi veri modele sızmasın)', () => {
@@ -126,4 +129,12 @@ test('anlık değerlerin kuralları: ölçüm sırasıyla, tekrarsız; boş dizi
   const empty = { ...rest, regions: [], pain: [] };
   assert.ok(!presentMetrics(empty).includes('regions'));
   assert.ok(!snapshotRuleIds(empty).includes('bolge-agri-izleme'));
+});
+
+test('maç günü: kuralı önce gelir, dikkat seçiminde de kalır; işaretsiz gün yok', () => {
+  const match = { ...fullSnapshot(), matchDay: true };
+  assert.equal(snapshotRuleIds(match)[0], 'mac-gunu');
+  assert.ok(snapshotRuleIds(match, attentionMetrics(match)).includes('mac-gunu'));
+  assert.ok(!snapshotRuleIds(fullSnapshot()).includes('mac-gunu'));
+  for (const id of matchDayRules) assert.ok(kbRules.some((r) => r.id === id), id);
 });

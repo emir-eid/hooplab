@@ -21,9 +21,10 @@ export function demoInputs(db: DemoDb, today: string, now: Date): CoachInputs {
   const readings = (date: string) => (history.byDate[date] ? painEntries(history.byDate[date]!) : null);
   const todaySessions = db.sessions.filter((s) => s.localDate === today);
   const tested = todaySessions.find((s) => s.sweat);
+  const matchDay = db.matchDays.includes(today);
   return {
     today,
-    matchDay: false,
+    matchDay,
     recovery: buildRecoveryView(db.healthDaily, db.sleep, today),
     checkin: readCheckin(
       db.checkins.map((c) => ({ date: c.local_date, answers: c.answers })),
@@ -42,7 +43,7 @@ export function demoInputs(db: DemoDb, today: string, now: Date): CoachInputs {
       today,
       { earliest, now, painToday: readings(today), painYesterday: readings(yesterday) },
     ),
-    nutrition: buildNutritionView(today, db.weights, todaySessions, null, db.meals, db.fluids),
+    nutrition: buildNutritionView(today, db.weights, todaySessions, null, db.meals, db.fluids, matchDay),
     sweat: tested?.sweat ? sweatTest({ ...tested.sweat, urineL: tested.sweat.urineL ?? 0, durationMin: tested.durationMin }) : null,
   };
 }

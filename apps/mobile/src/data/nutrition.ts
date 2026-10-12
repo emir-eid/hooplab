@@ -1,5 +1,6 @@
 // Beslenme hedefi verisi (karar 0029): sabah kiloları, gün tipi düzeltmesi, bugünün seansları; kilo ve gün tipi kaydı.
 // Öğün kaydı (karar 0030): bugünün öğünleri, son öğünler (tekrar için), öğün ekleme / düzeltme / silme.
+// Maç günü işareti (karar 0036): işaretli gün yoğun sayılır; işaret satır ekler, kaldırmak siler.
 // Erişimi RLS korur (karar 0015). Demo modu açıksa bellekteki demo deposuna gider (karar 0022).
 
 import {
@@ -40,14 +41,15 @@ export async function fetchNutrition(today: string): Promise<Result<NutritionVie
   const demo = demoStore();
   if (demo) return demo.fetchNutrition(today);
   if (!supabase) return { ok: false, message: offline };
-  const [weights, override, sessions, meals, fluids] = await Promise.all([
+  const [weights, override, sessions, meals, fluids, match] = await Promise.all([
     supabase.from('body_weights').select('local_date, weight_kg').gte('local_date', weightFrom(today)).lte('local_date', today),
     supabase.from('day_types').select('day_type').eq('local_date', today).maybeSingle(),
     supabase.from('training_sessions').select('kind, duration_min').eq('local_date', today),
     supabase.from('meals').select(mealColumns).eq('local_date', today),
     supabase.from('fluid_intakes').select('id, local_date, volume_ml, created_at').eq('local_date', today),
+    supabase.from('match_days').select('local_date').eq('local_date', today).maybeSingle(),
   ]);
-  if (weights.error || override.error || sessions.error || meals.error || fluids.error) return { ok: false, message: offline };
+  if (weights.error || override.error || sessions.error || meals.error || fluids.error || match.error) return { ok: false, message: offline };
   const rows = (sessions.data ?? []) as { kind: SessionKind; duration_min: number }[];
   return {
     ok: true,
@@ -58,6 +60,7 @@ export async function fetchNutrition(today: string): Promise<Result<NutritionVie
       (override.data as { day_type: DayType } | null)?.day_type ?? null,
       (meals.data ?? []) as MealRow[],
       (fluids.data ?? []) as FluidRow[],
+      match.data !== null,
     ),
   };
 }
@@ -84,6 +87,17 @@ export async function saveDayType(localDate: string, dayType: DayType | null): P
       ? await supabase.from('day_types').delete().eq('local_date', localDate)
       : await supabase.from('day_types').upsert({ local_date: localDate, day_type: dayType }, { onConflict: 'user_id,local_date' });
   return error ? { ok: false, message: failed } : { ok: true, value: null };
+}
+
+/** "Bugün maç var" işareti; false işareti kaldırır (satır silinir). Aynı gün ikinci ekleme zaten işaretli demektir. */
+export async function saveMatchDay(localDate: string, matchDay: boolean): Promise<Result<null>> {
+  const demo = demoStore();
+  if (demo) return demo.saveMatchDay(localDate, matchDay);
+  if (!supabase) return { ok: false, message: failed };
+  const { error } = matchDay
+    ? await supabase.from('match_days').insert({ local_date: localDate })
+    : await supabase.from('match_days').delete().eq('local_date', localDate);
+  return error && error.code !== '23505' ? { ok: false, message: failed } : { ok: true, value: null };
 }
 
 /** Son iki haftanın öğünleri, yeniden eskiye, kalemleri aynı olanlar bir kez. */

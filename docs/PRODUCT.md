@@ -41,7 +41,7 @@ Basketbola özgü odak: sıçrama yükü ve patellar / Aşil tendonu, ani duruş
 | **Sabah kilo** | Her sabah (isteğe bağlı) | 5 saniye | |
 | **Ter testi:** öncesi / sonrası tartı, içilen sıvı | Ara sıra (farklı koşullarda) | 1 dakika | |
 | **Beslenme ve su** | Gün içinde (basit) | Öğün başına 15 saniye | Kalori sayacı değil; karbonhidrat / protein kaba tahmini. Besin listesinden, etiketten gram ya da Bugün'deki halkadan doğrudan gram |
-| **Takvim:** maç günleri, seyahat (saat dilimi) | Haftalık | | Faz 1'de elle; otomatik kaynak açık soru. Faz 3'te Bugün'de tek dokunuşluk "Bugün maç var" işareti ([0032](decisions/0032-ai-koc-tasarimi.md)) |
+| **Takvim:** maç günleri, seyahat (saat dilimi) | Haftalık | | Faz 1'de elle; otomatik kaynak açık soru. Faz 3'te Bugün'de tek dokunuşluk "Bugün maç var" işareti ([0032](decisions/0032-ai-koc-tasarimi.md), [0036](decisions/0036-mac-gunu-isareti.md)): işaretli gün beslenmede yoğun, koç maça hazırlık dilini kullanır |
 
 İlke: girdi yükü düşük kalmalı. Her ekran tek elle, birkaç dokunuşla doldurulabilmeli.
 

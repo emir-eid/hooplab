@@ -5,7 +5,7 @@ import { test } from 'node:test';
 
 import { addIsoDays } from '@hooplab/engine';
 
-import { bandNote, formatDecimal, formatSleep, statusAdvice, statusChips, statusReason } from '../copy/recovery.ts';
+import { bandNote, formatDecimal, formatSleep, matchDayAdvice, statusAdvice, statusChips, statusReason } from '../copy/recovery.ts';
 import { buildRecoveryView, chartDays, chartIndexAt, nightlySleep, recoveryFrom, type HealthDailyRow, type SleepRow } from './recovery-view.ts';
 
 const today = '2026-10-31';
@@ -59,6 +59,18 @@ test('yalnız uyku kısa → Kontrollü, öneride uyku', () => {
   assert.equal(v.status.level, 'caution');
   assert.equal(statusReason(v), 'Son 7 gecenin uyku ortalaması 7 saatin altında.');
   assert.match(statusAdvice(v) ?? '', /uykuyu öne çek/);
+});
+
+test('maç günü: durum aynı, öneri yoğunluk değil hazırlık dili; Toparlan ve kısa uyku notları kalır (karar 0036)', () => {
+  const caution = buildRecoveryView(daily(59, 50), nights(380), today);
+  const advice = statusAdvice(caution, true) ?? '';
+  assert.equal(caution.status.level, 'caution');
+  assert.ok(advice.startsWith(matchDayAdvice));
+  assert.doesNotMatch(advice, /yoğunluğu azalt/);
+  assert.match(advice, /uykuyu öne çek/);
+  const recover = buildRecoveryView(daily(35, 60), nights(460), today);
+  assert.match(statusAdvice(recover, true) ?? '', /sağlık ekibine/);
+  assert.doesNotMatch(statusAdvice(recover, true) ?? '', /dinlenme/);
 });
 
 test('yalnız HRV yüksek → Kontrollü, iki yorum da söylenir', () => {

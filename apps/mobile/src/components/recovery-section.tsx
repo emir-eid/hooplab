@@ -44,11 +44,11 @@ import { formatShortDate } from "@/utils/format-date";
 const openMethod = () => router.push("/recovery-method");
 
 /** "Bugünün durumu": büyük etiket, gerekçe, çipler ve tek öneri. Hale ekranın kendisinde çizilir. */
-export function RecoveryState({ view }: { view: RecoveryView }) {
+export function RecoveryState({ view, matchDay = false }: { view: RecoveryView; matchDay?: boolean }) {
   const palette = usePalette();
   const state = levelStates[view.status.level];
   const chips = statusChips(view);
-  const advice = statusAdvice(view);
+  const advice = statusAdvice(view, matchDay);
   const label = view.empty ? "Veri bekleniyor" : levelLabels[view.status.level];
 
   return (
@@ -101,7 +101,7 @@ export function RecoveryState({ view }: { view: RecoveryView }) {
             ]}
           >
             <Icon
-              name="today"
+              name={matchDay ? "ball" : "today"}
               size={22}
               strokeWidth={2}
               color={state ? palette.statusInk[state] : palette.inkSecondary}

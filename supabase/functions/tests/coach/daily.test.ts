@@ -33,7 +33,7 @@ function memoryStore() {
       return rows
         .filter((r) => r.user_id === userId && r.local_date === localDate)
         .sort((a, b) => b.created_at.localeCompare(a.created_at))
-        .map((r): SummaryRow => ({ status: r.status, created_at: r.created_at, audit: r.audit, error: r.error }));
+        .map((r): SummaryRow => ({ status: r.status, created_at: r.created_at, audit: r.audit, error: r.error, match_day: r.snapshot.matchDay }));
     },
     async insert(row) {
       rows.push({ ...structuredClone(row), created_at: new Date(NOW.getTime() + ++clock * 1000).toISOString() });
@@ -142,6 +142,16 @@ test('aynı gün yeniden açılış: model çağrılmaz, saklanan özet döner',
   assert.equal(rows.length, 1);
   assert.equal(again.body.status, 'accepted');
   assert.ok(again.body.status === 'accepted' && again.body.cached);
+});
+
+test('maç işareti: saklanan özet yazıldığı andaki işareti döner; işaret sonradan değişse de model çağrılmaz (karar 0036)', async () => {
+  const { fake, run } = setup();
+  fake.reply({ kind: 'message', message: message(goodContent()) });
+  const first = await run();
+  assert.ok(first.body.status === 'accepted' && first.body.matchDay === false);
+  const later = await run(asRequestBody({ ...fullSnapshot(), matchDay: true }));
+  assert.equal(fake.requests.length, 1);
+  assert.ok(later.body.status === 'accepted' && later.body.cached && later.body.matchDay === false);
 });
 
 test('yalnız bakma: deneme yoksa model çağrılmaz ve kayıt açılmaz; varsa saklanan sonuç döner', async () => {

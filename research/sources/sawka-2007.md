@@ -33,3 +33,4 @@ verified_on: 2026-10-07
 
 - `rules/hidrasyon.json` → `ter-orani`
 - `rules/hidrasyon.json` → `kilo-kaybi-notu`
+- `rules/mac.json` → `mac-gunu`

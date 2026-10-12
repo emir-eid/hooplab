@@ -34,6 +34,8 @@ export type DailyResponse =
       sentences: AuditSentence[];
       /** Denetimden geçmediği için gösterilmeyen cümle sayısı (kısmi kabul, karar 0034); tam kabulde 0. */
       omitted: number;
+      /** Özet yazılırken maç işaretli miydi (karar 0036); uygulama bugünkü işaretten farklıysa yeniden yazmayı önerir. */
+      matchDay: boolean;
       notes: RoutingNote[];
     }
   | { status: 'rejected'; cached: boolean; notes: RoutingNote[] }

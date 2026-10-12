@@ -71,7 +71,7 @@ Her faz, bitiş kriteri karşılanınca `/kapat` ile kapanır: faz özeti `docs/
   - [x] `coach-daily` Edge Function (2026-10-09, bulutta): `_shared/coach/daily.ts` (SDK 0.128.0, Sonnet 5.5, citations, `fallbacks: "default"`, aynı gün önbellek, günde 3 deneme, hata kodları, kodla yönlendirme notları); testler gerçek SDK + sahte Anthropic sunucusuyla, yerelde Deno'da uçtan uca (`tools/dev/fake-anthropic.mjs`)
   - [x] İlk gerçek çağrı ve `usage` ölçümü (2026-10-09, iPhone): dolu günde ~60 bin girdi token'ı, çağrı başına ~0,15 $; ilk deneme denetçi hatasıyla reddedildi, düzeltildi (LESSONS)
   - [x] Uygulamada anlık değerleri kuran modül, Bugün'de koç kartı, demo özetleri (2026-10-09; [0033](decisions/0033-koc-ozeti-check-in-sonrasi.md): check-in'den sonra yazılır, kart konu başlıklarıyla gruplar)
-- [ ] "Bugün maç var" işareti ve koçta maç günü dili
+- [x] "Bugün maç var" işareti ve koçta maç günü dili (2026-10-11, [0036](decisions/0036-mac-gunu-isareti.md): `match_days`, işaretli gün yoğun, `mac-gunu` kuralı, ısınma kaynakları; web önizlemesinde demo ile)
 - [ ] Soru-cevap: soru sınıflandırma (Haiku), tam taban önbellekte, kaynak yoksa sabit metin, `coach_messages`
 - [ ] Kırmızı bayrak ve doping güvenlik kuralları (kodla yönlendirme ve sabit metinler)
 - [x] Maliyet ölçümü ve düşürme (2026-10-10): ölçüm betiği `tools/coach-eval/run.ts` (Batch API), kısmi kabul ([0034](decisions/0034-koc-kismi-kabul.md)), yalnız dikkat isteyen ölçümlerin kaynakları ([0035](decisions/0035-koc-kaynak-secimi-dikkat.md)); çağrı başına ~0,15 → ~0,11 $

@@ -40,6 +40,8 @@ export interface NutritionView {
   inferred: DayType;
   /** Kullanıcının düzeltmesi; yoksa null. */
   override: DayType | null;
+  /** "Bugün maç var" işaretli mi (karar 0036); işaretli gün yoğun sayılır. */
+  matchDay: boolean;
   weight: TargetWeight | null;
   /** Bugün sabah kilosu girildi mi (değeri). */
   todayWeight: number | null;
@@ -128,9 +130,10 @@ export function buildNutritionView(
   override: DayType | null,
   mealRows: readonly MealRow[] = [],
   fluidRows: readonly FluidRow[] = [],
+  matchDay = false,
 ): NutritionView {
   const weights = toWeightSeries(weightRows).filter((w) => w.date >= weightFrom(today) && w.date <= today);
-  const inferred = inferDayType(todaySessions);
+  const inferred = inferDayType(todaySessions, matchDay);
   const dayType = override ?? inferred;
   const weight = targetWeight(weights, today);
   const targets = nutritionTargets(dayType, weight?.kg ?? null);
@@ -141,6 +144,7 @@ export function buildNutritionView(
     dayType,
     inferred,
     override,
+    matchDay,
     weight,
     todayWeight: weights.find((w) => w.date === today)?.value ?? null,
     weights,

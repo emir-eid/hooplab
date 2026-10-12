@@ -39,3 +39,4 @@ verified_on: 2026-10-07
 - `rules/beslenme.json` → `karbonhidrat-gun-tipi`
 - `rules/beslenme.json` → `protein-gunluk`
 - `rules/hidrasyon.json` → `sivi-hedefi`
+- `rules/mac.json` → `mac-gunu`

@@ -34,3 +34,4 @@ verified_on: 2026-10-07
 ## Bağlı kurallar
 
 - `rules/beslenme.json` → `karbonhidrat-gun-tipi`
+- `rules/mac.json` → `mac-gunu`

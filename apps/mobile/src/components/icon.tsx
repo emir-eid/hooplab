@@ -47,6 +47,13 @@ const paths = {
       <Path d="M8.5 8.2c0-1.3 1-1.5 1-2.8M12 8.2c0-1.3 1-1.5 1-2.8M15.5 8.2c0-1.3 1-1.5 1-2.8" />
     </>
   ),
+  // Basketbol topu (maç günü, karar 0036); maket setinde yok, aynı çizgi diliyle.
+  ball: (
+    <>
+      <Circle cx={12} cy={12} r={8.5} />
+      <Path d="M12 3.5v17M3.5 12h17M6.2 5.8c2.6 3 2.6 9.4 0 12.4M17.8 5.8c-2.6 3-2.6 9.4 0 12.4" />
+    </>
+  ),
   trash: <Path d="M4.5 7h15M9.5 7V4.8h5V7M6.5 7l.9 12.2h9.2L17.5 7M10.2 10.5v5.5M13.8 10.5v5.5" />,
 } as const;
 

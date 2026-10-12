@@ -34,8 +34,9 @@ export const dayTypeLabels: Record<DayType, string> = {
 const range = (r: readonly [number, number], digits = 0) =>
   `${formatDecimal(r[0], digits)}–${formatDecimal(r[1], digits)}`;
 
-export function dayTypeNote(dayType: DayType, inferred: DayType, override: DayType | null): string {
+export function dayTypeNote(dayType: DayType, inferred: DayType, override: DayType | null, matchDay = false): string {
   if (override === null) {
+    if (matchDay) return 'bugün maç işaretli';
     return dayType === 'rest' ? 'bugün seans kaydı yok' : dayType === 'high' ? `maç ya da ${highDayRule.minutesAtLeast / 60} saat ve üstü seans` : 'bugünkü seanslarından';
   }
   return `senin seçimin · kayıtlardan: ${dayTypeLabels[inferred].toLocaleLowerCase('tr')}`;

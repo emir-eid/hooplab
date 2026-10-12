@@ -29,3 +29,4 @@ Doğrudan sayı alınmadı. Basketbolda ter kaybının kişiden kişiye ve maçt
 ## Bağlı kurallar
 
 - `rules/hidrasyon.json` → `ter-orani`
+- `rules/mac.json` → `mac-gunu`

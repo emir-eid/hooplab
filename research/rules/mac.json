@@ -1,0 +1,13 @@
+{
+  "module": "mac",
+  "rules": [
+    {
+      "id": "mac-gunu",
+      "description": "Kullanıcı Bugün'de 'Bugün maç var' işaretler (karar 0036). İşaretli gün beslenmede yoğun gün sayılır (karbonhidrat-gun-tipi: maç varsa yoğun); günün durumu (gunun-durumu) değişmez. Koç o gün toparlanma dili yerine maça hazırlık dilini kullanır: ısınma, karbonhidrat ve sıvı, maç sonrası toparlanma; her biri bu kuralın kaynaklarına alıntılı. Süre, miktar veya zamanlama önerilmez; eşik yok.",
+      "value": { "day_type": "high" },
+      "applies_to": "kullanıcının maç işaretlediği gün",
+      "sources": ["fradkin-2010", "mcgowan-2015", "davis-2022", "kerksick-2018", "sawka-2007", "osterberg-2009", "doeven-2018"],
+      "notes": "Isınma: performansa yararı meta-analizden (fradkin-2010), mekanizma ve bekleme süresinde sıcak kalma anlatı derlemesinden (mcgowan-2015); ikisi de basketbola özgü değil. Karbonhidrat: basketbol derlemesi (davis-2022) ve ISSN derlemesi (kerksick-2018); maç gününe aktarım karbonhidrat-gun-tipi kuralındaki varsayımla aynı. Sıvı: ACSM tutum bildirgesi (sawka-2007) ve NBA'de ter kaybı (osterberg-2009). Maç sonrası toparlanma: takım sporlarında sistematik derleme (doeven-2018); basketbol verisi sınırlı. Ayrıntılı maç günü ve seyahat protokolü Faz 4'te (ROADMAP)."
+    }
+  ]
+}

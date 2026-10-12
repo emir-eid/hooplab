@@ -36,8 +36,12 @@ export function isValidWeight(kg: number): boolean {
   return Number.isFinite(kg) && kg >= weightLimits.min && kg <= weightLimits.max;
 }
 
-/** O günün seanslarından gün tipi: seans yoksa dinlenme, maç ya da toplam ≥ 180 dk ise yoğun, değilse antrenman. */
-export function inferDayType(sessions: readonly { kind: SessionKind; durationMin: number }[]): DayType {
+/**
+ * O günün seanslarından gün tipi: seans yoksa dinlenme, maç ya da toplam ≥ 180 dk ise yoğun, değilse antrenman.
+ * "Bugün maç var" işaretli gün maç seansı kaydedilmemiş olsa da yoğundur (rules/mac.json → mac-gunu, karar 0036).
+ */
+export function inferDayType(sessions: readonly { kind: SessionKind; durationMin: number }[], matchDay = false): DayType {
+  if (matchDay) return 'high';
   if (sessions.length === 0) return 'rest';
   const minutes = sessions.reduce((a, s) => a + s.durationMin, 0);
   if (minutes >= highDayRule.minutesAtLeast || sessions.some((s) => highDayRule.kinds.includes(s.kind))) return 'high';

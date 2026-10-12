@@ -157,7 +157,9 @@ export class DemoStore {
     const from = weightFrom(today);
     const weights = this.db.weights.filter((w) => w.local_date >= from && w.local_date <= today);
     const sessions = this.db.sessions.filter((s) => s.localDate === today);
-    return ok(buildNutritionView(today, weights, sessions, this.db.dayTypes[today] ?? null, this.db.meals, this.db.fluids));
+    return ok(
+      buildNutritionView(today, weights, sessions, this.db.dayTypes[today] ?? null, this.db.meals, this.db.fluids, this.db.matchDays.includes(today)),
+    );
   }
 
   async fetchRecentMeals(today: string): Promise<Result<Meal[]>> {
@@ -211,10 +213,16 @@ export class DemoStore {
     return ok(null);
   }
 
+  async saveMatchDay(localDate: string, matchDay: boolean): Promise<Result<null>> {
+    const rest = this.db.matchDays.filter((d) => d !== localDate);
+    this.db.matchDays = matchDay ? [...rest, localDate] : rest;
+    return ok(null);
+  }
+
   /** Koçun özeti: önceden yazılmış sentetik metin, o anki demo değerlerinden (karar 0032); API çağrılmaz. */
   async fetchCoachDaily(snapshot: CoachSnapshot): Promise<Result<CoachReply>> {
     return ok({
-      response: { status: 'accepted', cached: true, sentences: demoCoachSummary(this.scenario, snapshot), omitted: 0, notes: routingNotes(snapshot) },
+      response: { status: 'accepted', cached: true, sentences: demoCoachSummary(this.scenario, snapshot), omitted: 0, matchDay: snapshot.matchDay, notes: routingNotes(snapshot) },
       demo: true,
     });
   }

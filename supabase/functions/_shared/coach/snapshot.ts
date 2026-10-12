@@ -237,9 +237,12 @@ export function attentionMetrics(snapshot: CoachSnapshot): MetricKey[] {
   return presentMetrics(snapshot).filter((key) => keep[key]);
 }
 
-/** Anlık değerlerin kullandığı kurallar: ölçüm sırasıyla, tekrarsız. */
+/** Maç günü işaretliyse koçun hazırlık dili için kural (rules/mac.json; ısınma, karbonhidrat, sıvı, maç sonrası). */
+export const matchDayRules: readonly string[] = ['mac-gunu'];
+
+/** Anlık değerlerin kullandığı kurallar: maç günüyse önce onunki, sonra ölçüm sırasıyla, tekrarsız. */
 export function snapshotRuleIds(snapshot: CoachSnapshot, metrics: readonly MetricKey[] = presentMetrics(snapshot)): string[] {
-  return [...new Set(metrics.flatMap((key) => metricRules[key]))];
+  return [...new Set([...(snapshot.matchDay ? matchDayRules : []), ...metrics.flatMap((key) => metricRules[key])])];
 }
 
 // --- Doğrulama ---

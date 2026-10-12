@@ -28,6 +28,7 @@ import {
   coachFooter,
   coachInvalidBody,
   coachLimitBody,
+  coachMatchDayChanged,
   coachOmittedNote,
   coachRegenerateAction,
   coachRejectedBody,
@@ -136,6 +137,11 @@ export function CoachCard({ snapshot, checkinDone }: { snapshot: CoachSnapshot; 
               {demo ? coachDemoNote : coachFooter}
               {response.omitted > 0 ? ` ${coachOmittedNote(response.omitted)}` : ''}
             </Text>
+            {response.matchDay !== snapshot.matchDay ? (
+              <Text variant="caption" tone="inkSecondary" style={styles.footer}>
+                {coachMatchDayChanged}
+              </Text>
+            ) : null}
             <Actions>
               <Action label={coachBasisAction} onPress={() => openBasis(response.sentences, null)} />
               {demo || limited ? null : <Action label={coachRegenerateAction} onPress={() => void write('regenerate')} />}
@@ -191,7 +197,7 @@ function Message({ title, body }: { title?: string; body: string }) {
   );
 }
 
-const topicIcons: Record<SummaryTopic, IconName> = { recovery: 'trend', load: 'body', nutrition: 'meal' };
+const topicIcons: Record<SummaryTopic, IconName> = { match: 'ball', recovery: 'trend', load: 'body', nutrition: 'meal' };
 
 /**
  * Özet: günün durumu cümlesi öne çıkar, kalan cümleler konu başlıkları altında ayrı satırlarda (summaryLayout).

@@ -105,6 +105,23 @@ test('demo özeti: her senaryoda sunucunun denetçisinden geçer, cümleler alı
   }
 });
 
+test('demo özeti maç günü: her senaryoda hazırlık dili, denetçiden geçer, maç günü kaynaklarına alıntılı', () => {
+  for (const today of days) {
+    for (const scenario of demoScenarios) {
+      const db = createDemoDb(scenario, today, now);
+      db.matchDays.push(today);
+      const snapshot = buildCoachSnapshot(demoInputs(db, today, now));
+      assert.equal(snapshot.matchDay, true);
+      assert.equal(snapshot.nutrition?.dayType, 'high', `${scenario} @ ${today}: maç günü yoğun`);
+      const { summary, audit } = asResponse(snapshot, scenario);
+      assert.ok(summary.length >= 4 && summary.length <= 7, `${scenario} @ ${today}: ${summary.length} cümle`);
+      assert.deepEqual(audit.problems, [], `${scenario} @ ${today}`);
+      const cited = new Set(summary.flatMap((x) => x.sources));
+      for (const id of ['fradkin-2010', 'mcgowan-2015', 'sawka-2007', 'doeven-2018']) assert.ok(cited.has(id), `${scenario}: ${id}`);
+    }
+  }
+});
+
 test('denetçi bu yolda gerçekten kırılır: demo cümlesindeki sayı değişince özet reddedilir', () => {
   const today = days[0]!;
   const snapshot = buildCoachSnapshot(demoInputs(createDemoDb('green', today, now), today, now));

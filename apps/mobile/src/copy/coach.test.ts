@@ -73,3 +73,16 @@ test('özetin düzeni: ilk cümle durum değilse öne çıkan cümle yok', () =>
   assert.equal(layout.lead, null);
   assert.deepEqual(layout.sections.map((x) => x.topic), ['load']);
 });
+
+test('özetin düzeni: maç günü cümleleri ayrı konu, en başta (karar 0036)', () => {
+  const s = (numbers: string[], sources: string[] = []) => ({ text: numbers.join('+') || sources.join('+'), numbers, sources });
+  const layout = summaryLayout([s(['status']), s(['day']), s([], ['fradkin-2010']), s(['nutrition']), s([], ['sawka-2007'])]);
+  assert.equal(layout.lead?.index, 0);
+  assert.deepEqual(
+    layout.sections.map((x) => [x.topic, x.lines.map((l) => l.index)]),
+    [
+      ['match', [1, 2]],
+      ['nutrition', [3, 4]],
+    ],
+  );
+});

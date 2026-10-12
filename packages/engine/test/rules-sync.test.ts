@@ -14,6 +14,7 @@ import {
   fluidTargetRule,
   gainNoteRule,
   highDayRule,
+  inferDayType,
   mealLimits,
   mealSlots,
   portionMultipliers,
@@ -261,4 +262,9 @@ test('veritabanındaki bölge listesi motorla aynı', () => {
   assert.ok(m, 'region CHECK bulunamadı');
   const dbRegions = [...m[1]!.matchAll(/'([a-z_]+)'/g)].map((x) => x[1]);
   assert.deepEqual(dbRegions, [...bodyRegions]);
+});
+
+test('maç günü işareti kuralla aynı gün tipini verir', () => {
+  const { value } = rule('mac.json', 'mac-gunu');
+  assert.equal(inferDayType([], true), value.day_type);
 });

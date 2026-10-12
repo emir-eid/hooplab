@@ -19,9 +19,41 @@ function sentence(text: string, numbers: string[], sources: string[] = []): Audi
   return { text, numbers, sources };
 }
 
-export function demoCoachSummary(scenario: DemoScenario, s: CoachSnapshot): AuditSentence[] {
+/** Günün durumu cümlesi (ilk cümle); senaryoya göre neden. */
+const statusReason: Record<DemoScenario, string> = {
+  green: 'ortalamaların kişisel bandının dışına çıkmadı',
+  yellow: 'HRV ortalaman bandın altında ve uyku kısa',
+  red: 'HRV ortalaman bandın altında, dinlenik nabzın bandın üstünde',
+};
+
+/** Karbonhidrat hedefi cümlesi (gün tipiyle). */
+function nutritionSentence(n: NonNullable<CoachSnapshot['nutrition']>): AuditSentence {
+  return sentence(
+    `Gün tipi ${dayTypeLabels[n.dayType].toLocaleLowerCase('tr')}: karbonhidrat hedefin ${dec(n.carbsPerKg[0])}–${dec(n.carbsPerKg[1])} g/kg, protein ${formatDecimal(n.proteinPerKg[0])}–${formatDecimal(n.proteinPerKg[1])} g/kg.`,
+    ['nutrition'],
+  );
+}
+
+/**
+ * Maç günü (karar 0036): günün durumu aynı kalır, ardından toparlanma yerine maça hazırlık dili: ısınma,
+ * karbonhidrat ve sıvı, maç sonrası toparlanma. Kaynaklar rules/mac.json → mac-gunu.
+ */
+function matchDaySummary(scenario: DemoScenario, s: CoachSnapshot, level: string | null): AuditSentence[] {
   const out: AuditSentence[] = [];
+  if (level) out.push(sentence(`Günün durumu ${level}: ${statusReason[scenario]}.`, ['status']));
+  out.push(sentence('Bugün maç günü; hazırlıkta ısınma, karbonhidrat ve sıvı öne çıkıyor.', ['day']));
+  out.push(sentence('Yeterli bir ısınma, incelenen çalışmaların çoğunda performansı iyileştirmiş.', [], ['fradkin-2010']));
+  out.push(sentence('Isınmayla maçın başlangıcı arasındaki beklemede sıcak kalmak da hazırlığın parçası.', [], ['mcgowan-2015']));
+  out.push(sentence('Takım sporlarında maç sonrası toparlanma günler sürebiliyor; yarının planında bunu hesaba kat.', [], ['doeven-2018']));
+  if (s.nutrition) out.push(nutritionSentence(s.nutrition));
+  out.push(sentence('Maç öncesinde ve sırasında sıvı almak ter kaybını karşılama önerilerinin parçası.', [], ['sawka-2007']));
+  return out;
+}
+
+export function demoCoachSummary(scenario: DemoScenario, s: CoachSnapshot): AuditSentence[] {
   const level = s.status ? levelLabels[s.status.level] : null;
+  if (s.matchDay) return matchDaySummary(scenario, s, level);
+  const out: AuditSentence[] = [];
   const hrv = s.hrv?.rolling != null && s.hrv.band ? s.hrv : null;
   const rhr = s.rhr?.rolling != null && s.rhr.band ? s.rhr : null;
 
@@ -36,7 +68,7 @@ export function demoCoachSummary(scenario: DemoScenario, s: CoachSnapshot): Audi
   };
 
   if (scenario === 'green') {
-    if (level) out.push(sentence(`Günün durumu ${level}: ortalamaların kişisel bandının dışına çıkmadı.`, ['status']));
+    if (level) out.push(sentence(`Günün durumu ${level}: ${statusReason.green}.`, ['status']));
     hrvSentence();
     if (hrv) {
       out.push(
@@ -48,7 +80,7 @@ export function demoCoachSummary(scenario: DemoScenario, s: CoachSnapshot): Audi
       );
     }
   } else if (scenario === 'yellow') {
-    if (level) out.push(sentence(`Günün durumu ${level}: HRV ortalaman bandın altında ve uyku kısa.`, ['status']));
+    if (level) out.push(sentence(`Günün durumu ${level}: ${statusReason.yellow}.`, ['status']));
     if (s.sleep?.rollingHours != null && s.sleep.short) {
       out.push(
         sentence(
@@ -75,7 +107,7 @@ export function demoCoachSummary(scenario: DemoScenario, s: CoachSnapshot): Audi
       );
     }
   } else {
-    if (level) out.push(sentence(`Günün durumu ${level}: HRV ortalaman bandın altında, dinlenik nabzın bandın üstünde.`, ['status']));
+    if (level) out.push(sentence(`Günün durumu ${level}: ${statusReason.red}.`, ['status']));
     if (rhr) {
       out.push(
         sentence(
@@ -108,12 +140,7 @@ export function demoCoachSummary(scenario: DemoScenario, s: CoachSnapshot): Audi
 
   const n = s.nutrition;
   if (n) {
-    out.push(
-      sentence(
-        `Gün tipi ${dayTypeLabels[n.dayType].toLocaleLowerCase('tr')}: karbonhidrat hedefin ${dec(n.carbsPerKg[0])}–${dec(n.carbsPerKg[1])} g/kg, protein ${formatDecimal(n.proteinPerKg[0])}–${formatDecimal(n.proteinPerKg[1])} g/kg.`,
-        ['nutrition'],
-      ),
-    );
+    out.push(nutritionSentence(n));
     out.push(sentence('Karbonhidratı günün antrenman yüküne göre ayarlamak sporcu beslenmesi önerileriyle örtüşür.', [], ['kerksick-2018']));
   }
   return out;

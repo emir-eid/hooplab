@@ -7,7 +7,7 @@
 import { sessionLoad, sweatTest, wellnessTotal, wellnessTotalRange, type CheckinReading, type DayType } from '@hooplab/engine';
 import { layout, radius, size, spacing } from '@hooplab/theme';
 import { router, useFocusEffect } from 'expo-router';
-import { useCallback, useState } from 'react';
+import { useCallback, useMemo, useState } from 'react';
 import { Pressable, StyleSheet, View } from 'react-native';
 
 import { Aura } from '@/components/aura';
@@ -17,6 +17,7 @@ import { DemoBar } from '@/components/demo-bar';
 import { ExplainButton } from '@/components/info-button';
 import { GroupLabel, ListGroup, ListRow } from '@/components/list';
 import { LoadSpikeRow } from '@/components/load-section';
+import { MatchDayToggle } from '@/components/match-day-toggle';
 import { NutritionSection, SweatResults } from '@/components/nutrition-section';
 import { PageHeader } from '@/components/page-header';
 import { NightData, RecoveryState } from '@/components/recovery-section';
@@ -26,7 +27,7 @@ import { sessionKindLabels } from '@/copy/labels';
 import { sweatSummary } from '@/copy/nutrition';
 import { checkinLowBody, checkinLowTitle, checkinNote, formatZ } from '@/copy/personal-baseline';
 import { levelStates } from '@/copy/recovery';
-import { buildCoachSnapshot, type CoachSnapshot } from '@/data/coach-snapshot';
+import { buildCoachSnapshot, type CoachInputs } from '@/data/coach-snapshot';
 import {
   fetchCheckin,
   fetchCheckinReading,
@@ -36,7 +37,7 @@ import {
   type TrainingSession,
 } from '@/data/daily-log';
 import { exerciseSummary, type ExerciseSession } from '@/data/exercise-tagging';
-import { deleteMeal, fetchNutrition, saveDayType } from '@/data/nutrition';
+import { deleteMeal, fetchNutrition, saveDayType, saveMatchDay } from '@/data/nutrition';
 import type { NutritionView } from '@/data/nutrition-view';
 import { fetchRecovery } from '@/data/recovery';
 import { fetchRegionLoad } from '@/data/region-load';
@@ -73,7 +74,8 @@ function TodayScreen({ demo }: { demo: DemoScenario | null }) {
   const [load, setLoad] = useState<TrainingLoadView | null>(null);
   const [checkinReading, setCheckinReading] = useState<CheckinReading | null>(null);
   const [nutrition, setNutrition] = useState<NutritionView | null>(null);
-  const [coachSnapshot, setCoachSnapshot] = useState<CoachSnapshot | null>(null);
+  const [coachInputs, setCoachInputs] = useState<CoachInputs | null>(null);
+  const coachSnapshot = useMemo(() => (coachInputs ? buildCoachSnapshot(coachInputs) : null), [coachInputs]);
 
   // Form kapanınca ekran yeniden odaklanır ve günün kaydı tazelenir.
   useFocusEffect(
@@ -128,18 +130,16 @@ function TodayScreen({ demo }: { demo: DemoScenario | null }) {
       Promise.all([checkinP, sessionsP, recoveryP, nutritionP, readingP, loadP, fetchRegionLoad(today, new Date())]).then(
         ([checkin, sessions, recoveryR, nutritionR, reading, loadR, regions]) => {
           if (cancelled || !checkin.ok) return;
-          setCoachSnapshot(
-            buildCoachSnapshot({
-              today,
-              matchDay: false,
-              recovery: recoveryR.ok ? recoveryR.value : null,
-              checkin: reading.ok ? reading.value : null,
-              load: loadR.ok ? loadR.value : null,
-              regions: regions.ok ? regions.value : null,
-              nutrition: nutritionR.ok ? nutritionR.value : null,
-              sweat: sessions.ok ? todaySweat(sessions.value) : null,
-            }),
-          );
+          setCoachInputs({
+            today,
+            matchDay: nutritionR.ok ? nutritionR.value.matchDay : false,
+            recovery: recoveryR.ok ? recoveryR.value : null,
+            checkin: reading.ok ? reading.value : null,
+            load: loadR.ok ? loadR.value : null,
+            regions: regions.ok ? regions.value : null,
+            nutrition: nutritionR.ok ? nutritionR.value : null,
+            sweat: sessions.ok ? todaySweat(sessions.value) : null,
+          });
         },
       );
       return () => {
@@ -166,6 +166,16 @@ function TodayScreen({ demo }: { demo: DemoScenario | null }) {
       .map(sweatResult)
       .find((r) => r?.shortRecoveryFluidL)?.shortRecoveryFluidL ?? null;
 
+  // Maç işareti beslenme hedefini (yoğun gün) ve koçun anlık değerlerini değiştirir (karar 0036).
+  async function changeMatchDay(matchDay: boolean) {
+    const r = await saveMatchDay(today, matchDay);
+    if (!r.ok) return setError(r.message);
+    const n = await fetchNutrition(today);
+    if (!n.ok) return;
+    setNutrition(n.value);
+    setCoachInputs((prev) => (prev ? { ...prev, matchDay: n.value.matchDay, nutrition: n.value } : prev));
+  }
+
   async function changeDayType(dayType: DayType | null) {
     const r = await saveDayType(today, dayType);
     if (!r.ok) return setError(r.message);
@@ -179,7 +189,8 @@ function TodayScreen({ demo }: { demo: DemoScenario | null }) {
       <PageHeader overline={formatDayHeader(new Date())} title="Bugün" />
       {demo ? <DemoBar scenario={demo} /> : null}
 
-      {recovery ? <RecoveryState view={recovery} /> : null}
+      {recovery ? <RecoveryState view={recovery} matchDay={nutrition?.matchDay ?? false} /> : null}
+      {nutrition ? <MatchDayToggle matchDay={nutrition.matchDay} onChange={(m) => void changeMatchDay(m)} /> : null}
       {recoveryError ? (
         <Text variant="footnoteMedium" style={[styles.error, { color: palette.statusInk.red }]} accessibilityRole="alert">
           {recoveryError}

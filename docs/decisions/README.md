@@ -68,3 +68,4 @@ Hangisi seçildi ve tek paragrafta neden.
 | [0033](0033-koc-ozeti-check-in-sonrasi.md) | Koçun günlük özeti check-in'den sonra yazılır (öncesinde yalnız bakılır, elle yazdırılabilir); kart cümleleri alıntıladıkları ölçümün konusuna göre gruplar | Kabul edildi |
 | [0034](0034-koc-kismi-kabul.md) | Koç özetinde kısmi kabul: denetimden geçmeyen cümle atılır, gerisi gösterilir (durum cümlesi ve en az 3 cümle şartıyla); atılan sayısı kartta yazar | Kabul edildi |
 | [0035](0035-koc-kaynak-secimi-dikkat.md) | Günlük özette yalnız dikkat isteyen ölçümlerin kaynakları (bandın dışı, not, bölge / ağrı / ter testi; durum ve beslenme her zaman); ölçüme dayalı, çağrı başına ~%21 daha az | Kabul edildi |
+| [0036](0036-mac-gunu-isareti.md) | "Bugün maç var" işareti: `match_days` tablosu, işaretli gün beslenmede yoğun (günün durumu değişmez), koçta `mac-gunu` kuralı ve ısınma kaynakları (fradkin-2010, mcgowan-2015), eskiyen özette "Yeniden yaz" önerisi | Kabul edildi |

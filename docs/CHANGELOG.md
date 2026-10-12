@@ -5,6 +5,7 @@ Uygulamaya veya altyapıya görünür değişiklikler. Biçim: [Keep a Changelog
 ## [Yayınlanmamış]
 
 ### Eklendi
+- "Bugün maç var" işareti (karar 0036): Bugün'de tek dokunuş, `match_days` tablosu (RLS, pgTAP), işaretli gün beslenmede yoğun (karbonhidrat 8-10 g/kg), koç maç günü hazırlık dilini kullanır (yeni kural `mac-gunu`, ısınma kaynakları fradkin-2010 ve mcgowan-2015), kartta "Maç günü" konusu, işaret özetten sonra değiştiyse "Yeniden yaz" önerisi; demo maç günü özeti.
 - Beslenme halkalarından doğrudan gram (kullanıcı isteği, karar 0030 / 0031): Bugün'de karbonhidrat ya da protein halkasına dokununca "Gram ekle" açılır (dokunulan alan klavyeyle), giriş tek kalemli öğün olarak kaydedilir; adsız gram kalemi "Elle girilen" yazar.
 - AI koç maliyeti (karar 0034, 0035): kısmi kabul (denetimden geçmeyen cümle atılır, kart atılan sayısını yazar; alıntısız kopyalar ayıklanır), günlük özette yalnız dikkat isteyen ölçümlerin kaynakları, ölçüm betiği `tools/coach-eval/run.ts` (Batch API, `--dry`).
 - AI koç günlük özeti, uygulama tarafı (karar 0032, 0033): Bugün'de koç kartı (check-in'den sonra yazılır, konu başlıklarıyla gruplu, dayanak rozetleri ve Dayanaklar sayfası, kodla yönlendirme notları), uygulamada anlık değerler (sunucunun şemasıyla doğrulanır), demo için sentetik özetler; `coach-daily` `?peek=1`.

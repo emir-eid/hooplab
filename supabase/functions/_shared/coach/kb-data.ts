@@ -454,6 +454,22 @@ export const kbSources: readonly KbSource[] = [
     "summary": "## Ne söylüyor (kendi cümlelerimizle)\n\n- Seans RPE yöntemi, kalp atım hızına dayalı nesnel bir yükle karşılaştırıldı. Hem sabit ve aralıklı bisiklet egzersizinde hem basketbol antrenmanında iki yöntem arasında tutarlı bir ilişki bulundu.\n- Seans RPE ile hesaplanan mutlak değer, kalp atımı yöntemininkinden yüksek çıktı; iki bölümdeki ilişki ise neredeyse aynıydı.\n- Yazarların sonucu: seans RPE, egzersiz türünden bağımsız olarak antrenmanı sayısallaştırmanın geçerli bir yolu.\n\n## Uygulamada kullanılan sayılar\n\nÖlçek ve hesap bu çalışmanın yöntemi; ayrıntılar açık erişimli `haddad-2017` derlemesinden doğrulandı.\n\n| Değer | Birim | Bağlam / koşul |\n|---|---|---|\n| 0-10 | RPE (değiştirilmiş CR-10) | Seans bittikten sonra, tüm seans için tek puan |\n| RPE × süre | AU (keyfi birim) | Seans yükü |\n\n## Sınırlılıklar\n\n- Küçük örneklemler; basketbol bölümü kolej düzeyinde.\n- Yalnız özet okundu."
   },
   {
+    "id": "fradkin-2010",
+    "title": "Effects of warming-up on physical performance: a systematic review with meta-analysis",
+    "authors": [
+      "Fradkin AJ",
+      "Zazryn TR",
+      "Smoliga JM"
+    ],
+    "year": 2010,
+    "type": "meta-analysis",
+    "doi": "10.1519/JSC.0b013e3181c643a0",
+    "pmid": "19996770",
+    "journal": "Journal of Strength and Conditioning Research",
+    "population": "İnsan çalışmaları, fiziksel aktivite ve spor; 32 yüksek kaliteli çalışma (1966-2008)",
+    "summary": "## Ne söylüyor (kendi cümlelerimizle)\n\n- Isınmanın performansa etkisini sistematik derleme ve meta-analizle inceliyor; yalnız germe içeren ısınmalar dışarıda bırakılmış.\n- İncelenen ölçütlerin büyük çoğunluğunda yeterli bir ısınmadan sonra performans iyileşmiş.\n- Isınmanın sporcuya zarar verdiğine dair çok az kanıt bulmuş.\n- İyi yürütülmüş randomize kontrollü çalışma az; ısınmanın rolünü netleştirmek için daha fazlası gerekiyor.\n\n## Uygulamada kullanılan sayılar\n\n| Değer | Birim | Bağlam / koşul |\n|---|---|---|\n| (sayı kullanılmıyor) | | Koç maç günü ısınmanın önemini kaynaklı anlatır; süre veya yoğunluk önermez |\n\n## Sınırlılıklar\n\n- Basketbola özgü değil; çalışmalar farklı spor ve testlerden.\n- Isınma biçimleri (süre, yoğunluk, içerik) çalışmalar arasında farklı; tek bir protokol çıkmıyor.\n- Az sayıda RCT."
+  },
+  {
     "id": "fukagawa-2022",
     "title": "USDA's FoodData Central: what is it and why is it needed today?",
     "authors": [
@@ -896,6 +912,23 @@ export const kbSources: readonly KbSource[] = [
     "journal": "Journal of Athletic Training",
     "population": "Fiziksel aktivite yapan bireyler ve sporcular (NATA tutum bildirgesi)",
     "summary": "## Ne söylüyor (kendi cümlelerimizle)\n\n- Ter kaybı = egzersiz öncesi kilo − egzersiz sonrası kilo + egzersizde içilen sıvı − (varsa) idrar; ter oranı bunun egzersiz süresine bölümü (L/saat).\n- Egzersiz sonunda vücut ağırlığı kaybı %2'nin altında tutulmalı (öneri gücü A); en iyi performans için ±%1 aralığı öneriliyor (B).\n- Egzersiz sırasında kilo artmamalı; fazla içmek fizyolojik ya da performans yararı sağlamaz ve hiponatremiye yol açabilir (A).\n- 4 saatten kısa toparlanmada kaybın %100-150'si kadar sıvı alınması gerekebilir. Ter oranını bilmeyen biri için egzersiz sırasında susadıkça içmek, fazla içmeyi önleyen güvenli bir yol.\n\n## Uygulamada kullanılan sayılar\n\n| Değer | Birim | Bağlam / koşul |\n|---|---|---|\n| Ter kaybı formülü (idrar dahil, girilmezse 0) | L | Ter testi |\n| %2 | vücut ağırlığı | Kayıp notu |\n| Kilo artışı > 0 | kg | Fazla içme notu (hiponatremi riski; tanı değil) |\n| %100-150 | kayıp | Sonraki seansa 4 saatten az varsa sıvı hedefi |\n\n## Sınırlılıklar\n\n- Genel aktif bireyler için; basketbola özgü değil (bkz. baker-2007, osterberg-2009).\n- Tam metin okundu (PMC)."
+  },
+  {
+    "id": "mcgowan-2015",
+    "title": "Warm-Up Strategies for Sport and Exercise: Mechanisms and Applications",
+    "authors": [
+      "McGowan CJ",
+      "Pyne DB",
+      "Thompson KG",
+      "Rattray B"
+    ],
+    "year": 2015,
+    "type": "narrative-review",
+    "doi": "10.1007/s40279-015-0376-x",
+    "pmid": "26400696",
+    "journal": "Sports Medicine",
+    "population": "Bireysel ve takım sporları sporcuları (derleme)",
+    "summary": "## Ne söylüyor (kendi cümlelerimizle)\n\n- Aktif ve pasif ısınmanın vücut ısısı, metabolizma, sinir sistemi ve psikoloji üzerinden etki ettiğini anlatıyor.\n- Aktif ısınma bir sonraki efora daha fazla hazırlık sağlıyor; pasif ısıtma enerji depolarını harcamadan vücut ısısını yükseltebiliyor.\n- Isınmanın bitişi ile yarışmanın başlangıcı arasındaki bekleme süresinde vücut ve kas ısısını korumanın önemine dikkat çekiyor.\n- Isınma uygulamalarının uzun süre deneme yanılmayla geliştiğini, son yıllarda kanıtın arttığını; bireysel ve takım sporları için tasarım önerileri sunduğunu belirtiyor.\n\n## Uygulamada kullanılan sayılar\n\n| Değer | Birim | Bağlam / koşul |\n|---|---|---|\n| (sayı kullanılmıyor) | | Koç maç günü ısınma ve bekleme süresinde sıcak kalmayı kaynaklı anlatır |\n\n## Sınırlılıklar\n\n- Anlatı derlemesi; sistematik bir arama ve nicel birleştirme yok.\n- Basketbola özgü veri sınırlı; öneriler genel takım sporu bağlamında."
   },
   {
     "id": "mclean-2010",
@@ -1847,7 +1880,7 @@ export const kbRules: readonly KbRule[] = [
   {
     "id": "karbonhidrat-gun-tipi",
     "module": "beslenme",
-    "description": "Günlük karbonhidrat hedefi gün tipine göre (g/kg/gün, sabah kilosuyla): dinlenme 3-5, antrenman 5-7, yoğun 8-10. Gün tipi o günün seans kayıtlarından: seans yoksa dinlenme, seans varsa antrenman, maç varsa ya da seansların toplam süresi 180 dakika veya üstüyse yoğun. Kullanıcı gün tipini değiştirebilir.",
+    "description": "Günlük karbonhidrat hedefi gün tipine göre (g/kg/gün, sabah kilosuyla): dinlenme 3-5, antrenman 5-7, yoğun 8-10. Gün tipi o günün seans kayıtlarından: seans yoksa dinlenme, seans varsa antrenman, maç varsa (maç seansı kaydı ya da Bugün'deki 'Bugün maç var' işareti, mac-gunu) ya da seansların toplam süresi 180 dakika veya üstüyse yoğun. Kullanıcı gün tipini değiştirebilir.",
     "value": {
       "rest": [
         3,
@@ -1904,6 +1937,25 @@ export const kbRules: readonly KbRule[] = [
       "mcdermott-2017",
       "sawka-2007",
       "baker-2007"
+    ]
+  },
+  {
+    "id": "mac-gunu",
+    "module": "mac",
+    "description": "Kullanıcı Bugün'de 'Bugün maç var' işaretler (karar 0036). İşaretli gün beslenmede yoğun gün sayılır (karbonhidrat-gun-tipi: maç varsa yoğun); günün durumu (gunun-durumu) değişmez. Koç o gün toparlanma dili yerine maça hazırlık dilini kullanır: ısınma, karbonhidrat ve sıvı, maç sonrası toparlanma; her biri bu kuralın kaynaklarına alıntılı. Süre, miktar veya zamanlama önerilmez; eşik yok.",
+    "value": {
+      "day_type": "high"
+    },
+    "appliesTo": "kullanıcının maç işaretlediği gün",
+    "notes": "Isınma: performansa yararı meta-analizden (fradkin-2010), mekanizma ve bekleme süresinde sıcak kalma anlatı derlemesinden (mcgowan-2015); ikisi de basketbola özgü değil. Karbonhidrat: basketbol derlemesi (davis-2022) ve ISSN derlemesi (kerksick-2018); maç gününe aktarım karbonhidrat-gun-tipi kuralındaki varsayımla aynı. Sıvı: ACSM tutum bildirgesi (sawka-2007) ve NBA'de ter kaybı (osterberg-2009). Maç sonrası toparlanma: takım sporlarında sistematik derleme (doeven-2018); basketbol verisi sınırlı. Ayrıntılı maç günü ve seyahat protokolü Faz 4'te (ROADMAP).",
+    "sources": [
+      "fradkin-2010",
+      "mcgowan-2015",
+      "davis-2022",
+      "kerksick-2018",
+      "sawka-2007",
+      "osterberg-2009",
+      "doeven-2018"
     ]
   },
   {

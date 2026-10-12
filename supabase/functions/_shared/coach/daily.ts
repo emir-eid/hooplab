@@ -45,6 +45,8 @@ export interface SummaryRow {
   created_at: string;
   audit: AuditResult | null;
   error: string | null;
+  /** Özetin yazıldığı anlık değerlerdeki maç işareti (snapshot->matchDay). */
+  match_day: boolean | null;
 }
 
 export interface NewSummaryRow {
@@ -132,7 +134,8 @@ function present(row: SummaryRow, cached: boolean, notes: RoutingNote[]): DailyR
   if (row.status === 'accepted' && row.audit) {
     const { sentences, shown } = row.audit;
     const visible = shown ? shown.flatMap((i) => (sentences[i] ? [sentences[i]] : [])) : sentences;
-    return { httpStatus: 200, body: { status: 'accepted', cached, sentences: visible, omitted: sentences.length - visible.length, notes } };
+    const matchDay = row.match_day === true;
+    return { httpStatus: 200, body: { status: 'accepted', cached, sentences: visible, omitted: sentences.length - visible.length, matchDay, notes } };
   }
   if (row.status === 'failed') {
     return { httpStatus: cached ? 200 : 502, body: { status: 'failed', cached, error: row.error ?? 'unknown', notes } };
@@ -176,7 +179,7 @@ export async function runDaily(input: DailyInput, deps: { store: CoachStore; mes
   } catch (error) {
     const row: NewSummaryRow = { ...base, status: 'failed', content: null, audit: null, error: errorCode(error), model: null, fallback: false, usage: null };
     await deps.store.insert(row);
-    return present({ status: 'failed', created_at: input.now.toISOString(), audit: null, error: row.error }, false, notes);
+    return present({ status: 'failed', created_at: input.now.toISOString(), audit: null, error: row.error, match_day: snapshot.matchDay }, false, notes);
   }
 
   const usage = message.usage as unknown as Record<string, unknown>;
@@ -186,7 +189,7 @@ export async function runDaily(input: DailyInput, deps: { store: CoachStore; mes
   if (message.stop_reason === 'refusal' || message.stop_reason === 'max_tokens') {
     const error = message.stop_reason === 'refusal' ? `refusal_${message.stop_details?.category ?? 'unknown'}` : 'max_tokens';
     await deps.store.insert({ ...base, status: 'failed', content: null, audit: null, error, model: message.model, fallback, usage });
-    return present({ status: 'failed', created_at: input.now.toISOString(), audit: null, error }, false, notes);
+    return present({ status: 'failed', created_at: input.now.toISOString(), audit: null, error, match_day: snapshot.matchDay }, false, notes);
   }
 
   // Düşünme ve yedek blokları saklanmaz; yalnız metin ve alıntılar.
@@ -201,5 +204,5 @@ export async function runDaily(input: DailyInput, deps: { store: CoachStore; mes
   const audit: AuditResult = trimmed ? { ...checked, shown } : checked;
   const status = checked.ok || shown ? 'accepted' : 'rejected';
   await deps.store.insert({ ...base, status, content, audit, error: null, model: message.model, fallback, usage });
-  return present({ status, created_at: input.now.toISOString(), audit, error: null }, false, notes);
+  return present({ status, created_at: input.now.toISOString(), audit, error: null, match_day: snapshot.matchDay }, false, notes);
 }

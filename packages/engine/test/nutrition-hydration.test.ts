@@ -13,6 +13,9 @@ test('gün tipi: seans yoksa dinlenme, kısa seans antrenman, maç ya da ≥ 180
   assert.equal(inferDayType([{ kind: 'shooting', durationMin: 30 }, { kind: 'game', durationMin: 40 }]), 'high');
   assert.equal(inferDayType([{ kind: 'team_practice', durationMin: 120 }, { kind: 'strength', durationMin: 60 }]), 'high');
   assert.equal(inferDayType([{ kind: 'team_practice', durationMin: 120 }, { kind: 'strength', durationMin: 59 }]), 'training');
+  // Maç işareti: maç seansı henüz kaydedilmemiş sabah da yoğun gün (mac-gunu).
+  assert.equal(inferDayType([], true), 'high');
+  assert.equal(inferDayType([{ kind: 'shooting', durationMin: 30 }], true), 'high');
 });
 
 test('hedef kilo: son 7 günün ortalaması; yoksa son ölçüm; geçersiz ve gelecek sayılmaz', () => {

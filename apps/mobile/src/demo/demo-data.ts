@@ -37,6 +37,8 @@ export interface DemoDb {
   weights: { local_date: string; weight_kg: number }[];
   /** Gün tipi düzeltmeleri; başta boş. */
   dayTypes: Record<string, DayType>;
+  /** "Bugün maç var" işaretli günler (karar 0036); başta boş. */
+  matchDays: string[];
   /** Sentetik öğünler (karar 0030): bugün kahvaltı, dün üç öğün; satır biçiminde. */
   meals: MealRow[];
   /** Sentetik içişler (karar 0031): bugün sabah üç içiş. */
@@ -298,6 +300,7 @@ export function createDemoDb(scenario: DemoScenario, today: string, now: Date): 
     exercises,
     weights,
     dayTypes: {},
+    matchDays: [],
     meals,
     fluids: [
       { id: 'demo-fluid-1', local_date: today, volume_ml: 500, created_at: at(today, 5, 0) },

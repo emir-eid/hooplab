@@ -14,6 +14,8 @@ export const coachBadge = 'Yapay zeka';
 export const coachFooter = 'Sayılar uygulamanın hesabından, yorumlar kanıt tabanındaki kaynaklardan. Tanı değil.';
 export const coachBasisAction = 'Dayanaklar';
 export const coachRegenerateAction = 'Yeniden yaz';
+/** Özet yazıldıktan sonra maç işareti değiştiyse (karar 0036). */
+export const coachMatchDayChanged = 'Bu özet maç işareti değişmeden önce yazıldı. Yeniden yazarsan bugünkü işarete göre olur.';
 
 export const coachChecking = 'Bugünün özetine bakılıyor…';
 export const coachWriting = 'Koç bugünün özetini yazıyor. Yarım dakika kadar sürebilir.';
@@ -93,16 +95,18 @@ export function basisLabel(blockId: string): string {
 // Citations yapılandırılmış çıktıyla birlikte kullanılamadığı için (karar 0032) model başlık yazmaz; kart cümleleri
 // alıntıladıkları ölçüme göre kendisi gruplar. Düzen modelin keyfine bağlı değildir.
 
-export type SummaryTopic = 'recovery' | 'load' | 'nutrition';
-export const summaryTopics = ['recovery', 'load', 'nutrition'] as const satisfies readonly SummaryTopic[];
+export type SummaryTopic = 'match' | 'recovery' | 'load' | 'nutrition';
+export const summaryTopics = ['match', 'recovery', 'load', 'nutrition'] as const satisfies readonly SummaryTopic[];
 export const summaryTopicLabels: Record<SummaryTopic, string> = {
+  match: 'Maç günü',
   recovery: 'Toparlanma',
   load: 'Yük ve vücut',
   nutrition: 'Beslenme ve sıvı',
 };
 
 const metricTopics: Record<MetricKey | 'day', SummaryTopic> = {
-  day: 'recovery',
+  // Maç günü bloğuna alıntı yapan cümle ve ardındaki kaynaklı cümleler (ısınma, maç sonrası) ayrı konu (karar 0036).
+  day: 'match',
   status: 'recovery',
   hrv: 'recovery',
   rhr: 'recovery',
