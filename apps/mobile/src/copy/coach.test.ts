@@ -85,4 +85,19 @@ test('özetin düzeni: maç günü cümleleri ayrı konu, en başta (karar 0036)
       ['nutrition', [3, 4]],
     ],
   );
+  // Gerçek özetteki sıra: ısınma cümleleri nabız cümlesinin ardından gelse de Maç günü'ne girer; karışık kaynaklı cümle önündekinin konusunda kalır (burada Maç günü).
+  const real = summaryLayout([
+    s(['day', 'status']),
+    s(['rhr']),
+    s([], ['fradkin-2010']),
+    s([], ['mcgowan-2015']),
+    s([], ['fradkin-2010', 'plews-2013']),
+  ]);
+  assert.deepEqual(
+    real.sections.map((x) => [x.topic, x.lines.map((l) => l.index)]),
+    [
+      ['match', [2, 3, 4]],
+      ['recovery', [1]],
+    ],
+  );
 });

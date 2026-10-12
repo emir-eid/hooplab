@@ -14,6 +14,7 @@ import type { DocumentEntry } from '../../../../supabase/functions/_shared/coach
 import { kbRules, kbSources } from '../../../../supabase/functions/_shared/coach/kb-data.ts';
 import type { Kb } from '../../../../supabase/functions/_shared/coach/kb.ts';
 import { parseSnapshot, type CoachSnapshot } from '../../../../supabase/functions/_shared/coach/snapshot.ts';
+import { matchDayOnlySources } from '../copy/coach.ts';
 import { buildCoachSnapshot, checkCoachSnapshot } from '../data/coach-snapshot.ts';
 import { demoCoachSummary } from './demo-coach.ts';
 import { createDemoDb, demoScenarios, type DemoScenario } from './demo-data.ts';
@@ -120,6 +121,12 @@ test('demo özeti maç günü: her senaryoda hazırlık dili, denetçiden geçer
       for (const id of ['fradkin-2010', 'mcgowan-2015', 'sawka-2007', 'doeven-2018']) assert.ok(cited.has(id), `${scenario}: ${id}`);
     }
   }
+});
+
+test('kartın maç günü kaynakları: kanıt tabanında yalnız mac-gunu kuralına bağlı olanlar', () => {
+  const others = new Set(kbRules.filter((r) => r.id !== 'mac-gunu').flatMap((r) => r.sources));
+  const mac = kbRules.find((r) => r.id === 'mac-gunu')!;
+  assert.deepEqual([...matchDayOnlySources].sort(), mac.sources.filter((id) => !others.has(id)).sort());
 });
 
 test('denetçi bu yolda gerçekten kırılır: demo cümlesindeki sayı değişince özet reddedilir', () => {

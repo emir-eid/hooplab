@@ -135,9 +135,19 @@ export interface SummaryLayout {
   sections: { topic: SummaryTopic; lines: SummaryLine[] }[];
 }
 
+/**
+ * Yalnız maç günü kuralına (rules/mac.json → mac-gunu) bağlı kaynaklar: ısınma. Yalnız bunlara alıntı yapan cümle
+ * önündeki cümleden bağımsız olarak "Maç günü" konusuna girer (karar 0036; gerçek özette ısınma cümleleri nabız
+ * cümlesinin ardından Toparlanma'ya düşmüştü). Liste demo-coach.test.ts'te kanıt tabanıyla denetlenir.
+ */
+export const matchDayOnlySources: readonly string[] = ['fradkin-2010', 'mcgowan-2015'];
+
 function topicOf(s: AuditSentence): SummaryTopic | null {
   const metric = s.numbers[0]?.split('.')[0];
-  return metric !== undefined && metric in metricTopics ? metricTopics[metric as MetricKey | 'day'] : null;
+  if (metric === undefined) {
+    return s.sources.length > 0 && s.sources.every((id) => matchDayOnlySources.includes(id)) ? 'match' : null;
+  }
+  return metric in metricTopics ? metricTopics[metric as MetricKey | 'day'] : null;
 }
 
 /**
