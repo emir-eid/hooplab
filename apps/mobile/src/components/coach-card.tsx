@@ -56,7 +56,7 @@ export function coachBasis() {
   return shownBasis;
 }
 
-function openBasis(sentences: AuditSentence[], only: number | null) {
+export function openBasis(sentences: AuditSentence[], only: number | null) {
   shownBasis = { sentences, only };
   router.push('/coach-basis');
 }
@@ -229,19 +229,34 @@ function Summary({ sentences }: { sentences: AuditSentence[] }) {
 }
 
 function Line({ line, sentences, variant }: { line: SummaryLine; sentences: AuditSentence[]; variant: 'callout' | 'bodyCompact' }) {
+  return <CitedSentence text={line.sentence.text} mark={line.mark} variant={variant} onPress={() => openBasis(sentences, line.index)} />;
+}
+
+/** Cümle ve sonunda numaralı dayanak rozeti (maket: .cite); alıntısız cümlede rozet yok. Soru-cevap da kullanır. */
+export function CitedSentence({
+  text,
+  mark,
+  variant,
+  onPress,
+}: {
+  text: string;
+  mark: number | null;
+  variant: 'callout' | 'bodyCompact';
+  onPress: () => void;
+}) {
   const palette = usePalette();
   return (
     <Text variant={variant}>
-      {line.sentence.text}
-      {line.mark !== null ? (
+      {text}
+      {mark !== null ? (
         <Pressable
-          onPress={() => openBasis(sentences, line.index)}
+          onPress={onPress}
           hitSlop={(size.hitTarget - size.citeBadge) / 2}
           accessibilityRole="button"
-          accessibilityLabel={`Dayanak ${line.mark}`}
+          accessibilityLabel={`Dayanak ${mark}`}
           style={({ pressed }) => [styles.cite, { backgroundColor: palette.ink }, pressed && styles.pressed]}>
           <Text variant="micro" tone="onInk">
-            {line.mark}
+            {mark}
           </Text>
         </Pressable>
       ) : null}

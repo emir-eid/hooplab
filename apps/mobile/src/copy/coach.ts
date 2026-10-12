@@ -50,6 +50,7 @@ export function coachFailureReason(code: string): string {
   if (code === 'anthropic_connection') return "Anthropic'e bağlanılamadı. Biraz sonra yeniden dene.";
   if (code.startsWith('refusal_')) return 'Model bu isteği yanıtlamadı.';
   if (code === 'max_tokens') return 'Yanıt yarıda kesildi.';
+  if (code === 'classifier_invalid') return 'Soru sınıflandırılamadı. Yeniden dene.';
   return 'Beklenmeyen bir hata oluştu.';
 }
 

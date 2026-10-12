@@ -4,7 +4,8 @@
 //
 // Kurallar (cümle cümle):
 //   1. Rakam içeren cümle "günün sayıları" belgesinden alıntı yapmalı; cümledeki her sayı alıntılanan
-//      bloklarda geçmeli. Sayı uydurulamaz, yuvarlanamaz, kaynaktan alınamaz.
+//      bloklarda geçmeli. Sayı uydurulamaz, yuvarlanamaz, kaynaktan alınamaz. Soru-cevapta (`sourceNumbers`)
+//      kaynağın sayısı da kullanılabilir, ama yalnız alıntılanan kaynak metninde (`cited_text`) geçiyorsa.
 //   2. Öneri veya yorum cümlesi en az bir kaynak belgesine alıntı yapmalı.
 //   3. Alıntısız cümleye yalnız kısa bir geçiş cümlesi olarak izin verilir (rakam yok, öneri / yorum sözü yok).
 //   4. Tahmin bloğuna dayanan cümlede (ya da hemen önceki cümlede) "tahmin" sözü geçmeli.
@@ -71,6 +72,14 @@ export const auditOptions = {
   /** Alıntısız geçiş cümlesinin en fazla kelime sayısı. Bilimsel eşik değil, denetçi ayarı. */
   maxTransitionWords: 8,
 };
+
+export interface AuditMode {
+  /**
+   * Kaynaktan alıntılanan metindeki sayılar da kabul edilir (soru-cevap, karar 0037). Günlük özette kapalı:
+   * özetin sayıları yalnız günün sayılarından gelir.
+   */
+  sourceNumbers?: boolean;
+}
 
 // --- Sayılar ---
 
@@ -234,7 +243,7 @@ function splitSentences(full: string): Sentence[] {
 }
 
 /** Yanıtı denetler. `layout`: istekteki belgelerin sırası (documents.ts dailyDocuments). */
-export function auditResponse(content: readonly ResponseBlock[], layout: readonly DocumentEntry[]): AuditResult {
+export function auditResponse(content: readonly ResponseBlock[], layout: readonly DocumentEntry[], mode: AuditMode = {}): AuditResult {
   const problems: AuditProblem[] = [];
 
   let full = '';
@@ -283,12 +292,14 @@ export function auditResponse(content: readonly ResponseBlock[], layout: readonl
 
     const numberBlocks: NumbersBlock[] = [];
     const sourceIds: string[] = [];
+    const sourceTexts: string[] = [];
     for (const c of citations) {
       const entry = layout[c.document_index];
       if (entry?.kind === 'numbers') {
         numberBlocks.push(...(citedBlocks(c, entry) ?? []));
       } else if (entry?.kind === 'source') {
         sourceIds.push(entry.sourceId);
+        if (typeof c.cited_text === 'string') sourceTexts.push(c.cited_text);
       }
     }
     const numbers = [...new Set(numberBlocks)];
@@ -298,11 +309,12 @@ export function auditResponse(content: readonly ResponseBlock[], layout: readonl
     if (/[âÂ]/u.test(sentence.text)) problems.push({ code: 'forbidden_text', sentence: i, detail: 'â' });
 
     const tokens = extractNumbers(sentence.text);
+    const quoted = mode.sourceNumbers ? sourceTexts.flatMap((t) => extractNumbers(t).flatMap(numberCandidates)) : [];
     if (tokens.length) {
-      if (numbers.length === 0) {
+      if (numbers.length === 0 && quoted.length === 0) {
         problems.push({ code: 'number_uncited', sentence: i, detail: tokens.join(', ') });
       } else {
-        const allowed = blockValues(numbers);
+        const allowed = new Set([...blockValues(numbers), ...quoted]);
         const missing = tokens.filter((t) => !numberCandidates(t).some((v) => allowed.has(v)));
         if (missing.length) problems.push({ code: 'number_mismatch', sentence: i, detail: missing.join(', ') });
       }
@@ -329,10 +341,15 @@ export function auditResponse(content: readonly ResponseBlock[], layout: readonl
 
 // --- Kısmi kabul (karar 0034) ---
 
-export const salvageOptions = {
+export interface SalvageOptions {
   /** Kalan özetin en az cümle sayısı. Bilimsel eşik değil, okunabilirlik ayarı. */
-  minSentences: 3,
-};
+  minSentences: number;
+  /** Günün durumu bloğu varsa ona alıntı yapan bir cümle kalmalı (günlük özet). */
+  requireStatus: boolean;
+}
+
+/** Günlük özetin ayarı. */
+export const salvageOptions: SalvageOptions = { minSentences: 3, requireStatus: true };
 
 const normalize = (t: string) => trLower(t).replace(/\s+/g, ' ').trim();
 
@@ -342,12 +359,12 @@ const normalize = (t: string) => trLower(t).replace(/\s+/g, ' ').trim();
  *   - Yanıt düzeyindeki sorun (geçersiz alıntı, boş yanıt) varsa özetin tamamı reddedilir.
  *   - Sorunlu cümle atılır; alıntılı bir kopyası olan alıntısız cümle de (aynı cümleyi iki kez yazma) atılır.
  *   - Atılan cümle yüzünden "tahmin" sözünü kaybeden tahmin cümlesi de atılır (kural 4 kalan sırayla yeniden bakılır).
- *   - Günün durumu bloğu varsa ona alıntı yapan bir cümle kalmalı; en az `minSentences` cümle kalmalı.
+ *   - `requireStatus`: günün durumu bloğu varsa ona alıntı yapan bir cümle kalmalı; en az `minSentences` cümle kalmalı.
  */
-export function salvageAudit(result: AuditResult, layout: readonly DocumentEntry[]): number[] | null {
+export function salvageAudit(result: AuditResult, layout: readonly DocumentEntry[], options: SalvageOptions = salvageOptions): number[] | null {
   if (result.problems.some((p) => p.sentence === null)) return null;
 
-  const numbers = layout[0]?.kind === 'numbers' ? layout[0].blocks : [];
+  const numbers = layout.flatMap((e) => (e.kind === 'numbers' ? e.blocks : []));
   const estimateIds = new Set(numbers.filter((b) => b.estimate).map((b) => b.id));
   const cited = (s: AuditSentence) => s.numbers.length + s.sources.length > 0;
   const citedTexts = new Set(result.sentences.filter(cited).map((s) => normalize(s.text)));
@@ -368,7 +385,7 @@ export function salvageAudit(result: AuditResult, layout: readonly DocumentEntry
     });
   }
 
-  if (numbers.some((b) => b.id === 'status') && !kept.some(({ s }) => s.numbers.includes('status'))) return null;
-  if (kept.length < salvageOptions.minSentences) return null;
+  if (options.requireStatus && numbers.some((b) => b.id === 'status') && !kept.some(({ s }) => s.numbers.includes('status'))) return null;
+  if (kept.length < options.minSentences) return null;
   return kept.map(({ i }) => i);
 }

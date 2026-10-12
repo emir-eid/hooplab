@@ -6,6 +6,7 @@ import { addIsoDays, checkinBaseline, readCheckin, type CheckinReading, type Day
 import { routingNotes } from '../../../../supabase/functions/_shared/coach/contract.ts';
 
 import type { CoachReply } from '@/data/coach';
+import type { AskEntry, AskReply } from '@/data/coach-ask';
 import type { CoachSnapshot } from '@/data/coach-snapshot';
 import type { Checkin, ExerciseToTag, NewTrainingSession, Result, TrainingSession } from '@/data/daily-log';
 import { linkCandidates, pendingExercises, type ExerciseSession } from '@/data/exercise-tagging';
@@ -17,6 +18,8 @@ import type { MealInput } from '@/data/nutrition';
 import { buildNutritionView, distinctRecent, recentMealDays, toMeals, toStoredItems, weightFrom, type NutritionView } from '@/data/nutrition-view';
 import { buildRegionLoadView, regionFrom, type RegionLoadView } from '@/data/region-load-view';
 import { buildTrainingLoadView, loadChartDays, type TrainingLoadView } from '@/data/training-load-view';
+import { askDemoOnlySamples } from '@/copy/coach-ask';
+import { demoAnswer } from '@/demo/demo-ask';
 import { demoCoachSummary } from '@/demo/demo-coach';
 import { createDemoDb, type DemoDb, type DemoScenario } from '@/demo/demo-data';
 
@@ -30,6 +33,8 @@ export class DemoStore {
   readonly scenario: DemoScenario;
   private readonly db: DemoDb;
   private nextId = 1;
+  /** Koça sorulan örnek sorular (yalnız bellekte), en yeni önce. */
+  private asks: AskEntry[] = [];
 
   constructor(scenario: DemoScenario, today: string, now: Date) {
     this.scenario = scenario;
@@ -225,6 +230,18 @@ export class DemoStore {
       response: { status: 'accepted', cached: true, sentences: demoCoachSummary(this.scenario, snapshot), omitted: 0, matchDay: snapshot.matchDay, notes: routingNotes(snapshot) },
       demo: true,
     });
+  }
+
+  /** Koçta soru-cevap: örnek sorulara önceden yazılmış sentetik yanıt (karar 0037); API çağrılmaz. */
+  async askCoach(question: string, localDate: string): Promise<Result<AskReply>> {
+    const answer = demoAnswer(question);
+    if (!answer) return { ok: false, message: askDemoOnlySamples };
+    this.asks.unshift({ id: `demo-ask-${this.nextId++}`, createdAt: new Date().toISOString(), localDate, question: question.trim(), answer, demo: true });
+    return ok({ response: answer, demo: true });
+  }
+
+  async fetchAskHistory(): Promise<Result<AskEntry[]>> {
+    return ok([...this.asks]);
   }
 
   async fetchSyncStatus(): Promise<Result<SyncStatusRow | null>> {

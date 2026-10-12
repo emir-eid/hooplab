@@ -7,7 +7,7 @@
 import { sessionLoad, sweatTest, wellnessTotal, wellnessTotalRange, type CheckinReading, type DayType } from '@hooplab/engine';
 import { layout, radius, size, spacing } from '@hooplab/theme';
 import { router, useFocusEffect } from 'expo-router';
-import { useCallback, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import { Pressable, StyleSheet, View } from 'react-native';
 
 import { Aura } from '@/components/aura';
@@ -27,6 +27,7 @@ import { sessionKindLabels } from '@/copy/labels';
 import { sweatSummary } from '@/copy/nutrition';
 import { checkinLowBody, checkinLowTitle, checkinNote, formatZ } from '@/copy/personal-baseline';
 import { levelStates } from '@/copy/recovery';
+import { rememberCoachSnapshot, todaySweat } from '@/data/coach-context';
 import { buildCoachSnapshot, type CoachInputs } from '@/data/coach-snapshot';
 import {
   fetchCheckin,
@@ -76,6 +77,10 @@ function TodayScreen({ demo }: { demo: DemoScenario | null }) {
   const [nutrition, setNutrition] = useState<NutritionView | null>(null);
   const [coachInputs, setCoachInputs] = useState<CoachInputs | null>(null);
   const coachSnapshot = useMemo(() => (coachInputs ? buildCoachSnapshot(coachInputs) : null), [coachInputs]);
+  // Koç sekmesindeki soru bugünün değerleriyle gitsin (karar 0037).
+  useEffect(() => {
+    if (coachSnapshot) rememberCoachSnapshot(coachSnapshot);
+  }, [coachSnapshot]);
 
   // Form kapanınca ekran yeniden odaklanır ve günün kaydı tazelenir.
   useFocusEffect(
@@ -322,11 +327,6 @@ function TodayScreen({ demo }: { demo: DemoScenario | null }) {
 
 function sweatResult(s: TrainingSession) {
   return s.sweat ? sweatTest({ ...s.sweat, urineL: s.sweat.urineL ?? 0, durationMin: s.durationMin }) : null;
-}
-
-/** Bugünkü ter testlerinden en yenisi (koçun anlık değerleri için). */
-function todaySweat(sessions: readonly TrainingSession[]) {
-  return sessions.map(sweatResult).filter((r) => r !== null).at(-1) ?? null;
 }
 
 /** Seans satırına ter testinin kısa özeti. */

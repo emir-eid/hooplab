@@ -26,6 +26,12 @@ const allowed: Record<string, Record<string, string>> = {
     'kendi ortalamasının 1 SD altında olan oyuncuların': 'kaynak bulgusu (gallo-2016), uygulamanın eşiği değil',
     'yaklaşık 24 saatte zirve': 'kaynak bulgusu (magnusson-2010), uygulamanın eşiği değil',
   },
+  // Demo soru-cevabı kaynağın sözünü aktarır; sayının kaynak özetinde geçtiğini demo-ask.test.ts denetler.
+  'demo/demo-ask.ts': {
+    'yaklaşık 8-10 g/kg/gün olarak veriliyor': 'kaynak bulgusu (kerksick-2018), uygulamanın eşiği değil',
+    'vücut ağırlığının %2 düzeyini': 'kaynak bulgusu (sawka-2007), uygulamanın eşiği değil',
+    'gecede 7 saatten az ve parçalı uyku': 'kaynak bulgusu (walsh-2021), uygulamanın eşiği değil',
+  },
   'copy/personal-baseline.ts': {
     "return '0 SD'": 'biçim: sıfır z değeri',
   },

@@ -3,6 +3,7 @@
 
 import type { SupabaseClient } from 'npm:@supabase/supabase-js@2.117.2';
 
+import type { AskStore, NewAskRow } from './ask.ts';
 import type { CoachStore, NewSummaryRow, SummaryRow } from './daily.ts';
 
 export interface CoachEnv {
@@ -38,6 +39,24 @@ export function supabaseCoachStore(db: SupabaseClient): CoachStore {
     async insert(row: NewSummaryRow) {
       const { error } = await db.from('coach_summaries').insert(row);
       if (error) throw dbError('coach_summaries yazılamadı', error);
+    },
+  };
+}
+
+export function supabaseAskStore(db: SupabaseClient): AskStore {
+  return {
+    async countDay(userId, localDate) {
+      const { count, error } = await db
+        .from('coach_messages')
+        .select('id', { count: 'exact', head: true })
+        .eq('user_id', userId)
+        .eq('local_date', localDate);
+      if (error) throw dbError('coach_messages sayılamadı', error);
+      return count ?? 0;
+    },
+    async insert(row: NewAskRow) {
+      const { error } = await db.from('coach_messages').insert(row);
+      if (error) throw dbError('coach_messages yazılamadı', error);
     },
   };
 }

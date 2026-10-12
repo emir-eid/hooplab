@@ -109,7 +109,7 @@ Bulut tarafını kurulum sihirbazı kurar (yukarıda). Kurduğu değerler:
 
 - Supabase secrets: `GOOGLE_HEALTH_CLIENT_ID`, `GOOGLE_HEALTH_CLIENT_SECRET`, `GHEALTH_CRON_SECRET`
 - Vault: `project_url`, `ghealth_cron_secret`
-- Fonksiyonlar: `ghealth-connect`, `ghealth-callback`, `ghealth-sync`, `coach-daily` (koçun günlük özeti; `ANTHROPIC_API_KEY` ister)
+- Fonksiyonlar: `ghealth-connect`, `ghealth-callback`, `ghealth-sync`, `coach-daily` (koçun günlük özeti), `coach-ask` (koçta soru-cevap); ikisi de `ANTHROPIC_API_KEY` ister
 
 Fonksiyon kodu değiştiğinde yeniden dağıtım: `npm run setup -- --redeploy --yes`. Web istemcisinin kurulumu: [rehber](guides/google-health-baglantisi.md) §4.
 
@@ -119,7 +119,7 @@ Yerel uçtan uca deneme (sentetik, gerçek Google'a gidilmez):
 2. `supabase/functions/.env` (gitignore'lu): istemci değerleri sahte (zamanlayıcı sırrı ve yerel Vault için `npm run setup -- --local --yes`; yerel mod gerçek Google dosyasını okumaz), `GHEALTH_REDIRECT_URI=http://127.0.0.1:54321/functions/v1/ghealth-callback`, `GHEALTH_AUTH_URL=http://127.0.0.1:54399/auth`, `GHEALTH_TOKEN_URL` / `GHEALTH_REVOKE_URL` / `GHEALTH_API_BASE` `http://host.docker.internal:54399/...`, `GHEALTH_CRON_SECRET`.
 3. `npx supabase functions serve --env-file supabase/functions/.env`, sonra `npm run web:local` ile Ben → Google Health. `npm run db:reset` yerel senkron verisini siler.
 
-Koçun günlük özeti yerelde (sentetik, gerçek Anthropic API'sine gidilmez, ücret yok): `node tools/dev/fake-anthropic.mjs` (port 54398), `supabase/functions/.env`'e `ANTHROPIC_API_KEY=sk-ant-yerel-sahte` ve `COACH_ANTHROPIC_BASE_URL=http://host.docker.internal:54398`, sonra `functions serve`. Demo kullanıcısıyla (seed) giriş yapıp `POST /functions/v1/coach-daily` gövdesinde anlık değerler (`supabase/functions/_shared/coach/snapshot.ts`); `?regenerate=1` elle yeniden üretme.
+Koçun günlük özeti yerelde (sentetik, gerçek Anthropic API'sine gidilmez, ücret yok): `node tools/dev/fake-anthropic.mjs` (port 54398), `supabase/functions/.env`'e `ANTHROPIC_API_KEY=sk-ant-yerel-sahte` ve `COACH_ANTHROPIC_BASE_URL=http://host.docker.internal:54398`, sonra `functions serve`. Demo kullanıcısıyla (seed) giriş yapıp `POST /functions/v1/coach-daily` gövdesinde anlık değerler (`supabase/functions/_shared/coach/snapshot.ts`); `?regenerate=1` elle yeniden üretme. Soru-cevap: `POST /functions/v1/coach-ask` gövdesi `{ date, question, snapshot | null }`; sahte sunucu sınıflandırmaya `in_scope`, yanıta ilk kaynağa alıntılı tek cümle döner. Windows'ta curl ile Türkçe soru gönderilirse harfler bozuk kaydedilir (kodlama); arayüzden denenir.
 
 Koçun maliyet / kalite ölçümü (gerçek API, **ücretli, önce kullanıcı onayı**): kullanıcı Console'da kısa süreli ayrı bir anahtar açar ve kendi PowerShell'inde gizli girişle `tools/coach-eval/.env.local`'a (gitignore'lu) `ANTHROPIC_API_KEY=...` olarak yazar. `node tools/coach-eval/run.ts --dry` ücretsiz tahmin verir, `node tools/coach-eval/run.ts` Batch API ile (%50) koşar, sonuçlar ve yan yana metinler `private/data/coach-eval/<batch>/` altına yazılır. İş bitince anahtar dosyası silinir ([0035](decisions/0035-koc-kaynak-secimi-dikkat.md), LESSONS).
 

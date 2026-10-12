@@ -70,7 +70,10 @@ export interface CoachStore {
 
 /** SDK'nın beta messages yüzeyinin kullandığımız kısmı. */
 export interface MessagesApi {
-  create(params: Anthropic.Beta.Messages.MessageCreateParamsNonStreaming): Promise<Anthropic.Beta.Messages.BetaMessage>;
+  create(
+    params: Anthropic.Beta.Messages.MessageCreateParamsNonStreaming,
+    options?: { timeout?: number; maxRetries?: number },
+  ): Promise<Anthropic.Beta.Messages.BetaMessage>;
 }
 
 export interface DailyResult {

@@ -5,6 +5,7 @@ Uygulamaya veya altyapıya görünür değişiklikler. Biçim: [Keep a Changelog
 ## [Yayınlanmamış]
 
 ### Eklendi
+- Koçta soru-cevap (karar 0037): Koç sekmesinde soru alanı, örnek sorular ve geçmiş; `coach-ask` Edge Function (Haiku sınıflandırması, tıbbi ve kapsam dışı soruda sabit metin, takviyede doping uyarısı, Sonnet'e önbellekli tam kanıt tabanı ve bugünün sayıları, soru-cevap kipinde denetçi), `coach_messages` tablosu (sahibi okur, yazan yalnız fonksiyon), günde 10 soru; demo örnek sorulara sentetik yanıt.
 - Koç kartı: yalnız ısınma kaynaklarına dayanan cümle her zaman "Maç günü" konusunda; koç yönergesinde maç günü de toplam cümle sınırı aynı (karar 0036).
 - "Bugün maç var" işareti (karar 0036): Bugün'de tek dokunuş, `match_days` tablosu (RLS, pgTAP), işaretli gün beslenmede yoğun (karbonhidrat 8-10 g/kg), koç maç günü hazırlık dilini kullanır (yeni kural `mac-gunu`, ısınma kaynakları fradkin-2010 ve mcgowan-2015), kartta "Maç günü" konusu, işaret özetten sonra değiştiyse "Yeniden yaz" önerisi; demo maç günü özeti.
 - Beslenme halkalarından doğrudan gram (kullanıcı isteği, karar 0030 / 0031): Bugün'de karbonhidrat ya da protein halkasına dokununca "Gram ekle" açılır (dokunulan alan klavyeyle), giriş tek kalemli öğün olarak kaydedilir; adsız gram kalemi "Elle girilen" yazar.

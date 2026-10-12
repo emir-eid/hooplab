@@ -43,3 +43,55 @@ export type DailyResponse =
   | { status: 'none'; notes: RoutingNote[] }
   | { status: 'invalid'; errors: string[] }
   | { status: 'limit' };
+
+// --- Soru-cevap (karar 0037) ---
+
+/** Günde en fazla soru (kullanıcı kararı, 2026-10-12). Maliyet ayarı, bilimsel eşik değil. */
+export const askDailyLimit = 10;
+
+/** Soru metninin uzunluğu (karakter, kırpılmış). */
+export const questionLength = { min: 3, max: 500 } as const;
+
+/**
+ * Sorunun sınıfı (karar 0032 "soru sınıflandırma"; Haiku yapılandırılmış çıktıyla verir).
+ *   in_scope: kanıt tabanının konusu (yük, toparlanma, uyku, beslenme, sıvı, kas / tendon, ısınma, maç hazırlığı).
+ *   supplement: takviye; yanıtın sonuna uygulama sabit doping uyarısını ekler.
+ *   medical_red_flag: belirti, ilaç, teşhis; koç yanıt üretmez, uygulama sabit metinle doktora yönlendirir.
+ *   out_of_scope: başka konu; sabit metin.
+ */
+export const questionCategories = ['in_scope', 'supplement', 'medical_red_flag', 'out_of_scope'] as const;
+export type QuestionCategory = (typeof questionCategories)[number];
+export type AnsweredCategory = Extract<QuestionCategory, 'in_scope' | 'supplement'>;
+export type RoutedCategory = Extract<QuestionCategory, 'medical_red_flag' | 'out_of_scope'>;
+
+/** coach-ask istek gövdesi. `snapshot` günlük özetle aynı anlık değerler; yoksa yanıt kişisel değildir. */
+export interface AskRequest {
+  date: string;
+  question: string;
+  snapshot: CoachSnapshot | null;
+}
+
+/**
+ * coach-ask yanıtı; aynı nesne `coach_messages.answer`'da saklanır, uygulama geçmişi oradan okur.
+ * `answered`: yalnız denetimden geçen cümleler (kısmi kabul); en az biri kaynağa alıntılı.
+ * `no_source`: yanıt hiçbir kaynağa alıntı yapmadı; uygulama "kanıt tabanında kaynak yok" der.
+ * `rejected`: kaynaklı cümlelerin hepsi denetimden düştü. `routed`: model çağrılmadı, sabit metin.
+ */
+export type AskResponse =
+  | {
+      status: 'answered';
+      category: AnsweredCategory;
+      sentences: AuditSentence[];
+      omitted: number;
+      /** Soruyla bugünün sayıları gitti mi. */
+      withNumbers: boolean;
+    }
+  | { status: 'no_source'; category: AnsweredCategory }
+  | { status: 'rejected'; category: AnsweredCategory }
+  | { status: 'routed'; category: RoutedCategory }
+  | { status: 'failed'; category: QuestionCategory | null; error: string }
+  | { status: 'invalid'; errors: string[] }
+  | { status: 'limit' };
+
+/** Saklanan (geçmişte gösterilen) yanıt türleri. */
+export type StoredAskResponse = Exclude<AskResponse, { status: 'invalid' } | { status: 'limit' }>;

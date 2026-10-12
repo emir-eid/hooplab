@@ -1,13 +1,24 @@
-// Yerel deneme için sahte Anthropic Messages API (SETUP §9): coach-daily'yi gerçek API'yi çağırmadan,
-// Deno'da uçtan uca çalıştırır. Gerçek anahtar gerekmez, ücret doğmaz.
+// Yerel deneme için sahte Anthropic Messages API (SETUP §9): coach-daily'yi ve coach-ask'ı gerçek API'yi
+// çağırmadan, Deno'da uçtan uca çalıştırır. Gerçek anahtar gerekmez, ücret doğmaz.
 //   node tools/dev/fake-anthropic.mjs           → port 54398
 //   supabase/functions/.env: ANTHROPIC_API_KEY=sk-ant-yerel-sahte, COACH_ANTHROPIC_BASE_URL=http://host.docker.internal:54398
 // Her isteğin özeti (model, beta başlığı, belge sayısı) konsola yazılır; içerik yazılmaz.
-// Yanıt alıntısız tek kısa cümledir: denetçiden geçer, özet kabul edilir.
+// Günlük özete yanıt alıntısız tek kısa cümledir. Soru-cevapta sınıflandırma isteğine (yapılandırılmış çıktı)
+// `in_scope`, yanıt isteğine ilk kaynağa alıntılı tek cümle döner: denetçiden geçer, soru yanıtlanır.
 
 import { createServer } from 'node:http';
 
 const port = Number(process.env.PORT ?? 54398);
+
+function replyContent(request) {
+  if (request.output_config?.format) return [{ type: 'text', text: JSON.stringify({ category: 'in_scope' }) }];
+  const first = request.messages?.[0]?.content?.[0];
+  if (Array.isArray(request.messages?.[0]?.content) && first?.title !== 'Günün sayıları') {
+    const citation = { type: 'char_location', document_index: 0, document_title: first?.title ?? null, start_char_index: 0, end_char_index: 1, cited_text: '-', file_id: null };
+    return [{ type: 'text', text: 'Yerel deneme yanıtı', citations: [citation] }, { type: 'text', text: '.' }];
+  }
+  return [{ type: 'text', text: 'Bugünün kısa özeti.' }];
+}
 
 createServer((req, res) => {
   let body = '';
@@ -27,8 +38,9 @@ createServer((req, res) => {
         beta: req.headers['anthropic-beta'],
         model: request.model,
         fallbacks: request.fallbacks,
-        documents: content.filter((c) => c.type === 'document').length,
-        numbersBlocks: content[0]?.source?.content?.length ?? 0,
+        documents: Array.isArray(content) ? content.filter((c) => c.type === 'document').length : 0,
+        numbersBlocks: Array.isArray(content) ? (content.find((c) => c.title === 'Günün sayıları')?.source?.content?.length ?? 0) : 0,
+        cacheMarks: Array.isArray(content) ? content.filter((c) => c.cache_control).length : 0,
         bytes: body.length,
       }),
     );
@@ -39,7 +51,7 @@ createServer((req, res) => {
         type: 'message',
         role: 'assistant',
         model: request.model,
-        content: [{ type: 'text', text: 'Bugünün kısa özeti.' }],
+        content: replyContent(request),
         stop_reason: 'end_turn',
         stop_sequence: null,
         stop_details: null,

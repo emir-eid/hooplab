@@ -353,7 +353,7 @@ export function numbersBlocks(snapshot: CoachSnapshot, kb: Kb): NumbersBlock[] {
   return [day, ...presentMetrics(snapshot).flatMap((key) => blocksFor(snapshot, key, kb))];
 }
 
-function sourceDocument(source: KbSource): DocumentParam {
+export function sourceDocument(source: KbSource): DocumentParam {
   const ids = [source.doi && `DOI ${source.doi}`, source.pmid && `PMID ${source.pmid}`].filter(Boolean).join(', ');
   return {
     type: 'document',
@@ -364,23 +364,25 @@ function sourceDocument(source: KbSource): DocumentParam {
   };
 }
 
+/** "Günün sayıları" belgesi: her blok ayrı içerik bloğu (alıntı blok indisiyle döner). */
+export function numbersDocument(blocks: readonly NumbersBlock[]): DocumentParam {
+  return {
+    type: 'document',
+    source: { type: 'content', content: blocks.map((b) => ({ type: 'text', text: b.text })) },
+    title: numbersTitle,
+    context:
+      "Sporcunun bugünkü değerleri; HoopLab'in hesap motoru hesapladı. Her blok ayrı bir ölçümdür. 'Tahmin' yazan değerler doğrulanmış ölçüm değildir.",
+    citations: { enabled: true },
+  };
+}
+
 /**
  * Günlük özetin belgeleri: önce günün sayıları (document_index 0), sonra kaynaklar verilen sırayla.
  * Kaynaklar selectForRules(kb, snapshotRuleIds(snapshot)) ile seçilir.
  */
 export function dailyDocuments(snapshot: CoachSnapshot, kb: Kb, sources: readonly KbSource[]): CoachDocuments {
   const blocks = numbersBlocks(snapshot, kb);
-  const documents: DocumentParam[] = [
-    {
-      type: 'document',
-      source: { type: 'content', content: blocks.map((b) => ({ type: 'text', text: b.text })) },
-      title: numbersTitle,
-      context:
-        "Sporcunun bugünkü değerleri; HoopLab'in hesap motoru hesapladı. Her blok ayrı bir ölçümdür. 'Tahmin' yazan değerler doğrulanmış ölçüm değildir.",
-      citations: { enabled: true },
-    },
-    ...sources.map(sourceDocument),
-  ];
+  const documents: DocumentParam[] = [numbersDocument(blocks), ...sources.map(sourceDocument)];
   const layout: DocumentEntry[] = [{ kind: 'numbers', blocks }, ...sources.map((s) => ({ kind: 'source' as const, sourceId: s.id }))];
   return { documents, layout };
 }
