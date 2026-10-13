@@ -25,6 +25,9 @@ import {
   checkinBaseline,
   durationLimits,
   respirationNightRule,
+  nightRhrRule,
+  nightSpo2Rule,
+  skinTempRule,
   sessionLoad,
   targetWeightDays,
   wellnessTotalRange,
@@ -267,4 +270,26 @@ test('veritabanındaki bölge listesi motorla aynı', () => {
 test('maç günü işareti kuralla aynı gün tipini verir', () => {
   const { value } = rule('mac.json', 'mac-gunu');
   assert.equal(inferDayType([], true), value.day_type);
+});
+
+test('gece işaretleri kuralla aynı (karar 0039)', () => {
+  const rhr = rule('hastalik-isaretleri.json', 'gece-nabzi-yuksek').value;
+  assert.equal(rhr.above_baseline_median, nightRhrRule.aboveBaselineMedian);
+  assert.equal(rhr.consecutive_nights, nightRhrRule.consecutiveNights);
+  assert.equal(rhr.baseline_days, nightRhrRule.baselineDays);
+  assert.equal(rhr.min_baseline_nights, nightRhrRule.minBaselineNights);
+  assert.equal(rhr.in_day_status, false);
+  const spo2 = rule('hastalik-isaretleri.json', 'gece-spo2-dusuk').value;
+  assert.equal(spo2.below_pct, nightSpo2Rule.belowPct);
+  assert.equal(spo2.below_baseline_median, nightSpo2Rule.belowBaselineMedian);
+  assert.equal(spo2.nights_required, nightSpo2Rule.nightsRequired);
+  assert.equal(spo2.nights_window, nightSpo2Rule.nightsWindow);
+  assert.equal(spo2.baseline_days, nightSpo2Rule.baselineDays);
+  assert.equal(spo2.min_baseline_nights, nightSpo2Rule.minBaselineNights);
+  assert.equal(spo2.in_day_status, false);
+  const skin = rule('hastalik-isaretleri.json', 'cilt-sicakligi-yuksek').value;
+  assert.equal(skin.above_baseline, skinTempRule.aboveBaseline);
+  assert.equal(skin.consecutive_nights, skinTempRule.consecutiveNights);
+  assert.equal(skin.in_day_status, false);
+  assert.equal(rule('hastalik-isaretleri.json', 'hastalik-isareti-yonlendirme').value.in_day_status, false);
 });

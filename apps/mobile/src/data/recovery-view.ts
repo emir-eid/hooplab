@@ -4,12 +4,14 @@
 import {
   addIsoDays,
   dayStatus,
+  readIllnessSigns,
   readMetric,
   readRespiration,
   readSleep,
   recoveryLookbackDays,
   type DayStatus,
   type DayValue,
+  type IllnessSigns,
   type MetricReading,
   type RespirationReading,
   type SleepReading,
@@ -36,6 +38,9 @@ export interface HealthDailyRow {
   hrv_deep_rmssd_ms: number | null;
   resting_hr_bpm: number | null;
   respiratory_rate_bpm: number | null;
+  spo2_avg_pct: number | null;
+  skin_temp_nightly_c: number | null;
+  skin_temp_baseline_c: number | null;
 }
 
 export interface SleepRow {
@@ -59,6 +64,8 @@ export interface RecoveryView {
   sleep: SleepReading;
   /** Gece solunumu: kişisel bant ve tek gece notu (karar 0028); günün durumuna girmez. */
   respiration: RespirationReading;
+  /** Gece nabzı, SpO2 ve cilt sıcaklığının tanı koymayan notları (karar 0039); günün durumuna girmez. */
+  signs: IllnessSigns;
   chart: ChartDay[];
   /** Hiç cihaz verisi yok: Google Health bağlı değil veya henüz senkron olmadı. */
   empty: boolean;
@@ -95,12 +102,22 @@ export function buildRecoveryView(daily: readonly HealthDailyRow[], sleepRows: r
     today,
   );
 
+  const signs = readIllnessSigns(
+    {
+      rhr: rhrSeries,
+      spo2: daily.map((r) => ({ date: r.local_date, value: r.spo2_avg_pct })),
+      skinTemp: daily.map((r) => ({ date: r.local_date, nightly: r.skin_temp_nightly_c, baseline: r.skin_temp_baseline_c })),
+    },
+    today,
+  );
+
   return {
     status: dayStatus(hrv, rhr, sleep),
     hrv,
     rhr,
     sleep,
     respiration,
+    signs,
     chart,
     empty: daily.length === 0 && sleepRows.length === 0,
   };

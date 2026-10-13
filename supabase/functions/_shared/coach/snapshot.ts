@@ -74,6 +74,16 @@ export interface RespirationMetric extends BandMetric {
   nightHigh: boolean | null;
 }
 
+/**
+ * Gece işaretleri (karar 0039; rules/hastalik-isaretleri.json): tanı koymayan notlar. Değer motorda hesaplanır; null =
+ * hesaplanamadı (yakın gece ya da taban yok). Günün durumuna girmez; koç yorumlamaz, uygulama sabit metinle yönlendirir.
+ */
+export interface SignsMetric {
+  rhrHigh: boolean | null;
+  spo2Low: boolean | null;
+  skinTempHigh: boolean | null;
+}
+
 export interface CheckinMetric {
   /** Bugünkü toplam (5-25). */
   total: number;
@@ -156,6 +166,7 @@ export interface CoachSnapshot {
   rhr?: BandMetric;
   sleep?: SleepMetric;
   respiration?: RespirationMetric;
+  signs?: SignsMetric;
   checkin?: CheckinMetric;
   load?: LoadMetric;
   regions?: readonly RegionMetric[];
@@ -171,6 +182,7 @@ export const metricKeys = [
   'rhr',
   'sleep',
   'respiration',
+  'signs',
   'checkin',
   'load',
   'regions',
@@ -192,6 +204,7 @@ export const metricRules: Readonly<Record<MetricKey, readonly string[]>> = {
   rhr: ['toparlanma-bant', 'toparlanma-veri-yeterliligi'],
   sleep: ['uyku-kisa'],
   respiration: ['solunum-bant', 'solunum-tek-gece', 'toparlanma-veri-yeterliligi'],
+  signs: ['gece-nabzi-yuksek', 'gece-spo2-dusuk', 'cilt-sicakligi-yuksek', 'hastalik-isareti-yonlendirme'],
   checkin: ['checkin-olcek', 'checkin-kisisel'],
   load: ['seans-rpe-olcek', 'seans-yuku', 'yuk-gunluk', 'yuk-haftalik', 'yuk-ewma', 'yuk-orani', 'yuk-artis-notu', 'yuk-monotonluk'],
   regions: ['bolge-icerik-etiketleri', 'bolge-esleme', 'bolge-yuku', 'bolge-toparlanma-penceresi'],
@@ -226,6 +239,7 @@ export function attentionMetrics(snapshot: CoachSnapshot): MetricKey[] {
     rhr: outside(s.rhr),
     sleep: s.sleep?.short === true,
     respiration: s.respiration?.nightHigh === true || s.respiration?.position === 'above',
+    signs: s.signs !== undefined && Object.values(s.signs).some((v) => v === true),
     checkin: s.checkin?.low === true,
     load: s.load?.spike === true,
     regions: (s.regions?.length ?? 0) > 0,
@@ -423,6 +437,15 @@ const parsers: { [K in MetricKey]: (c: Checker, value: unknown, path: string) =>
       band: m.band,
       position: m.position,
       nightHigh: c.nullableBoolean(m.nightHigh, `${path}.nightHigh`),
+    };
+  },
+  signs(c, value, path) {
+    const o = c.object(value, path, ['rhrHigh', 'spo2Low', 'skinTempHigh']);
+    if (!o) return null;
+    return {
+      rhrHigh: c.nullableBoolean(o.rhrHigh, `${path}.rhrHigh`),
+      spo2Low: c.nullableBoolean(o.spo2Low, `${path}.spo2Low`),
+      skinTempHigh: c.nullableBoolean(o.skinTempHigh, `${path}.skinTempHigh`),
     };
   },
   checkin(c, value, path) {

@@ -17,6 +17,13 @@ export function respirationNote(r: RespirationReading): string {
 
 export const respirationHighTitle = 'Son gece solunum alıştığından belirgin yüksek';
 
+/** Son gecenin solunumu ve olağanı; gece işaretleri kartında da satır olarak kullanılır (karar 0039). */
+export function respirationHighLine(r: RespirationReading): string {
+  const last = r.latest ? formatDecimal(r.latest.value) : '–';
+  const usual = r.band ? formatDecimal(r.band.mean) : '–';
+  return `Solunum son gece ${last} nefes/dk; önceki ${weeks(recoveryBand.baselineDays)} haftanın ortalaması ${usual}.`;
+}
+
 export function respirationHighBody(r: RespirationReading): string {
   const last = r.latest ? formatDecimal(r.latest.value) : '–';
   const usual = r.band ? formatDecimal(r.band.mean) : '–';

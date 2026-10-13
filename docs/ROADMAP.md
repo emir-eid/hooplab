@@ -79,6 +79,7 @@ Her faz, bitiş kriteri karşılanınca `/kapat` ile kapanır: faz özeti `docs/
 
 ## Faz 4: Son rötuşlar
 
+- [x] Gece işaretleri: dinlenik nabız, SpO2, cilt sıcaklığında kaynaklı "doktora danış" notu (2026-10-13, [0039](decisions/0039-gece-isaretleri.md); 0038'de ertelenen fizyolojik kırmızı bayrak eşikleri)
 - [ ] Bildirimler
 - [ ] Haftalık rapor
 - [ ] Maç günü ve seyahat protokolleri

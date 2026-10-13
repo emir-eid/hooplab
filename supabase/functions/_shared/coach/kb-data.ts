@@ -29,6 +29,25 @@ export const kbSources: readonly KbSource[] = [
     "summary": "## Ne söylüyor (kendi cümlelerimizle)\n\n- REDs üzerine bilginin çoğu sınırlı çalışmalardan çıkarılmış ya da aktarılmış; standart ölçüm protokolü olmadığı için çalışmalar karşılaştırılamıyor.\n- Temel terimlerin tanımı, çalışma tasarımları, kan ölçümleri ve REDs sonuçlarının nasıl ölçüleceği \"tercih edilen\", \"kullanılan ve önerilen\" ve \"olası\" yöntemler diye sınıflanıyor.\n- Amaç, araştırma yöntemini standartlaştırıp önleme, tanı ve tedaviyi güçlendirmek.\n\n## Uygulamada kullanılan sayılar\n\nSayı kullanılmıyor. Enerji yeterliliği öğün kaydıyla da hesaplanmıyor: alımın yanında egzersiz harcaması ve yağsız kütle gerekir, bunların ölçümü araştırmada bile standart değil (karar 0030).\n\n| Değer | Birim | Bağlam / koşul |\n|---|---|---|\n| — | — | — |\n\n## Sınırlılıklar\n\n- Anlatı derlemesi; araştırma yöntemi rehberi, sahada kullanım için bir eşik vermiyor.\n- BMJ sayfası otomatik erişime kapalı (LESSONS, Literatür); yalnız özet okundu."
   },
   {
+    "id": "alavi-2022",
+    "title": "Real-time alerting system for COVID-19 and other stress events using wearable data",
+    "authors": [
+      "Alavi A",
+      "Bogu GK",
+      "Wang M",
+      "Rangan ES",
+      "Brooks AW",
+      "Wang Q"
+    ],
+    "year": 2022,
+    "type": "cohort",
+    "doi": "10.1038/s41591-021-01593-2",
+    "pmid": "34845389",
+    "journal": "Nature Medicine",
+    "population": "Fitbit veya Apple Watch kullanan 3.318 yetişkin (genel nüfus, sporcu değil); 84'ü SARS-CoV-2 ile enfekte",
+    "summary": "## Ne söylüyor (kendi cümlelerimizle)\n\n- Gece dinlenik nabzını (gece yarısından sabaha, adım atılmayan dakikalar) kişinin kendi geçmişinin medyanıyla kıyaslayan basit bir uyarı kuralı (NightSignal) ileriye dönük olarak denendi.\n- Kırmızı uyarı: iki gece üst üste gece nabzı medyanın en az 4 atım/dk üstünde. 3 atım/dk'lık bir ara düzey de var; yazarlar bu sayıyı medyanların aylar içindeki olağan oynamasından seçmiş.\n- COVID-19'u yakalama oranı yaklaşık %80, uyarısız gün oranı (özgüllük) %87,7. Sinyal belirtilerden ortalama 3 gün önce görüldü.\n- Uyarılar yalnız enfeksiyonda değil, stres, alkol, seyahat, aşı ve tatil dönemlerinde de çıktı. Yedi gece sonra kişisel medyan çoğu kişide kararlı hale geliyor.\n\n## Uygulamada kullanılan sayılar\n\n| Değer | Birim | Bağlam / koşul |\n|---|---|---|\n| Medyanın en az 4 üstü, iki gece üst üste | atım/dk | Gece nabzı notu (tanı değil) |\n| 7 gece | gece | Kişisel medyan için en az gece sayısı |\n\n## Sınırlılıklar\n\n- Doğrulama yalnız COVID-19'a karşı; diğer hastalıklar için temiz bir referans yok. Özgüllük alarm günü başına; COVID olmayanlarda üç haftada ortalama bir gün uyarı var (yanlış alarm sık).\n- Popülasyon sporcu değil; ağır antrenman, geç maç ve seyahat sporcuda daha çok yanlış alarm üretebilir.\n- Makaledeki ölçü cihazın ham nabzından hesaplanan gece ortalaması; HoopLab'in aldığı Google Health günlük dinlenik nabzı aynı ölçü değil (aktarım varsayım). Makalede taban o geceye kadarki bütün gecelerin medyanı; HoopLab önceki 28 günün medyanını alır (uyarlama).\n- Kıdemli yazarın şirket ortaklıkları var (cihaz üreticisi değil); kod açık."
+  },
+  {
     "id": "amoutzopoulos-2020",
     "title": "Portion size estimation in dietary assessment: a systematic review of existing tools, their strengths and limitations",
     "authors": [
@@ -254,6 +273,25 @@ export const kbSources: readonly KbSource[] = [
     "journal": "Healthcare (Basel)",
     "population": "Basketbolda yük ve sakatlık çalışmaları; 14 çalışma (profesyonel, kolej ve genç oyuncular)",
     "summary": "## Ne söylüyor (kendi cümlelerimizle)\n\n- 14 çalışmanın 11'i yük ile sakatlık arasında en azından kısmen anlamlı bir ilişki buluyor; yük iç, dış veya ikisiyle ölçülmüş, çoğu mutlak yük kullanıyor.\n- Düşük kronik yük ve ani yük değişimleri riski artırıyor görünüyor; maç başına oynanan dakikadaki ani artış da sakatlıkla ilişkili.\n- Basketbolda oranı yalnız iki çalışma incelemiş ve sonuçları çelişiyor (weiss-2017, ferioli-2020); \"oranı 1-1,5 arasında tutmak sakatlığı azaltır\" diyen bir kanıt yok. Yazarlar oranın sahada temkinli kullanılmasını istiyor.\n\n## Uygulamada kullanılan sayılar\n\nDoğrudan eşik alınmadı. Basketbolda ani yük artışının izlenmeye değer olduğunun, ama oran eşiklerinin bu sporda doğrulanmadığının dayanağı.\n\n## Sınırlılıklar\n\n- Çalışmaların kalitesi karışık (dördü \"zayıf\"); sakatlık tanımları farklı; anlatı sentezi, meta-analiz yok.\n- Açık erişimli tam metnin ilgili bölümleri okundu (PMC11431307)."
+  },
+  {
+    "id": "chen-2020",
+    "title": "Validity of the Use of Wrist and Forehead Temperatures in Screening the General Population for COVID-19: A Prospective Real-World Study",
+    "authors": [
+      "Chen G",
+      "Xie J",
+      "Dai G",
+      "Zheng P",
+      "Hu X",
+      "Lu H"
+    ],
+    "year": 2020,
+    "type": "cross-sectional",
+    "doi": "10.18502/ijph.v49iS1.3670",
+    "pmid": "34268206",
+    "journal": "Iranian Journal of Public Health",
+    "population": "528 kişi; temassız kızılötesi termometreyle bilek ve alın ölçümü, kulak termometresiyle karşılaştırma",
+    "summary": "## Ne söylüyor (kendi cümlelerimizle)\n\n- Bilek cilt sıcaklığı çekirdek sıcaklığının yaklaşık 1 °C altında okuyor ve onunla uyumu zayıf.\n- Fark, kişinin bulunduğu ortama (içeri / dışarıdan gelme) göre değişiyor.\n\n## Uygulamada kullanılan sayılar\n\nDoğrudan sayı alınmadı. Cilt sıcaklığı notunun \"bu bir ateş ölçümü değil; şüphede termometreyle ölç\" demesinin dayanağı.\n\n## Sınırlılıklar\n\n- Tek noktalık el termometresi ölçümü, takılı bir sensör değil; Fitbit'e aktarım dolaylı."
   },
   {
     "id": "conte-2018",
@@ -594,6 +632,21 @@ export const kbSources: readonly KbSource[] = [
     "summary": "## Ne söylüyor (kendi cümlelerimizle)\n\n- Öğün başına ortalama mutlak hata diyetisyenlerde yaklaşık 13 g, yapay zeka araçlarında 20-28 g arasındaydı.\n- 20 g ve üstü fazla tahminler diyetisyenlerde nadirdi, yapay zeka araçlarında belirgin daha sıktı.\n- Yazarlar bu araçların eğitimin yerini tutamayacağı, ancak tamamlayıcı olabileceği sonucuna varıyor.\n\n## Uygulamada kullanılan sayılar\n\nSayı kullanılmıyor. Öğün gramını fotoğraftan yapay zekaya tahmin ettirmeme gerekçesi (karar 0030; CLAUDE.md §3: sayıları kod hesaplar).\n\n| Değer | Birim | Bağlam / koşul |\n|---|---|---|\n| — | — | — |\n\n## Sınırlılıklar\n\n- Diyabet bağlamı, küçük öğün örneklemi; araçların sürümleri hızla değişiyor.\n- Çevrimiçi yayın 2025 sonu, dergi sayısı 2026.\n- Yalnız özet okundu."
   },
   {
+    "id": "gries-1996",
+    "title": "Normal oxyhemoglobin saturation during sleep. How low does it go?",
+    "authors": [
+      "Gries RE",
+      "Brooks LJ"
+    ],
+    "year": 1996,
+    "type": "cross-sectional",
+    "doi": "10.1378/chest.110.6.1489",
+    "pmid": "8989066",
+    "journal": "Chest",
+    "population": "Gece uyku çalışması (polisomnografi) normal çıkan 350 kişi, 1 ay-85 yaş (184 erkek); uyku laboratuvarı oksimetrisi",
+    "summary": "## Ne söylüyor (kendi cümlelerimizle)\n\n- Sağlıklı kişilerde gece boyunca ölçülen oksijen doygunluğunun ortanca (medyan) değeri yaklaşık %96-97; gecenin en düşük değeri ise olağan olarak %90 civarına iniyor.\n- Cinsiyet, ırk ve beden kitle indeksi ile ilişki bulunmadı; 60 yaş üstünde değerler daha düşük.\n- Uyku apnesi olanlarda değerler düşük, stabil astımı olanlarda farksız.\n\n## Uygulamada kullanılan sayılar\n\n| Değer | Birim | Bağlam / koşul |\n|---|---|---|\n| Gece medyan doygunluğu 96,5 ± 1,5 (ortalama ± SD) | % | Sağlıklı kişiler, uyku laboratuvarı |\n| 93,5 = 96,5 − 2 × 1,5 (türetilmiş) | % | Gece SpO2 notunun mutlak alt sınırı: gece ortalaması bunun altında (tahmin; makalede eşik olarak geçmiyor) |\n| Gecenin en düşük değeri 90,4 ± 3,1 | % | Tek başına anlamlı değil: gecenin alt sınırı not için kullanılmaz |\n\n## Sınırlılıklar\n\n- Yalnız özet okundu (açık erişim değil). 1996, tek merkez, örneklemde çocuklar da var; genç yetişkinler için ayrı değer yok.\n- Medyan doygunluk Fitbit'in gece ortalamasıyla aynı ölçü değil; laboratuvar oksimetresi ile bileklik farklı."
+  },
+  {
     "id": "griffin-2019",
     "title": "The Association Between the Acute:Chronic Workload Ratio and Injury and its Application in Team Sports: A Systematic Review",
     "authors": [
@@ -693,6 +746,25 @@ export const kbSources: readonly KbSource[] = [
     "journal": "Arthritis Care & Research",
     "population": "Yetişkinlerde ağrı ölçüm araçları (romatoloji odaklı derleme)",
     "summary": "## Ne söylüyor (kendi cümlelerimizle)\n\n- Yetişkinlerde ağrı şiddetini ölçen yaygın araçları (görsel analog ölçek, sayısal derecelendirme ölçeği ve diğerleri) ölçüm özellikleriyle birlikte derliyor.\n- Sayısal derecelendirme ölçeği (NRS), ağrı şiddeti için yerleşik araçlardan biri olarak ele alınıyor.\n\n## Uygulamada kullanılan sayılar\n\nBu kayıttan doğrudan sayı alınmadı. Tam metne erişilemedi; yalnız künye ve başlık doğrulandı. NRS'nin 0-10 aralığı ve uç ifadeleri `todri-2025`'ten.\n\n## Sınırlılıklar\n\n- Klinik (romatoloji) popülasyon; sporcuya özgü değil.\n- Tam metin okunmadı."
+  },
+  {
+    "id": "hermans-2024",
+    "title": "Validity of a Consumer-Based Wearable to Measure Clinical Parameters in Patients With Chronic Obstructive Pulmonary Disease and Healthy Controls: Observational Study",
+    "authors": [
+      "Hermans F",
+      "Arents E",
+      "Blondeel A",
+      "Janssens W",
+      "Cardinaels N",
+      "Calders P"
+    ],
+    "year": 2024,
+    "type": "cross-sectional",
+    "doi": "10.2196/56027",
+    "pmid": "39504450",
+    "journal": "JMIR mHealth and uHealth",
+    "population": "KOAH hastaları (SpO2 analizi n=19); Fitbit Charge 4'ün gece SpO2'si bilekte referans oksimetreyle 4 gece karşılaştırıldı",
+    "summary": "## Ne söylüyor (kendi cümlelerimizle)\n\n- Fitbit'in gece SpO2'si referansa göre ortalama yaklaşık 2 puan yüksek okudu.\n- Referansla uyumu zayıf, geceden geceye değişimi izleme gücü düşük bulundu.\n- Yazarlar bilekliğin uykuda üstüne yatılmasının ölçümü bozabileceğini belirtiyor.\n\n## Uygulamada kullanılan sayılar\n\nDoğrudan eşik alınmadı. Gece SpO2 notunun tek geceye değil son 3 gecenin 2'sine bakmasının ve \"cihaz ölçümü, tıbbi oksimetre değil\" uyarısının dayanağı.\n\n## Sınırlılıklar\n\n- SpO2 yalnız KOAH hastalarında analiz edildi; sağlıklı kişide uykuda doğruluk bilinmiyor. Küçük örneklem."
   },
   {
     "id": "hooper-1995",
@@ -852,6 +924,25 @@ export const kbSources: readonly KbSource[] = [
     "journal": "Journal of the International Society of Sports Nutrition",
     "population": "Egzersiz yapan bireyler ve sporcular; ayrıca klinik gruplar (ISSN tutum bildirgesi)",
     "summary": "## Ne söylüyor (kendi cümlelerimizle)\n\n- Kreatin monohidrat, antrenman sırasında yüksek yoğunluklu egzersiz kapasitesini ve yağsız kütleyi artırmak için sporcuların kullanabildiği en etkili besin takviyesi olarak değerlendiriliyor; en çok çalışılmış biçim de monohidrat.\n- Kas kreatin depolarını en hızlı artırma yolu yaklaşık 0,3 g/kg/gün kreatin monohidratı 5-7 gün almak, ardından 3-5 g/gün ile sürdürmek. Baştan 3-5 g/gün almak da depoları 3-4 haftada artırıyor, ama bu yolun ilk dönemdeki performans etkisi daha az destekleniyor.\n- Karbonhidrat ya da karbonhidrat ve proteinle birlikte almak kasa geçişi artırıyor gibi görünüyor; performansa ek katkısı belirsiz.\n- Literatürde tutarlı olarak bildirilen tek yan etki kilo artışı; yükleme sırasında kısa süreli su tutulması olabiliyor. Sağlıklı kişilerde uzun süreli kullanımda zararlı bir etki gösteren güçlü kanıt bulunmuyor.\n\n## Uygulamada kullanılan sayılar\n\nDoğrudan sayı alınmadı. Kreatin sorularında koçun dayanağı (soru-cevap, karar 0037); uygulama doz hesaplamaz.\n\n## Sınırlılıklar\n\n- Çalışmaların çoğu erkeklerde; bazı çalışmalar kadınlarda kuvvet ve kas kazanımının daha az olabileceğini gösteriyor.\n- Yazarların bir kısmı takviye sektörüyle bağlantılı (bildirgedeki çıkar beyanı); güvenlik ve etkinlik bulguları IOC uzlaşısıyla (maughan-2018) birlikte okunur.\n- Basketbola özgü bir bulgu değil; takım sporlarına aktarım IOC'nin \"tekrarlı yüksek yoğunluklu efor\" değerlendirmesine dayanıyor.\n- Takviye doping açısından ayrıca değerlendirilir (maughan-2018).\n- Tam metin okundu (açık erişim, PMC5469049)."
+  },
+  {
+    "id": "latshang-2013",
+    "title": "Are nocturnal breathing, sleep, and cognitive performance impaired at moderate altitude (1,630-2,590 m)?",
+    "authors": [
+      "Latshang TD",
+      "Lo Cascio CM",
+      "Stöwhas AC",
+      "Grimm M",
+      "Stadelmann K",
+      "Tesler N"
+    ],
+    "year": 2013,
+    "type": "rct",
+    "doi": "10.5665/sleep.3242",
+    "pmid": "24293773",
+    "journal": "Sleep",
+    "population": "800 m altında yaşayan 51 sağlıklı genç erkek (medyan yaş 24); çapraz randomize, 490 m, 1.630 m ve 2.590 m'de uyku çalışması",
+    "summary": "## Ne söylüyor (kendi cümlelerimizle)\n\n- Sağlıklı genç erkeklerde gece ortalama oksijen doygunluğu alçakta yaklaşık %96.\n- Orta yükseklikte belirgin düşüyor: yaklaşık 1.600 m'de %94, 2.600 m'de %90-91; ikinci gece biraz düzeliyor.\n\n## Uygulamada kullanılan sayılar\n\nDoğrudan eşik alınmadı. Gece SpO2 notunun olası nedenler arasında yüksekliği saymasının dayanağı; genç sağlıklı erkekte alçakta gece ortalamasının notun mutlak alt sınırının üstünde kaldığını da gösteriyor.\n\n## Sınırlılıklar\n\n- Yalnız özet okundu. Yalnız erkekler, kısa süreli (birkaç gün) yükseklik."
   },
   {
     "id": "lian-2005",
@@ -1228,6 +1319,23 @@ export const kbSources: readonly KbSource[] = [
     "summary": "## Ne söylüyor (kendi cümlelerimizle)\n\n- Solunum hızı temel bir yaşamsal bulgu; hastalıkların yanı sıra duygusal stres, bilişsel yük, sıcak, soğuk, fiziksel efor ve egzersize bağlı yorgunluk gibi pek çok etkene duyarlı.\n- Bu etkenlere duyarlılığı diğer yaşamsal bulguların çoğundan yüksek, ama sporda hala rutin izlenmiyor.\n- Derleme, sporda ve sağlıkta solunum izlemenin amaçlarını ve uygun ölçüm yöntemlerini topluyor.\n\n## Uygulamada kullanılan sayılar\n\nDoğrudan sayı alınmadı. Kaynak, solunumdaki bir artışın tek bir nedene (ör. hastalık) bağlanamayacağının dayanağı: not, olası nedenleri sayar ve tanı koymaz.\n\n## Sınırlılıklar\n\n- Anlatı derlemesi (kanıt düzeyi 4); sistematik bir tarama değil.\n- Gece bileklik ölçümüne özgü değil; çoğunlukla egzersiz sırasındaki solunumu ele alıyor.\n- Yalnız özet okundu."
   },
   {
+    "id": "odriscoll-2017",
+    "title": "British Thoracic Society Guideline for oxygen use in adults in healthcare and emergency settings",
+    "authors": [
+      "O'Driscoll BR",
+      "Howard LS",
+      "Earis J",
+      "Mak V"
+    ],
+    "year": 2017,
+    "type": "position-stand",
+    "doi": "10.1136/bmjresp-2016-000170",
+    "pmid": "28883921",
+    "journal": "BMJ Open Respiratory Research",
+    "population": "16 yaş üstü hastane ve acil hastaları (ulusal kılavuzun yönetici özeti)",
+    "summary": "## Ne söylüyor (kendi cümlelerimizle)\n\n- Akut hastalarda hedef oksijen doygunluğu aralığı %94-98.\n- Hedef aralığın içinde bile doygunlukta ani ve en az 3 puanlık bir düşüş, akut bir hastalığın ilk işareti olabileceği için daha kapsamlı değerlendirme (ve oksimetre sinyalinin kontrolü) gerektirir.\n- Sağlıklı kişilerde uykuda doygunluğun kısa süreliğine %90'a ya da altına inmesi olağandır.\n\n## Uygulamada kullanılan sayılar\n\n| Değer | Birim | Bağlam / koşul |\n|---|---|---|\n| En az 3 puan düşüş | % puan | Gece SpO2 notu: gece ortalaması kişisel medyanın bu kadar altında (son 3 gecenin 2'sinde) |\n\n## Sınırlılıklar\n\n- Hastane hastaları için tedavi hedefleri; uyanıkken parmak ucu ya da sürekli izlem ölçümleri. Evde, uykuda, bileklikten alınan gece ortalamasına aktarım varsayım.\n- Yaşa göre normal aralık tam kılavuzda (Thorax); o metin okunamadı."
+  },
+  {
     "id": "osterberg-2009",
     "title": "Pregame urine specific gravity and fluid intake by National Basketball Association players during competition",
     "authors": [
@@ -1340,6 +1448,25 @@ export const kbSources: readonly KbSource[] = [
     "summary": "## Ne söylüyor (kendi cümlelerimizle)\n\n- Sporcuların yaklaşık iki haftalık enfeksiyonsuz günleri kişisel başlangıç düzeyi olarak alındı; pozitif testten önceki günler bununla karşılaştırıldı.\n- Gece solunum hızı pozitif testten üç gün önce yükselmeye başladı; dinlenik nabız yükselmesi ve HRV düşüşü testten bir gün önce görüldü.\n- Bileklik verisinin, takım sağlığını izleyen çok yönlü bir yaklaşımın parçası olarak kullanılabileceği sonucuna varıldı.\n\n## Uygulamada kullanılan sayılar\n\nDoğrudan sayı alınmadı. Sporcularda da gece solunumunun kişisel başlangıç düzeyine göre okunmasının ve diğer ölçümlerden önce değişebileceğinin dayanağı.\n\n## Sınırlılıklar\n\n- Çok küçük örneklem (n=14), yalnız kadın sporcular, tek takım ve tek hastalık.\n- Grup ortalaması düzeyinde anlamlılık; kişi düzeyinde doğruluk verilmedi.\n- Yalnız özet okundu."
   },
   {
+    "id": "risch-2022",
+    "title": "Investigation of the use of a sensor bracelet for the presymptomatic detection of changes in physiological parameters related to COVID-19: an interim analysis of a prospective cohort study (COVI-GAPP)",
+    "authors": [
+      "Risch M",
+      "Grossmann K",
+      "Aeschbacher S",
+      "Weideli OC",
+      "Kovac M",
+      "Pereira F"
+    ],
+    "year": 2022,
+    "type": "cohort",
+    "doi": "10.1136/bmjopen-2021-058274",
+    "pmid": "35728900",
+    "journal": "BMJ Open",
+    "population": "Lihtenştayn'da 1.163 yetişkin (ortalama yaş 44); 66 laboratuvarla doğrulanmış COVID-19 vakası; geceleri bileğe takılan sensör bileklik (Ava)",
+    "summary": "## Ne söylüyor (kendi cümlelerimizle)\n\n- Bilek cilt sıcaklığı enfeksiyonun kuluçka, belirti öncesi ve belirtili dönemlerinde kişinin kendi başlangıç düzeyine göre adım adım yükseldi; belirtili dönemde ortalama artış yaklaşık 0,3 °C.\n- İyileşme döneminde de yaklaşık 0,2 °C yüksek kaldı.\n- Çok sinyalli bir model vakaların yaklaşık üçte ikisini belirtilerden önce yakaladı ama özgüllüğü düşüktü.\n\n## Uygulamada kullanılan sayılar\n\n| Değer | Birim | Bağlam / koşul |\n|---|---|---|\n| +0,3 | °C | Cilt sıcaklığı notu: gece değeri cihazın kişisel tabanının en az bu kadar üstünde, iki gece üst üste (tahmin) |\n\n## Sınırlılıklar\n\n- 0,3 °C grup düzeyinde ortalama bir etki, doğrulanmış bir uyarı eşiği değil; tek gece için duyarlılık ve özgüllük verilmedi. İyileşmede de yüksek kalması ve geceden geceye oynama yanlış alarm üretebilir.\n- Ara analiz, tek merkez, küçük COVID alt örneklemi. Yazarlardan bazıları cihaz üreticisinin çalışanı.\n- Ölçüm yeri Fitbit'le aynı (bilek), ama cihaz ve algoritma farklı."
+  },
+  {
     "id": "saw-2016",
     "title": "Monitoring the athlete training response: subjective self-reported measures trump commonly used objective measures: a systematic review",
     "authors": [
@@ -1373,6 +1500,44 @@ export const kbSources: readonly KbSource[] = [
     "journal": "Medicine and Science in Sports and Exercise",
     "population": "Fiziksel aktivite yapan bireyler ve sporcular (ACSM tutum bildirgesi)",
     "summary": "## Ne söylüyor (kendi cümlelerimizle)\n\n- Egzersiz sırasında içmenin amacı, su kaybına bağlı vücut ağırlığı kaybının %2'yi geçmesini ve elektrolit dengesinin aşırı bozulmasını önlemek; bu düzeyin üstünde performans bozulabilir.\n- Ter oranı ve terdeki elektrolit kişiden kişiye çok değiştiği için kişiye göre bir sıvı planı öneriliyor.\n- Kişisel ter oranı egzersiz öncesi ve sonrası tartıyla tahmin edilebilir.\n- Egzersizden sonra amaç sıvı ve elektrolit açığını kapatmak; ne kadar hızlı gerektiği sonraki seansa kalan süreye bağlı.\n\n## Uygulamada kullanılan sayılar\n\n| Değer | Birim | Bağlam / koşul |\n|---|---|---|\n| %2 | vücut ağırlığı | Ter testinde seans boyunca kayıp bunu aşarsa not |\n\n## Sınırlılıklar\n\n- 2007 tarihli; güncel NATA bildirgesi (mcdermott-2017) aynı sınırı koruyor.\n- Yalnız özet okundu."
+  },
+  {
+    "id": "schwellnus-2016",
+    "title": "How much is too much? (Part 2) International Olympic Committee consensus statement on load in sport and risk of illness",
+    "authors": [
+      "Schwellnus M",
+      "Soligard T",
+      "Alonso JM",
+      "Bahr R",
+      "Clarsen B",
+      "Dijkstra HP"
+    ],
+    "year": 2016,
+    "type": "consensus",
+    "doi": "10.1136/bjsports-2016-096572",
+    "pmid": "27535991",
+    "journal": "British Journal of Sports Medicine",
+    "population": "Her branştan sporcular (yük ve hastalık riski üzerine uzlaşı)",
+    "summary": "## Ne söylüyor (kendi cümlelerimizle)\n\n- Hastalıktan önce özgül olmayan belirtilerin görüldüğü bir dönem olabiliyor; bu erken işaretler hastalığın da, aşırı yüklenmenin de belirtisi olabilir.\n- Sporcuların hastalığın belirti öncesi işaretleri için duyarlı araçlarla izlenmesini, izlemenin özellikle yük değişimi, seyahat ve yarışma dönemlerinde sürmesini öneriyor.\n- Ateş vücudun ısı düzenlemesini bozar; üst solunum yolu hastalığından sonra performans birkaç gün düşük kalabilir.\n\n## Uygulamada kullanılan sayılar\n\nDoğrudan sayı alınmadı. Gece işaretlerinin \"hastalık başlangıcında da, ağır yükte de görülebilir\" diye tek bir nedene bağlanmadan sunulmasının dayanağı.\n\n## Sınırlılıklar\n\n- Başlamış bir hastalığın yönetimi değil, yük ve hastalık riski üzerine. Giyilebilir cihazlardan ve dinlenik nabızdan söz etmiyor."
+  },
+  {
+    "id": "schwellnus-2022a",
+    "title": "International Olympic Committee (IOC) consensus statement on acute respiratory illness in athletes part 1: acute respiratory infections",
+    "authors": [
+      "Schwellnus M",
+      "Adami PE",
+      "Bougault V",
+      "Budgett R",
+      "Clemm HH",
+      "Derman W"
+    ],
+    "year": 2022,
+    "type": "consensus",
+    "doi": "10.1136/bjsports-2022-105759",
+    "pmid": "35863871",
+    "journal": "British Journal of Sports Medicine",
+    "population": "Her branştan sporcular; akut solunum yolu enfeksiyonu (uzlaşı bildirgesi, hekimler için)",
+    "summary": "## Ne söylüyor (kendi cümlelerimizle)\n\n- Akut solunum yolu enfeksiyonunda antrenman kararı ağırlığa göre verilir: hafif ve orta durumda günlük aktivite genellikle sürer, sporcu antrenmandan önce belirti listesiyle kendini yoklar; ağır (sistemik belirtili) durumda belirtiler geçene kadar dinlenme ve hekim değerlendirmesi önerilir.\n- Sistemik belirtiler arasında doğrulanmış ateş (çekirdek sıcaklığı 38 °C üstü), istirahatte hızlı nabız, yaygın kas / eklem ağrısı, baş ağrısı ve aşırı halsizlik sayılır. Sporcunun kendi listesinde istirahatte çarpıntı ya da baş dönmesi ve \"egzersiz yapacak kadar iyi hissetmemek\" de var.\n- Eski \"boyun kuralı\" (belirti boynun üstündeyse antrenman) verisiz uzman görüşü olarak anılıyor; yerine aşamalı değerlendirme ve hafif bir deneme seansı öneriliyor.\n- Giyilebilir cihaz sinyallerinden (nabız, cilt sıcaklığı, SpO2) söz etmiyor.\n\n## Uygulamada kullanılan sayılar\n\nDoğrudan eşik alınmadı. Gece işaretleri notunun yönlendirme cümlesinin dayanağı: sistemik belirti varsa antrenmana çıkmadan hekime danışmak.\n\n## Sınırlılıklar\n\n- Kontrol listeleri ve ağırlık ölçeği uzman görüşü; yazarlar tam doğrulanmadığını belirtiyor.\n- Yayıncı PDF'i otomatik isteğe kapalıydı; yazarların kurum deposundaki el yazması okundu (son sürümden küçük ifade farkları olabilir)."
   },
   {
     "id": "seidler-2025",
@@ -1432,6 +1597,25 @@ export const kbSources: readonly KbSource[] = [
     "journal": "The American journal of sports medicine",
     "population": "Aşil tendinopatili hastalar, n=38",
     "summary": "## Ne söylüyor (kendi cümlelerimizle)\n\n- Aşil tendinopatisinde koşu ve sıçramaya ağrı izleme modeliyle devam eden grup ile 6 hafta aktif dinlenen grup karşılaştırıldı.\n- İki grup da 12 ayda belirgin düzeldi; devam eden grupta olumsuz etki görülmedi.\n- Aşil tendinopatisi koşu ve sıçrama içeren sporlarda sık görülen bir aşırı kullanım yaralanması.\n\n## Uygulamada kullanılan sayılar\n\n| Değer | Birim | Bağlam / koşul |\n|---|---|---|\n| Ağrı izleme modeli | NRS ≤ 5 | etkinlik sırası ve sonrası; ertesi sabah azalmış olmalı (ayrıntı seidler-2025 tam metninden) |\n\n## Sınırlılıklar\n\n- Hasta grubu, sağlıklı sporcu değil; yalnız özet okundu. Modelin sayısal ayrıntısı açık erişimli seidler-2025 tam metninden doğrulandı."
+  },
+  {
+    "id": "smarr-2020",
+    "title": "Feasibility of continuous fever monitoring using wearable devices",
+    "authors": [
+      "Smarr BL",
+      "Aschbacher K",
+      "Fisher SM",
+      "Chowdhary A",
+      "Dilchert S",
+      "Puldon K"
+    ],
+    "year": 2020,
+    "type": "cohort",
+    "doi": "10.1038/s41598-020-78355-6",
+    "pmid": "33318528",
+    "journal": "Scientific Reports",
+    "population": "COVID-19 geçirdiğini bildiren 50 yüzük (Oura) kullanıcısı (%66 erkek, ortalama yaş 44); parmaktan sürekli cilt sıcaklığı",
+    "summary": "## Ne söylüyor (kendi cümlelerimizle)\n\n- Cilt sıcaklığının düzeyi kişiden kişiye çok farklı; bu yüzden 38 °C gibi sabit bir sınır uygun değil, kişinin kendi tabanından sapmaya bakmak gerekiyor.\n- Belirti penceresinde ortalama sapma yaklaşık +0,6 °C, ama yayılım geniş (yaklaşık ±1 °C).\n- \"Ateşe benzer gün\" işaretleri çoğu kişide belirtiler bildirilmeden önce görüldü; ateş bildirmeyen bazı kişilerde de çıktı. Yazarlar nabız, HRV ve solunumla birlikte okunmasını öneriyor.\n\n## Uygulamada kullanılan sayılar\n\nDoğrudan eşik alınmadı. Cilt sıcaklığının sabit sınırla değil kişisel tabana göre okunmasının ve notun tek başına bir şey kanıtlamadığının dayanağı.\n\n## Sınırlılıklar\n\n- Küçük örneklem, kendi bildirimi (doğrulanmış tanı yok), kalibre edilmemiş sensör. Çalışmayı cihaz üreticisi destekledi; yazarlardan biri çalışanı.\n- Ölçüm yeri parmak (Fitbit bilek)."
   },
   {
     "id": "soligard-2016",
@@ -1923,6 +2107,25 @@ export const kbRules: readonly KbRule[] = [
     ]
   },
   {
+    "id": "cilt-sicakligi-yuksek",
+    "module": "hastalik-isaretleri",
+    "description": "Son iki gecenin cilt sıcaklığı, Google Health'in o gece için verdiği kişisel tabanın en az 0,3 °C üstündeyse not düşer. Tanı değil ve ateş ölçümü değil: olası nedenler (hastalık başlangıcı, sıcak oda, alkol, aşı, iyileşme dönemi) sayılır; şüphede termometreyle ölçmesi, belirti varsa doktora başvurması söylenir. Günün durumuna girmez.",
+    "value": {
+      "above_baseline": 0.3,
+      "consecutive_nights": 2,
+      "in_day_status": false,
+      "unit": "°C"
+    },
+    "appliesTo": "Google Health gece cilt sıcaklığı ve aynı satırdaki taban sıcaklığı (sapma = gece − taban); en yeni gece bugün ya da dün olmalı, iki gece ardışık takvim günleri",
+    "notes": "0,3 °C risch-2022'nin bilekte ölçülmüş grup ortalamasından: doğrulanmış COVID-19'da belirtili dönemde bilek cilt sıcaklığı kişisel tabana göre ortalama 0,3 °C yüksek (iyileşmede 0,2 °C). Bu bir ortalama etki, doğrulanmış bir uyarı eşiği değil; tek gece için duyarlılık / özgüllük yok (tahmin). Cilt sıcaklığı kişiden kişiye çok değiştiği için kişisel tabana göre okunur ve geceden geceye oynaması büyük (smarr-2020, parmak); bu yüzden iki gece üst üste şartı aranır. İki gece sayısı alavi-2022'nin gece nabzı kuralından aktarıldı, cilt sıcaklığında doğrulanmadı. Bilek cilt sıcaklığı çekirdek sıcaklığının ~1 °C altında ve onunla uyumu zayıf (chen-2020): not ateş ölçümü değildir. Google Health tabanının nasıl hesaplandığı belgelenmemiş; Fitbit cilt sıcaklığı için doğrulama çalışması bulunamadı.",
+    "sources": [
+      "risch-2022",
+      "smarr-2020",
+      "chen-2020",
+      "alavi-2022"
+    ]
+  },
+  {
     "id": "enerji-yeterliligi",
     "module": "beslenme",
     "description": "Düşük enerji yeterliliği (REDs) hesaplanmaz ve otomatik uyarı verilmez: öğün kaydı yalnız karbonhidrat ve protein tutar (enerji yok), egzersiz harcaması ve yağsız kütle ölçülmez, kayıt gerçek alımın altında kalabilir. Hedef sayfasında REDs anlatılır ve belirtilerde sağlık ekibine yönlendirilir. Sabah kilosu eşiksiz trend olarak gösterilir.",
@@ -1938,6 +2141,49 @@ export const kbRules: readonly KbRule[] = [
       "mountjoy-2023",
       "ackerman-2023",
       "capling-2017"
+    ]
+  },
+  {
+    "id": "gece-nabzi-yuksek",
+    "module": "hastalik-isaretleri",
+    "description": "Son iki gecenin dinlenik nabzı, o gecelerden önceki 28 günün kişisel medyanının en az 4 atım/dk üstündeyse not düşer. Tanı değil: olası nedenler (hastalık başlangıcı, ağır yük, stres, alkol, seyahat, aşı) sayılır, belirti varsa doktora yönlendirilir. Günün durumuna girmez.",
+    "value": {
+      "above_baseline_median": 4,
+      "consecutive_nights": 2,
+      "baseline_days": 28,
+      "min_baseline_nights": 7,
+      "in_day_status": false,
+      "unit": "atım/dk"
+    },
+    "appliesTo": "Google Health'in günlük dinlenik nabzı; en yeni gece bugün ya da dün olmalı, iki gece ardışık takvim günleri",
+    "notes": "Sayılar alavi-2022'nin ileriye dönük denenmiş gece nabzı kuralından (NightSignal kırmızı uyarı: iki gece üst üste medyanın en az 4 atım/dk üstü; medyan 7 geceden sonra kararlı). COVID-19'da duyarlılık yaklaşık %80, özgüllük %87,7 (alarm günü başına); stres, alkol, seyahat ve aşıda da uyarı çıkıyor, yanlış alarm sık. Makalede taban o geceye kadarki bütün gecelerin medyanı ve ölçü gece ham nabız ortalaması; HoopLab Google Health'in günlük dinlenik nabzını ve önceki 28 günün medyanını kullanır (aktarım ve uyarlama, tahmin). Sporcuya ya da basketbola özgü doğrulanmış eşik yok. IOC uzlaşısında istirahatte hızlı nabız sistemik hastalık belirtileri arasında (schwellnus-2022a); erken işaretler aşırı yüklenmeyi de gösterebilir (schwellnus-2016). CLAUDE.md §3 tıbbi sınır: tanı yok, yönlendirme var.",
+    "sources": [
+      "alavi-2022",
+      "schwellnus-2022a",
+      "schwellnus-2016"
+    ]
+  },
+  {
+    "id": "gece-spo2-dusuk",
+    "module": "hastalik-isaretleri",
+    "description": "Son üç gecenin en az ikisinde gece SpO2 ortalaması %93,5'in altındaysa ya da önceki 28 günün kişisel medyanının en az 3 puan altındaysa not düşer. Tanı değil: cihaz ölçümü; olası nedenler (yükseklik, bilekliğin oturması, hastalık) sayılır, tekrarlarsa ya da nefes darlığı / göğüs ağrısı varsa doktora yönlendirilir. Günün durumuna girmez.",
+    "value": {
+      "below_pct": 93.5,
+      "below_baseline_median": 3,
+      "nights_required": 2,
+      "nights_window": 3,
+      "baseline_days": 28,
+      "min_baseline_nights": 7,
+      "in_day_status": false,
+      "unit": "%"
+    },
+    "appliesTo": "Google Health'in gece SpO2 ortalaması (uyku sırasında); gecenin alt ve üst sınırı kullanılmaz; en yeni gece bugün ya da dün olmalı; kişisel medyan yoksa yalnız mutlak sınır",
+    "notes": "%93,5 gries-1996'dan türetildi: sağlıklı kişilerde gece medyan doygunluğu 96,5 ± 1,5 → ortalama − 2 SD (makalede eşik olarak geçmiyor, tahmin). Gecenin en düşük değerinin olağan olarak %90'a inmesi (gries-1996, odriscoll-2017) nedeniyle gecenin alt sınırı kullanılmaz. 3 puan, BTS kılavuzunda 'hedef aralık içinde bile ani ve en az 3 puanlık düşüş değerlendirme gerektirir' ifadesinden (odriscoll-2017; hastane ve uyanık ölçüm, aktarım varsayım). Son 3 gecenin 2'si şartı cihaz hatası yüzünden: Fitbit gece SpO2'si ortalama ~2 puan yüksek okuyor ve geceden geceye uyumu zayıf (hermans-2024, KOAH hastaları). Alçakta sağlıklı genç erkekte gece ortalaması ~%96, 1.600 m'de ~%94, 2.600 m'de ~%90-91 (latshang-2013): yükseklikte not beklenir. Kişisel medyan için en az gece sayısı gece-nabzi-yuksek ile aynı (alavi-2022'den aktarım). Fitbit gece ortalaması için doğrulanmış bir eşik yok.",
+    "sources": [
+      "gries-1996",
+      "odriscoll-2017",
+      "hermans-2024",
+      "latshang-2013"
     ]
   },
   {
@@ -1967,6 +2213,21 @@ export const kbRules: readonly KbRule[] = [
       "buchheit-2014",
       "bellenger-2016",
       "walsh-2021"
+    ]
+  },
+  {
+    "id": "hastalik-isareti-yonlendirme",
+    "module": "hastalik-isaretleri",
+    "description": "Gece işaretlerinden (solunum, nabız, SpO2, cilt sıcaklığı) biri çıktığında uygulama ve koç yalnız sabit metinle yönlendirir: ateş ya da ateşli hissetme, titreme, olağandışı halsizlik, yaygın kas ağrısı, nefes darlığı, göğüs ağrısı, istirahatte çarpıntı ya da baş dönmesi varsa ya da antrenman yapacak kadar iyi hissetmiyorsa antrenmana çıkmadan doktora başvurması; belirti yoksa sonraki gecelere bakması. İşaretler hastalık teşhisi koymaz, yük önerisi değiştirmez.",
+    "value": {
+      "in_day_status": false,
+      "diagnosis": false
+    },
+    "appliesTo": "gece-nabzi-yuksek, gece-spo2-dusuk, cilt-sicakligi-yuksek ve solunum-tek-gece notları",
+    "notes": "Belirti listesi IOC akut solunum yolu enfeksiyonu uzlaşısının sistemik belirtiler ve sporcu kontrol listesinden (schwellnus-2022a): sistemik belirtide dinlenme ve hekim değerlendirmesi. Uzlaşı giyilebilir cihaz sinyallerini hastalık göstergesi olarak doğrulamıyor; bu yüzden not 'hastalığı yakaladık' demez, 'kendini yokla' der. Erken işaretler aşırı yüklenmeyi de gösterebilir (schwellnus-2016). Eski 'boyun kuralı' verisiz uzman görüşü olduğu için kullanılmaz (schwellnus-2022a). CLAUDE.md §3 tıbbi sınır.",
+    "sources": [
+      "schwellnus-2022a",
+      "schwellnus-2016"
     ]
   },
   {

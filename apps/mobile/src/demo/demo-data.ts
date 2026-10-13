@@ -164,6 +164,11 @@ export function createDemoDb(scenario: DemoScenario, today: string, now: Date): 
         // Kırmızıda son hafta bandın üstünde ve son gece belirgin yüksek (tek gece notu, karar 0028).
         respiratory_rate_bpm:
           Math.round((14.4 + 0.4 * noise(r) + (recent && scenario === 'red' ? (i === 0 ? 3.6 : 1.2) : 0)) * 10) / 10,
+        // SpO2 ve cilt sıcaklığı günün sırasından türetilir: rastgele üreteç ilerlemesin, diğer demo değerleri kaymasın.
+        // Kırmızıda son iki gece cilt sıcaklığı tabanın belirgin üstünde (gece işareti, karar 0039); SpO2 hep olağan.
+        spo2_avg_pct: Math.round((95.8 + 0.1 * ((i * 7) % 5)) * 10) / 10,
+        skin_temp_nightly_c: Math.round((33.4 + 0.05 * (((i * 3) % 5) - 2) + (scenario === 'red' && i <= 1 ? 0.45 : 0)) * 1000) / 1000,
+        skin_temp_baseline_c: 33.4,
       });
       const minutes = recent ? tail.sleep + 10 * noise(r) : 465 + 28 * noise(r);
       sleep.push({ local_date: date, minutes_asleep: Math.round(minutes), is_nap: false });

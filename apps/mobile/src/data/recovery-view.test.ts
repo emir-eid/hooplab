@@ -17,6 +17,9 @@ function daily(recentHrv: number, recentRhr: number): HealthDailyRow[] {
     hrv_deep_rmssd_ms: i < 7 ? recentHrv : i % 2 === 0 ? 50 : 70,
     resting_hr_bpm: i < 7 ? recentRhr : i % 2 === 0 ? 48 : 52,
     respiratory_rate_bpm: i === 0 ? 14.63 : 15,
+    spo2_avg_pct: 96,
+    skin_temp_nightly_c: 33.4,
+    skin_temp_baseline_c: 33.4,
   }));
 }
 
@@ -122,4 +125,20 @@ test('grafikte dokunulan yere en yakın gün', () => {
   assert.equal(chartIndexAt(900, 334, 21, 6), 20);
   assert.equal(chartIndexAt(100, 0, 21, 6), null);
   assert.equal(chartIndexAt(100, 334, 0, 6), null);
+});
+
+test('gece işaretleri satırlardan okunur (karar 0039): nabız iki gece medyanın üstünde, cilt sıcaklığı tabanın üstünde', () => {
+  const rows = daily(70, 50).map((r, i) => ({
+    ...r,
+    resting_hr_bpm: i < 2 ? 57 : 50,
+    skin_temp_nightly_c: i < 2 ? 33.8 : 33.4,
+  }));
+  const view = buildRecoveryView(rows, nights(480), today);
+  assert.equal(view.signs.rhr.flagged, true);
+  assert.equal(view.signs.skinTemp.flagged, true);
+  assert.equal(view.signs.spo2.flagged, false);
+  // Olağan satırlarda not yok.
+  const calm = buildRecoveryView(daily(70, 50), nights(480), today);
+  assert.equal(calm.signs.rhr.flagged, false);
+  assert.equal(calm.signs.skinTemp.flagged, false);
 });

@@ -12,11 +12,13 @@ export const dailyAttemptLimit = 3;
  * Kodla yönlendirme (karar 0032): motorun tanı koymayan notları varsa uygulama kendi sabit yönlendirme
  * metnini gösterir. Metin modele bırakılmaz; burada yalnız hangi notun gösterileceği belirlenir.
  */
-export type RoutingNote = 'respiration_high' | 'pain_high';
+export type RoutingNote = 'respiration_high' | 'illness_signs' | 'pain_high';
 
 export function routingNotes(snapshot: CoachSnapshot): RoutingNote[] {
   const notes: RoutingNote[] = [];
   if (snapshot.respiration?.nightHigh === true) notes.push('respiration_high');
+  // Gece nabzı, SpO2, cilt sıcaklığı (karar 0039): tek not, uygulama hangi işaretin çıktığını kendi kartında yazar.
+  if (snapshot.signs && Object.values(snapshot.signs).some((v) => v === true)) notes.push('illness_signs');
   if (snapshot.pain?.some((p) => p.reasons.includes('high'))) notes.push('pain_high');
   return notes;
 }

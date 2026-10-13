@@ -1,7 +1,9 @@
 // Bugün ekranının toparlanma bölümleri (maket: .state, .advice, "Gece verisi"); karar 0021.
 // Solunum kişisel bantla okunur ve tek gece notu düşebilir, ama günün durumuna girmez (karar 0028).
+// Gece nabzı, SpO2 ve cilt sıcaklığı işaretleri de (karar 0039); işaret çıkınca solunum notuyla tek kartta toplanır.
 // Sayılar motordan (packages/engine), metinler copy/recovery'den; burada yalnız yerleşim.
 
+import { flaggedSigns } from "@hooplab/engine";
 import { layout, radius, size, spacing } from "@hooplab/theme";
 import { router } from "expo-router";
 import { useState } from "react";
@@ -32,8 +34,15 @@ import {
 } from "@/copy/recovery";
 import type { ExplainerId } from "@/copy/explainers";
 import {
+  illnessSignLine,
+  illnessSignsCauses,
+  illnessSignsFooter,
+  illnessSignsTitle,
+} from "@/copy/illness-signs";
+import {
   respirationHighBody,
   respirationHighFooter,
+  respirationHighLine,
   respirationHighTitle,
   respirationNote,
 } from "@/copy/personal-baseline";
@@ -192,7 +201,8 @@ export function NightData({ view }: { view: RecoveryView }) {
   const palette = usePalette();
   const state = levelStates[view.status.level];
   const signals = view.status.signals;
-  const { hrv, rhr, sleep, respiration } = view;
+  const { hrv, rhr, sleep, respiration, signs } = view;
+  const signKeys = flaggedSigns(signs);
   const band = formatBand(hrv);
   const hrvValue =
     hrv.rolling === null ? dash : String(Math.round(hrv.rolling));
@@ -333,7 +343,32 @@ export function NightData({ view }: { view: RecoveryView }) {
         />
       </View>
 
-      {respiration.nightHigh ? (
+      {signKeys.length > 0 ? (
+        <Card>
+          <View style={styles.titleRow}>
+            <Text variant="callout" style={styles.noteTitle}>
+              {illnessSignsTitle}
+            </Text>
+            <ExplainButton id="illnessSigns" />
+          </View>
+          {respiration.nightHigh ? (
+            <Text variant="footnoteRegular" tone="inkSecondary" style={styles.noteBody}>
+              {respirationHighLine(respiration)}
+            </Text>
+          ) : null}
+          {signKeys.map((key) => (
+            <Text key={key} variant="footnoteRegular" tone="inkSecondary" style={styles.noteBody}>
+              {illnessSignLine(key, signs)}
+            </Text>
+          ))}
+          <Text variant="footnoteRegular" tone="inkSecondary" style={styles.noteBody}>
+            {illnessSignsCauses}
+          </Text>
+          <Text variant="caption" tone="inkMuted" style={styles.noteBody}>
+            {illnessSignsFooter}
+          </Text>
+        </Card>
+      ) : respiration.nightHigh ? (
         <Card>
           <View style={styles.titleRow}>
             <Text variant="callout" style={styles.noteTitle}>

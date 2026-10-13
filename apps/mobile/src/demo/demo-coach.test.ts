@@ -75,13 +75,15 @@ test('demo: bugün check-in yok; check-in eklenince toplam ve kıyas gider', () 
   assert.ok(checkin?.z !== null && checkin!.z < 0 && checkin!.baselineMean !== null);
 });
 
-test('demo: senaryonun durumu ve kırmızıdaki solunum notu anlık değerlere geçer', () => {
+test('demo: senaryonun durumu, kırmızıdaki solunum notu ve gece işaretleri anlık değerlere geçer', () => {
   const today = days[0]!;
   const level = { green: 'ready', yellow: 'caution', red: 'recover' } as const;
   for (const scenario of demoScenarios) {
     const snapshot = buildCoachSnapshot(demoInputs(createDemoDb(scenario, today, now), today, now));
     assert.equal(snapshot.status?.level, level[scenario]);
-    assert.deepEqual(routingNotes(snapshot), scenario === 'red' ? ['respiration_high'] : []);
+    assert.deepEqual(routingNotes(snapshot), scenario === 'red' ? ['respiration_high', 'illness_signs'] : []);
+    // Kırmızıda gece nabzı ve cilt sıcaklığı işareti (karar 0039); SpO2 her senaryoda olağan.
+    assert.deepEqual(snapshot.signs, { rhrHigh: scenario === 'red', spo2Low: false, skinTempHigh: scenario === 'red' });
   }
 });
 

@@ -10,3 +10,4 @@ export * from './region-load.ts';
 export * from './nutrition.ts';
 export * from './hydration.ts';
 export * from './meals.ts';
+export * from './illness-signs.ts';

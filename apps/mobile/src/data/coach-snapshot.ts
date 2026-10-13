@@ -78,6 +78,9 @@ export function buildCoachSnapshot(input: CoachInputs): CoachSnapshot {
       short: r.sleep.short,
     };
     snapshot.respiration = { ...bandMetric(r.respiration, today, L.respirationBpm), nightHigh: r.respiration.nightHigh };
+    // Gece işaretleri (karar 0039): yalnız bayraklar; hiçbiri hesaplanamadıysa gönderilmez.
+    const signs = { rhrHigh: r.signs.rhr.flagged, spo2Low: r.signs.spo2.flagged, skinTempHigh: r.signs.skinTemp.flagged };
+    if (Object.values(signs).some((v) => v !== null)) snapshot.signs = signs;
   }
 
   const c = input.checkin;

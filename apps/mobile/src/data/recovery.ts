@@ -16,7 +16,7 @@ export async function fetchRecovery(today: string): Promise<Result<RecoveryView>
   const [daily, sleep] = await Promise.all([
     supabase
       .from('health_daily')
-      .select('local_date, hrv_deep_rmssd_ms, resting_hr_bpm, respiratory_rate_bpm')
+      .select('local_date, hrv_deep_rmssd_ms, resting_hr_bpm, respiratory_rate_bpm, spo2_avg_pct, skin_temp_nightly_c, skin_temp_baseline_c')
       .gte('local_date', from)
       .lte('local_date', today)
       .order('local_date', { ascending: true }),

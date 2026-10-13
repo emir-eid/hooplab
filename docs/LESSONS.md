@@ -37,6 +37,7 @@ Tekrar yaşanabilecek hatalar ve önceden bilinen tuzaklar. Her madde: **ders**,
 - **[ölçüldü] Önceki oturumdan kalan Metro `/status`'a yanıt verip ardından düşebiliyor;** iPhone'da Expo Go sunucuyu bulamadı. Kullanıcıya "hazır" demeden önce 8081'de dinleyen süreç (`Get-NetTCPConnection -LocalPort 8081 -State Listen`) ve LAN adresinden manifestin `hostUri`'si (`http://<LAN IP>:8081/`, `expo-platform: ios` başlığıyla) denetlenir. Kanıt: 2026-10-06 oturumu.
 
 - **[ölçüldü] Dokunulabilir bir kartın (Pressable) içine ikinci bir düğme (ör. açıklama "i"si) konunca web'de iç içe `<button>` hatası çıkar** ("<button> cannot contain a nested <button>"); iOS'ta görünmez, ama ekran okuyucu için de karışıktır. İkinci düğme dokunulabilir alanın dışına alınır (başlık satırı kartta, gövde Pressable). Kanıt: 2026-10-07 Bugün check-in kartı, başsız Chrome'da `Runtime.consoleAPICalled` dinlenerek bulundu. Bekçi: yok (yöntem; Tile kartlarında "i" düğme değil, işaret).
+- **[ölçüldü] Metro, `apps/mobile` dışındaki paylaşılan bir dosyanın değişikliğini kaçırabiliyor: diskteki dosya yeni, paket eski.** Aynı anda değişen `supabase/functions/_shared/coach/snapshot.ts` pakete girdi, `contract.ts` girmedi; sayfayı yenilemek ve dosyaya `touch` yetmedi. Belirti: testler yeşil, demo eski davranıyor. Şüphede paketin içinde fonksiyonun gövdesine bakılır (tarayıcıda `fetch(script.src)` ve arama); çözüm Metro'yu `--clear` ile yeniden başlatmak ([SETUP](SETUP.md) §8). Kanıt: 2026-10-13 gece işaretleri. Bekçi: yok (yöntem).
 
 ## Git ve süreç
 

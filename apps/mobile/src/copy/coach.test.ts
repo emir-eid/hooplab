@@ -4,7 +4,7 @@ import { test } from 'node:test';
 import { numbersBlocks } from '../../../../supabase/functions/_shared/coach/documents.ts';
 import { kbRules, kbSources } from '../../../../supabase/functions/_shared/coach/kb-data.ts';
 import { fullSnapshot } from '../../../../supabase/functions/tests/coach/fixtures.ts';
-import { basisLabel, basisTarget, coachFailureReason, summaryLayout } from './coach.ts';
+import { basisLabel, basisTarget, coachFailureReason, summaryLayout, visibleRoutingNotes } from './coach.ts';
 import { explainers } from './explainers.ts';
 import { sources } from './sources.ts';
 
@@ -100,4 +100,10 @@ test('özetin düzeni: maç günü cümleleri ayrı konu, en başta (karar 0036)
       ['recovery', [1]],
     ],
   );
+});
+
+test('gece işaretleri notu solunum notunu kapsar; tek başına notlar olduğu gibi (karar 0039)', () => {
+  assert.deepEqual(visibleRoutingNotes(['respiration_high', 'illness_signs', 'pain_high']), ['illness_signs', 'pain_high']);
+  assert.deepEqual(visibleRoutingNotes(['respiration_high', 'pain_high']), ['respiration_high', 'pain_high']);
+  assert.deepEqual(visibleRoutingNotes([]), []);
 });

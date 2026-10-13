@@ -25,6 +25,7 @@ const explainerMetrics: Record<ExplainerId, readonly MetricKey[]> = {
   rhr: ['rhr', 'status'],
   sleep: ['sleep'],
   respiration: ['respiration'],
+  illnessSigns: ['signs'],
   checkin: ['checkin'],
   sessionLoad: ['load'],
   loadChart: ['load'],

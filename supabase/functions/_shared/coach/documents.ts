@@ -219,6 +219,32 @@ function blocksFor(snapshot: CoachSnapshot, key: MetricKey, kb: Kb): NumbersBloc
       }
       return [block(text)];
     }
+    case 'signs': {
+      // Gece işaretleri (karar 0039): tanı koymayan notlar. Model yorumlamaz; yönlendirmeyi uygulama sabit metinle yapar.
+      const s = snapshot.signs!;
+      const rhrRise = ruleNumber(kb, 'gece-nabzi-yuksek', 'above_baseline_median');
+      const rhrNights = ruleNumber(kb, 'gece-nabzi-yuksek', 'consecutive_nights');
+      const rhrDays = ruleNumber(kb, 'gece-nabzi-yuksek', 'baseline_days');
+      const spo2Floor = ruleNumber(kb, 'gece-spo2-dusuk', 'below_pct');
+      const spo2Drop = ruleNumber(kb, 'gece-spo2-dusuk', 'below_baseline_median');
+      const spo2Need = ruleNumber(kb, 'gece-spo2-dusuk', 'nights_required');
+      const spo2Window = ruleNumber(kb, 'gece-spo2-dusuk', 'nights_window');
+      const skinRise = ruleNumber(kb, 'cilt-sicakligi-yuksek', 'above_baseline');
+      const skinNights = ruleNumber(kb, 'cilt-sicakligi-yuksek', 'consecutive_nights');
+      const flagged: string[] = [];
+      if (s.rhrHigh === true) flagged.push(`son ${dec(rhrNights)} gece dinlenik nabız önceki ${dec(rhrDays)} günün medyanının ${dec(rhrRise)} atım/dk veya daha fazla üstünde`);
+      if (s.spo2Low === true) {
+        flagged.push(`son ${dec(spo2Window)} gecenin en az ${dec(spo2Need)}'sinde gece SpO2 ortalaması %${dec(spo2Floor)}'in altında ya da kişisel medyanın ${dec(spo2Drop)} puan veya daha fazla altında`);
+      }
+      if (s.skinTempHigh === true) flagged.push(`son ${dec(skinNights)} gece cilt sıcaklığı kişisel tabanın ${dec(skinRise)} °C veya daha fazla üstünde`);
+      if (flagged.length === 0) return [block('Gece işaretleri (tahmin, tanı değil; gece nabzı, SpO2, cilt sıcaklığı): not yok.', true)];
+      return [
+        block(
+          `Gece işaretleri (tahmin, tanı değil): ${flagged.join('; ')}. Ateş ölçümü değil; hastalık başlangıcında da, ağır yük, stres, alkol, seyahat veya yükseklikte de görülebilir. Belirti varsa antrenmana çıkmadan doktora danışılır. Günün durumuna girmez.`,
+          true,
+        ),
+      ];
+    }
     case 'sleep': {
       const s = snapshot.sleep!;
       const nights = ruleNumber(kb, 'uyku-kisa', 'rolling_nights');

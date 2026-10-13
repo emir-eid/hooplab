@@ -1,0 +1,37 @@
+{
+  "module": "hastalik-isaretleri",
+  "rules": [
+    {
+      "id": "gece-nabzi-yuksek",
+      "description": "Son iki gecenin dinlenik nabzı, o gecelerden önceki 28 günün kişisel medyanının en az 4 atım/dk üstündeyse not düşer. Tanı değil: olası nedenler (hastalık başlangıcı, ağır yük, stres, alkol, seyahat, aşı) sayılır, belirti varsa doktora yönlendirilir. Günün durumuna girmez.",
+      "value": { "above_baseline_median": 4, "consecutive_nights": 2, "baseline_days": 28, "min_baseline_nights": 7, "in_day_status": false, "unit": "atım/dk" },
+      "applies_to": "Google Health'in günlük dinlenik nabzı; en yeni gece bugün ya da dün olmalı, iki gece ardışık takvim günleri",
+      "sources": ["alavi-2022", "schwellnus-2022a", "schwellnus-2016"],
+      "notes": "Sayılar alavi-2022'nin ileriye dönük denenmiş gece nabzı kuralından (NightSignal kırmızı uyarı: iki gece üst üste medyanın en az 4 atım/dk üstü; medyan 7 geceden sonra kararlı). COVID-19'da duyarlılık yaklaşık %80, özgüllük %87,7 (alarm günü başına); stres, alkol, seyahat ve aşıda da uyarı çıkıyor, yanlış alarm sık. Makalede taban o geceye kadarki bütün gecelerin medyanı ve ölçü gece ham nabız ortalaması; HoopLab Google Health'in günlük dinlenik nabzını ve önceki 28 günün medyanını kullanır (aktarım ve uyarlama, tahmin). Sporcuya ya da basketbola özgü doğrulanmış eşik yok. IOC uzlaşısında istirahatte hızlı nabız sistemik hastalık belirtileri arasında (schwellnus-2022a); erken işaretler aşırı yüklenmeyi de gösterebilir (schwellnus-2016). CLAUDE.md §3 tıbbi sınır: tanı yok, yönlendirme var."
+    },
+    {
+      "id": "gece-spo2-dusuk",
+      "description": "Son üç gecenin en az ikisinde gece SpO2 ortalaması %93,5'in altındaysa ya da önceki 28 günün kişisel medyanının en az 3 puan altındaysa not düşer. Tanı değil: cihaz ölçümü; olası nedenler (yükseklik, bilekliğin oturması, hastalık) sayılır, tekrarlarsa ya da nefes darlığı / göğüs ağrısı varsa doktora yönlendirilir. Günün durumuna girmez.",
+      "value": { "below_pct": 93.5, "below_baseline_median": 3, "nights_required": 2, "nights_window": 3, "baseline_days": 28, "min_baseline_nights": 7, "in_day_status": false, "unit": "%" },
+      "applies_to": "Google Health'in gece SpO2 ortalaması (uyku sırasında); gecenin alt ve üst sınırı kullanılmaz; en yeni gece bugün ya da dün olmalı; kişisel medyan yoksa yalnız mutlak sınır",
+      "sources": ["gries-1996", "odriscoll-2017", "hermans-2024", "latshang-2013"],
+      "notes": "%93,5 gries-1996'dan türetildi: sağlıklı kişilerde gece medyan doygunluğu 96,5 ± 1,5 → ortalama − 2 SD (makalede eşik olarak geçmiyor, tahmin). Gecenin en düşük değerinin olağan olarak %90'a inmesi (gries-1996, odriscoll-2017) nedeniyle gecenin alt sınırı kullanılmaz. 3 puan, BTS kılavuzunda 'hedef aralık içinde bile ani ve en az 3 puanlık düşüş değerlendirme gerektirir' ifadesinden (odriscoll-2017; hastane ve uyanık ölçüm, aktarım varsayım). Son 3 gecenin 2'si şartı cihaz hatası yüzünden: Fitbit gece SpO2'si ortalama ~2 puan yüksek okuyor ve geceden geceye uyumu zayıf (hermans-2024, KOAH hastaları). Alçakta sağlıklı genç erkekte gece ortalaması ~%96, 1.600 m'de ~%94, 2.600 m'de ~%90-91 (latshang-2013): yükseklikte not beklenir. Kişisel medyan için en az gece sayısı gece-nabzi-yuksek ile aynı (alavi-2022'den aktarım). Fitbit gece ortalaması için doğrulanmış bir eşik yok."
+    },
+    {
+      "id": "cilt-sicakligi-yuksek",
+      "description": "Son iki gecenin cilt sıcaklığı, Google Health'in o gece için verdiği kişisel tabanın en az 0,3 °C üstündeyse not düşer. Tanı değil ve ateş ölçümü değil: olası nedenler (hastalık başlangıcı, sıcak oda, alkol, aşı, iyileşme dönemi) sayılır; şüphede termometreyle ölçmesi, belirti varsa doktora başvurması söylenir. Günün durumuna girmez.",
+      "value": { "above_baseline": 0.3, "consecutive_nights": 2, "in_day_status": false, "unit": "°C" },
+      "applies_to": "Google Health gece cilt sıcaklığı ve aynı satırdaki taban sıcaklığı (sapma = gece − taban); en yeni gece bugün ya da dün olmalı, iki gece ardışık takvim günleri",
+      "sources": ["risch-2022", "smarr-2020", "chen-2020", "alavi-2022"],
+      "notes": "0,3 °C risch-2022'nin bilekte ölçülmüş grup ortalamasından: doğrulanmış COVID-19'da belirtili dönemde bilek cilt sıcaklığı kişisel tabana göre ortalama 0,3 °C yüksek (iyileşmede 0,2 °C). Bu bir ortalama etki, doğrulanmış bir uyarı eşiği değil; tek gece için duyarlılık / özgüllük yok (tahmin). Cilt sıcaklığı kişiden kişiye çok değiştiği için kişisel tabana göre okunur ve geceden geceye oynaması büyük (smarr-2020, parmak); bu yüzden iki gece üst üste şartı aranır. İki gece sayısı alavi-2022'nin gece nabzı kuralından aktarıldı, cilt sıcaklığında doğrulanmadı. Bilek cilt sıcaklığı çekirdek sıcaklığının ~1 °C altında ve onunla uyumu zayıf (chen-2020): not ateş ölçümü değildir. Google Health tabanının nasıl hesaplandığı belgelenmemiş; Fitbit cilt sıcaklığı için doğrulama çalışması bulunamadı."
+    },
+    {
+      "id": "hastalik-isareti-yonlendirme",
+      "description": "Gece işaretlerinden (solunum, nabız, SpO2, cilt sıcaklığı) biri çıktığında uygulama ve koç yalnız sabit metinle yönlendirir: ateş ya da ateşli hissetme, titreme, olağandışı halsizlik, yaygın kas ağrısı, nefes darlığı, göğüs ağrısı, istirahatte çarpıntı ya da baş dönmesi varsa ya da antrenman yapacak kadar iyi hissetmiyorsa antrenmana çıkmadan doktora başvurması; belirti yoksa sonraki gecelere bakması. İşaretler hastalık teşhisi koymaz, yük önerisi değiştirmez.",
+      "value": { "in_day_status": false, "diagnosis": false },
+      "applies_to": "gece-nabzi-yuksek, gece-spo2-dusuk, cilt-sicakligi-yuksek ve solunum-tek-gece notları",
+      "sources": ["schwellnus-2022a", "schwellnus-2016"],
+      "notes": "Belirti listesi IOC akut solunum yolu enfeksiyonu uzlaşısının sistemik belirtiler ve sporcu kontrol listesinden (schwellnus-2022a): sistemik belirtide dinlenme ve hekim değerlendirmesi. Uzlaşı giyilebilir cihaz sinyallerini hastalık göstergesi olarak doğrulamıyor; bu yüzden not 'hastalığı yakaladık' demez, 'kendini yokla' der. Erken işaretler aşırı yüklenmeyi de gösterebilir (schwellnus-2016). Eski 'boyun kuralı' verisiz uzman görüşü olduğu için kullanılmaz (schwellnus-2022a). CLAUDE.md §3 tıbbi sınır."
+    }
+  ]
+}

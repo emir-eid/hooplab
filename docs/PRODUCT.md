@@ -18,7 +18,7 @@ Kod public ve MIT lisanslı. Başkası kendi Supabase ve Google Cloud hesabıyla
 
 | # | Modül | Girdiler | Çıktı | Faz |
 |---|---|---|---|---|
-| 1 | **Toparlanma** | HRV, dinlenik nabız, uyku, solunum hızı, SpO2; sabah check-in | Kişisel banda göre günün durumu (yeşil / sarı / kırmızı) ve nedeni | 1 (temel), 2 |
+| 1 | **Toparlanma** | HRV, dinlenik nabız, uyku, solunum hızı, SpO2, gece cilt sıcaklığı; sabah check-in | Kişisel banda göre günün durumu (yeşil / sarı / kırmızı) ve nedeni; gece işaretleri (solunum, gece nabzı, SpO2, cilt sıcaklığı kişisel olağandan belirgin ayrılınca tanı koymayan "doktora danış" notu; günün durumuna girmez, [0028](decisions/0028-solunum-ve-checkin-kisisel.md), [0039](decisions/0039-gece-isaretleri.md)) | 1 (temel), 2, 3 |
 | 2 | **Antrenman yükü** | Seans türü, süre, RPE, oynanan dakika | Seans yükü, akut ve kronik yük, monotonluk; yük artışı uyarısı | 2 |
 | 3 | **Kas ve tendon yorgunluğu** (tahmin) | Seans içeriği (sıçrama / iniş, yön değiştirme / ani duruş, sprint, alt / üst vücut kuvvet; temas alınmadı, [0027](decisions/0027-kas-tendon-bolge-yuku.md)), bölgesel ağrı haritası | Bölge bazında tahmini yük ve toparlanma durumu; arayüzde "tahmin" etiketli | 2 |
 | 4 | **Uyku** | Süre, düzen, evreler; maç ve seyahat takvimi | Uyku borcu, düzen sapmaları; maç öncesi ve seyahat önerileri | 2-3 |
@@ -57,7 +57,7 @@ Ayrıntı: [CLAUDE.md §3](../CLAUDE.md) ve [karar 0004](decisions/0004-mimari-h
 - **Sayıları kod hesaplar**, AI yorumlar.
 - **Her eşik kaynaklı**; kaynak tıklanınca görünür.
 - **Tahmin etiketlidir.** Ölçülemeyen bir şey ölçülmüş gibi sunulmaz.
-- **Tıbbi sınır:** teşhis yok; kırmızı bayrakta doktora yönlendirme.
+- **Tıbbi sınır:** teşhis yok; kırmızı bayrakta doktora yönlendirme. Gece işaretlerinin yönlendirmesi IOC'nin sporcularda akut solunum yolu enfeksiyonu uzlaşısındaki sistemik belirtilere dayanır ([0039](decisions/0039-gece-isaretleri.md)).
 - **Kanıt hiyerarşisi:** konsensüs → meta-analiz → basketbol / elit sporcu çalışmaları → uzman görüşü. Uzmanlar (ör. Louise Burke, Asker Jeukendrup, Stuart Phillips, Martin Buchheit, Shona Halson, Cheri Mah) yalnız yayınlarıyla kaynak olur; podcast ve sosyal medya iddiaları kaynak değildir.
 
 ## 7. Aday kaynaklar (henüz doğrulanmadı)

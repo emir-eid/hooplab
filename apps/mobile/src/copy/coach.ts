@@ -6,6 +6,7 @@ import type { AuditSentence } from '../../../../supabase/functions/_shared/coach
 import { dailyAttemptLimit, type RoutingNote } from '../../../../supabase/functions/_shared/coach/contract.ts';
 import { metricKeys, type MetricKey } from '../../../../supabase/functions/_shared/coach/snapshot.ts';
 import { explainers, type ExplainerId } from './explainers.ts';
+import { illnessSignsFooter, illnessSignsTitle } from './illness-signs.ts';
 import { respirationHighFooter, respirationHighTitle } from './personal-baseline.ts';
 import { painNoteFooter } from './region-load.ts';
 
@@ -56,8 +57,17 @@ export function coachFailureReason(code: string): string {
 
 export const routingNoteTexts: Record<RoutingNote, { title: string; body: string }> = {
   respiration_high: { title: respirationHighTitle, body: respirationHighFooter },
+  illness_signs: { title: illnessSignsTitle, body: illnessSignsFooter },
   pain_high: { title: 'Sabah ağrısı yüksek', body: painNoteFooter },
 };
+
+/**
+ * Kartta gösterilecek notlar: gece işaretleri notu solunum notunu da kapsar (Bugün'deki kartta da tek kart, karar 0039),
+ * ikisi birlikte gelirse yalnız o gösterilir.
+ */
+export function visibleRoutingNotes(notes: readonly RoutingNote[]): RoutingNote[] {
+  return notes.includes('illness_signs') ? notes.filter((n) => n !== 'respiration_high') : [...notes];
+}
 
 /** Günün sayıları bloğunun açılacağı yer: açıklama sayfası ya da günün durumunun yöntem ekranı. */
 export type BasisTarget = { kind: 'explainer'; id: ExplainerId } | { kind: 'method' } | null;
@@ -68,6 +78,7 @@ const metricTargets: Record<MetricKey, BasisTarget> = {
   rhr: { kind: 'explainer', id: 'rhr' },
   sleep: { kind: 'explainer', id: 'sleep' },
   respiration: { kind: 'explainer', id: 'respiration' },
+  signs: { kind: 'explainer', id: 'illnessSigns' },
   checkin: { kind: 'explainer', id: 'checkin' },
   load: { kind: 'explainer', id: 'loadChart' },
   regions: { kind: 'explainer', id: 'regionLoad' },
@@ -113,6 +124,7 @@ const metricTopics: Record<MetricKey | 'day', SummaryTopic> = {
   rhr: 'recovery',
   sleep: 'recovery',
   respiration: 'recovery',
+  signs: 'recovery',
   checkin: 'recovery',
   load: 'load',
   regions: 'load',

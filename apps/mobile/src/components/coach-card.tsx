@@ -38,6 +38,7 @@ import {
   coachWriteNowAction,
   coachWriting,
   routingNoteTexts,
+  visibleRoutingNotes,
   summaryLayout,
   summaryTopicLabels,
   type SummaryLine,
@@ -266,10 +267,11 @@ export function CitedSentence({
 
 function RoutingNotes({ notes }: { notes: readonly (keyof typeof routingNoteTexts)[] }) {
   const palette = usePalette();
-  if (notes.length === 0) return null;
+  const shown = visibleRoutingNotes(notes);
+  if (shown.length === 0) return null;
   return (
     <View style={[styles.notes, { borderTopColor: palette.line }]}>
-      {notes.map((note) => (
+      {shown.map((note) => (
         <View key={note} style={styles.note}>
           <Text variant="callout">{routingNoteTexts[note].title}</Text>
           <Text variant="footnoteRegular" tone="inkSecondary">
