@@ -60,7 +60,7 @@ Her faz, bitiş kriteri karşılanınca `/kapat` ile kapanır: faz özeti `docs/
 - [x] Solunum ve sabah check-in için kişisel kıyas (2026-10-07, [0028](decisions/0028-solunum-ve-checkin-kisisel.md))
 - [x] Her eşik `research/rules` + doğrulanmış `research/sources` kaydına bağlı (2026-10-08, [Faz 2 özeti](phases/faz-2.md)): motor sabitleri `rules-sync` testinde; arayüz metinlerindeki sayılar motor sabitlerinden, bekçi `apps/mobile/src/copy/hardcoded-numbers.test.ts`
 
-## Faz 3: AI koç
+## Faz 3: AI koç ✓ ([özet](phases/faz-3.md))
 
 - [x] Tasarım ve model kararı (2026-10-08, [0032](decisions/0032-ai-koc-tasarimi.md)): Claude Sonnet 5.5; pgvector yerine kural grafiğiyle seçim ve önbellekli tam taban; citations ile kaynak zorunluluğu, sayıları kod denetler; güvenlik yönlendirmesi kodda
 - [x] Anthropic Console: HoopLab çalışma alanı, ön ödemeli 10 $ (otomatik yükleme kapalı), anahtar `hooplab-koc` (bitiş 2027-10-09), `ANTHROPIC_API_KEY` Supabase secrets'ta (2026-10-09)
@@ -75,7 +75,7 @@ Her faz, bitiş kriteri karşılanınca `/kapat` ile kapanır: faz özeti `docs/
 - [x] Soru-cevap: soru sınıflandırma (Haiku), tam taban önbellekte, kaynak yoksa sabit metin, `coach_messages` (2026-10-12, [0037](decisions/0037-koc-soru-cevap.md): Koç sekmesi, tek soru tek yanıt, bugünün sayılarıyla, günde 10 soru, takviyede doping uyarısı, tıbbi / kapsam dışı sabit metin; `coach-ask` bulutta, iPhone'da gerçek çağrı: ilk soru ~0,18 $, önbellekten ~0,009 $)
 - [x] Kırmızı bayrak ve doping güvenlik kuralları (kodla yönlendirme ve sabit metinler) (2026-10-12, [0038](decisions/0038-takviye-ve-doping.md): takviye kaynakları maughan-2018, kreider-2017, guest-2021, liu-2026; `rules/takviye.json`; doping uyarısı kaynağa bağlı; tıbbi soru yönlendirmesi 0037'de. Yeni fizyolojik kırmızı bayrak eşikleri kapsam dışı, kullanıcı kararı)
 - [x] Maliyet ölçümü ve düşürme (2026-10-10): ölçüm betiği `tools/coach-eval/run.ts` (Batch API), kısmi kabul ([0034](decisions/0034-koc-kismi-kabul.md)), yalnız dikkat isteyen ölçümlerin kaynakları ([0035](decisions/0035-koc-kaynak-secimi-dikkat.md)); çağrı başına ~0,15 → ~0,11 $
-- [ ] Aylık token kullanımı raporu (`coach_summaries.usage`), COSTS tahminiyle kıyas
+- [x] Aylık token kullanımı raporu (2026-10-13): `npm run coach:usage` (`tools/coach-usage`, testli), özet ve soru-cevap kayıtlarından resmi fiyatlarla ay toplamı, 30 günlük karşılık ve 0032 tahminiyle kıyas, kalite oranları, 0032 tetikleri; ilk rapor 5 günde ~1,01 $, 30 günlük karşılığı ~6,1 $ (tahminin 1,74 katı, COSTS)
 
 ## Faz 4: Son rötuşlar
 

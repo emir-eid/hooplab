@@ -5,6 +5,7 @@ Uygulamaya veya altyapıya görünür değişiklikler. Biçim: [Keep a Changelog
 ## [Yayınlanmamış]
 
 ### Eklendi
+- Koçun aylık token kullanımı raporu (karar 0032): `npm run coach:usage` (`tools/coach-usage`) bulut kayıtlarından ay toplamını resmi fiyatlarla hesaplar (önbellek yazma / okuma, Haiku'da uzun istem fiyatı, `inference_geo`, yedek modelin turu kendi fiyatıyla; fiyatı bilinmeyen model tahmin edilmez), 30 günlük karşılığı 0032 tahminiyle kıyaslar, kalite oranlarını (atılan cümle, durumlar, sorun kodları), 0032 tetiklerini ve krediden kalanı yazar; metin sütunlarını okumaz.
 - Takviye ve doping (karar 0038): kanıt tabanına IOC takviye uzlaşısı, ISSN kreatin ve kafein bildirgeleri, basketbolda kafein meta-analizi; `rules/takviye.json`; koç takviye sorularını kaynaklı yanıtlar (doz yalnız kaynaktan, kişisel doz yok); doping uyarısı kurala ve kaynağa bağlı, Koç kartında kaynak satırı; demo kreatin yanıtı kaynaklı.
 - Koçta soru-cevap (karar 0037): Koç sekmesinde soru alanı, örnek sorular ve geçmiş; `coach-ask` Edge Function (Haiku sınıflandırması, tıbbi ve kapsam dışı soruda sabit metin, takviyede doping uyarısı, Sonnet'e önbellekli tam kanıt tabanı ve bugünün sayıları, soru-cevap kipinde denetçi), `coach_messages` tablosu (sahibi okur, yazan yalnız fonksiyon), günde 10 soru; demo örnek sorulara sentetik yanıt.
 - Koç kartı: yalnız ısınma kaynaklarına dayanan cümle her zaman "Maç günü" konusunda; koç yönergesinde maç günü de toplam cümle sınırı aynı (karar 0036).

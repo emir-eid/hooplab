@@ -123,6 +123,8 @@ Koçun günlük özeti yerelde (sentetik, gerçek Anthropic API'sine gidilmez, �
 
 Koçun maliyet / kalite ölçümü (gerçek API, **ücretli, önce kullanıcı onayı**): kullanıcı Console'da kısa süreli ayrı bir anahtar açar ve kendi PowerShell'inde gizli girişle `tools/coach-eval/.env.local`'a (gitignore'lu) `ANTHROPIC_API_KEY=...` olarak yazar. `node tools/coach-eval/run.ts --dry` ücretsiz tahmin verir, `node tools/coach-eval/run.ts` Batch API ile (%50) koşar, sonuçlar ve yan yana metinler `private/data/coach-eval/<batch>/` altına yazılır. İş bitince anahtar dosyası silinir ([0035](decisions/0035-koc-kaynak-secimi-dikkat.md), LESSONS).
 
+Koçun aylık token kullanımı raporu (ücretsiz, API çağırmaz): `npm run coach:usage` bağlı bulut projesinden `coach_summaries` / `coach_messages`'in yalnız token, durum, sınıf, hata kodu ve denetim sayılarını okur (metin sütunları seçilmez), resmi fiyatlarla maliyeti hesaplar ve markdown raporu ekrana yazar: ay toplamı, 30 günlük karşılık ve karar 0032 tahminiyle kıyas, kalite oranları (atılan cümle, durumlar), 0032 tetikleri, krediden kalan (tahmin; Console bakiyesi esastır). Seçenekler: `-- --ay 2026-10`, `-- --kredi <toplam yüklenen $>`, `-- --yerel`, `-- --dosya <sorgu çıktısı.json>`. Fiyat, kredi ve tablo dışı harcama `tools/coach-usage/usage-lib.mjs`'te; fiyat değişince resmi sayfadan güncellenir ([COSTS](COSTS.md)).
+
 ## 10. EAS (iOS derleme ve güncelleme)
 
 Proje mevcut kişisel Expo hesabında ([0024](decisions/0024-eas-derleme-ve-guncelleme.md)). Bu bilgisayarda EAS CLI o hesapla girişli. Yeni makinede kullanıcı bir kez `npx.cmd eas-cli@24.10.0 login` yapar.
