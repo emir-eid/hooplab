@@ -29,7 +29,12 @@ export const demoAnswers: Record<(typeof askSamples)[number], StoredAskResponse>
     sentence('Bir ya da daha fazla uykusuz gece performansı düşürüyor.', ['walsh-2021']),
     sentence('Herkese aynı süre yerine kendi uyku ihtiyacını gözeten kişisel bir yaklaşım öneriliyor.', ['walsh-2021']),
   ]),
-  'Kreatin kullanmalı mıyım?': { status: 'no_source', category: 'supplement' },
+  'Kreatin kullanmalı mıyım?': answered('supplement', [
+    sentence('Kreatin monohidrat, yüksek yoğunluklu egzersiz kapasitesini artırmak için en etkili besin takviyesi olarak değerlendiriliyor.', ['kreider-2017']),
+    sentence('Takım sporları gibi tekrarlı yüksek yoğunluklu eforlu sporlarda yararı bildirilmiş.', ['maughan-2018']),
+    sentence('Tutarlı olarak bildirilen tek yan etki, yüklemede su tutulmasına bağlı kilo artışı.', ['kreider-2017']),
+    sentence('Takviye kararından önce beslenmenin tam değerlendirilmesi ve uzman desteği öneriliyor.', ['maughan-2018']),
+  ]),
   'Dizim şişti, ne yapmalıyım?': { status: 'routed', category: 'medical_red_flag' },
 };
 

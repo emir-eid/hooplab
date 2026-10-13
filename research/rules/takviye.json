@@ -1,0 +1,19 @@
+{
+  "module": "takviye",
+  "rules": [
+    {
+      "id": "takviye-kanit",
+      "description": "Koç takviye sorularını yalnız kanıtı güçlü takviyelerin kaynaklarına dayanarak yanıtlar (PRODUCT modül 7, karar 0038). Performansa doğrudan katkısı için iyi kanıtı olanlar belirli senaryolarda kafein, kreatin monohidrat, nitrat, sodyum bikarbonat ve olasılıkla beta-alanin; doz ve zamanlama yalnız kaynakta yazdığı gibi aktarılır, uygulama kişiye doz hesaplamaz. Kaynağı olmayan takviyede koç 'kaynak yok' der.",
+      "applies_to": "koçta takviye sorusu (soru sınıfı supplement)",
+      "sources": ["maughan-2018", "kreider-2017", "guest-2021", "liu-2026"],
+      "notes": "IOC uzlaşısı (maughan-2018) genel çerçeve; kreatin için ISSN tutum bildirgesi (kreider-2017), kafein için ISSN tutum bildirgesi (guest-2021) ve basketbolcularda meta-analiz (liu-2026). Nitrat, bikarbonat ve beta-alanin için ayrı kaynak eklenmedi; IOC uzlaşısının özeti yeterli ayrıntıyı taşımıyorsa koç 'kaynak yok' der."
+    },
+    {
+      "id": "takviye-doping-riski",
+      "description": "Takviye sorusunda yanıtın altına uygulama her zaman sabit doping uyarısını ekler (CLAUDE.md §3, karar 0032 ve 0038): takviye etiketinde yazmayan yasaklı madde içerebilir, bilmeden alınan yasaklı madde de ihlal sayılır, bağımsız denetimli ürün riski azaltır ama sıfırlamaz, başlamadan önce uzmana danışılır. Eşik yok.",
+      "applies_to": "koçta takviye sorusu (soru sınıfı supplement)",
+      "sources": ["maughan-2018"],
+      "notes": "Uyarının metni copy/coach-ask.ts dopingWarning; WADA yasaklılar listesi her yıl güncellenir, metin listeyi saymaz, listeye yönlendirir."
+    }
+  ]
+}

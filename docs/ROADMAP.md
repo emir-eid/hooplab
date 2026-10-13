@@ -73,7 +73,7 @@ Her faz, bitiş kriteri karşılanınca `/kapat` ile kapanır: faz özeti `docs/
   - [x] Uygulamada anlık değerleri kuran modül, Bugün'de koç kartı, demo özetleri (2026-10-09; [0033](decisions/0033-koc-ozeti-check-in-sonrasi.md): check-in'den sonra yazılır, kart konu başlıklarıyla gruplar)
 - [x] "Bugün maç var" işareti ve koçta maç günü dili (2026-10-11, [0036](decisions/0036-mac-gunu-isareti.md): `match_days`, işaretli gün yoğun, `mac-gunu` kuralı, ısınma kaynakları; web önizlemesinde demo ile)
 - [x] Soru-cevap: soru sınıflandırma (Haiku), tam taban önbellekte, kaynak yoksa sabit metin, `coach_messages` (2026-10-12, [0037](decisions/0037-koc-soru-cevap.md): Koç sekmesi, tek soru tek yanıt, bugünün sayılarıyla, günde 10 soru, takviyede doping uyarısı, tıbbi / kapsam dışı sabit metin; `coach-ask` bulutta, iPhone'da gerçek çağrı: ilk soru ~0,18 $, önbellekten ~0,009 $)
-- [ ] Kırmızı bayrak ve doping güvenlik kuralları (kodla yönlendirme ve sabit metinler)
+- [x] Kırmızı bayrak ve doping güvenlik kuralları (kodla yönlendirme ve sabit metinler) (2026-10-12, [0038](decisions/0038-takviye-ve-doping.md): takviye kaynakları maughan-2018, kreider-2017, guest-2021, liu-2026; `rules/takviye.json`; doping uyarısı kaynağa bağlı; tıbbi soru yönlendirmesi 0037'de. Yeni fizyolojik kırmızı bayrak eşikleri kapsam dışı, kullanıcı kararı)
 - [x] Maliyet ölçümü ve düşürme (2026-10-10): ölçüm betiği `tools/coach-eval/run.ts` (Batch API), kısmi kabul ([0034](decisions/0034-koc-kismi-kabul.md)), yalnız dikkat isteyen ölçümlerin kaynakları ([0035](decisions/0035-koc-kaynak-secimi-dikkat.md)); çağrı başına ~0,15 → ~0,11 $
 - [ ] Aylık token kullanımı raporu (`coach_summaries.usage`), COSTS tahminiyle kıyas
 

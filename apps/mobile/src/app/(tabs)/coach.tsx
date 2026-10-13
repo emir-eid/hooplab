@@ -20,6 +20,7 @@ import { PrimaryButton } from '@/components/primary-button';
 import { Screen } from '@/components/screen';
 import { Text } from '@/components/text';
 import { coachBadge, coachFailureReason, coachOmittedNote } from '@/copy/coach';
+import { sources } from '@/copy/sources';
 import {
   askAction,
   askBasisAction,
@@ -241,6 +242,9 @@ function AnswerCard({ entry, today }: { entry: AskEntry; today: string }) {
           <Text variant="callout">{dopingWarning.title}</Text>
           <Text variant="footnoteRegular" tone="inkSecondary">
             {dopingWarning.body}
+          </Text>
+          <Text variant="caption" tone="inkMuted">
+            {`Kaynak: ${dopingWarning.sources.map((id) => `${sources[id].cite} · ${sources[id].kind}`).join('; ')}`}
           </Text>
         </View>
       ) : null}

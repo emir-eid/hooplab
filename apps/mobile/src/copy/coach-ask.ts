@@ -55,15 +55,20 @@ export const askRouted: Record<Extract<QuestionCategory, 'medical_red_flag' | 'o
   },
 };
 
-/** Takviye sorusunda yanıtın altına her zaman eklenir (CLAUDE.md §3); modelin hatırlamasına bırakılmaz. */
+/**
+ * Takviye sorusunda yanıtın altına her zaman eklenir (CLAUDE.md §3); modelin hatırlamasına bırakılmaz. Kural
+ * `takviye-doping-riski`, kaynak IOC uzlaşı bildirgesi (karar 0038); coach-ask.test.ts bağı denetler.
+ */
 export const dopingWarning = {
   title: 'Takviyede doping riski',
-  body: 'Bir takviye etiketinde yazmayan, WADA yasaklılar listesindeki bir madde içerebilir. Kullanacaksan bağımsız parti testinden geçmiş (batch-tested) ürün seç ve takımının doktoruna ya da diyetisyenine danış.',
-};
+  body: 'Takviyeler etiketinde yazmayan, WADA yasaklılar listesindeki maddeleri içerebilir; bilmeden alınsa da doping ihlali sayılır. Bağımsız kuruluşça test edilmiş (batch-tested) ürün riski azaltır ama sıfırlamaz. Başlamadan önce takımının doktoruna ya da diyetisyenine danış.',
+  rule: 'takviye-doping-riski',
+  sources: ['maughan-2018'],
+} as const;
 
 /**
  * Ekranda dokununca alana yazılan örnek sorular. Demo bunları önceden yazılmış yanıtlarla gösterir (demo-ask.ts);
- * gerçek hesapta koça gider. Biri kaynaklı yanıt, biri takviye (kaynak yok + uyarı), biri tıbbi yönlendirme örneği.
+ * gerçek hesapta koça gider. Kaynaklı yanıtlar, takviye (yanıt + doping uyarısı) ve tıbbi yönlendirme örneği.
  */
 export const askSamples = [
   'Maç günü ne kadar karbonhidrat almalıyım?',

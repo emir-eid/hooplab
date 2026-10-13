@@ -611,6 +611,33 @@ export const kbSources: readonly KbSource[] = [
     "summary": "## Ne söylüyor (kendi cümlelerimizle)\n\n- Oranın temassız sakatlıklarla ilişkili olduğunu ve tek başına değil, başka yöntemlerle birlikte çok yönlü bir izleme sisteminin parçası olarak kullanılabileceğini söylüyor.\n- Kayan ortalama ve EWMA yöntemlerinin ikisini de destekleyen çalışmalar var; yazarlar daha duyarlı olduğu için EWMA'yı daha uygun buluyor.\n- En uygun pencere uzunluğu ve yük ölçüsü spora göre değişebilir.\n\n## Uygulamada kullanılan sayılar\n\nDoğrudan eşik alınmadı. EWMA seçiminin sistematik derleme düzeyindeki dayanağı.\n\n## Sınırlılıklar\n\n- Çalışmalar arası yöntem farkı büyük; basketbol çalışması az.\n- Yalnız özet okundu."
   },
   {
+    "id": "guest-2021",
+    "title": "International society of sports nutrition position stand: caffeine and exercise performance",
+    "authors": [
+      "Guest NS",
+      "VanDusseldorp TA",
+      "Nelson MT",
+      "Grgic J",
+      "Schoenfeld BJ",
+      "Jenkins NDM",
+      "Arent SM",
+      "Antonio J",
+      "Stout JR",
+      "Trexler ET",
+      "Smith-Ryan AE",
+      "Goldstein ER",
+      "Kalman DS",
+      "Campbell BI"
+    ],
+    "year": 2021,
+    "type": "position-stand",
+    "doi": "10.1186/s12970-020-00383-4",
+    "pmid": "33388079",
+    "journal": "Journal of the International Society of Sports Nutrition",
+    "population": "Antrenmanlı ve antrenmansız yetişkinler (ISSN tutum bildirgesi)",
+    "summary": "## Ne söylüyor (kendi cümlelerimizle)\n\n- Kafein çalışmaların çoğunda, ama hepsinde değil, performansı kısa vadede artırıyor: kas dayanıklılığı, hareket hızı ve kuvvet, sprint, sıçrama ve fırlatma gibi alanlarda küçük ile orta düzeyde yarar bildiriliyor.\n- Performansı tutarlı olarak artıran doz vücut ağırlığının kilogramı başına 3-6 mg; en düşük etkili doz belirsiz, 2 mg/kg kadar düşük olabilir. 9 mg/kg gibi çok yüksek dozlar yan etkileri belirgin artırıyor ve yarar için gerekli görünmüyor.\n- En sık kullanılan zamanlama egzersizden 60 dakika önce; sakız gibi biçimlerde bekleme süresi daha kısa olabilir.\n- Kişiler arasında performans yanıtı ve uykuya, kaygıya olumsuz etkileri farklı; bunda genetik, alışılmış kafein tüketimi ve kişisel yanıt rol oynuyor.\n- Kafein dikkat ve uyanıklığı çoğu kişide iyileştiriyor; uykusuzluk koşullarında bazı kişilerde bilişsel ve fiziksel performansa katkı sağlayabiliyor.\n\n## Uygulamada kullanılan sayılar\n\nDoğrudan sayı alınmadı. Kafein sorularında koçun dayanağı (soru-cevap, karar 0037); uygulama doz hesaplamaz.\n\n## Sınırlılıklar\n\n- Bildirge çok sayıda spor dalını ve antrenmansız kişileri kapsıyor; basketbola özgü bulgular için liu-2026.\n- Kafeinin uykuya etkisi kişiye göre değişiyor; uyku izlemesiyle (walsh-2021) birlikte düşünülür.\n- Yalnız özet ve bildirge maddeleri okundu (açık erişim, PMC7777221)."
+  },
+  {
     "id": "haddad-2017",
     "title": "Session-RPE Method for Training Load Monitoring: Validity, Ecological Usefulness, and Influencing Factors",
     "authors": [
@@ -804,6 +831,29 @@ export const kbSources: readonly KbSource[] = [
     "summary": "## Ne söylüyor (kendi cümlelerimizle)\n\n- Belirli bir performans hedefi olmadan genel fitness yapan biri karbonhidrat ihtiyacını normal bir beslenmeyle (yaklaşık 3-5 g/kg/gün) karşılayabilir.\n- Günde 2-3 saat yoğun antrenman yapan sporcunun karbonhidrat ihtiyacı yaklaşık 5-8 g/kg/gün.\n- Günde 3-6 saat, bir ya da iki seansta yoğun antrenman yapan sporcunun karbonhidrat ihtiyacı yaklaşık 8-10 g/kg/gün (metinde birim \"g/day\" yazılmış; bağlam ve verilen gram aralığı g/kg/gün olduğunu gösteriyor).\n- Protein için orta yoğun antrenmanda 1,2-2,0 g/kg/gün, yüksek hacimli yoğun antrenmanda 1,7-2,2 g/kg/gün; günün içine 3-4 saatte bir dağıtılması öneriliyor.\n\n## Uygulamada kullanılan sayılar\n\n| Değer | Birim | Bağlam / koşul |\n|---|---|---|\n| 3-5 | g/kg/gün karbonhidrat | Dinlenme günü (genel düzey) |\n| 8-10 | g/kg/gün karbonhidrat | Yoğun gün: maç ya da toplam 3 saat ve üstü seans |\n\n## Sınırlılıklar\n\n- Derneğin derleme güncellemesi (kanıt düzeyi 4); öneriler alıntılanan çalışmalara ve uzman görüşüne dayanıyor.\n- Dinlenme günü için doğrudan bir sayı vermiyor; 3-5 g/kg genel fitness için verilmiş, sporcunun dinlenme gününe aktarım bir varsayım.\n- Tam metin okundu (açık erişim)."
   },
   {
+    "id": "kreider-2017",
+    "title": "International Society of Sports Nutrition position stand: safety and efficacy of creatine supplementation in exercise, sport, and medicine",
+    "authors": [
+      "Kreider RB",
+      "Kalman DS",
+      "Antonio J",
+      "Ziegenfuss TN",
+      "Wildman R",
+      "Collins R",
+      "Candow DG",
+      "Kleiner SM",
+      "Almada AL",
+      "Lopez HL"
+    ],
+    "year": 2017,
+    "type": "position-stand",
+    "doi": "10.1186/s12970-017-0173-z",
+    "pmid": "28615996",
+    "journal": "Journal of the International Society of Sports Nutrition",
+    "population": "Egzersiz yapan bireyler ve sporcular; ayrıca klinik gruplar (ISSN tutum bildirgesi)",
+    "summary": "## Ne söylüyor (kendi cümlelerimizle)\n\n- Kreatin monohidrat, antrenman sırasında yüksek yoğunluklu egzersiz kapasitesini ve yağsız kütleyi artırmak için sporcuların kullanabildiği en etkili besin takviyesi olarak değerlendiriliyor; en çok çalışılmış biçim de monohidrat.\n- Kas kreatin depolarını en hızlı artırma yolu yaklaşık 0,3 g/kg/gün kreatin monohidratı 5-7 gün almak, ardından 3-5 g/gün ile sürdürmek. Baştan 3-5 g/gün almak da depoları 3-4 haftada artırıyor, ama bu yolun ilk dönemdeki performans etkisi daha az destekleniyor.\n- Karbonhidrat ya da karbonhidrat ve proteinle birlikte almak kasa geçişi artırıyor gibi görünüyor; performansa ek katkısı belirsiz.\n- Literatürde tutarlı olarak bildirilen tek yan etki kilo artışı; yükleme sırasında kısa süreli su tutulması olabiliyor. Sağlıklı kişilerde uzun süreli kullanımda zararlı bir etki gösteren güçlü kanıt bulunmuyor.\n\n## Uygulamada kullanılan sayılar\n\nDoğrudan sayı alınmadı. Kreatin sorularında koçun dayanağı (soru-cevap, karar 0037); uygulama doz hesaplamaz.\n\n## Sınırlılıklar\n\n- Çalışmaların çoğu erkeklerde; bazı çalışmalar kadınlarda kuvvet ve kas kazanımının daha az olabileceğini gösteriyor.\n- Yazarların bir kısmı takviye sektörüyle bağlantılı (bildirgedeki çıkar beyanı); güvenlik ve etkinlik bulguları IOC uzlaşısıyla (maughan-2018) birlikte okunur.\n- Basketbola özgü bir bulgu değil; takım sporlarına aktarım IOC'nin \"tekrarlı yüksek yoğunluklu efor\" değerlendirmesine dayanıyor.\n- Takviye doping açısından ayrıca değerlendirilir (maughan-2018).\n- Tam metin okundu (açık erişim, PMC5469049)."
+  },
+  {
     "id": "lian-2005",
     "title": "Prevalence of jumper's knee among elite athletes from different sports: a cross-sectional study",
     "authors": [
@@ -818,6 +868,27 @@ export const kbSources: readonly KbSource[] = [
     "journal": "The American journal of sports medicine",
     "population": "Norveç ulusal düzey elit sporcular, 9 spor, n=613 (basketbol: erkek)",
     "summary": "## Ne söylüyor (kendi cümlelerimizle)\n\n- Dokuz sporda patellar tendinopati (jumper's knee) yaygınlığı muayene ve anketle ölçüldü.\n- Yaygınlık sıçrama ve güç gerektiren sporlarda en yüksek: voleybolda yaklaşık yüzde 45, basketbolda yaklaşık yüzde 32; bisiklet ve oryantiringde vaka yok.\n- Sonuç, diz ekstansör mekanizmasına binen sıçrama yükünün patellar tendonla ilişkisini destekliyor.\n\n## Uygulamada kullanılan sayılar\n\n| Değer | Birim | Bağlam / koşul |\n|---|---|---|\n| Basketbolda patellar tendinopati yaygınlığı | ~%32 | elit erkek basketbolcular, kesitsel |\n\n## Sınırlılıklar\n\n- Kesitsel; yük ölçülmedi, ilişki spor türü üzerinden kuruluyor."
+  },
+  {
+    "id": "liu-2026",
+    "title": "Effects of caffeine intake on exercise performance in basketball players: a systematic review and meta-analysis",
+    "authors": [
+      "Liu J",
+      "Xue R",
+      "Zhang X",
+      "Huang J",
+      "Chen B",
+      "Guo L",
+      "Cao Y",
+      "Girard O"
+    ],
+    "year": 2026,
+    "type": "meta-analysis",
+    "doi": "10.3389/fnut.2026.1837912",
+    "pmid": "42180581",
+    "journal": "Frontiers in Nutrition",
+    "population": "Antrenmanlı basketbolcular, 18 kör çapraz çalışma, toplam 288 oyuncu (182 erkek, 106 kadın); çoğu yüksek düzeyde antrenmanlı ya da ulusal düzey",
+    "summary": "## Ne söylüyor (kendi cümlelerimizle)\n\n- Basketbolcularda düşük ile orta dozda kafein genel fiziksel performansı küçük düzeyde iyileştirdi: düz sprint ve tekrarlı sprint hızı, tek sıçrama yüksekliği ve çeviklik.\n- Düşük dozlar (2,3-3 mg/kg) serbest atış ve üçlük isabeti ya da top sürme hızı gibi basketbola özgü becerileri anlamlı biçimde iyileştirmedi.\n- Gerçek ya da taklit maçta genel performans göstergeleri ile algılanan kas dayanıklılığı ve gücü düşük dozla arttı.\n- Yazarlar, maça benzer koşullarda anlamlı bir etki için 3 mg/kg'nin üstünde orta bir dozun gerekebileceğini öne sürüyor.\n\n## Uygulamada kullanılan sayılar\n\nDoğrudan sayı alınmadı. Kafein sorularında basketbola özgü dayanak (soru-cevap, karar 0037); uygulama doz hesaplamaz.\n\n## Sınırlılıklar\n\n- Katılımcıların çoğu erkek (kadınlar yaklaşık %37); çalışmaların yarısında yanlılık riski \"bazı endişeler\" düzeyinde; yayın yanlılığına dair hafif işaret var.\n- Etkiler küçük; beceri çıktılarında sonuç tutarsız.\n- Tam metin okundu (açık erişim, PMC13191373)."
   },
   {
     "id": "lolli-2017",
@@ -873,6 +944,44 @@ export const kbSources: readonly KbSource[] = [
     "journal": "International Journal of Environmental Research and Public Health",
     "population": "8 kontrollü çalışma; sedanter, fiziksel olarak aktif ve dayanıklılık sporcusu yetişkinler",
     "summary": "## Ne söylüyor (kendi cümlelerimizle)\n\n- HRV'ye göre yönlendirilen antrenman, önceden sabitlenmiş programa göre vagal HRV'yi daha çok artırdı; dinlenik nabızda fark yoktu. Aerobik kapasite ve performansta HRV yönlendirmesi lehine küçük ama anlamlı olmayan farklar bulundu.\n- Derleme yöntem odaklı: çalışmaların yarısı tek günlük HRV değerini hareketli bir referansla, diğer yarısı yuvarlanan ortalamayı (üçü 7 gün, biri 3 gün) sabit bir başlangıç döneminden hesaplanan referansla karşılaştırdı.\n- Yuvarlanan ortalama kullanan çalışmaların hepsi referansı 3-4 haftalık bir başlangıç döneminden hesapladı; üçü referansı müdahalenin ortasında bir kez güncelledi.\n- Referans sınırı üç çalışmada ortalama ± 0,5 SD (en küçük anlamlı değişim), üç çalışmada ortalama − 1 SD olarak tanımlandı. Yazarlar en iyi yöntemin (indeks, kayıt pozisyonu, referans) henüz belli olmadığını vurguluyor.\n- Gece (uyku sırasında) HRV ölçümü kullanan çalışma az; çoğu sabah ayakta veya yatarak kısa kayıt kullandı.\n\n## Uygulamada kullanılan sayılar\n\n| Değer | Birim | Bağlam / koşul |\n|---|---|---|\n| 7 günlük yuvarlanan ortalama | gün | HRV değeri; tek gece yerine (3 çalışma: Javaloyes 2019 ve 2020, Vesterinen 2016) |\n| Başlangıç dönemi 3-4 hafta | hafta | Kişisel referansın hesaplandığı dönem |\n| Bant = ortalama ± 0,5 SD | SD | Aynı üç çalışmada en küçük anlamlı değişim; bant dışı \"olağan değil\" |\n\n## Sınırlılıklar\n\n- Çalışmalar dayanıklılık sporlarından; takım sporu veya basketbol yok. Yöntem basketbola aktarılıyor (kural notunda belirtildi).\n- Örneklemler küçük, protokoller farklı. Yazarlardan biri HRV ürünlerinden bir kerelik ücret almış.\n- Açık erişimli tam metin okundu (PMC8507742)."
+  },
+  {
+    "id": "maughan-2018",
+    "title": "IOC consensus statement: dietary supplements and the high-performance athlete",
+    "authors": [
+      "Maughan RJ",
+      "Burke LM",
+      "Dvorak J",
+      "Larson-Meyer DE",
+      "Peeling P",
+      "Phillips SM",
+      "Rawson ES",
+      "Walsh NP",
+      "Garthe I",
+      "Geyer H",
+      "Meeusen R",
+      "van Loon LJC",
+      "Shirreffs SM",
+      "Spriet LL",
+      "Stuart M",
+      "Vernec A",
+      "Currell K",
+      "Ali VM",
+      "Budgett RG",
+      "Ljungqvist A",
+      "Mountjoy M",
+      "Pitsiladis YP",
+      "Soligard T",
+      "Erdener U",
+      "Engebretsen L"
+    ],
+    "year": 2018,
+    "type": "consensus",
+    "doi": "10.1136/bjsports-2018-099027",
+    "pmid": "29540367",
+    "journal": "British Journal of Sports Medicine",
+    "population": "Yüksek performans sporcuları (IOC uzlaşı bildirgesi; yazarlar arasında WADA temsilcisi var)",
+    "summary": "## Ne söylüyor (kendi cümlelerimizle)\n\n- Beslenme performansa küçük ama değerli bir katkı yapar; takviyelerin bu programa katkısı daha da küçüktür. Takviye kararından önce beslenmenin tam bir değerlendirmesi yapılmalı.\n- Performansı doğrudan artırdığı iddia edilen takviyelerin çoğunun kanıtı yok; belirli kullanım senaryolarında iyi kanıtı olanlar kafein, kreatin monohidrat, nitrat, sodyum bikarbonat ve olasılıkla beta-alanin. Yanıt kişiden kişiye çok değişir (genetik, bağırsak florası, alışılmış beslenme).\n- Kafein: tipik kullanım egzersizden yaklaşık 60 dakika önce vücut ağırlığının kilogramı başına 3-6 mg; tekrarlı sprint ve takım oyunu etkinliklerinde performansa katkısı bildirilmiş. 9 mg/kg ve üstü dozlar yararı artırmıyor; bulantı, kaygı ve uykusuzluk gibi yan etkileri artırıyor.\n- Kreatin monohidrat: yükleme yaklaşık 20 g/gün (dörde bölünmüş) 5-7 gün, ardından 3-5 g/gün sürdürme; tekrarlı yüksek yoğunluklu eforlu sporlarda (takım sporları gibi) ve kuvvet antrenmanı uyumlarında yararlı. Yüklemeden sonra çoğunlukla su tutulmasına bağlı 1-2 kg kilo artışı olabilir; uygun protokolle uzun süreli kullanımda olumsuz sağlık etkisi bildirilmemiş.\n- Performans takviyesi yarışmada kullanılmadan önce antrenmanda ya da yarışmayı taklit eden koşullarda denenmeli.\n- Doping riski: takviyeler etiketinde yazmayan yasaklı madde içerebilir. WADA kurallarında kesin sorumluluk geçerli olduğu için bilmeden alınan yasaklı madde de doping ihlali sayılır; fizyolojik etkisi olmayacak kadar küçük bir miktar bile pozitif sonuç verebilir. Bağımsız kuruluşların denetim programları riski azaltır ama hiçbir ürün için tam güvence yoktur. Sporcu, olası küçük kazancın bir doping ihlali riskine değip değmediğini dikkatle tartmalı; takviyeye başlamadan önce uzman desteği alınması güçlü biçimde öneriliyor.\n- Sağlık amaçlı takviyelerde en umut verici adaylar D vitamini ve probiyotikler; tek başına yüksek doz antioksidanlar (C ve E vitamini) antrenman uyumunu köreltebilir.\n\n## Uygulamada kullanılan sayılar\n\nDoğrudan sayı alınmadı. Takviye sorularında koçun dayanağı (soru-cevap, karar 0037) ve doping uyarısının kaynağı (karar 0038). Uygulama doz hesaplamaz.\n\n## Sınırlılıklar\n\n- Uzman uzlaşısı; bulgular yazarların taradığı çalışmalara dayanıyor, çoğu basketbola özgü değil.\n- Kontaminasyonun gerçek yaygınlığı bilinmiyor; incelenen ürün örneklemleri rastgele değil.\n- 2018 tarihli; WADA yasaklılar listesi her yıl güncellenir.\n- Tam metin okundu (açık erişim, PMC5867441)."
   },
   {
     "id": "maupin-2020",
@@ -2134,6 +2243,29 @@ export const kbRules: readonly KbRule[] = [
       "miller-2020",
       "renteria-2024",
       "nicolo-2020"
+    ]
+  },
+  {
+    "id": "takviye-doping-riski",
+    "module": "takviye",
+    "description": "Takviye sorusunda yanıtın altına uygulama her zaman sabit doping uyarısını ekler (CLAUDE.md §3, karar 0032 ve 0038): takviye etiketinde yazmayan yasaklı madde içerebilir, bilmeden alınan yasaklı madde de ihlal sayılır, bağımsız denetimli ürün riski azaltır ama sıfırlamaz, başlamadan önce uzmana danışılır. Eşik yok.",
+    "appliesTo": "koçta takviye sorusu (soru sınıfı supplement)",
+    "notes": "Uyarının metni copy/coach-ask.ts dopingWarning; WADA yasaklılar listesi her yıl güncellenir, metin listeyi saymaz, listeye yönlendirir.",
+    "sources": [
+      "maughan-2018"
+    ]
+  },
+  {
+    "id": "takviye-kanit",
+    "module": "takviye",
+    "description": "Koç takviye sorularını yalnız kanıtı güçlü takviyelerin kaynaklarına dayanarak yanıtlar (PRODUCT modül 7, karar 0038). Performansa doğrudan katkısı için iyi kanıtı olanlar belirli senaryolarda kafein, kreatin monohidrat, nitrat, sodyum bikarbonat ve olasılıkla beta-alanin; doz ve zamanlama yalnız kaynakta yazdığı gibi aktarılır, uygulama kişiye doz hesaplamaz. Kaynağı olmayan takviyede koç 'kaynak yok' der.",
+    "appliesTo": "koçta takviye sorusu (soru sınıfı supplement)",
+    "notes": "IOC uzlaşısı (maughan-2018) genel çerçeve; kreatin için ISSN tutum bildirgesi (kreider-2017), kafein için ISSN tutum bildirgesi (guest-2021) ve basketbolcularda meta-analiz (liu-2026). Nitrat, bikarbonat ve beta-alanin için ayrı kaynak eklenmedi; IOC uzlaşısının özeti yeterli ayrıntıyı taşımıyorsa koç 'kaynak yok' der.",
+    "sources": [
+      "maughan-2018",
+      "kreider-2017",
+      "guest-2021",
+      "liu-2026"
     ]
   },
   {
