@@ -3,11 +3,11 @@
   "rules": [
     {
       "id": "gece-nabzi-yuksek",
-      "description": "Son iki gecenin dinlenik nabzı, o gecelerden önceki 28 günün kişisel medyanının en az 4 atım/dk üstündeyse not düşer. Tanı değil: olası nedenler (hastalık başlangıcı, ağır yük, stres, alkol, seyahat, aşı) sayılır, belirti varsa doktora yönlendirilir. Günün durumuna girmez.",
+      "description": "Son iki gecenin uyku nabzı, o gecelerden önceki 28 günün kişisel medyanının en az 4 atım/dk üstündeyse not düşer. Tanı değil: olası nedenler (hastalık başlangıcı, ağır yük, stres, alkol, seyahat, aşı) sayılır, belirti varsa doktora yönlendirilir. Günün durumuna girmez.",
       "value": { "above_baseline_median": 4, "consecutive_nights": 2, "baseline_days": 28, "min_baseline_nights": 7, "in_day_status": false, "unit": "atım/dk" },
-      "applies_to": "Google Health'in günlük dinlenik nabzı; en yeni gece bugün ya da dün olmalı, iki gece ardışık takvim günleri",
-      "sources": ["alavi-2022", "schwellnus-2022a", "schwellnus-2016"],
-      "notes": "Sayılar alavi-2022'nin ileriye dönük denenmiş gece nabzı kuralından (NightSignal kırmızı uyarı: iki gece üst üste medyanın en az 4 atım/dk üstü; medyan 7 geceden sonra kararlı). COVID-19'da duyarlılık yaklaşık %80, özgüllük %87,7 (alarm günü başına); stres, alkol, seyahat ve aşıda da uyarı çıkıyor, yanlış alarm sık. Makalede taban o geceye kadarki bütün gecelerin medyanı ve ölçü gece ham nabız ortalaması; HoopLab Google Health'in günlük dinlenik nabzını ve önceki 28 günün medyanını kullanır (aktarım ve uyarlama, tahmin). Sporcuya ya da basketbola özgü doğrulanmış eşik yok. IOC uzlaşısında istirahatte hızlı nabız sistemik hastalık belirtileri arasında (schwellnus-2022a); erken işaretler aşırı yüklenmeyi de gösterebilir (schwellnus-2016). CLAUDE.md §3 tıbbi sınır: tanı yok, yönlendirme var."
+      "applies_to": "Google Health'in NREM uyku nabzı (toparlanma.json → nabiz-olcu, karar 0041); en yeni gece bugün ya da dün olmalı, iki gece ardışık takvim günleri",
+      "sources": ["alavi-2022", "schwellnus-2022a", "schwellnus-2016", "nuuttila-2022"],
+      "notes": "Sayılar alavi-2022'nin ileriye dönük denenmiş gece nabzı kuralından (NightSignal kırmızı uyarı: iki gece üst üste medyanın en az 4 atım/dk üstü; medyan 7 geceden sonra kararlı). COVID-19'da duyarlılık yaklaşık %80, özgüllük %87,7 (alarm günü başına); stres, alkol, seyahat ve aşıda da uyarı çıkıyor, yanlış alarm sık. Makalede taban o geceye kadarki bütün gecelerin medyanı ve ölçü gece ham nabız ortalaması; HoopLab Google Health'in NREM uyku nabzını (bir gece ölçüsü; 2026-10-14'e kadar bütün gün verisinden hesaplanan günlük dinlenik nabız kullanılıyordu, karar 0041) ve önceki 28 günün medyanını kullanır (aktarım ve uyarlama, tahmin). Sporcuya ya da basketbola özgü doğrulanmış eşik yok. IOC uzlaşısında istirahatte hızlı nabız sistemik hastalık belirtileri arasında (schwellnus-2022a); erken işaretler aşırı yüklenmeyi de gösterebilir (schwellnus-2016). CLAUDE.md §3 tıbbi sınır: tanı yok, yönlendirme var."
     },
     {
       "id": "gece-spo2-dusuk",

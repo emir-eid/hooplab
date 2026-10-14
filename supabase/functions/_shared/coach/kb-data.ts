@@ -48,6 +48,21 @@ export const kbSources: readonly KbSource[] = [
     "summary": "## Ne söylüyor (kendi cümlelerimizle)\n\n- Gece dinlenik nabzını (gece yarısından sabaha, adım atılmayan dakikalar) kişinin kendi geçmişinin medyanıyla kıyaslayan basit bir uyarı kuralı (NightSignal) ileriye dönük olarak denendi.\n- Kırmızı uyarı: iki gece üst üste gece nabzı medyanın en az 4 atım/dk üstünde. 3 atım/dk'lık bir ara düzey de var; yazarlar bu sayıyı medyanların aylar içindeki olağan oynamasından seçmiş.\n- COVID-19'u yakalama oranı yaklaşık %80, uyarısız gün oranı (özgüllük) %87,7. Sinyal belirtilerden ortalama 3 gün önce görüldü.\n- Uyarılar yalnız enfeksiyonda değil, stres, alkol, seyahat, aşı ve tatil dönemlerinde de çıktı. Yedi gece sonra kişisel medyan çoğu kişide kararlı hale geliyor.\n\n## Uygulamada kullanılan sayılar\n\n| Değer | Birim | Bağlam / koşul |\n|---|---|---|\n| Medyanın en az 4 üstü, iki gece üst üste | atım/dk | Gece nabzı notu (tanı değil) |\n| 7 gece | gece | Kişisel medyan için en az gece sayısı |\n\n## Sınırlılıklar\n\n- Doğrulama yalnız COVID-19'a karşı; diğer hastalıklar için temiz bir referans yok. Özgüllük alarm günü başına; COVID olmayanlarda üç haftada ortalama bir gün uyarı var (yanlış alarm sık).\n- Popülasyon sporcu değil; ağır antrenman, geç maç ve seyahat sporcuda daha çok yanlış alarm üretebilir.\n- Makaledeki ölçü cihazın ham nabzından hesaplanan gece ortalaması; HoopLab'in aldığı Google Health günlük dinlenik nabzı aynı ölçü değil (aktarım varsayım). Makalede taban o geceye kadarki bütün gecelerin medyanı; HoopLab önceki 28 günün medyanını alır (uyarlama).\n- Kıdemli yazarın şirket ortaklıkları var (cihaz üreticisi değil); kod açık."
   },
   {
+    "id": "altini-2021",
+    "title": "What Is behind Changes in Resting Heart Rate and Heart Rate Variability? A Large-Scale Analysis of Longitudinal Measurements Acquired in Free-Living",
+    "authors": [
+      "Altini M",
+      "Plews D"
+    ],
+    "year": 2021,
+    "type": "cohort",
+    "doi": "10.3390/s21237932",
+    "pmid": "34883936",
+    "journal": "Sensors",
+    "population": "Bir HRV uygulamasının 28.175 kullanıcısı; 5 yılda yaklaşık 9 milyon sabah ölçümü (genel ve sporcu kullanıcılar karışık)",
+    "summary": "## Ne söylüyor (kendi cümlelerimizle)\n\n- Antrenmandan sonraki sabah HRV yaklaşık %4,6, nabız yalnız yaklaşık %1,3 değişti (ikisi de küçük etki); HRV antrenman stresine nabızdan daha duyarlı.\n- Yoğun alkol ve hastalık nabzı yaklaşık %6 yükseltti, HRV'yi %10-12 düşürdü (büyük-orta etki).\n- HRV strese duyarlı ama özgül değil: düşüş antrenmandan, alkolden, hastalıktan ya da döngüden gelebilir.\n\n## Uygulamada kullanılan sayılar\n\n| Değer | Birim | Bağlam / koşul |\n|---|---|---|\n| Antrenman sonrası nabız değişimi küçük, alkol ve hastalıkta büyük | ilke | Nabız tek başına durumu değiştirmez, bilgi notu olur; gece işaretleri (0039) hastalık yönünü ayrıca izler (karar 0041) |\n\n## Sınırlılıklar\n\n- Ölçüm sabah uyanınca telefon kamerasıyla kısa kayıt; gece bileklik ölçümü değil. Stres olayları kullanıcının kendi etiketi.\n- Birinci yazar HRV4Training uygulamasının geliştiricisi (çıkar çatışması makalede belirtilmiş).\n- Yalnız özet okundu (tam metin açık: PMC8659706)."
+  },
+  {
     "id": "amoutzopoulos-2020",
     "title": "Portion size estimation in dietary assessment: a systematic review of existing tools, their strengths and limitations",
     "authors": [
@@ -160,6 +175,23 @@ export const kbSources: readonly KbSource[] = [
     "journal": "Sports Medicine",
     "population": "Dayanıklılık sporcuları; 27 çalışma derlemede, 24'ü meta-analizde",
     "summary": "## Ne söylüyor (kendi cümlelerimizle)\n\n- Performansı artıran antrenman dönemlerinde dinlenik vagal HRV (rMSSD) küçük ölçüde arttı.\n- Aşırı yüklenme (performansın düştüğü dönem) dinlenik HRV'yi pek değiştirmedi; egzersiz sonrası HRV ve nabız toparlanması ise hem olumlu uyumda hem aşırı yüklenmede arttı.\n- Sonuç: HRV tek başına olumlu ve olumsuz uyumu ayırt etmeye yetmeyebilir; ek göstergeler gerekir.\n\n## Uygulamada kullanılan sayılar\n\n| Değer | Birim | Bağlam / koşul |\n|---|---|---|\n| HRV tek başına karar vermez | ilke | Günün durumu HRV, dinlenik nabız ve uykuyla birlikte okunur; arayüz \"teşhis\" değil \"izleme\" dili kullanır |\n\n## Sınırlılıklar\n\n- Dayanıklılık sporcuları; ölçüm protokolleri farklı. Basketbol yok.\n- Yalnız özet okundu."
+  },
+  {
+    "id": "bosquet-2008",
+    "title": "Is heart rate a convenient tool to monitor over-reaching? A systematic review of the literature",
+    "authors": [
+      "Bosquet L",
+      "Merkari S",
+      "Arvisais D",
+      "Aubert AE"
+    ],
+    "year": 2008,
+    "type": "meta-analysis",
+    "doi": "10.1136/bjsm.2007.042200",
+    "pmid": "18308872",
+    "journal": "British Journal of Sports Medicine",
+    "population": "Yarışmacı sporcular; antrenman yükünün artırıldığı çalışmalar (kısa süreli ≤ 2 hafta ve uzun süreli müdahaleler ayrı)",
+    "summary": "## Ne söylüyor (kendi cümlelerimizle)\n\n- Kısa süreli yüklenmede dinlenik nabız orta düzeyde arttı; uzun süreli yüklenmede dinlenik değerler değişmedi, egzersiz nabzı biraz düştü.\n- Değişimler küçük-orta büyüklükte; sporcunun günden güne oynaması içinde kalabiliyor, bu yüzden tek başına pratik bir aşırı yüklenme göstergesi değil.\n- Nabız ve HRV değişimi ancak başka işaret ve belirtilerle birlikte yorumlanınca anlam kazanıyor.\n\n## Uygulamada kullanılan sayılar\n\n| Değer | Birim | Bağlam / koşul |\n|---|---|---|\n| Nabız tek başına durumu değiştirmez | ilke | Günün durumunda nabız yalnız HRV de bandın altındayken \"Toparlan\"a katkı verir; tek başına bilgi notu (karar 0041) |\n\n## Sınırlılıklar\n\n- Çalışmalar 2008 öncesi, çoğu sabah ya da yatarak kısa kayıt; gece bileklik ölçümü yok. Basketbola özgü veri yok.\n- Yalnız özet okundu (tam metin ücretli)."
   },
   {
     "id": "bourdon-2017",
@@ -1319,6 +1351,23 @@ export const kbSources: readonly KbSource[] = [
     "summary": "## Ne söylüyor (kendi cümlelerimizle)\n\n- Solunum hızı temel bir yaşamsal bulgu; hastalıkların yanı sıra duygusal stres, bilişsel yük, sıcak, soğuk, fiziksel efor ve egzersize bağlı yorgunluk gibi pek çok etkene duyarlı.\n- Bu etkenlere duyarlılığı diğer yaşamsal bulguların çoğundan yüksek, ama sporda hala rutin izlenmiyor.\n- Derleme, sporda ve sağlıkta solunum izlemenin amaçlarını ve uygun ölçüm yöntemlerini topluyor.\n\n## Uygulamada kullanılan sayılar\n\nDoğrudan sayı alınmadı. Kaynak, solunumdaki bir artışın tek bir nedene (ör. hastalık) bağlanamayacağının dayanağı: not, olası nedenleri sayar ve tanı koymaz.\n\n## Sınırlılıklar\n\n- Anlatı derlemesi (kanıt düzeyi 4); sistematik bir tarama değil.\n- Gece bileklik ölçümüne özgü değil; çoğunlukla egzersiz sırasındaki solunumu ele alıyor.\n- Yalnız özet okundu."
   },
   {
+    "id": "nuuttila-2022",
+    "title": "Reliability and Sensitivity of Nocturnal Heart Rate and Heart-Rate Variability in Monitoring Individual Responses to Training Load",
+    "authors": [
+      "Nuuttila OP",
+      "Seipäjärvi S",
+      "Kyröläinen H",
+      "Nummela A"
+    ],
+    "year": 2022,
+    "type": "cohort",
+    "doi": "10.1123/ijspp.2022-0145",
+    "pmid": "35894977",
+    "journal": "International Journal of Sports Physiology and Performance",
+    "population": "Rekreasyonel koşucular; iki özdeş hafif seans sonrası geceler (n=15) ve 3000 m testi öncesi / sonrası geceler (n=23)",
+    "summary": "## Ne söylüyor (kendi cümlelerimizle)\n\n- Gece nabzı ve HRV'si (ln RMSSD) iki benzer gece arasında çok tutarlı çıktı; nabızda tutarlılık HRV'den bile biraz yüksekti.\n- Maksimal bir koşu testinden sonraki gece nabız yükseldi, HRV düştü; değişim bütün gecede ve uykunun ilk dört saatinde görüldü, sabaha doğru tahmin edilen değerde görülmedi.\n- Değişim uykunun ilk saatlerinde en belirgindi: gece ölçümü yüklenmeye en duyarlı kesitlerden biri.\n\n## Uygulamada kullanılan sayılar\n\n| Değer | Birim | Bağlam / koşul |\n|---|---|---|\n| Nabız ölçüsü uyku sırasında ölçülen nabız | ilke | Google Health'in NREM nabzı (`nrem_hr_bpm`), HRV ile aynı gece; Google'ın bütün gün verisinden hesaplanan günlük dinlenik nabzı yerine (karar 0041) |\n\n## Sınırlılıklar\n\n- Rekreasyonel koşucular, küçük örneklem; ölçüm göğüs bandıyla. Google'ın NREM nabzı uyku evresine göre hesaplanmış bir ortalama; çalışmadaki 4 saatlik ve bütün gece kesitleriyle aynı ölçü değil (aktarım varsayım).\n- Yalnız özet okundu (tam metin ücretli)."
+  },
+  {
     "id": "odriscoll-2017",
     "title": "British Thoracic Society Guideline for oxygen use in adults in healthcare and emergency settings",
     "authors": [
@@ -1465,6 +1514,24 @@ export const kbSources: readonly KbSource[] = [
     "journal": "BMJ Open",
     "population": "Lihtenştayn'da 1.163 yetişkin (ortalama yaş 44); 66 laboratuvarla doğrulanmış COVID-19 vakası; geceleri bileğe takılan sensör bileklik (Ava)",
     "summary": "## Ne söylüyor (kendi cümlelerimizle)\n\n- Bilek cilt sıcaklığı enfeksiyonun kuluçka, belirti öncesi ve belirtili dönemlerinde kişinin kendi başlangıç düzeyine göre adım adım yükseldi; belirtili dönemde ortalama artış yaklaşık 0,3 °C.\n- İyileşme döneminde de yaklaşık 0,2 °C yüksek kaldı.\n- Çok sinyalli bir model vakaların yaklaşık üçte ikisini belirtilerden önce yakaladı ama özgüllüğü düşüktü.\n\n## Uygulamada kullanılan sayılar\n\n| Değer | Birim | Bağlam / koşul |\n|---|---|---|\n| +0,3 | °C | Cilt sıcaklığı notu: gece değeri cihazın kişisel tabanının en az bu kadar üstünde, iki gece üst üste (tahmin) |\n\n## Sınırlılıklar\n\n- 0,3 °C grup düzeyinde ortalama bir etki, doğrulanmış bir uyarı eşiği değil; tek gece için duyarlılık ve özgüllük verilmedi. İyileşmede de yüksek kalması ve geceden geceye oynama yanlış alarm üretebilir.\n- Ara analiz, tek merkez, küçük COVID alt örneklemi. Yazarlardan bazıları cihaz üreticisinin çalışanı.\n- Ölçüm yeri Fitbit'le aynı (bilek), ama cihaz ve algoritma farklı."
+  },
+  {
+    "id": "roete-2021",
+    "title": "A Systematic Review on Markers of Functional Overreaching in Endurance Athletes",
+    "authors": [
+      "Roete AJ",
+      "Elferink-Gemser MT",
+      "Otter RTA",
+      "Stoter IK",
+      "Lamberts RP"
+    ],
+    "year": 2021,
+    "type": "systematic-review",
+    "doi": "10.1123/ijspp.2021-0024",
+    "pmid": "34108275",
+    "journal": "International Journal of Sports Physiology and Performance",
+    "population": "Antrenmanlı-profesyonel dayanıklılık sporcuları; 380 makaleden 12 çalışma",
+    "summary": "## Ne söylüyor (kendi cümlelerimizle)\n\n- İşlevsel aşırı yüklenmeyi gösterebilen ölçümler: güç çıktısı, egzersiz sırasındaki (maksimal ve submaksimal) nabız ve nabız toparlanması, algılanan zorluk ve bazı anketler.\n- Maksimal oksijen tüketimi ve HRV parametreleri bu durumu yansıtmadı. Dinlenik nabız geçerli göstergeler arasında yer almıyor.\n- Ruh hali anketi (POMS) aşırı yüklenmeyi akut yorgunluktan ayıramadı.\n\n## Uygulamada kullanılan sayılar\n\n| Değer | Birim | Bağlam / koşul |\n|---|---|---|\n| Dinlenik ölçümler tek başına aşırı yüklenmeyi göstermez | ilke | Günün durumu bir izleme özeti; nabız tek başına durumu değiştirmez (karar 0041) |\n\n## Sınırlılıklar\n\n- Dayanıklılık sporcuları, küçük çalışma sayısı; takım sporu yok. Egzersiz içi ölçümler HoopLab'de standart bir testle alınmıyor.\n- Yalnız özet okundu."
   },
   {
     "id": "saw-2016",
@@ -2146,7 +2213,7 @@ export const kbRules: readonly KbRule[] = [
   {
     "id": "gece-nabzi-yuksek",
     "module": "hastalik-isaretleri",
-    "description": "Son iki gecenin dinlenik nabzı, o gecelerden önceki 28 günün kişisel medyanının en az 4 atım/dk üstündeyse not düşer. Tanı değil: olası nedenler (hastalık başlangıcı, ağır yük, stres, alkol, seyahat, aşı) sayılır, belirti varsa doktora yönlendirilir. Günün durumuna girmez.",
+    "description": "Son iki gecenin uyku nabzı, o gecelerden önceki 28 günün kişisel medyanının en az 4 atım/dk üstündeyse not düşer. Tanı değil: olası nedenler (hastalık başlangıcı, ağır yük, stres, alkol, seyahat, aşı) sayılır, belirti varsa doktora yönlendirilir. Günün durumuna girmez.",
     "value": {
       "above_baseline_median": 4,
       "consecutive_nights": 2,
@@ -2155,12 +2222,13 @@ export const kbRules: readonly KbRule[] = [
       "in_day_status": false,
       "unit": "atım/dk"
     },
-    "appliesTo": "Google Health'in günlük dinlenik nabzı; en yeni gece bugün ya da dün olmalı, iki gece ardışık takvim günleri",
-    "notes": "Sayılar alavi-2022'nin ileriye dönük denenmiş gece nabzı kuralından (NightSignal kırmızı uyarı: iki gece üst üste medyanın en az 4 atım/dk üstü; medyan 7 geceden sonra kararlı). COVID-19'da duyarlılık yaklaşık %80, özgüllük %87,7 (alarm günü başına); stres, alkol, seyahat ve aşıda da uyarı çıkıyor, yanlış alarm sık. Makalede taban o geceye kadarki bütün gecelerin medyanı ve ölçü gece ham nabız ortalaması; HoopLab Google Health'in günlük dinlenik nabzını ve önceki 28 günün medyanını kullanır (aktarım ve uyarlama, tahmin). Sporcuya ya da basketbola özgü doğrulanmış eşik yok. IOC uzlaşısında istirahatte hızlı nabız sistemik hastalık belirtileri arasında (schwellnus-2022a); erken işaretler aşırı yüklenmeyi de gösterebilir (schwellnus-2016). CLAUDE.md §3 tıbbi sınır: tanı yok, yönlendirme var.",
+    "appliesTo": "Google Health'in NREM uyku nabzı (toparlanma.json → nabiz-olcu, karar 0041); en yeni gece bugün ya da dün olmalı, iki gece ardışık takvim günleri",
+    "notes": "Sayılar alavi-2022'nin ileriye dönük denenmiş gece nabzı kuralından (NightSignal kırmızı uyarı: iki gece üst üste medyanın en az 4 atım/dk üstü; medyan 7 geceden sonra kararlı). COVID-19'da duyarlılık yaklaşık %80, özgüllük %87,7 (alarm günü başına); stres, alkol, seyahat ve aşıda da uyarı çıkıyor, yanlış alarm sık. Makalede taban o geceye kadarki bütün gecelerin medyanı ve ölçü gece ham nabız ortalaması; HoopLab Google Health'in NREM uyku nabzını (bir gece ölçüsü; 2026-10-14'e kadar bütün gün verisinden hesaplanan günlük dinlenik nabız kullanılıyordu, karar 0041) ve önceki 28 günün medyanını kullanır (aktarım ve uyarlama, tahmin). Sporcuya ya da basketbola özgü doğrulanmış eşik yok. IOC uzlaşısında istirahatte hızlı nabız sistemik hastalık belirtileri arasında (schwellnus-2022a); erken işaretler aşırı yüklenmeyi de gösterebilir (schwellnus-2016). CLAUDE.md §3 tıbbi sınır: tanı yok, yönlendirme var.",
     "sources": [
       "alavi-2022",
       "schwellnus-2022a",
-      "schwellnus-2016"
+      "schwellnus-2016",
+      "nuuttila-2022"
     ]
   },
   {
@@ -2189,7 +2257,7 @@ export const kbRules: readonly KbRule[] = [
   {
     "id": "gunun-durumu",
     "module": "toparlanma",
-    "description": "Günün durumu: HRV bandın altında ve dinlenik nabız bandın üstündeyse 'Toparlan'; HRV bandın dışında (iki yönde), dinlenik nabız bandın üstünde veya uyku kısaysa 'Kontrollü'; hiçbiri yoksa 'Hazır'. HRV bandı yoksa durum üretilmez.",
+    "description": "Günün durumu: HRV bandın altında ve uyku nabzı bandın üstündeyse 'Toparlan'; HRV bandın dışında (iki yönde) veya uyku kısaysa 'Kontrollü'; hiçbiri yoksa 'Hazır'. Uyku nabzı tek başına durumu değiştirmez; bandın üstündeyse bilgi notu düşer. HRV bandı yoksa durum üretilmez.",
     "value": {
       "requires": [
         "hrv"
@@ -2201,17 +2269,22 @@ export const kbRules: readonly KbRule[] = [
       "caution_when_any": [
         "hrv_low",
         "hrv_high",
-        "rhr_high",
         "sleep_short"
+      ],
+      "note_only": [
+        "rhr_high"
       ]
     },
     "appliesTo": "Bugün ekranındaki 'Bugünün durumu'; tanı değil, izleme özeti",
-    "notes": "Test edilmiş karar kuralı yalnız HRV'dir: bant içinde planlanan yoğunluk, bant dışında (iki yönde) düşük yoğunluk (vesterinen-2016). HRV tek başına uyumu ayırt etmeyebilir (bellenger-2016) ve HRV düşüşü nabızla birlikte okunur (plews-2013, buchheit-2014); bu yüzden en ağır durum iki otonom işaret aynı yönü gösterdiğinde. Uyku kısalığı (walsh-2021) yalnız 'Kontrollü'ye katkı verir. Bu birleşim HoopLab'in sentezidir, doğrulanmış bir hazır olma skoru değildir (karar 0021).",
+    "notes": "Test edilmiş karar kuralı yalnız HRV'dir: bant içinde planlanan yoğunluk, bant dışında (iki yönde) düşük yoğunluk (vesterinen-2016). HRV tek başına uyumu ayırt etmeyebilir (bellenger-2016) ve HRV düşüşü nabızla birlikte okunur (plews-2013, buchheit-2014); bu yüzden en ağır durum iki otonom işaret aynı yönü gösterdiğinde. Nabız tek başına zayıf bir yorgunluk göstergesi: yüklenmedeki değişimi küçük ve günlük oynama içinde (bosquet-2008), dinlenik ölçümler işlevsel aşırı yüklenmeyi yansıtmadı (roete-2021), antrenmandan sonraki değişimi HRV'ninkinin yaklaşık üçte biri, asıl alkol ve hastalıkta yükseliyor (altini-2021). Bu yüzden tek başına yalnız not (karar 0041; 0021'de tek başına 'Kontrollü'ydü); hastalık yönü gece işaretlerinde ayrıca izlenir (hastalik-isaretleri.json). Uyku kısalığı (walsh-2021) yalnız 'Kontrollü'ye katkı verir. İşaretin kod adı rhr_high korunur; ölçü uyku nabzıdır (nabiz-olcu). Bu birleşim HoopLab'in sentezidir, doğrulanmış bir hazır olma skoru değildir (karar 0021, 0041).",
     "sources": [
       "vesterinen-2016",
       "plews-2013",
       "buchheit-2014",
       "bellenger-2016",
+      "bosquet-2008",
+      "roete-2021",
+      "altini-2021",
       "walsh-2021"
     ]
   },
@@ -2326,6 +2399,21 @@ export const kbRules: readonly KbRule[] = [
       "sawka-2007",
       "osterberg-2009",
       "doeven-2018"
+    ]
+  },
+  {
+    "id": "nabiz-olcu",
+    "module": "toparlanma",
+    "description": "İzlenen nabız değeri: HRV ile aynı gecenin uyku nabzı (NREM uykudaki ortalama nabız, atım/dk). Google'ın bütün gün verisinden hesaplanan günlük dinlenik nabzı saklanır ama günün durumunda ve gece işaretlerinde kullanılmaz.",
+    "value": {
+      "metric": "nrem_hr",
+      "unit": "atım/dk"
+    },
+    "appliesTo": "Google Health günlük HRV özeti (health_daily.nrem_hr_bpm)",
+    "notes": "Gece nabzı geceden geceye çok tutarlı ve yüklenmeye duyarlı (nuuttila-2022, ICC 0,97-0,98; değişim uykunun ilk saatlerinde ve bütün gecede). Google'ın günlük dinlenik nabzı discovery belgesine göre bütün gün nabız ölçümlerinden hesaplanıyor, yöntemi belgelenmemiş; HoopLab verisinde yumuşatılmış ve cihaz takıldıktan sonra tırmanan bir seri gibi davrandı (günden güne oynaması NREM nabzının yaklaşık yarısı; LESSONS, karar 0041). NREM nabzı uyku evresine göre hesaplanmış ortalama; çalışmalardaki gece kesitleriyle aynı ölçü değil (aktarım varsayım). Ekranda 'Uyku nabzı'.",
+    "sources": [
+      "nuuttila-2022",
+      "buchheit-2014"
     ]
   },
   {
@@ -2557,11 +2645,11 @@ export const kbRules: readonly KbRule[] = [
       "sd_multiplier": 0.5,
       "metrics": [
         "hrv",
-        "resting_hr"
+        "sleep_hr"
       ]
     },
-    "appliesTo": "HRV (ln) ve dinlenik nabız (atım/dk); her gün yeniden hesaplanır",
-    "notes": "Çalışmalar 7 günlük ortalamayı 3-4 haftalık sabit bir başlangıç döneminden hesaplanan ortalama ± 0,5 SD ile karşıladı ve referansı dönem ortasında güncelledi (manresa-rocamora-2021). Sürekli kullanımda referans her gün kayar; 7 günlük pencereyle çakışmaz, böylece bu haftaki düşüş bandı aşağı çekmez. SD örneklem SD'si (n − 1). Dinlenik nabıza aynı yöntem uygulanır: anlamlı değişim kişisel günden güne oynamanın kesri (buchheit-2014). Kaynaklar dayanıklılık sporcularından; basketbola aktarım bir varsayımdır.",
+    "appliesTo": "HRV (ln) ve uyku nabzı (atım/dk, nabiz-olcu); her gün yeniden hesaplanır",
+    "notes": "Çalışmalar 7 günlük ortalamayı 3-4 haftalık sabit bir başlangıç döneminden hesaplanan ortalama ± 0,5 SD ile karşıladı ve referansı dönem ortasında güncelledi (manresa-rocamora-2021). Sürekli kullanımda referans her gün kayar; 7 günlük pencereyle çakışmaz, böylece bu haftaki düşüş bandı aşağı çekmez. SD örneklem SD'si (n − 1). Uyku nabzına aynı yöntem uygulanır: anlamlı değişim kişisel günden güne oynamanın kesri (buchheit-2014). Kaynaklar dayanıklılık sporcularından; basketbola aktarım bir varsayımdır.",
     "sources": [
       "manresa-rocamora-2021",
       "vesterinen-2016",
@@ -2577,8 +2665,8 @@ export const kbRules: readonly KbRule[] = [
       "rolling_min_values": 3,
       "baseline_min_values": 12
     },
-    "appliesTo": "HRV, dinlenik nabız ve 7 gecelik uyku ortalaması",
-    "notes": "plews-2014 haftalık HRV ortalaması için en az 3 geçerli ölçüm öneriyor; başlangıç penceresi için haftada 3 × 4 hafta. Aynı alt sınır dinlenik nabız ve uyku ortalamasına da uygulanır (doğrudan kaynak yok; tutarlılık için).",
+    "appliesTo": "HRV, uyku nabzı ve 7 gecelik uyku ortalaması",
+    "notes": "plews-2014 haftalık HRV ortalaması için en az 3 geçerli ölçüm öneriyor; başlangıç penceresi için haftada 3 × 4 hafta. Aynı alt sınır uyku nabzı ve uyku ortalamasına da uygulanır (doğrudan kaynak yok; tutarlılık için).",
     "sources": [
       "plews-2014"
     ]

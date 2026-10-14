@@ -106,7 +106,7 @@ export const currentRecoveryNote = 'Haftanın ortalaması ve bant kıyası hafta
 
 export const nightKindLabels: Record<NightNoteKind, string> = {
   respiration: 'Solunum',
-  rhr: 'Dinlenik nabız',
+  rhr: 'Uyku nabzı',
   spo2: 'SpO2',
   skinTemp: 'Cilt sıcaklığı',
 };

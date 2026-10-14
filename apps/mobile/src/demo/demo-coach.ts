@@ -23,7 +23,7 @@ function sentence(text: string, numbers: string[], sources: string[] = []): Audi
 const statusReason: Record<DemoScenario, string> = {
   green: 'ortalamaların kişisel bandının dışına çıkmadı',
   yellow: 'HRV ortalaman bandın altında ve uyku kısa',
-  red: 'HRV ortalaman bandın altında, dinlenik nabzın bandın üstünde',
+  red: 'HRV ortalaman bandın altında, uyku nabzın bandın üstünde',
 };
 
 /** Karbonhidrat hedefi cümlesi (gün tipiyle). */
@@ -111,12 +111,12 @@ export function demoCoachSummary(scenario: DemoScenario, s: CoachSnapshot): Audi
     if (rhr) {
       out.push(
         sentence(
-          `Dinlenik nabız ortalaman ${formatDecimal(rhr.rolling!, 0)} atım/dk, kişisel bandın ${formatDecimal(rhr.band!.low, 0)}–${formatDecimal(rhr.band!.high, 0)} atım/dk.`,
+          `Uyku nabzı ortalaman ${formatDecimal(rhr.rolling!, 0)} atım/dk, kişisel bandın ${formatDecimal(rhr.band!.low, 0)}–${formatDecimal(rhr.band!.high, 0)} atım/dk.`,
           ['rhr'],
         ),
       );
     }
-    out.push(sentence('HRV düşüşü dinlenik nabız artışıyla birlikte geldiğinde tek ölçümden daha anlamlı okunur.', ['status'], ['plews-2013']));
+    out.push(sentence('HRV düşüşü nabız artışıyla birlikte geldiğinde tek ölçümden daha anlamlı okunur.', ['status'], ['plews-2013']));
     if (s.load?.ratio != null && s.load.spike) {
       out.push(sentence(`Bu hafta yükün alıştığın seviyenin belirgin üstünde; oran ${formatDecimal(s.load.ratio)}× ve bu bir tahmin.`, ['load.ratio']));
       out.push(

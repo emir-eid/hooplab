@@ -54,7 +54,7 @@ export interface StatusMetric {
   signals: readonly RecoverySignal[];
 }
 
-/** HRV (ms) ve dinlenik nabız (atım/dk): son 7 günün ortalaması ve kişisel bant (karar 0021). */
+/** HRV (ms) ve uyku nabzı (atım/dk, karar 0041): son 7 günün ortalaması ve kişisel bant (karar 0021). */
 export interface BandMetric {
   rolling: number | null;
   lastNight: number | null;
@@ -201,7 +201,7 @@ export type MetricKey = (typeof metricKeys)[number];
 export const metricRules: Readonly<Record<MetricKey, readonly string[]>> = {
   status: ['gunun-durumu', 'toparlanma-bant', 'toparlanma-veri-yeterliligi'],
   hrv: ['hrv-olcu', 'toparlanma-bant', 'toparlanma-veri-yeterliligi'],
-  rhr: ['toparlanma-bant', 'toparlanma-veri-yeterliligi'],
+  rhr: ['nabiz-olcu', 'toparlanma-bant', 'toparlanma-veri-yeterliligi'],
   sleep: ['uyku-kisa'],
   respiration: ['solunum-bant', 'solunum-tek-gece', 'toparlanma-veri-yeterliligi'],
   signs: ['gece-nabzi-yuksek', 'gece-spo2-dusuk', 'cilt-sicakligi-yuksek', 'hastalik-isareti-yonlendirme'],

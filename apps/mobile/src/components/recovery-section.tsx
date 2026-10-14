@@ -298,7 +298,7 @@ export function NightData({ view }: { view: RecoveryView }) {
 
       <View style={styles.grid}>
         <Tile
-          label="Dinlenik nabız"
+          label="Uyku nabzı"
           explain="rhr"
           value={rhr.rolling === null ? dash : String(Math.round(rhr.rolling))}
           unit="atım/dk"

@@ -5,7 +5,7 @@ import { test } from 'node:test';
 
 import { addIsoDays } from '@hooplab/engine';
 
-import { bandNote, formatDecimal, formatSleep, matchDayAdvice, statusAdvice, statusChips, statusReason } from '../copy/recovery.ts';
+import { bandNote, formatDecimal, formatSleep, matchDayAdvice, statusAdvice, statusChips, statusReason, rhrAloneNote } from '../copy/recovery.ts';
 import { buildRecoveryView, chartDays, chartIndexAt, nightlySleep, recoveryFrom, type HealthDailyRow, type SleepRow } from './recovery-view.ts';
 
 const today = '2026-10-31';
@@ -15,7 +15,7 @@ function daily(recentHrv: number, recentRhr: number): HealthDailyRow[] {
   return Array.from({ length: 35 }, (_, i) => ({
     local_date: addIsoDays(today, -i),
     hrv_deep_rmssd_ms: i < 7 ? recentHrv : i % 2 === 0 ? 50 : 70,
-    resting_hr_bpm: i < 7 ? recentRhr : i % 2 === 0 ? 48 : 52,
+    nrem_hr_bpm: i < 7 ? recentRhr : i % 2 === 0 ? 48 : 52,
     respiratory_rate_bpm: i === 0 ? 14.63 : 15,
     spo2_avg_pct: 96,
     skin_temp_nightly_c: 33.4,
@@ -43,7 +43,7 @@ test('şekerleme sayılmaz, bölünmüş gece toplanır', () => {
 test('her şey bandında, uyku yeterli → Hazır', () => {
   const v = buildRecoveryView(daily(59, 50), nights(460), today);
   assert.equal(v.status.level, 'ready');
-  assert.equal(statusReason(v), 'HRV ve dinlenik nabız kendi bandında, uyku yeterli.');
+  assert.equal(statusReason(v), 'HRV ve uyku nabzı kendi bandında, uyku yeterli.');
   assert.deepEqual(statusChips(v), ['HRV bandında', 'Uyku yeterli']);
   assert.equal(statusAdvice(v), 'Planlanan antrenmanı yapabilirsin.');
   assert.deepEqual(v.respiration.latest, { date: today, value: 14.63 });
@@ -53,8 +53,17 @@ test('her şey bandında, uyku yeterli → Hazır', () => {
 test('HRV düşük ve nabız yüksek → Toparlan', () => {
   const v = buildRecoveryView(daily(35, 60), nights(460), today);
   assert.equal(v.status.level, 'recover');
-  assert.equal(statusReason(v), "HRV'nin 7 günlük ortalaması bandının altında ve dinlenik nabız bandının üstünde.");
-  assert.deepEqual(statusChips(v), ['HRV düşük', 'Nabız yüksek']);
+  assert.equal(statusReason(v), "HRV'nin 7 günlük ortalaması bandının altında ve uyku nabzı bandının üstünde.");
+  assert.deepEqual(statusChips(v), ['HRV düşük', 'Uyku nabzı yüksek']);
+});
+
+test('yalnız uyku nabzı yüksek → Hazır, notla (karar 0041)', () => {
+  const v = buildRecoveryView(daily(59, 60), nights(460), today);
+  assert.equal(v.status.level, 'ready');
+  assert.deepEqual(v.status.signals, ['rhr_high']);
+  assert.equal(statusReason(v), `HRV kendi bandında, uyku yeterli. ${rhrAloneNote}`);
+  assert.deepEqual(statusChips(v), ['HRV bandında', 'Uyku yeterli', 'Uyku nabzı yüksek']);
+  assert.equal(statusAdvice(v), 'Planlanan antrenmanı yapabilirsin.');
 });
 
 test('yalnız uyku kısa → Kontrollü, öneride uyku', () => {
@@ -130,7 +139,7 @@ test('grafikte dokunulan yere en yakın gün', () => {
 test('gece işaretleri satırlardan okunur (karar 0039): nabız iki gece medyanın üstünde, cilt sıcaklığı tabanın üstünde', () => {
   const rows = daily(70, 50).map((r, i) => ({
     ...r,
-    resting_hr_bpm: i < 2 ? 57 : 50,
+    nrem_hr_bpm: i < 2 ? 57 : 50,
     skin_temp_nightly_c: i < 2 ? 33.8 : 33.4,
   }));
   const view = buildRecoveryView(rows, nights(480), today);

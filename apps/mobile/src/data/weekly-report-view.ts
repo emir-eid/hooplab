@@ -187,7 +187,7 @@ export function buildWeeklyReportView(rows: WeeklyRows, weekStart: string, today
   // --- Toparlanma ---
   const health = rows.healthDaily.filter((r) => r.local_date <= last);
   const hrvSeries = health.map((r) => ({ date: r.local_date, value: r.hrv_deep_rmssd_ms }));
-  const rhrSeries = health.map((r) => ({ date: r.local_date, value: r.resting_hr_bpm }));
+  const rhrSeries = health.map((r) => ({ date: r.local_date, value: r.nrem_hr_bpm }));
   const respSeries = health.map((r) => ({ date: r.local_date, value: r.respiratory_rate_bpm }));
   const signInputs = {
     rhr: rhrSeries,

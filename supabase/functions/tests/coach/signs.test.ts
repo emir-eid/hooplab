@@ -29,7 +29,7 @@ test('belge: çıkan işaretler kural değerleriyle, tahmin ve tanı değil; ç�
   const block = signsText(withSigns({ rhrHigh: true, spo2Low: true, skinTempHigh: true }))!;
   assert.equal(block.estimate, true);
   assert.match(block.text, /^Gece işaretleri \(tahmin, tanı değil\): /);
-  assert.match(block.text, /son 2 gece dinlenik nabız önceki 28 günün medyanının 4 atım\/dk veya daha fazla üstünde/);
+  assert.match(block.text, /son 2 gece uyku nabzı önceki 28 günün medyanının 4 atım\/dk veya daha fazla üstünde/);
   assert.match(block.text, /son 3 gecenin en az 2'sinde gece SpO2 ortalaması %93,5'in altında ya da kişisel medyanın 3 puan/);
   assert.match(block.text, /son 2 gece cilt sıcaklığı kişisel tabanın 0,3 °C veya daha fazla üstünde/);
   assert.match(block.text, /antrenmana çıkmadan doktora danışılır\. Günün durumuna girmez\.$/);

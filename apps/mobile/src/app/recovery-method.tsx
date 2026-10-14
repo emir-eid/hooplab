@@ -19,8 +19,10 @@ export default function RecoveryMethodScreen() {
       <GroupLabel>Ne izleniyor</GroupLabel>
       <Card>
         <Text variant="bodyCompact">
-          Gece derin uykudaki HRV (RMSSD), dinlenik nabız ve uyku süresi. Bütün gecenin HRV'si uyku evrelerinden
-          etkilendiği için derin uyku değeri izlenir; Fitbit uygulamasındaki sayıdan farklı olabilir.
+          Gece derin uykudaki HRV (RMSSD), aynı gecenin uyku nabzı (REM dışı uykudaki ortalama) ve uyku süresi. Bütün
+          gecenin HRV'si uyku evrelerinden etkilendiği için derin uyku değeri izlenir. Fitbit uygulamasındaki dinlenik nabız
+          bütün gün verisinden hesaplanır ve yöntemi belgelenmemiş; burada kullanılmaz. İki sayı da Fitbit uygulamasındakinden
+          farklı olabilir.
         </Text>
       </Card>
 
@@ -43,11 +45,15 @@ export default function RecoveryMethodScreen() {
 
       <GroupLabel>Günün durumu</GroupLabel>
       <Card>
-        <Text variant="bodyCompact">Toparlan: HRV bandın altında ve dinlenik nabız bandın üstünde.</Text>
+        <Text variant="bodyCompact">Toparlan: HRV bandın altında ve uyku nabzı bandın üstünde.</Text>
         <Text variant="bodyCompact">
-          {`Kontrollü: HRV bandın dışında (iki yönde), dinlenik nabız bandın üstünde ya da son ${shortSleep.rollingNights} gecenin uyku ortalaması ${shortSleep.minHours} saatin altında.`}
+          {`Kontrollü: HRV bandın dışında (iki yönde) ya da son ${shortSleep.rollingNights} gecenin uyku ortalaması ${shortSleep.minHours} saatin altında.`}
         </Text>
         <Text variant="bodyCompact">Hazır: bunların hiçbiri yok.</Text>
+        <Text variant="bodyCompact">
+          Uyku nabzı tek başına bandın üstündeyse durum değişmez, not olarak gösterilir: nabzın yüklenmedeki değişimi küçük
+          ve günlük oynama içinde kalabiliyor; belirgin yükselişi daha çok alkol ya da hastalıkla geliyor.
+        </Text>
       </Card>
       <GroupFooter>
         Çalışmalarda test edilen kural yalnız HRV'dir: bant içinde planlanan yoğunluk, dışında düşük yoğunluk. Nabız ve

@@ -18,7 +18,7 @@ export function illnessSignLine(key: IllnessSignKey, signs: IllnessSigns): strin
     const s = signs.rhr;
     const values = join(s.nights.map((n) => String(Math.round(n.value))));
     const usual = s.baselineMedian === null ? '–' : dec(s.baselineMedian);
-    return `Dinlenik nabız son ${s.nights.length} gece ${values} atım/dk; önceki ${weeks(nightRhrRule.baselineDays)} haftanın medyanı ${usual}. İkisi de ${dec(nightRhrRule.aboveBaselineMedian)} atım/dk veya daha fazla yüksek.`;
+    return `Uyku nabzı son ${s.nights.length} gece ${values} atım/dk; önceki ${weeks(nightRhrRule.baselineDays)} haftanın medyanı ${usual}. İkisi de ${dec(nightRhrRule.aboveBaselineMedian)} atım/dk veya daha fazla yüksek.`;
   }
   if (key === 'spo2') {
     const s = signs.spo2;

@@ -81,6 +81,12 @@ function ruleNumber(kb: Kb, ruleId: string, key: string): number {
   return v;
 }
 
+function ruleStrings(kb: Kb, ruleId: string, key: string): string[] {
+  const v = ruleValue(kb, ruleId, key);
+  if (!Array.isArray(v) || !v.every((x) => typeof x === 'string')) throw new MissingRuleValueError(ruleId, key);
+  return v as string[];
+}
+
 function ruleRange(kb: Kb, ruleId: string, key: string): Range {
   const v = ruleValue(kb, ruleId, key);
   if (!Array.isArray(v) || v.length !== 2 || typeof v[0] !== 'number' || typeof v[1] !== 'number') {
@@ -153,7 +159,7 @@ export const wellnessTitles: Record<WellnessItem, string> = {
 const signalTexts: Record<RecoverySignal, string> = {
   hrv_low: 'HRV bandın altında',
   hrv_high: 'HRV bandın üstünde',
-  rhr_high: 'dinlenik nabız bandın üstünde',
+  rhr_high: 'uyku nabzı bandın üstünde',
   sleep_short: 'uyku kısa',
 };
 const positionTexts = { below: 'altında', within: 'içinde', above: 'üstünde' } as const;
@@ -200,13 +206,18 @@ function blocksFor(snapshot: CoachSnapshot, key: MetricKey, kb: Kb): NumbersBloc
       const s = snapshot.status!;
       const label = `Günün durumu: ${levelLabels[s.level]}.`;
       if (s.level === 'insufficient') return [block(`${label} Kişisel bant için henüz yeterli gece yok.`)];
-      if (s.signals.length === 0) return [block(`${label} Bandın dışında bir işaret yok.`)];
-      return [block(`${label} Nedeni: ${s.signals.map((x) => signalTexts[x]).join(', ')}.`)];
+      // Not işaretleri (uyku nabzı tek başına) durumu değiştirmez; "Toparlan"da HRV ile birlikte nedendir (karar 0041).
+      const noteOnly = new Set(s.level === 'recover' ? [] : ruleStrings(kb, 'gunun-durumu', 'note_only'));
+      const causes = s.signals.filter((x) => !noteOnly.has(x));
+      const notes = s.signals.filter((x) => noteOnly.has(x));
+      let text = causes.length === 0 ? `${label} Bandın dışında bir işaret yok.` : `${label} Nedeni: ${causes.map((x) => signalTexts[x]).join(', ')}.`;
+      if (notes.length > 0) text += ` Not: ${notes.map((x) => signalTexts[x]).join(', ')}; tek başına durumu değiştirmez.`;
+      return [block(text)];
     }
     case 'hrv':
       return [block(bandSentence(snapshot.hrv!, { name: 'HRV (derin uyku, RMSSD)', unit: 'ms', digits: 0, ...band('toparlanma-bant') }))];
     case 'rhr':
-      return [block(bandSentence(snapshot.rhr!, { name: 'Dinlenik nabız', unit: 'atım/dk', digits: 0, ...band('toparlanma-bant') }))];
+      return [block(bandSentence(snapshot.rhr!, { name: 'Uyku nabzı (REM dışı uyku ortalaması)', unit: 'atım/dk', digits: 0, ...band('toparlanma-bant') }))];
     case 'respiration': {
       const r = snapshot.respiration!;
       let text = bandSentence(r, { name: 'Gece solunum hızı', unit: 'nefes/dk', digits: 1, ...band('solunum-bant') });
@@ -232,7 +243,7 @@ function blocksFor(snapshot: CoachSnapshot, key: MetricKey, kb: Kb): NumbersBloc
       const skinRise = ruleNumber(kb, 'cilt-sicakligi-yuksek', 'above_baseline');
       const skinNights = ruleNumber(kb, 'cilt-sicakligi-yuksek', 'consecutive_nights');
       const flagged: string[] = [];
-      if (s.rhrHigh === true) flagged.push(`son ${dec(rhrNights)} gece dinlenik nabız önceki ${dec(rhrDays)} günün medyanının ${dec(rhrRise)} atım/dk veya daha fazla üstünde`);
+      if (s.rhrHigh === true) flagged.push(`son ${dec(rhrNights)} gece uyku nabzı önceki ${dec(rhrDays)} günün medyanının ${dec(rhrRise)} atım/dk veya daha fazla üstünde`);
       if (s.spo2Low === true) {
         flagged.push(`son ${dec(spo2Window)} gecenin en az ${dec(spo2Need)}'sinde gece SpO2 ortalaması %${dec(spo2Floor)}'in altında ya da kişisel medyanın ${dec(spo2Drop)} puan veya daha fazla altında`);
       }

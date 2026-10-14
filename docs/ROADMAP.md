@@ -80,8 +80,8 @@ Her faz, bitiş kriteri karşılanınca `/kapat` ile kapanır: faz özeti `docs/
 ## Faz 4: Son rötuşlar
 
 - [x] Gece işaretleri: dinlenik nabız, SpO2, cilt sıcaklığında kaynaklı "doktora danış" notu (2026-10-13, [0039](decisions/0039-gece-isaretleri.md); 0038'de ertelenen fizyolojik kırmızı bayrak eşikleri)
-- [ ] Günün durumunda nabız: ölçü ve rol (karar 0041)
-- [ ] Okunabilirlik turu: kartlarda bugünkü değer ve kişisel ortalama ayrı sayılarla; her ölçümde sade dilde tek cümlelik açıklama, açıklama sayfalarında "Kısaca" bölümü (kullanıcı isteği 2026-10-14)
+- [x] Günün durumunda nabız: NREM uyku nabzı, yalnız HRV ile birlikte (2026-10-14, [0041](decisions/0041-gunun-durumunda-nabiz.md))
+- [ ] Okunabilirlik turu: kartlarda bugünkü değer ve kişisel ortalama ayrı sayılarla; her ölçümde sade dilde tek cümlelik açıklama, açıklama sayfalarında "Kısaca" bölümü; durumu belirleyen ölçümlerde hedef yön ve kişisel aralık (kullanıcı isteği 2026-10-14)
 - [ ] Yakılan kalori: günlük toplam, seans başına, haftalık raporda; "Tahmin" etiketli, kaynaklı (veri senkronda var; kullanıcı isteği 2026-10-14)
 - [ ] Bildirimler
 - [x] Haftalık rapor: takvim haftası, yalnız motorun sayıları, Trend'den açılır (2026-10-14, [0040](decisions/0040-haftalik-rapor.md)); koç yorumu ve PDF paylaşımı sonra

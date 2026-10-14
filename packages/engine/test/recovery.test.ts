@@ -32,7 +32,7 @@ test('takvim günü ekleme ay ve yıl sınırını geçer', () => {
   assert.equal(recoveryLookbackDays, 34);
 });
 
-test('dinlenik nabız: bant başlangıç penceresinin ortalaması ± 0,5 SD', () => {
+test('uyku nabzı: bant başlangıç penceresinin ortalaması ± 0,5 SD', () => {
   const r = readMetric(withRecent(65), today, { log: false });
   assert.equal(r.rolling, 65);
   assert.equal(r.rollingN, 7);
@@ -137,10 +137,16 @@ test('günün durumu: iki otonom işaret birlikte → toparlan', () => {
 test('günün durumu: tek işaret → kontrollü; HRV iki yönde de sayılır', () => {
   assert.equal(dayStatus(metric('below'), metric('within'), sleep(false)).level, 'caution');
   assert.equal(dayStatus(metric('above'), metric('within'), sleep(false)).level, 'caution');
-  assert.equal(dayStatus(metric('within'), metric('above'), sleep(false)).level, 'caution');
   assert.equal(dayStatus(metric('within'), metric('within'), sleep(true)).level, 'caution');
   // Uyku kısa + HRV düşük kırmızı değildir: kırmızı yalnız iki otonom işaret
   assert.equal(dayStatus(metric('below'), metric('within'), sleep(true)).level, 'caution');
+});
+
+test('günün durumu: uyku nabzı tek başına durumu değiştirmez, işaret olarak kalır (karar 0041)', () => {
+  assert.deepEqual(dayStatus(metric('within'), metric('above'), sleep(false)), { level: 'ready', signals: ['rhr_high'] });
+  // HRV bandın üstündeyken de nabız yalnız not: durum HRV yüzünden kontrollü
+  assert.equal(dayStatus(metric('above'), metric('above'), sleep(false)).level, 'caution');
+  assert.equal(dayStatus(metric('within'), metric('above'), sleep(true)).level, 'caution');
 });
 
 test('günün durumu: işaret yoksa hazır; nabız ve uyku eksikse yok sayılır', () => {

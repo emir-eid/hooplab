@@ -35,14 +35,14 @@ export const sleepRollingLabel = `${shortSleep.rollingNights} gece ort.`;
 const signalChips: Record<RecoverySignal, string> = {
   hrv_low: 'HRV düşük',
   hrv_high: 'HRV yüksek',
-  rhr_high: 'Nabız yüksek',
+  rhr_high: 'Uyku nabzı yüksek',
   sleep_short: 'Uyku kısa',
 };
 
 const signalPhrases: Record<RecoverySignal, string> = {
   hrv_low: `HRV'nin ${recoveryBand.rollingDays} günlük ortalaması bandının altında`,
   hrv_high: `HRV'nin ${recoveryBand.rollingDays} günlük ortalaması bandının üstünde`,
-  rhr_high: 'dinlenik nabız bandının üstünde',
+  rhr_high: 'uyku nabzı bandının üstünde',
   sleep_short: `son ${shortSleep.rollingNights} gecenin uyku ortalaması ${shortSleep.minHours} saatin altında`,
 };
 
@@ -55,6 +55,10 @@ function joinTr(parts: readonly string[]): string {
   if (parts.length <= 1) return parts.join('');
   return `${parts.slice(0, -1).join(', ')} ve ${parts.at(-1)}`;
 }
+
+/** Uyku nabzı bandın üstünde ama HRV bandında: durum değişmez (rules/toparlanma.json → gunun-durumu, karar 0041). */
+export const rhrAloneNote =
+  'Uyku nabzı bandının üstünde; tek başına durumu değiştirmez. Ağır yük, geç maç, alkol, stres ya da başlayan bir hastalıkla yükselebilir.';
 
 export function statusReason(v: RecoveryView): string {
   if (v.empty) return 'Henüz gece verisi yok. Ben → Google Health ile bağlan; ilk senkrondan sonra burada görünür.';
@@ -70,11 +74,13 @@ export function statusReason(v: RecoveryView): string {
   if (level === 'ready') {
     const rhr =
       v.rhr.position === 'within'
-        ? 'HRV ve dinlenik nabız kendi bandında'
+        ? 'HRV ve uyku nabzı kendi bandında'
         : v.rhr.position === 'below'
-          ? 'HRV kendi bandında, dinlenik nabız bandının altında'
+          ? 'HRV kendi bandında, uyku nabzı bandının altında'
           : 'HRV kendi bandında';
-    return `${rhr}${v.sleep.short === false ? ', uyku yeterli.' : '.'}`;
+    const base = `${rhr}${v.sleep.short === false ? ', uyku yeterli.' : '.'}`;
+    // Uyku nabzı tek başına durumu değiştirmez, yalnız not (karar 0041).
+    return signals.includes('rhr_high') ? `${base} ${rhrAloneNote}` : base;
   }
 
   const sentence = `${capitalize(joinTr(signals.map((s) => signalPhrases[s])))}.`;
@@ -108,7 +114,13 @@ export function statusAdvice(v: RecoveryView, matchDay = false): string | null {
 }
 
 export function statusChips(v: RecoveryView): string[] {
-  if (v.status.level === 'ready') return ['HRV bandında', ...(v.sleep.short === false ? ['Uyku yeterli'] : [])];
+  if (v.status.level === 'ready') {
+    return [
+      'HRV bandında',
+      ...(v.sleep.short === false ? ['Uyku yeterli'] : []),
+      ...(v.status.signals.includes('rhr_high') ? [signalChips.rhr_high] : []),
+    ];
+  }
   return v.status.signals.map((s) => signalChips[s]);
 }
 

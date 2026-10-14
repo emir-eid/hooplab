@@ -1,4 +1,4 @@
-// Toparlanma: HRV ve dinlenik nabzın kişisel bandı, 7 gecelik uyku ve günün durumu (rules/toparlanma.json, karar 0021).
+// Toparlanma: HRV ve uyku nabzının kişisel bandı, 7 gecelik uyku ve günün durumu (rules/toparlanma.json, karar 0021, 0041).
 // Tarihler "YYYY-AA-GG" takvim günleri; saat dilimi çağıranın işidir (sporcunun yerel günü, karar 0015).
 // Veri yetersizse sonuç null döner; eksik günler sıfır sayılmaz, uydurma sayı üretilmez.
 
@@ -13,6 +13,9 @@ export const shortSleep = { minHours: 7, rollingNights: 7 } as const;
 
 /** rules/toparlanma.json → hrv-olcu: bant ln üzerinden hesaplanır. */
 export const hrvTransform = 'ln' as const;
+
+/** rules/toparlanma.json → nabiz-olcu: nabız ölçüsü HRV ile aynı gecenin NREM uyku nabzı (karar 0041). */
+export const heartRateMetric = 'nrem_hr' as const;
 
 /** Veri çekmek için gereken en eski gün: başlangıç penceresinin ilk günü. */
 export const recoveryLookbackDays = recoveryBand.rollingDays + recoveryBand.baselineDays - 1;
@@ -163,18 +166,25 @@ export function readSleep(nights: readonly DayValue[], today: string): SleepRead
   };
 }
 
+/** rhr_high: uyku nabzı bandın üstünde (ad karar 0041'den önceki ölçüden kaldı). */
 export type RecoverySignal = 'hrv_low' | 'hrv_high' | 'rhr_high' | 'sleep_short';
 export type DayLevel = 'ready' | 'caution' | 'recover' | 'insufficient';
 
 /** rules/toparlanma.json → gunun-durumu */
 export const dayStatusRule = {
   recoverWhenAll: ['hrv_low', 'rhr_high'],
-  cautionWhenAny: ['hrv_low', 'hrv_high', 'rhr_high', 'sleep_short'],
-} as const satisfies { recoverWhenAll: readonly RecoverySignal[]; cautionWhenAny: readonly RecoverySignal[] };
+  cautionWhenAny: ['hrv_low', 'hrv_high', 'sleep_short'],
+  /** Durumu değiştirmez, yalnız not (karar 0041). */
+  noteOnly: ['rhr_high'],
+} as const satisfies {
+  recoverWhenAll: readonly RecoverySignal[];
+  cautionWhenAny: readonly RecoverySignal[];
+  noteOnly: readonly RecoverySignal[];
+};
 
 export interface DayStatus {
   level: DayLevel;
-  /** Durumu belirleyen işaretler, önem sırasıyla. 'insufficient' iken de uyku işareti gelebilir. */
+  /** Bandın dışındaki işaretler, önem sırasıyla. Not işaretleri (rhr_high tek başına) durumu değiştirmeden burada da yer alır. */
   signals: RecoverySignal[];
 }
 
@@ -187,7 +197,10 @@ export function recoverySignals(hrv: MetricReading, rhr: MetricReading, sleep: S
   return s;
 }
 
-/** HRV bandı yoksa durum üretilmez ('insufficient'); nabız veya uyku eksikse yalnız o işaret yok sayılır. */
+/**
+ * HRV bandı yoksa durum üretilmez ('insufficient'); nabız veya uyku eksikse yalnız o işaret yok sayılır.
+ * Uyku nabzı yalnız HRV de bandın altındayken durumu ağırlaştırır; tek başına not olarak kalır (karar 0041).
+ */
 export function dayStatus(hrv: MetricReading, rhr: MetricReading, sleep: SleepReading): DayStatus {
   const signals = recoverySignals(hrv, rhr, sleep);
   if (hrv.position === null) return { level: 'insufficient', signals };

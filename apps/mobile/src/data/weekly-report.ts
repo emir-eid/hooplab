@@ -39,7 +39,7 @@ export async function fetchWeeklyReport(weekStart: string, today: string): Promi
       first('daily_checkins'),
       supabase
         .from('health_daily')
-        .select('local_date, hrv_deep_rmssd_ms, resting_hr_bpm, respiratory_rate_bpm, spo2_avg_pct, skin_temp_nightly_c, skin_temp_baseline_c')
+        .select('local_date, hrv_deep_rmssd_ms, nrem_hr_bpm, respiratory_rate_bpm, spo2_avg_pct, skin_temp_nightly_c, skin_temp_baseline_c')
         .gte('local_date', r.health)
         .lte('local_date', end),
       supabase.from('sleep_sessions').select('local_date, minutes_asleep, is_nap').gte('local_date', r.health).lte('local_date', end),

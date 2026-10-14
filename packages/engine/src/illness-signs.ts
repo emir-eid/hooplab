@@ -1,4 +1,4 @@
-// Gece işaretleri: dinlenik nabız, SpO2 ve cilt sıcaklığının tanı koymayan notları (rules/hastalik-isaretleri.json,
+// Gece işaretleri: uyku nabzı, SpO2 ve cilt sıcaklığının tanı koymayan notları (rules/hastalik-isaretleri.json,
 // karar 0039). Solunumun tek gece notu (karar 0028) recovery.ts'te. Hiçbiri günün durumuna girmez; not çıkınca uygulama
 // yalnız sabit yönlendirme metni gösterir (CLAUDE.md §3: tanı yok, yönlendirme var).
 // Tarihler "YYYY-AA-GG" takvim günleri. Hesaplanamıyorsa sonuç null; eksik gece sıfır sayılmaz.
@@ -116,7 +116,7 @@ function baselineBefore(byDate: ReadonlyMap<string, number>, firstNight: string,
   return out;
 }
 
-/** Gece dinlenik nabzı (gece-nabzi-yuksek). Taban, değerlendirilen iki geceden önceki 28 günün medyanı. */
+/** Uyku nabzı (gece-nabzi-yuksek; NREM, karar 0041). Taban, değerlendirilen iki geceden önceki 28 günün medyanı. */
 export function readNightRhr(series: readonly DayValue[], today: string): NightRhrSign {
   const byDate = valid(series);
   const last = latestRecent(byDate, today);

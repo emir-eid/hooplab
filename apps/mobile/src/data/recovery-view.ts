@@ -33,10 +33,11 @@ export function chartIndexAt(x: number, width: number, count: number, padX: numb
   return Math.min(count - 1, Math.max(0, Math.round((x - padX) / step)));
 }
 
+/** Nabız: NREM uyku nabzı (rules/toparlanma.json → nabiz-olcu, karar 0041); günlük dinlenik nabız okunmaz. */
 export interface HealthDailyRow {
   local_date: string;
   hrv_deep_rmssd_ms: number | null;
-  resting_hr_bpm: number | null;
+  nrem_hr_bpm: number | null;
   respiratory_rate_bpm: number | null;
   spo2_avg_pct: number | null;
   skin_temp_nightly_c: number | null;
@@ -83,7 +84,7 @@ export function nightlySleep(rows: readonly SleepRow[]): DayValue[] {
 
 export function buildRecoveryView(daily: readonly HealthDailyRow[], sleepRows: readonly SleepRow[], today: string): RecoveryView {
   const hrvSeries = daily.map((r) => ({ date: r.local_date, value: r.hrv_deep_rmssd_ms }));
-  const rhrSeries = daily.map((r) => ({ date: r.local_date, value: r.resting_hr_bpm }));
+  const rhrSeries = daily.map((r) => ({ date: r.local_date, value: r.nrem_hr_bpm }));
 
   const hrv = readMetric(hrvSeries, today, { log: true });
   const rhr = readMetric(rhrSeries, today, { log: false });

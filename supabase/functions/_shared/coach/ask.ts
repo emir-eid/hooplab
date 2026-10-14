@@ -41,7 +41,7 @@ export const askTimeouts = {
 } as const;
 
 export const classifierPrompt = `HoopLab, profesyonel bir basketbolcunun kendi antrenman, toparlanma ve beslenme verisini izlediği bir uygulama. Kullanıcının koça sorduğu soruyu tek bir sınıfa ayır:
-- in_scope: antrenman yükü, toparlanma, uyku, HRV ve dinlenik nabız gibi ölçümlerin anlamı, kas ve tendon yükü, ısınma, maç hazırlığı, beslenme, karbonhidrat ve protein, sıvı ve ter, uygulamadaki değerlerin yorumu.
+- in_scope: antrenman yükü, toparlanma, uyku, HRV, uyku nabzı ve dinlenik nabız gibi ölçümlerin anlamı, kas ve tendon yükü, ısınma, maç hazırlığı, beslenme, karbonhidrat ve protein, sıvı ve ter, uygulamadaki değerlerin yorumu.
 - supplement: takviye, vitamin, mineral hapı, protein tozu, kreatin, kafein hapı, enerji içeceği, performans artırıcı ya da yasaklı madde sorusu.
 - medical_red_flag: bir belirti, ağrı ya da sakatlığın ne olduğu, teşhis, ilaç ya da tedavi sorusu; göğüs ağrısı, çarpıntı, düzensiz nabız veya saatin kalp ritmi uyarısı, bayılma, baş dönmesi, nefes darlığı, ani şişlik, uyuşma, kafa darbesi, ateş.
 - out_of_scope: bunların dışındaki her şey (taktik, oyun kuralları, genel sohbet, başka konular).

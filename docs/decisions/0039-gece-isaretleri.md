@@ -1,6 +1,6 @@
 # 0039. Gece işaretleri: dinlenik nabız, SpO2 ve cilt sıcaklığında kaynaklı, tanı koymayan "doktora danış" notu
 
-- **Durum:** Kabul edildi
+- **Durum:** Kabul edildi; nabız ölçüsü [0041](0041-gunun-durumunda-nabiz.md) ile NREM uyku nabzına geçti (eşikler aynı)
 - **Tarih:** 2026-10-13
 - **İlgili:** [0028](0028-solunum-ve-checkin-kisisel.md) (solunumun tek gece notu, aynı desen), [0032](0032-ai-koc-tasarimi.md) (kırmızı bayrakta kodla yönlendirme), [0038](0038-takviye-ve-doping.md) (bu iş orada ertelenmişti), [0019](0019-google-health-senkronu.md) (veri), CLAUDE.md §3, oturum raporu (2026-10-13)
 

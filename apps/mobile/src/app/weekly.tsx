@@ -395,7 +395,7 @@ function RecoveryBlock({ view }: { view: WeeklyReportView }) {
         ) : null}
         {r.rhr ? (
           <Tile
-            label="Dinlenik nabız"
+            label="Uyku nabzı"
             explain="rhr"
             value={r.rhr.rolling === null ? dash : String(Math.round(r.rhr.rolling))}
             unit="atım/dk"

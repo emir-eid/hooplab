@@ -32,4 +32,4 @@ verified_on: 2026-10-04
 
 ## Bağlı kurallar
 
-- `rules/toparlanma.json` → `hrv-olcu`, `toparlanma-bant`, `gunun-durumu`
+- `rules/toparlanma.json` → `hrv-olcu`, `nabiz-olcu`, `toparlanma-bant`, `gunun-durumu`

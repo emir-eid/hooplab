@@ -160,7 +160,7 @@ export function createDemoDb(scenario: DemoScenario, today: string, now: Date): 
       healthDaily.push({
         local_date: date,
         hrv_deep_rmssd_ms: Math.round(hrv),
-        resting_hr_bpm: clamp(rhr, 38, 70),
+        nrem_hr_bpm: clamp(rhr, 38, 70),
         // Kırmızıda son hafta bandın üstünde ve son gece belirgin yüksek (tek gece notu, karar 0028).
         respiratory_rate_bpm:
           Math.round((14.4 + 0.4 * noise(r) + (recent && scenario === 'red' ? (i === 0 ? 3.6 : 1.2) : 0)) * 10) / 10,

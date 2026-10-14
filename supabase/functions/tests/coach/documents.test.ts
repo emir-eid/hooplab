@@ -129,3 +129,12 @@ test('belgeler: günün sayıları 0. belge, kaynaklar seçim sırasıyla; düze
     assert.deepEqual(doc.citations, { enabled: true });
   });
 });
+
+test('durum: uyku nabzı tek başına neden değil, not; Toparlan\'da HRV ile birlikte neden (karar 0041)', () => {
+  const ready: CoachSnapshot = { ...fullSnapshot(), status: { level: 'ready', signals: ['rhr_high'] } };
+  assert.equal(text(ready, 'status'), 'Günün durumu: Hazır. Bandın dışında bir işaret yok. Not: uyku nabzı bandın üstünde; tek başına durumu değiştirmez.');
+  const caution: CoachSnapshot = { ...fullSnapshot(), status: { level: 'caution', signals: ['hrv_high', 'rhr_high'] } };
+  assert.equal(text(caution, 'status'), 'Günün durumu: Kontrollü. Nedeni: HRV bandın üstünde. Not: uyku nabzı bandın üstünde; tek başına durumu değiştirmez.');
+  const recover: CoachSnapshot = { ...fullSnapshot(), status: { level: 'recover', signals: ['hrv_low', 'rhr_high'] } };
+  assert.equal(text(recover, 'status'), 'Günün durumu: Toparlan. Nedeni: HRV bandın altında, uyku nabzı bandın üstünde.');
+});

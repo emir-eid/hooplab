@@ -42,6 +42,7 @@ import {
   tagRegions,
   dayStatusRule,
   hrvTransform,
+  heartRateMetric,
   loadEwma,
   loadRatioRule,
   loadSpikeRule,
@@ -203,6 +204,8 @@ test('günün durumu birleşimi kuralla aynı', () => {
   const { value } = rule('toparlanma.json', 'gunun-durumu');
   assert.deepEqual(value.recover_when_all, [...dayStatusRule.recoverWhenAll]);
   assert.deepEqual(value.caution_when_any, [...dayStatusRule.cautionWhenAny]);
+  assert.deepEqual(value.note_only, [...dayStatusRule.noteOnly]);
+  assert.equal(rule('toparlanma.json', 'nabiz-olcu').value.metric, heartRateMetric);
 });
 
 test('antrenman yükü pencereleri ve eşikleri kuralla aynı', () => {
