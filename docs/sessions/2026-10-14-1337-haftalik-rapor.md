@@ -1,9 +1,9 @@
 # 2026-10-14 13:37 — Haftalık rapor; günün durumundaki nabız sorunu tespit edildi
 
 - **Faz:** 4 (Faz 1'in TestFlight maddesi Apple onayını bekliyor)
-- **Durum:** açık (/rep)
+- **Durum:** kapandı (/kapat, 2026-10-14 13:40)
 - **Model / efor:** Opus 5.5, orta
-- **Commit'ler:** bu bloğun rep commit'i
+- **Commit'ler:** `dedc041` (Blok 1), bu raporun kapanış commit'i
 
 ## Blok 1 — Haftalık rapor (karar 0040) ve günün durumunun incelenmesi (13:37)
 
