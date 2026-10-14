@@ -30,9 +30,22 @@ test('her açıklamanın kuralları var, kaynakları o kuralların kaynaklarınd
 
 test('metinlerde "â" yok ve bölümler dolu', () => {
   for (const [id, e] of Object.entries(explainers) as [string, Explainer][]) {
-    const text = [e.title, e.what, e.reference, ...e.read, e.limits ?? ''].join(' ');
+    const text = [e.title, e.hint, e.goal ?? '', e.what, e.reference, ...e.read, e.limits ?? ''].join(' ');
     assert.ok(!/[âÂ]/.test(text), id);
     assert.ok(e.what.length > 0 && e.reference.length > 0 && e.read.length > 0, id);
+  }
+});
+
+test('her açıklamanın kısa cümlesi var; kartta sığacak kadar kısa (sade dil, 2026-10-14)', () => {
+  for (const [id, e] of Object.entries(explainers) as [string, Explainer][]) {
+    assert.ok(e.hint.length > 0 && e.hint.length <= 72, `${id}: ${e.hint.length}`);
+    assert.ok(e.hint.endsWith('.'), id);
+  }
+});
+
+test('günün durumunu belirleyen ve not düşen ölçümlerde hedef yazılı', () => {
+  for (const id of ['hrv', 'rhr', 'sleep', 'respiration', 'checkin', 'illnessSigns', 'ratio', 'sweatTest', 'painMonitoring'] as const) {
+    assert.ok((explainers[id].goal ?? '').length > 0, id);
   }
 });
 

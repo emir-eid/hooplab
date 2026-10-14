@@ -47,6 +47,10 @@ export const basisLabels: Record<ExplainerBasis, string> = {
 export interface Explainer {
   title: string;
   basis: ExplainerBasis;
+  /** Kısaca: uzman olmayan için tek cümle (kartta ve sayfanın başında). */
+  hint: string;
+  /** Neyi hedefliyoruz: yön ve sınır (durumu belirleyen ölçümlerde zorunlu); yalnız kurallardaki sayılar. */
+  goal?: string;
   /** Bu ne? */
   what: string;
   /** Nasıl okunur? Her madde ayrı satır. */
@@ -65,17 +69,19 @@ export interface Explainer {
 const dec = (n: number) => formatDecimal(n, Number.isInteger(n) ? 0 : 1);
 const bandWeeks = weeks(recoveryBand.baselineDays);
 const regionDays = [regionWindow.tendonHours / 24, regionWindow.muscleHours / 24] as const;
-const bandText = `Senin önceki ${bandWeeks} haftanın ortalaması ± ${dec(recoveryBand.sdMultiplier)} standart sapma: buna kişisel bant diyoruz. Bant her gün yeniden hesaplanır; başkasının değeriyle karşılaştırılmaz.`;
+const bandText = `Senin önceki ${bandWeeks} haftanın ortalaması ± ${dec(recoveryBand.sdMultiplier)} standart sapma: buna kişisel bant, kartlarda kısaca "aralığın" diyoruz. Bant her gün yeniden hesaplanır; başkasının değeriyle karşılaştırılmaz.`;
 const bandLimits = `Son ${recoveryBand.rollingDays} günde en az ${recoveryMinValues.rolling}, bant için önceki ${bandWeeks} haftada en az ${recoveryMinValues.baseline} geçerli gece gerekir. Daha azsa değer veya bant gösterilmez.`;
 
 export const explainers = {
   hrv: {
     title: 'HRV · derin uyku',
     basis: 'measured',
+    hint: 'Kalbin dinlenme sinyali; kendi aralığında olması iyi.',
+    goal: `Yüksek olması değil, kendi aralığında kalması hedeflenir. ${recoveryBand.rollingDays} günlük ortalama aralığın altına inerse de üstüne çıkarsa da durum "Kontrollü" olur; altındayken uyku nabzı da yüksekse "Toparlan".`,
     what: "Kalp atımları arasındaki sürenin ne kadar değiştiğini gösterir (RMSSD, milisaniye). Vücudun dinlenme tarafının ne kadar devrede olduğuna dair dolaylı bir işarettir. Saat bunu gece derin uykuda ölçer; Fitbit uygulamasındaki bütün gece değerinden farklı olabilir.",
     read: [
       `Tek gece gürültülüdür; bu yüzden büyük sayı son ${recoveryBand.rollingDays} günün ortalamasıdır. Nokta tek geceyi, çizgi ortalamayı gösterir.`,
-      'Bant içi: alıştığın aralıktasın. Bandın altı da üstü de "her zamankinden farklı" demektir; yüksek değer her zaman iyi değildir.',
+      'Aralığının içi: alıştığın düzeydesin. Aralığın altı da üstü de "her zamankinden farklı" demektir; yüksek değer her zaman iyi değildir.',
       'HRV tek başına yetmez; uyku nabzıyla birlikte okunur. İkisi aynı yönü gösterirse (HRV düşük, nabız yüksek) durum "Toparlan" olur.',
       'Grafikte bir güne dokununca o gecenin değeri başlıkta görünür.',
     ],
@@ -88,6 +94,7 @@ export const explainers = {
   hrvNight: {
     title: 'Son gece HRV',
     basis: 'measured',
+    hint: 'Tek gecenin HRV değeri; geceden geceye çok oynar.',
     what: 'Dün gece derin uykuda ölçülen tek değer (milisaniye).',
     read: [
       'Tek gece gürültülüdür; önceki günün yükü bile onu oynatabilir.',
@@ -101,11 +108,13 @@ export const explainers = {
   rhr: {
     title: 'Uyku nabzı',
     basis: 'measured',
-    what: `Uykunun REM dışı evrelerinde (hafif ve derin uyku) kalbinin dakikadaki ortalama atımı. HRV ile aynı gece ölçülür. Büyük sayı son ${recoveryBand.rollingDays} günün ortalamasıdır. Düşük değer genellikle dinlenmiş bir vücudu, alıştığından yüksek değer vücudun hala bir şeyle uğraştığını gösterir.`,
+    hint: 'Uykudaki nabız; aralığın üstü vücudun yorgun olabileceğini gösterir.',
+    goal: 'Aralığında ya da altında kalması iyi. Aralığın üstü tek başına durumu değiştirmez; HRV de aralığının altındaysa durum "Toparlan" olur.',
+    what: `Uykunun REM dışı evrelerinde (hafif ve derin uyku) kalbinin dakikadaki ortalama atımı. HRV ile aynı gece ölçülür. Kartta büyük sayı son ${recoveryBand.rollingDays} günün ortalaması; son gece ve aralığın altındaki satırlarda. Düşük değer genellikle dinlenmiş bir vücudu, alıştığından yüksek değer vücudun hala bir şeyle uğraştığını gösterir.`,
     read: [
-      'Bandın içi: alıştığın aralık.',
-      'Bandın üstü tek başına günün durumunu değiştirmez; kartta not olarak görünür. Antrenmandan sonra nabız az değişir; belirgin yükseliş daha çok alkol ya da başlayan bir hastalıkla görülür.',
-      'HRV de bandın altındaysa iki işaret aynı yönü gösterir ve durum "Toparlan" olur.',
+      'Aralığının içi: alıştığın düzey.',
+      'Aralığının üstü tek başına günün durumunu değiştirmez; kartta not olarak görünür. Antrenmandan sonra nabız az değişir; belirgin yükseliş daha çok alkol ya da başlayan bir hastalıkla görülür.',
+      'HRV de aralığının altındaysa iki işaret aynı yönü gösterir ve durum "Toparlan" olur.',
       "Fitbit uygulamasındaki \"dinlenik nabız\" Google'ın belgesine göre bütün gün verisinden hesaplanır; bu yüzden buradaki sayıdan farklı olabilir.",
     ],
     reference: `${bandText} Gece nabzı geceden geceye çok tutarlı ölçülür ve zorlu bir antrenmandan sonraki gece yükselir. Ama yüklenmede nabzın değişimi küçük ve günlük oynama içinde kalabildiği için tek başına yorgunluk göstergesi sayılmaz; çalışmalar onu HRV ve başka işaretlerle birlikte okumayı öneriyor.`,
@@ -117,7 +126,9 @@ export const explainers = {
   sleep: {
     title: 'Uyku',
     basis: 'measured',
-    what: `Uykuda geçen süre; şekerlemeler sayılmaz. Büyük sayı dün gece, altındaki satır son ${shortSleep.rollingNights} gecenin ortalaması.`,
+    hint: 'Gece uykuda geçen süre; şekerlemeler sayılmaz.',
+    goal: `Son ${shortSleep.rollingNights} gecenin ortalaması en az ${shortSleep.minHours} saat. Altına inerse durum "Kontrollü" olur.`,
+    what: `Uykuda geçen süre; şekerlemeler sayılmaz. Kartta büyük sayı son ${shortSleep.rollingNights} gecenin ortalaması (günün durumu buna bakar); dün geceki süre ve hedef altındaki satırlarda.`,
     read: [
       `Son ${shortSleep.rollingNights} gecenin ortalaması ${shortSleep.minHours} saatin altındaysa uyku kısa sayılır ve günün durumu "Kontrollü"ye çekilir.`,
       'Tek kötü gece durumu tek başına değiştirmez; ortalama okunur.',
@@ -129,10 +140,12 @@ export const explainers = {
   respiration: {
     title: 'Solunum',
     basis: 'measured',
-    what: `Uykuda dakikadaki nefes sayısı. Saat bunu gece nabzının nefesle birlikte hafifçe dalgalanmasından hesaplar. Büyük sayı son gece, altındaki satır son ${recoveryBand.rollingDays} gecenin ortalaması ve bandı.`,
+    hint: 'Uykuda dakikada aldığın nefes; günün durumuna girmez.',
+    goal: `Kendi aralığında kalması. Son gece ortalamanın ${respirationNightRule.aboveBaselineMean} nefes/dk veya daha fazla üstüne çıkarsa not düşer; günün durumunu değiştirmez.`,
+    what: `Uykuda dakikadaki nefes sayısı. Saat bunu gece nabzının nefesle birlikte hafifçe dalgalanmasından hesaplar. Kartta büyük sayı son ${recoveryBand.rollingDays} gecenin ortalaması; son gece ve aralığın altındaki satırlarda.`,
     read: [
-      'Gece solunumu kişiden kişiye çok değişir, ama aynı kişide gece gece çok az oynar. Bu yüzden başkasıyla değil, kendi bandınla karşılaştırılır.',
-      'Bandın altı ya da üstü "her zamankinden farklı" demektir; iyi ya da kötü demez. Günün durumuna girmez.',
+      'Gece solunumu kişiden kişiye çok değişir, ama aynı kişide gece gece çok az oynar. Bu yüzden başkasıyla değil, kendi aralığınla karşılaştırılır.',
+      'Aralığının altı ya da üstü "her zamankinden farklı" demektir; iyi ya da kötü demez. Günün durumuna girmez.',
       `Son gece önceki ${bandWeeks} haftanın ortalamasından ${respirationNightRule.aboveBaselineMean} nefes/dk veya daha fazla yüksekse ayrı bir not çıkar.`,
       'Not tanı değil: hastalık başlangıcında da, sıcak, alkol, stres veya yükseklikte de görülebilir.',
     ],
@@ -145,6 +158,8 @@ export const explainers = {
   illnessSigns: {
     title: 'Gece işaretleri',
     basis: 'estimate',
+    hint: 'Gece ölçümlerin alıştığından belirgin farklıysa çıkan not.',
+    goal: 'Not çıkmaması. Çıkarsa tanı değildir; kendini yokla, belirti varsa antrenmandan önce doktora başvur.',
     what: 'Uyku nabzı, gece SpO2 ortalaması ve cilt sıcaklığı kendi olağanından belirgin ayrılınca çıkan not. Günün durumuna girmez, yük önerisini değiştirmez; yalnız kendini yoklamanı ve gerekirse doktora başvurmanı hatırlatır.',
     read: [
       `Uyku nabzı: son ${nightRhrRule.consecutiveNights} gece, önceki ${dec(nightRhrRule.baselineDays / 7)} haftanın medyanından ${dec(nightRhrRule.aboveBaselineMedian)} atım/dk veya daha fazla yüksekse. Medyan için en az ${nightRhrRule.minBaselineNights} gece gerekir.`,
@@ -162,6 +177,8 @@ export const explainers = {
   checkin: {
     title: 'Sabah check-in',
     basis: 'computed',
+    hint: 'Sabah kendini nasıl hissettiğinin toplamı; yüksek daha iyi.',
+    goal: `Kendi ortalamana yakın ya da üstünde olması. ${Math.abs(checkinBaseline.zNoteMax)} SD veya daha fazla altına inerse not çıkar; günün durumunu değiştirmez.`,
     what: `Her sabah beş soru: uyku kalitesi, yorgunluk, kas ağrısı, stres, ruh hali. Her biri ${wellnessScale.min}-${wellnessScale.max} arası, ${wellnessScale.max} en iyi. Toplam ${wellnessTotalRange.min}-${wellnessTotalRange.max}.`,
     read: [
       'Yüksek toplam, o sabah kendini iyi hissettiğini gösterir.',
@@ -179,6 +196,7 @@ export const explainers = {
   sessionLoad: {
     title: 'Seans yükü · AU',
     basis: 'computed',
+    hint: 'Seansın zorluğu (RPE) × süresi; tek sayıda seans yükü.',
     what: `Bir seansın seni ne kadar zorladığını tek sayıda toplar: zorluk puanın (RPE, ${rpeScale.min}-${rpeScale.max}) × süre (dakika). Birimi AU (arbitrary unit), yani keyfi birim: kilo ya da kalori gibi fiziksel bir karşılığı yok.`,
     read: [
       'Örnek: RPE 6 ile 90 dakikalık antrenman 540 AU eder.',
@@ -193,6 +211,7 @@ export const explainers = {
   loadChart: {
     title: 'Günlük ve haftalık yük',
     basis: 'computed',
+    hint: 'Her günün antrenman yükü, seans türüne göre renkli.',
     what: 'Her çubuk bir günün toplam yükü (AU). Renkler seans türünü gösterir: maç, saha (takım antrenmanı ve şut), kuvvet ve kondisyon, hafif (mobilite ve rehabilitasyon).',
     read: [
       `Gölgeli alan son ${loadWeek.days} gün. Başlıktaki sayı bu ${loadWeek.days} günün toplamı; yanında önceki ${loadWeek.days} gün ve değişim.`,
@@ -208,6 +227,8 @@ export const explainers = {
   ratio: {
     title: 'Alıştığına göre',
     basis: 'computed',
+    hint: 'Bu günlerin yükü, alıştığın yükün kaç katı.',
+    goal: `Ani sıçrama olmaması: oran ${dec(loadSpikeRule.ratioMin)} ve üstündeyse not çıkar. Güvenli bir aralık tanımlı değil; bağlam olarak okunur.`,
     what: `Son günlerdeki yükünün, son ${loadWeek.averageWeeks} haftada alıştığın yüke oranı. 1,0 alıştığın kadar demek; 1,2 yüzde 20 fazla.`,
     read: [
       `İki ortalama karşılaştırılır: ${loadEwma.acuteN} günlük ve ${loadEwma.chronicN} günlük. İkisinde de yakın günler daha ağır sayılır (üstel ağırlıklı ortalama).`,
@@ -222,6 +243,7 @@ export const explainers = {
   weeklyAverage: {
     title: `${loadWeek.averageWeeks} hafta ortalaması`,
     basis: 'computed',
+    hint: 'Son haftalarda ortalama bir haftanın yükü.',
     what: `Son ${loadWeek.days * loadWeek.averageWeeks} günün toplam yükü ÷ ${loadWeek.averageWeeks}: bir haftada ortalama ne kadar yük aldığın.`,
     read: ['Bu haftanın toplamını bununla karşılaştırınca haftanın olağanın üstünde mi altında mı olduğunu görürsün.'],
     reference: 'Kendi geçmişin; eşik yok.',
@@ -232,6 +254,8 @@ export const explainers = {
   monotony: {
     title: 'Monotonluk',
     basis: 'computed',
+    hint: 'Günlerin yükü birbirine ne kadar benziyor.',
+    goal: 'Doğrulanmış bir hedef sayı yok. Zor ve hafif günlerin sırayla gelmesi (düşük değer) yüklü bir haftada tekdüzelikten daha iyi kabul edilir.',
     what: `Haftanın günleri birbirine ne kadar benziyor? Son ${loadWeek.days} günün günlük yük ortalaması ÷ günden güne değişimi (standart sapma).`,
     read: [
       'Yüksek değer: her gün aşağı yukarı aynı yük, hafif ya da dinlenme günü az.',
@@ -246,6 +270,8 @@ export const explainers = {
   strain: {
     title: 'Gerilim',
     basis: 'computed',
+    hint: 'Haftalık yük × monotonluk; yüklü ve tekdüze haftada yükselir.',
+    goal: 'Doğrulanmış bir hedef sayı yok; kendi haftalarınla karşılaştırılır.',
     what: `Son ${loadWeek.days} günün toplam yükü × monotonluk. Hem yüklü hem tekdüze bir haftada yükselir.`,
     read: ['Aynı toplam yükte, arada hafif günleri olan bir hafta daha düşük gerilim verir.'],
     reference: "Foster'ın çalışmasında hastalıklar en çok gerilimle ilişkiliydi, ama eşikler kişiye özgüydü. Burada eşik yok; kendi geçmişinle karşılaştırma haftalar biriktikçe gelecek.",
@@ -255,6 +281,7 @@ export const explainers = {
   regionLoad: {
     title: 'Bölge yükü',
     basis: 'estimate',
+    hint: 'Bir bölgeyi çalıştıran seansların toplam yükü (tahmin).',
     what: `Bir bölgenin son ${regionDays[0]}-${regionDays[1]} günde hangi seanslarla, ne kadar çalıştığı. Seansa işaretlediğin içerik (sıçrama, yön değiştirme, sprint, alt / üst vücut kuvvet) o içeriğin çalıştırdığı bölgelere eşlenir. Bölge yükü, o bölgeyi çalıştıran seansların yükleri toplamıdır (AU).`,
     read: [
       'Eşleme: sıçrama / iniş → patellar tendon ve Aşil; yön değiştirme / ani duruş → quadriceps ve adduktor; sprint → hamstring, baldır ve Aşil; alt vücut kuvvet → quadriceps, hamstring ve kalça; üst vücut kuvvet → omuz.',
@@ -283,6 +310,7 @@ export const explainers = {
   regionWindow: {
     title: 'Toparlanma penceresi',
     basis: 'estimate',
+    hint: 'Bir bölgenin yüklendikten sonra toparlanma süresi (tahmin).',
     what: `Benzer bir yükten önce önerilen ara: tendonlarda (patellar tendon, Aşil) ${regionWindow.tendonHours} saat, kaslarda ${regionWindow.muscleHours} saat. Bu pencere içinde çalışmış bölge "toparlanıyor" olarak gösterilir.`,
     read: [
       `Elle girilen seansın saati yok; pencere takvim günüyle uygulanır: ${regionWindow.tendonHours} saat bugün ve dün, ${regionWindow.muscleHours} saat bugün ve önceki iki gün.`,
@@ -297,6 +325,8 @@ export const explainers = {
   painMonitoring: {
     title: 'Ağrı izleme',
     basis: 'estimate',
+    hint: 'Sabah ağrısının günden güne seyri.',
+    goal: `Sabah ağrısının ${painScale.max} üzerinden ${painMonitoringRule.maxNrs}'i geçmemesi ve bölge çalıştıktan sonraki sabah azalmış olması.`,
     what: `Tendon rehabilitasyonunda kullanılan ağrı izleme modelinin sabah ağrısına uyarlanmışı. Bir bölgede sabah ağrısı ${painMonitoringRule.maxNrs}'in üstündeyse ya da bölge dün çalıştıysa ve bu sabahki ağrı dünkünden azalmadıysa not düşer.`,
     read: [
       `Modelde etkinlik sırasında ve sonrasında ${painScale.max} üzerinden ${painMonitoringRule.maxNrs}'e kadar ağrı kabul edilebilir sayılır; ertesi sabah ağrının azalmış olması beklenir.`,
@@ -313,12 +343,14 @@ export const explainers = {
   nutrition: {
     title: 'Beslenme hedefi',
     basis: 'computed',
+    hint: 'Günün tipine göre karbonhidrat ve protein hedefi.',
+    goal: 'Kayıtlı alımın hedef aralığına girmesi. Kalori sayılmaz.',
     what: `Bugün için karbonhidrat ve protein hedefi: gün tipine göre gram / kilo × son ${targetWeightDays} günün sabah kilosu ortalaması. Öğün kaydedersen günün kayıtlı alımı bu aralığın yanında gösterilir.`,
     read: [
       `Gün tipi kayıtlarından çıkar: seans yoksa dinlenme (${carbTargets.rest[0]}-${carbTargets.rest[1]} g/kg karbonhidrat), seans varsa antrenman (${carbTargets.training[0]}-${carbTargets.training[1]}), maç ya da toplam ${highDayRule.minutesAtLeast / 60} saat ve üstü seans varsa yoğun (${carbTargets.high[0]}-${carbTargets.high[1]}). Çiplere dokunarak değiştirebilirsin; kayıtlardan çıkan tipe dokunmak düzeltmeyi kaldırır.`,
       `Protein her gün ${dec(proteinTarget.range[0])}-${dec(proteinTarget.range[1])} g/kg; öğünlere bölünmüş, ${proteinTarget.mealIntervalHours[0]}-${proteinTarget.mealIntervalHours[1]} saatte bir, öğün başı yaklaşık ${dec(proteinTarget.perMeal)} g/kg. ${dec(proteinTarget.noAddedGainAbove)} g/kg üstü kas kazanımına ek katkı göstermemiş; aralığın ortası iyi bir başlangıç.`,
       `Öğün ekle: listeden besine dokun, porsiyonu − / + ile ayarla (${portionMultipliers.map((m) => dec(m)).join(' / ')} porsiyon); paketli ürün için etiketteki gramı gir. Gramları uygulama hesaplar: her besinin ev ölçüsü ve 100 g'daki karbonhidrat ve proteini ABD Tarım Bakanlığı'nın besin veritabanından (FoodData Central). Kalori sayılmaz.`,
-      'Kayıtlı alım "aralığın altında / aralıkta / üstünde" diye yerleştirilir. Bu bir tahmindir: sporcular yediklerini ortalama yaklaşık beşte bir eksik kaydediyor, göz kararı karbonhidrat tahmini de eğitimli kişilerde bile belirgin eksik kalıyor. Altında görünmesi uyarı değil; çoğu zaman kayıt eksiktir.',
+      'Kayıtlı alım "hedefin altında / hedefte / hedefin üstünde" diye yerleştirilir. Bu bir tahmindir: sporcular yediklerini ortalama yaklaşık beşte bir eksik kaydediyor, göz kararı karbonhidrat tahmini de eğitimli kişilerde bile belirgin eksik kalıyor. Altında görünmesi uyarı değil; çoğu zaman kayıt eksiktir.',
       'Öğünün proteini öğün dozuna ulaştıysa öğün satırında yazar; öğünler satırı kaç öğünün dozda olduğunu gösterir.',
       'Halkada içteki yay kayıtlı miktarı, dıştaki ince yay hedef aralığını gösterir. Renkler yalnız karbonhidrat, protein ve suyu ayırır; iyi ya da kötü anlamı yok.',
       `Su: dokunarak ${fluidQuickAddMl.join(' / ')} mL ya da istediğin miktarı ekle. Günlük sabit bir su hedefi yok, çünkü ihtiyaç tere göre kişiden kişiye çok değişiyor; susadıkça iç. Ter testi yaptığın gün seans sonrası sıvı hedefi su halkasının altında yazar.`,
@@ -349,6 +381,7 @@ export const explainers = {
   weeklyReport: {
     title: 'Haftalık rapor',
     basis: 'computed',
+    hint: 'Pazartesiden pazara haftanın özeti.',
     what: "Pazartesiden pazara bir haftanın özeti: yük, toparlanma, gece notları, check-in, ağrı, beslenme, sıvı ve kilo. Her gün Bugün ve Trend'deki hesapla okunur; rapor yalnız bunları toplar, sayar ve ortalar.",
     read: [
       `Biten haftada yük, haftanın son günü (pazar) "bugün" sayılarak hesaplanır: haftanın toplamı, önceki hafta, değişim, ${loadWeek.averageWeeks} hafta ortalaması, monotonluk ve gerilim. Monotonluk ve gerilim önceki ${loadWeek.averageWeeks} haftanınkiyle yan yana gösterilir; eşik yok.`,
@@ -366,6 +399,8 @@ export const explainers = {
   sweatTest: {
     title: 'Ter testi',
     basis: 'computed',
+    hint: 'Antrenmanda terle kaybettiğin sıvı.',
+    goal: `Seans boyunca kilo kaybının %${lossNoteRule.lossPercentMin}'nin altında kalması ve kilo almaman (fazla içmemen).`,
     what: 'Seanstan önce ve sonra tartılarak terle ne kadar sıvı kaybettiğin. Ter kaybı = önce − sonra + içilen − idrar (1 kg yaklaşık 1 L); ter oranı = kayıp ÷ seans süresi.',
     read: [
       `Seans boyunca kilo kaybın %${lossNoteRule.lossPercentMin} veya üstündeyse not çıkar: basketbolcularda beceri bu düzeyde anlamlı düşmüş.`,

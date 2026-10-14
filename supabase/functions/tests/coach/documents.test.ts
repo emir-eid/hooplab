@@ -31,7 +31,7 @@ test('sayılar uygulamadaki gibi yuvarlanır; eşikler kural değerlerinden', ()
   );
   assert.equal(
     text(s, 'sleep'),
-    'Uyku: son 7 gecenin ortalaması 6,4 saat (6 sa 24 dk). Son gece 7,3 saat (7 sa 15 dk). Ortalama 7 saatin altında: uyku kısa.',
+    'Uyku: son 7 gecenin ortalaması 6,4 saat (6 sa 24 dk). Son gece 7,2 saat (7 sa 15 dk). Ortalama 7 saatin altında: uyku kısa.',
   );
   assert.equal(
     text(s, 'checkin'),
@@ -137,4 +137,10 @@ test('durum: uyku nabzı tek başına neden değil, not; Toparlan\'da HRV ile bi
   assert.equal(text(caution, 'status'), 'Günün durumu: Kontrollü. Nedeni: HRV bandın üstünde. Not: uyku nabzı bandın üstünde; tek başına durumu değiştirmez.');
   const recover: CoachSnapshot = { ...fullSnapshot(), status: { level: 'recover', signals: ['hrv_low', 'rhr_high'] } };
   assert.equal(text(recover, 'status'), 'Günün durumu: Toparlan. Nedeni: HRV bandın altında, uyku nabzı bandın üstünde.');
+});
+
+test('uyku saati aşağı kesilir: 7 saatin hemen altı "7,0" yazıp kısa denmez', () => {
+  const s = fullSnapshot();
+  const sleep = { ...s.sleep!, rollingHours: 6.996, short: true };
+  assert.match(text({ ...s, sleep }, 'sleep') ?? '', /ortalaması 6,9 saat \(6 sa 59 dk\)\. .*uyku kısa\./);
 });

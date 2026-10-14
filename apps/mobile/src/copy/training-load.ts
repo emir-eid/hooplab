@@ -41,8 +41,8 @@ export function untaggedLabel(count: number): string {
 export const untaggedDetail = 'Etiketlenmeyen oturum yüke girmez; yük eksik görünebilir.';
 
 export const monotonyEmpty = `son ${monotonyRule.windowDays} günde değişim yok veya kayıt az`;
-export const monotonyNote = 'Ortalama / gün gün değişim. Eşik yok; kendi geçmişinle kıyas haftalar biriktikçe.';
-export const strainNote = 'Haftalık yük × monotonluk.';
+export const monotonyNote = `son ${monotonyRule.windowDays} gün · eşik yok`;
+export const strainNote = `son ${monotonyRule.windowDays} gün · eşik yok`;
 
 export const loadMethodNote = `Yük = RPE × dakika (AU). Ortalamalar üstel ağırlıklı: yakın günler daha ağır sayılır (${loadEwma.acuteN} ve ${loadEwma.chronicN} gün). Oran ve not tahmindir; basketbolda doğrulanmış bir sakatlık eşiği yok. Renkler yalnız seans türünü gösterir. Saha: takım antrenmanı ve şut; hafif: mobilite ve rehabilitasyon.`;
 

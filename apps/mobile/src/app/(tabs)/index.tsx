@@ -25,7 +25,8 @@ import { Screen } from '@/components/screen';
 import { Text } from '@/components/text';
 import { sessionKindLabels } from '@/copy/labels';
 import { sweatSummary } from '@/copy/nutrition';
-import { checkinLowBody, checkinLowTitle, checkinNote, formatZ } from '@/copy/personal-baseline';
+import { explainers } from '@/copy/explainers';
+import { checkinLowBody, checkinLowTitle, checkinNote, checkinRows, formatZ } from '@/copy/personal-baseline';
 import { levelStates } from '@/copy/recovery';
 import { rememberCoachSnapshot, todaySweat } from '@/data/coach-context';
 import { buildCoachSnapshot, type CoachInputs } from '@/data/coach-snapshot';
@@ -233,6 +234,7 @@ function TodayScreen({ demo }: { demo: DemoScenario | null }) {
             <ExplainButton
               id="checkin"
               value={`${total} / ${wellnessTotalRange.max}${checkinReading?.z != null ? ` · ${formatZ(checkinReading.z)}` : ''}`}
+              rows={checkinReading && checkinReading.total === total ? checkinRows(checkinReading, total) : undefined}
             />
           </View>
           <Pressable
@@ -252,6 +254,9 @@ function TodayScreen({ demo }: { demo: DemoScenario | null }) {
                   {checkinNote(checkinReading)}
                 </Text>
               ) : null}
+              <Text variant="caption2" tone="inkMuted" style={styles.hint}>
+                {explainers.checkin.hint}
+              </Text>
               {checkinReading?.low && checkinReading.total === total ? (
                 <View style={[styles.checkinLow, { borderTopColor: palette.line }]}>
                   <Text variant="callout">{checkinLowTitle}</Text>
@@ -336,6 +341,7 @@ function sweatNote(s: TrainingSession): string {
 }
 
 const styles = StyleSheet.create({
+  hint: { marginTop: spacing[2] },
   cta: {
     marginTop: spacing[5],
     marginHorizontal: layout.cardInset,

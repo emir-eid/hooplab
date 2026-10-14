@@ -16,23 +16,28 @@ import { ExplainButton, InfoButton, openExplainer } from "@/components/info-butt
 import { GroupLabel, ListGroup, ListRow } from "@/components/list";
 import { Text } from "@/components/text";
 import {
-  bandNote,
+  bandPageRows,
+  bandRows,
   bandSectionNote,
   formatBand,
-  formatDecimal,
+  formatRolling,
   formatSleep,
   hrvChartTitle,
   hrvLineLegend,
   levelLabels,
   levelStates,
+  rollingCaption,
   rollingLabel,
   rollingSpoken,
-  sleepRollingLabel,
+  sleepCaption,
+  sleepPageRows,
+  sleepRows,
   statusAdvice,
   statusChips,
   statusReason,
+  type ValueRow,
 } from "@/copy/recovery";
-import type { ExplainerId } from "@/copy/explainers";
+import { explainers, type ExplainerId } from "@/copy/explainers";
 import {
   illnessSignLine,
   illnessSignsCauses,
@@ -44,7 +49,6 @@ import {
   respirationHighFooter,
   respirationHighLine,
   respirationHighTitle,
-  respirationNote,
 } from "@/copy/personal-baseline";
 import type { RecoveryView } from "@/data/recovery-view";
 import { usePalette } from "@/theme/appearance";
@@ -132,28 +136,42 @@ export interface TileProps {
   label: string;
   value: string;
   unit: string;
+  /** Büyük sayının ne olduğu ve aralığa göre yeri (ör. "7 gün ort. · aralığında"). */
   note: string;
+  /** Etiketli ek değerler: son gece, aralığın, hedef (kullanıcı isteği 2026-10-14). */
+  rows?: readonly ValueRow[];
+  /** Açıklama sayfasının "Senin değerlerin" satırları; verilmezse kart satırları. */
+  pageRows?: readonly ValueRow[];
   /** Bu ölçüm günün durumuna katkı verdi mi (nokta ve not durum renginde). */
   flagged: boolean;
   state: "green" | "yellow" | "red" | null;
-  /** Verilirse kart dokunulabilir ve açıklama alt sayfasını açar (karar 0026). */
+  /** Verilirse kart dokunulabilir ve açıklama alt sayfasını açar (karar 0026); kısa açıklaması kartta görünür. */
   explain?: ExplainerId;
+  /** Tam genişlik (ızgarada tek başına). */
+  wide?: boolean;
 }
 
-export function Tile({ label, value, unit, note, flagged, state, explain }: TileProps) {
+export function Tile({ label, value, unit, note, rows, pageRows, flagged, state, explain, wide }: TileProps) {
   const palette = usePalette();
   const accent = flagged && state ? palette.statusInk[state] : null;
+  const hint = explain ? explainers[explain].hint : null;
+  const spoken = [`${label}: ${value} ${unit}, ${note}`, ...(rows ?? []).map((r) => `${r.label} ${r.value}`)].join(". ");
   return (
     <Pressable
       disabled={!explain}
-      onPress={explain ? () => openExplainer(explain, value === "–" ? undefined : `${value} ${unit}`.trim()) : undefined}
+      onPress={
+        explain
+          ? () => openExplainer(explain, { value: value === dash ? undefined : `${value} ${unit}`.trim(), rows: pageRows ?? rows })
+          : undefined
+      }
       style={({ pressed }) => [
         styles.tile,
+        wide && styles.tileWide,
         { backgroundColor: palette.card, boxShadow: palette.shadow.card },
         pressed && styles.pressed,
       ]}
       accessibilityRole={explain ? "button" : undefined}
-      accessibilityLabel={`${label}: ${value} ${unit}, ${note}`}
+      accessibilityLabel={spoken}
       accessibilityHint={explain ? "Ne olduğunu ve nasıl okunduğunu açar" : undefined}
     >
       <View style={styles.tileHead}>
@@ -190,6 +208,25 @@ export function Tile({ label, value, unit, note, flagged, state, explain }: Tile
       >
         {note}
       </Text>
+      {rows && rows.length > 0 ? (
+        <View style={[styles.tileRows, { borderTopColor: palette.line }]}>
+          {rows.map((r) => (
+            <View key={r.label} style={styles.tileRow}>
+              <Text variant="caption" tone="inkMuted">
+                {r.label}
+              </Text>
+              <Text variant="caption" tone="inkSecondary">
+                {r.value}
+              </Text>
+            </View>
+          ))}
+        </View>
+      ) : null}
+      {hint ? (
+        <Text variant="caption2" tone="inkMuted" style={styles.tileHint}>
+          {hint}
+        </Text>
+      ) : null}
     </Pressable>
   );
 }
@@ -204,9 +241,8 @@ export function NightData({ view }: { view: RecoveryView }) {
   const { hrv, rhr, sleep, respiration, signs } = view;
   const signKeys = flaggedSigns(signs);
   const band = formatBand(hrv);
-  const hrvValue =
-    hrv.rolling === null ? dash : String(Math.round(hrv.rolling));
-  const lastHrv = hrv.latest;
+  const hrvRows: ValueRow[] = bandRows(hrv, "ms");
+  const hrvValue = formatRolling(hrv);
   // Grafikte seçilen gün; null iken başlık bugünün 7 günlük ortalamasını gösterir.
   const [selected, setSelected] = useState<number | null>(null);
   const day = selected !== null ? view.chart[selected] : undefined;
@@ -231,7 +267,7 @@ export function NightData({ view }: { view: RecoveryView }) {
                   ? `${formatShortDate(day.date)} · gece`
                   : hrvChartTitle}
               </Text>
-              <ExplainButton id="hrv" value={hrv.rolling === null ? undefined : `${hrvValue} ms`} />
+              <ExplainButton id="hrv" value={hrv.rolling === null ? undefined : `${hrvValue} ms`} rows={bandPageRows(hrv, "ms")} />
             </View>
             <View style={styles.valueRow}>
               <Text variant="metric">{day ? round(day.value) : hrvValue}</Text>
@@ -239,6 +275,17 @@ export function NightData({ view }: { view: RecoveryView }) {
                 ms
               </Text>
             </View>
+            <Text
+              variant="caption"
+              tone="inkMuted"
+              style={
+                !day && state && (signals.includes("hrv_low") || signals.includes("hrv_high"))
+                  ? { color: palette.statusInk[state] }
+                  : undefined
+              }
+            >
+              {day ? "o gece" : rollingCaption(hrv)}
+            </Text>
           </View>
           {day ? (
             <View style={styles.chartHeadRight}>
@@ -253,23 +300,11 @@ export function NightData({ view }: { view: RecoveryView }) {
             </View>
           ) : (
             <View style={styles.chartHeadRight}>
-              <Text
-                variant="caption"
-                tone="inkMuted"
-                style={
-                  state &&
-                  (signals.includes("hrv_low") || signals.includes("hrv_high"))
-                    ? { color: palette.statusInk[state] }
-                    : undefined
-                }
-              >
-                {bandNote(hrv)}
-              </Text>
-              {band ? (
-                <Text variant="caption" tone="inkMuted">
-                  bant {band}
+              {hrvRows.map((r) => (
+                <Text key={r.label} variant="caption" tone="inkMuted">
+                  {`${r.label} ${r.value}`}
                 </Text>
-              ) : null}
+              ))}
             </View>
           )}
         </View>
@@ -290,56 +325,49 @@ export function NightData({ view }: { view: RecoveryView }) {
           </Text>
           {band ? (
             <Text variant="caption2" tone="inkMuted">
-              Şerit: kişisel bant
+              Şerit: aralığın
             </Text>
           ) : null}
         </View>
+        <Text variant="caption2" tone="inkMuted" style={styles.chartHint}>
+          {explainers.hrv.hint}
+        </Text>
       </Card>
 
       <View style={styles.grid}>
         <Tile
           label="Uyku nabzı"
           explain="rhr"
-          value={rhr.rolling === null ? dash : String(Math.round(rhr.rolling))}
+          value={formatRolling(rhr)}
           unit="atım/dk"
-          note={
-            rhr.rolling === null
-              ? bandNote(rhr)
-              : `${rollingLabel} · ${bandNote(rhr)}`
-          }
+          note={rollingCaption(rhr)}
+          rows={bandRows(rhr, "atım/dk")}
+          pageRows={bandPageRows(rhr, "atım/dk")}
           flagged={signals.includes("rhr_high")}
           state={state}
         />
         <Tile
           label="Uyku"
           explain="sleep"
-          value={sleep.lastNight ? formatSleep(sleep.lastNight.minutes) : dash}
+          value={sleep.rollingHours === null ? dash : formatSleep(sleep.rollingHours * 60)}
           unit="sa"
-          note={
-            sleep.rollingHours === null
-              ? `${sleepRollingLabel} için veri az`
-              : `${sleepRollingLabel} ${formatSleep(sleep.rollingHours * 60)}`
-          }
+          note={sleepCaption(sleep)}
+          rows={sleepRows(sleep)}
+          pageRows={sleepPageRows(sleep)}
           flagged={signals.includes("sleep_short")}
-          state={state}
-        />
-        <Tile
-          label="Son gece HRV"
-          explain="hrvNight"
-          value={lastHrv ? String(Math.round(lastHrv.value)) : dash}
-          unit="ms"
-          note="tek gece, gürültülü"
-          flagged={false}
           state={state}
         />
         <Tile
           label="Solunum"
           explain="respiration"
-          value={respiration.latest ? formatDecimal(respiration.latest.value) : dash}
-          unit="/dk"
-          note={respirationNote(respiration)}
+          value={formatRolling(respiration, 1)}
+          unit="nefes/dk"
+          note={rollingCaption(respiration)}
+          rows={bandRows(respiration, "nefes/dk", 1)}
+          pageRows={bandPageRows(respiration, "nefes/dk", 1)}
           flagged={false}
           state={state}
+          wide
         />
       </View>
 
@@ -479,6 +507,16 @@ const styles = StyleSheet.create({
     borderRadius: radius.xl,
     borderCurve: "continuous",
   },
+  tileWide: { flexBasis: "100%" },
+  tileRows: {
+    marginTop: spacing[2.5],
+    paddingTop: spacing[2],
+    borderTopWidth: StyleSheet.hairlineWidth,
+    gap: spacing[0.5],
+  },
+  tileRow: { flexDirection: "row", justifyContent: "space-between", gap: spacing[2] },
+  tileHint: { marginTop: spacing[2] },
+  chartHint: { paddingHorizontal: spacing[1], marginTop: spacing[1.5] },
   tileHead: { flexDirection: "row", alignItems: "center", gap: spacing[1.5] },
   tileLabel: { flex: 1 },
   tileInfo: {

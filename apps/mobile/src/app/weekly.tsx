@@ -2,7 +2,7 @@
 // beslenme ve kilo özeti. Sayılar motordan ve görünümden (data/weekly-report-view), metinler copy/weekly-report'tan;
 // burada yalnız yerleşim. Risk rengi yok: durum renkleri Bugün'deki günün durumu, yük renkleri seans türü (karar 0026).
 
-import { addIsoDays, weekLength, weekStartOf, type DayLevel } from '@hooplab/engine';
+import { addIsoDays, weekLength, weekStartOf, shortSleep, type DayLevel, type MetricReading } from '@hooplab/engine';
 import { layout, loadGroups, radius, spacing } from '@hooplab/theme';
 import { router, useLocalSearchParams } from 'expo-router';
 import { useEffect, useState } from 'react';
@@ -18,7 +18,7 @@ import { Tile } from '@/components/recovery-section';
 import { Screen } from '@/components/screen';
 import { Text } from '@/components/text';
 import { wellnessLabels } from '@/copy/labels';
-import { bandNote, formatDecimal, formatSleep, levelLabels, levelStates } from '@/copy/recovery';
+import { bandDigits, bandNote, formatBand, formatDecimal, formatRolling, formatSleep, levelLabels, levelStates } from '@/copy/recovery';
 import { spotName } from '@/copy/region-load';
 import { averageWeeksLabel, formatLoad, formatRatio, loadGroupLabels } from '@/copy/training-load';
 import {
@@ -384,11 +384,12 @@ function RecoveryBlock({ view }: { view: WeeklyReportView }) {
       <View style={styles.grid}>
         {r.hrv ? (
           <Tile
-            label="HRV · hafta ort."
+            label="HRV"
             explain="hrv"
-            value={r.hrv.rolling === null ? dash : String(Math.round(r.hrv.rolling))}
+            value={formatRolling(r.hrv)}
             unit="ms"
-            note={bandNote(r.hrv)}
+            note={`hafta ort. · ${bandNote(r.hrv)}`}
+            rows={weekBandRows(r.hrv, "ms")}
             flagged={false}
             state={null}
           />
@@ -397,19 +398,21 @@ function RecoveryBlock({ view }: { view: WeeklyReportView }) {
           <Tile
             label="Uyku nabzı"
             explain="rhr"
-            value={r.rhr.rolling === null ? dash : String(Math.round(r.rhr.rolling))}
+            value={formatRolling(r.rhr)}
             unit="atım/dk"
-            note={bandNote(r.rhr)}
+            note={`hafta ort. · ${bandNote(r.rhr)}`}
+            rows={weekBandRows(r.rhr, "atım/dk")}
             flagged={false}
             state={null}
           />
         ) : null}
         <Tile
-          label="Uyku · gece ort."
+          label="Uyku"
           explain="sleep"
           value={r.sleepHours === null ? dash : formatSleep(r.sleepHours * 60)}
           unit="sa"
           note={sleepText(view)}
+          rows={[{ label: "Hedef", value: `ort. en az ${formatSleep(shortSleep.minHours * 60)} sa` }]}
           flagged={false}
           state={null}
         />
@@ -417,6 +420,12 @@ function RecoveryBlock({ view }: { view: WeeklyReportView }) {
       {view.phase === 'current' ? <GroupFooter>{currentRecoveryNote}</GroupFooter> : null}
     </>
   );
+}
+
+/** Haftanın aralığı (haftadan önceki 4 hafta); "son gece" haftalık raporda anlamsız, yazılmaz. */
+function weekBandRows(r: MetricReading, unit: string) {
+  const band = formatBand(r, bandDigits(r));
+  return [{ label: "Aralığın", value: band ? `${band} ${unit}` : "oluşuyor" }];
 }
 
 // --- Gece notları ---

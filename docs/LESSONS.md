@@ -70,6 +70,8 @@ Tekrar yaşanabilecek hatalar ve önceden bilinen tuzaklar. Her madde: **ders**,
 - **[ölçüldü] Windows'ta Node betiği `fetch` sonrası `process.exit()` ile çıkarsa libuv iddia hatasıyla çökebiliyor** (`!(handle->flags & UV_HANDLE_CLOSING)`, çıkış 127). `process.exitCode` atanıp olay döngüsünün kendiliğinden bitmesi beklenir. Kanıt: 2026-10-05 `tools/setup/setup.mjs`. Bekçi: yok (yöntem).
 - **[ölçüldü] Çok uzun geçici yollarda `git clone` başarısız olabilir** (muhtemelen Windows yol uzunluğu sınırı). Klonlar kısa bir yola (ör. `%TEMP%\kisa-ad`) yapılır; hata çıktısı bastırılmaz.
 
+- **[ölçüldü] Ham değerle karar veren bir kural, yuvarlanmış gösterimde kendisiyle çelişebilir:** ortalama 14,56 ve aralığın üst sınırı 14,55 iken ikisi de "14,6" göründü ama kart "aralığın üstünde" yazıyordu; uyku ortalaması 6 sa 59,7 dk "7:00" görünüp "kısa" deniyordu. Sınıra değen değer bir ondalık fazla gösterilir (`bandDigits`), eşiğin altında kalan süre aşağı kesilir (`formatSleep`); koçun belgesi de aynı kuralla yazılır, yoksa denetçi demo cümlesini reddeder. Kanıt: 2026-10-14 okunabilirlik turu, web önizlemesi. Bekçi: `apps/mobile/src/copy/recovery-rows.test.ts`, `supabase/functions/tests/coach/documents.test.ts`.
+
 ## Önizleme ve maketler
 
 - **[ölçüldü] Başsız Chrome betiğinde modal açıkken arkadaki ekran DOM'da kalır:** metne göre kaydırma ya da tıklama (ör. "Ter testi") arkadaki ekrandaki aynı metne gidebilir. Modalda benzersiz bir metin seçilir. RN-web metin alanına `Input.insertText` göndermeden önce alana `element.focus()` ile odaklanılır; yalnız tıklama üçüncü alanda yetmedi. Kanıt: 2026-10-07 seans formu ter testi. Bekçi: yok (yöntem).

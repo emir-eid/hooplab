@@ -3,7 +3,7 @@
 - **Faz:** 4 (Faz 1'in TestFlight maddesi Apple onayını bekliyor)
 - **Durum:** açık (/rep)
 - **Model / efor:** Opus 5.5, yüksek
-- **Commit'ler:** `359b00e` (plan: kullanıcı istekleri sıraya), Blok 1'in rep commit'i
+- **Commit'ler:** `359b00e` (plan: kullanıcı istekleri sıraya), `0e77ad8` (Blok 1), Blok 2'nin rep commit'i
 
 ## Blok 1 — Günün durumunda nabız: NREM uyku nabzı, yalnız HRV ile birlikte (16:39)
 
@@ -46,12 +46,70 @@
 ### Öğrenilenler
 - LESSONS "Google Health / veri": dinlenik nabız maddesi sonuçla ve bekçiyle kapatıldı. Ders: sağlayıcının türetilmiş, belgelenmemiş özeti karar girdisi yapılmadan önce aynı gecenin ham ölçüsüyle kıyaslanır.
 
+## Blok 2 — Okunabilirlik turu: değer / ortalama ayrımı, sade açıklamalar, hedef ve kişisel aralık (17:22)
+
+### Amaç
+Kullanıcının üç isteği:
+- Bugün'de bugünkü değer ile ortalama ayrı ve anlaşılır görünsün.
+- Her ölçümde uzman olmayan için sade açıklama olsun ("mutlaka").
+- Durumu belirleyen ölçümlerde neyin hedeflendiği ve kişisel aralık sayıyla yazsın.
+
+### Yapılanlar
+- **Açıklamalar** (`copy/explainers.ts`):
+  - 19 açıklamanın hepsine `hint` eklendi, 9'una `goal`. Sayılar motor sabitlerinden geliyor; yeni eşik yok.
+  - HRV, uyku nabzı, uyku ve solunumda "Bu ne?" yeni kart düzenine göre düzeltildi.
+  - "Nasıl okunur?" maddelerinde "bant" yerine "aralık" kullanıldı.
+  - Testler: kısa cümle zorunlu ve en çok 72 karakter; belirlenen ölçümlerde hedef zorunlu.
+- **Açıklama sayfası** (`app/explain/[id].tsx`):
+  - Başına "Kısaca" kartı eklendi: kısa cümle, "Neyi hedefliyoruz?" ve "Senin değerlerin".
+  - `openExplainer` artık değer ve satırları birlikte taşıyor; bellekte tutuluyor, adreste değil.
+- **Kart** (`components/recovery-section.tsx`, `Tile`):
+  - Büyük sayının altında ne olduğu yazıyor; etiketli satırlar ve açıklamanın kısa cümlesi var.
+  - Açıklama sayfasına ayrı satırlar gidiyor.
+  - Aynı kart Trend'de ve haftalık raporda da kullanılıyor, kısa cümle oralara da geldi.
+- **Bugün'ün gece verisi:**
+  - HRV başlığında 7 gün ortalaması ve yeri var; sağda son gece ve aralık, altta sade cümle.
+  - Uyku nabzı ve uyku kartları yeni düzende; solunum tam genişlik.
+  - "Son gece HRV" kartı kalktı.
+- **Yardımcılar** (`copy/recovery.ts`):
+  - Satır ve yuvarlama işlevleri eklendi: `bandRows`, `bandPageRows`, `sleepRows`, `sleepPageRows`, `rollingCaption`, `sleepCaption`, `bandDigits`, `formatRolling`.
+  - `bandNote`, gerekçe ve çipler "aralık" diliyle yazılıyor.
+  - Yeni test dosyası: `copy/recovery-rows.test.ts`.
+- **Diğer ekranlar:**
+  - **Check-in:** karta kısa cümle eklendi. Açıklama sayfasında bugün, ortalama ve fark satırları var; fark puan ve SD olarak ayrı (`checkinRows`).
+  - **Beslenme ve ter testi:** başlıkların altına kısa cümle geldi. Halkalarda artık "hedefin altında / hedefte" yazıyor.
+  - **Trend:** monotonluk ve gerilim notları sadeleşti, tekrar kalktı.
+  - **Haftalık rapor:** HRV ve uyku nabzında "hafta ort." ve aralık, uykuda hedef satırı var.
+- **Yuvarlama:**
+  - Sınıra değen ortalamada bir ondalık fazla gösteriliyor.
+  - Uyku süresi aşağı kesiliyor. Koçun belgesi (`documents.ts`, `hours`) ve demo koç da aynı kuralı izliyor.
+  - `coach-daily` v13 ve `coach-ask` v5 dağıtıldı (ACTIVE).
+- **Doğrulama:**
+  - `npm run check` yeşil.
+  - Web önizlemesinde 390×844, demo ile bakıldı: Bugün kartları, solunum ve uyku nabzı açıklama sayfaları, Trend, haftalık rapor, beslenme.
+  - Kullanıcı iPhone'da gerçek hesapla baktı: "çok güzel olmuş".
+
+### Kararlar
+- [0042 Okunabilirlik](../decisions/0042-okunabilirlik-kartlar-ve-kisaca.md)
+
+### Sorunlar ve hatalar
+- **Solunum:** ortalama ve aralığın üst sınırı yuvarlanınca aynı göründü ("14,6"), ama kart "aralığın üstünde" yazıyordu. Ekranda fark edildi, `bandDigits` ile çözüldü.
+- **Haftalık rapor, uyku:** "7:00" görünüp "ortalama kısa" diyordu. Ekranda fark edildi, süreyi aşağı keserek çözüldü.
+- **Demo koç:** koçun belgesi aşağı kesmeye geçince demo koç cümlesi denetçiden geçmedi (`number_mismatch`). Cümle aynı kurala getirildi.
+- **Terim çakışması:** beslenmedeki "aralığın altında" kişisel aralıkla karışıyordu; "hedefin altında" yapıldı.
+- **Web önizlemesi:** her sıcak yenileme demoyu kapatıyor, çünkü demo bellekte. Her bakışta demo yeniden açıldı.
+- **`/rep` sırasında:** kabuk heredoc'unda alıntı bozuldu, hiçbir dosya yazılmadı. Dosyalar doğrudan yazıldı.
+
+### Öğrenilenler
+- LESSONS "Expo / React Native" bölümüne eklendi: ham değerle karar veren kural, yuvarlanmış gösterimde kendisiyle çelişebilir. Bekçi testlerle.
+
 ## Açık kalanlar
-- Okunabilirlik turu (STATE sıradaki iş 1).
-- Yakılan kalori (STATE sıradaki iş 2).
+- Yakılan kalori (STATE sıradaki iş 1).
+- Koç cümleleri hala "bant" diyor; ekranda "aralık". Gerekirse koç yönergesinde ele alınır.
+- Vücut sekmesinde kart yok; bölge yükü ve ağrının kısa cümlesi yalnız açıklama sayfasında.
 - Kaydırınca içerik iOS durum çubuğunun altından geçiyor (önceki oturumdan).
 - Google Health izni 2026-10-19 11:55'te düşer; kullanıcı öncesinde yeniden bağlar.
 - Apple Developer üyeliği onayı.
 
 ## Sıradaki adım
-- Okunabilirlik turu: kartlarda bugünkü değer ve kişisel ortalama ayrı sayılarla; sade dilde tek cümlelik açıklama; durumu belirleyen ölçümlerde "neyi hedefliyoruz" ve kişisel aralık.
+- Yakılan kalori: günlük toplam, seans başına, haftalık raporda; "Tahmin" etiketli, kaynaklı, yeni kart düzeniyle.

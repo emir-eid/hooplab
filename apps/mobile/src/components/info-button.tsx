@@ -7,20 +7,31 @@ import { Pressable, StyleSheet, type StyleProp, type ViewStyle } from 'react-nat
 
 import { Text } from '@/components/text';
 import { explainers, type ExplainerId } from '@/copy/explainers';
+import type { ValueRow } from '@/copy/recovery';
 import { usePalette } from '@/theme/appearance';
 
-// Açılan sayfada gösterilecek güncel değer (ör. "1,9"). Adres parametresine konmaz: web'de adres satırında
-// sağlık verisi görünmesin; bellekte, son açılan değer olarak tutulur.
-const shownValues = new Map<ExplainerId, string>();
+/** Açılan sayfanın "Senin değerlerin" satırı (ör. "Son gece" · "45 ms"). */
+export type ExplainerRow = ValueRow;
 
-export function openExplainer(id: ExplainerId, value?: string) {
-  if (value) shownValues.set(id, value);
-  else shownValues.delete(id);
+export interface ExplainerContext {
+  /** Başlığın yanındaki güncel değer (ör. "1,9"). */
+  value?: string;
+  rows?: readonly ExplainerRow[];
+}
+
+// Açılan sayfada gösterilecek güncel değerler. Adres parametresine konmaz: web'de adres satırında
+// sağlık verisi görünmesin; bellekte, son açılan değer olarak tutulur.
+const shown = new Map<ExplainerId, ExplainerContext>();
+
+export function openExplainer(id: ExplainerId, context?: string | ExplainerContext) {
+  const c = typeof context === 'string' ? { value: context } : context;
+  if (c && (c.value || (c.rows?.length ?? 0) > 0)) shown.set(id, c);
+  else shown.delete(id);
   router.push({ pathname: '/explain/[id]', params: { id } });
 }
 
-export function explainerValue(id: ExplainerId): string | undefined {
-  return shownValues.get(id);
+export function explainerContext(id: ExplainerId): ExplainerContext {
+  return shown.get(id) ?? {};
 }
 
 interface InfoButtonProps {
@@ -46,9 +57,19 @@ export function InfoButton({ onPress, accessibilityLabel, style }: InfoButtonPro
 }
 
 /** Açıklama sayfasını açan rozet. */
-export function ExplainButton({ id, value, style }: { id: ExplainerId; value?: string; style?: StyleProp<ViewStyle> }) {
+export function ExplainButton({
+  id,
+  value,
+  rows,
+  style,
+}: {
+  id: ExplainerId;
+  value?: string;
+  rows?: readonly ExplainerRow[];
+  style?: StyleProp<ViewStyle>;
+}) {
   return (
-    <InfoButton onPress={() => openExplainer(id, value)} accessibilityLabel={`${explainers[id].title}: bu ne?`} style={style} />
+    <InfoButton onPress={() => openExplainer(id, { value, rows })} accessibilityLabel={`${explainers[id].title}: bu ne?`} style={style} />
   );
 }
 

@@ -122,10 +122,13 @@ const range = ([a, b]: Range, digits = 0) => `${formatDecimal(a, digits)}–${fo
 const decRange = ([a, b]: Range) => `${dec(a)}–${dec(b)}`;
 const capitalize = (s: string) => s.charAt(0).toLocaleUpperCase('tr') + s.slice(1);
 
-/** 6.4 saat → "6,4 saat (6 sa 24 dk)": model iki yazımdan birini kullanabilsin. */
+/**
+ * 6.4 saat → "6,4 saat (6 sa 24 dk)": model iki yazımdan birini kullanabilsin. Aşağı kesilir (uygulamadaki gibi):
+ * 6,996 saat "7,0 saat" yazıp "7 saatin altında: kısa" denmesin.
+ */
 function hours(h: number): string {
-  const total = Math.round(h * 60);
-  return `${formatDecimal(h)} saat (${Math.floor(total / 60)} sa ${total % 60} dk)`;
+  const total = Math.floor(h * 60 + 1e-9);
+  return `${formatDecimal(Math.floor(h * 10 + 1e-9) / 10)} saat (${Math.floor(total / 60)} sa ${total % 60} dk)`;
 }
 
 // Uygulamadaki etiketlerle aynı (copy/labels.ts, copy/recovery.ts, copy/nutrition.ts); test denetler.

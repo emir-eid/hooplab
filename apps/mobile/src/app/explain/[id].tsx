@@ -6,7 +6,7 @@ import { router, useLocalSearchParams } from 'expo-router';
 import { Pressable, ScrollView, StyleSheet, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
-import { explainerValue } from '@/components/info-button';
+import { explainerContext } from '@/components/info-button';
 import { GroupFooter, GroupLabel, ListGroup, ListRow } from '@/components/list';
 import { Text } from '@/components/text';
 import { basisLabels, explainers, isExplainerId, medicalNote, type Explainer } from '@/copy/explainers';
@@ -30,7 +30,7 @@ export default function ExplainScreen() {
 
   const e: Explainer = explainers[id];
   const estimate = e.basis === 'estimate';
-  const value = explainerValue(id);
+  const { value, rows } = explainerContext(id);
 
   return (
     <ScrollView
@@ -63,6 +63,34 @@ export default function ExplainScreen() {
             </Text>
           ) : null}
         </View>
+      </View>
+
+      <GroupLabel>Kısaca</GroupLabel>
+      <View style={[styles.card, { backgroundColor: palette.card, boxShadow: palette.shadow.card }]}>
+        <Text variant="bodyCompact">{e.hint}</Text>
+        {e.goal ? (
+          <View style={styles.block}>
+            <Text variant="footnote" tone="inkSecondary">
+              Neyi hedefliyoruz?
+            </Text>
+            <Text variant="bodyCompact">{e.goal}</Text>
+          </View>
+        ) : null}
+        {rows && rows.length > 0 ? (
+          <View style={styles.block}>
+            <Text variant="footnote" tone="inkSecondary">
+              Senin değerlerin
+            </Text>
+            {rows.map((r) => (
+              <View key={r.label} style={styles.row}>
+                <Text variant="bodyCompact" tone="inkSecondary" style={styles.rowLabel}>
+                  {r.label}
+                </Text>
+                <Text variant="bodyCompact">{r.value}</Text>
+              </View>
+            ))}
+          </View>
+        ) : null}
       </View>
 
       <GroupLabel>Bu ne?</GroupLabel>
@@ -126,6 +154,9 @@ const styles = StyleSheet.create({
     borderCurve: 'continuous',
     gap: spacing[2.5],
   },
+  block: { gap: spacing[1] },
+  row: { flexDirection: 'row', justifyContent: 'space-between', gap: spacing[3] },
+  rowLabel: { flexShrink: 1 },
   bullet: { flexDirection: 'row', alignItems: 'flex-start', gap: spacing[2.5] },
   dot: { width: 5, height: 5, borderRadius: radius.full, marginTop: 9 },
   bulletText: { flex: 1 },

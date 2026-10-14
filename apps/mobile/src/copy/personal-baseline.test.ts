@@ -5,7 +5,7 @@ import { test } from 'node:test';
 
 import type { CheckinReading } from '@hooplab/engine';
 
-import { checkinLowBody, checkinNote, formatZ } from './personal-baseline.ts';
+import { checkinLowBody, checkinNote, checkinRows, formatZ } from './personal-baseline.ts';
 
 const base: CheckinReading = {
   date: '2026-10-31',
@@ -33,4 +33,13 @@ test('check-in notu: kıyas için kalan check-in, SD 0, z', () => {
 test('düşük notu en çok düşen maddeyi yazar', () => {
   assert.equal(checkinLowBody(base), 'Toplamın son 4 haftadaki olağanının 1 SD altında. En çok düşen: yorgunluk (ort. 4,1, bugün 2).');
   assert.equal(checkinLowBody({ ...base, drops: [] }), 'Toplamın son 4 haftadaki olağanının 1 SD altında.');
+});
+
+test('check-in sayfa satırları: bugün, ortalama ve fark puan ve SD olarak ayrı', () => {
+  assert.deepEqual(checkinRows(base, 18), [
+    { label: 'Bugün', value: '18 / 25' },
+    { label: '4 hafta ort.', value: '20,0' },
+    { label: 'Fark', value: '−2,0 puan (−2,0 SD)' },
+  ]);
+  assert.deepEqual(checkinRows({ ...base, baselineMean: null, z: null }, 18), [{ label: 'Bugün', value: '18 / 25' }]);
 });

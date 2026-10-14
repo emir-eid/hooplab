@@ -43,8 +43,8 @@ test('şekerleme sayılmaz, bölünmüş gece toplanır', () => {
 test('her şey bandında, uyku yeterli → Hazır', () => {
   const v = buildRecoveryView(daily(59, 50), nights(460), today);
   assert.equal(v.status.level, 'ready');
-  assert.equal(statusReason(v), 'HRV ve uyku nabzı kendi bandında, uyku yeterli.');
-  assert.deepEqual(statusChips(v), ['HRV bandında', 'Uyku yeterli']);
+  assert.equal(statusReason(v), 'HRV ve uyku nabzı kendi aralığında, uyku yeterli.');
+  assert.deepEqual(statusChips(v), ['HRV aralığında', 'Uyku yeterli']);
   assert.equal(statusAdvice(v), 'Planlanan antrenmanı yapabilirsin.');
   assert.deepEqual(v.respiration.latest, { date: today, value: 14.63 });
   assert.equal(v.respiration.nightHigh, false);
@@ -53,7 +53,7 @@ test('her şey bandında, uyku yeterli → Hazır', () => {
 test('HRV düşük ve nabız yüksek → Toparlan', () => {
   const v = buildRecoveryView(daily(35, 60), nights(460), today);
   assert.equal(v.status.level, 'recover');
-  assert.equal(statusReason(v), "HRV'nin 7 günlük ortalaması bandının altında ve uyku nabzı bandının üstünde.");
+  assert.equal(statusReason(v), "HRV'nin 7 günlük ortalaması aralığının altında ve uyku nabzı aralığının üstünde.");
   assert.deepEqual(statusChips(v), ['HRV düşük', 'Uyku nabzı yüksek']);
 });
 
@@ -61,8 +61,8 @@ test('yalnız uyku nabzı yüksek → Hazır, notla (karar 0041)', () => {
   const v = buildRecoveryView(daily(59, 60), nights(460), today);
   assert.equal(v.status.level, 'ready');
   assert.deepEqual(v.status.signals, ['rhr_high']);
-  assert.equal(statusReason(v), `HRV kendi bandında, uyku yeterli. ${rhrAloneNote}`);
-  assert.deepEqual(statusChips(v), ['HRV bandında', 'Uyku yeterli', 'Uyku nabzı yüksek']);
+  assert.equal(statusReason(v), `HRV kendi aralığında, uyku yeterli. ${rhrAloneNote}`);
+  assert.deepEqual(statusChips(v), ['HRV aralığında', 'Uyku yeterli', 'Uyku nabzı yüksek']);
   assert.equal(statusAdvice(v), 'Planlanan antrenmanı yapabilirsin.');
 });
 
@@ -98,7 +98,7 @@ test('bant henüz yok → durum yok, eksik gece sayısı söylenir', () => {
   assert.equal(v.hrv.baselineN, 8);
   assert.match(statusReason(v), /en az 12 gecesinden kurulur; şu an 8 gece var/);
   assert.equal(statusAdvice(v), null);
-  assert.equal(bandNote(v.hrv), 'bant oluşuyor');
+  assert.equal(bandNote(v.hrv), 'aralık oluşuyor');
 });
 
 test('hiç veri yok → bağlanma çağrısı', () => {
@@ -122,6 +122,8 @@ test('grafik 21 gün, eksik gün null ve sıfır değer çizilmez', () => {
 test('biçimler', () => {
   assert.equal(formatSleep(452), '7:32');
   assert.equal(formatSleep(60), '1:00');
+  // 7 saatin hemen altı 7:00 görünmez (kısa denen ortalama)
+  assert.equal(formatSleep(419.8), '6:59');
   assert.equal(formatDecimal(14.63), '14,6');
 });
 

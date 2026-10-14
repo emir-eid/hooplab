@@ -102,9 +102,9 @@ export function defaultSlot(hour: number): MealSlot {
 export const estimateLabel = 'Tahmin';
 
 const positionLabels: Record<RangePosition, string> = {
-  below: 'aralığın altında',
-  within: 'aralıkta',
-  above: 'aralığın üstünde',
+  below: 'hedefin altında',
+  within: 'hedefte',
+  above: 'hedefin üstünde',
 };
 
 const grams = (g: number) => `${Math.round(g)} g`;

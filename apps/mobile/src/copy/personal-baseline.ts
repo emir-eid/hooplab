@@ -1,19 +1,13 @@
 // Solunum ve sabah check-in'in kişisel kıyas metinleri (karar 0028). Tanı yok, risk dili yok;
 // solunum notu olası nedenleri sayar ve belirtide doktora yönlendirir (CLAUDE.md §3).
 
-import { checkinBaseline, recoveryBand, type CheckinReading, type RespirationReading } from '@hooplab/engine';
+import { checkinBaseline, recoveryBand, wellnessTotalRange, type CheckinReading, type RespirationReading } from '@hooplab/engine';
 
 import { wellnessLabels } from './labels.ts';
-import { bandNote, formatDecimal, rollingLabel, weeks } from './recovery.ts';
+import { formatDecimal, weeks, type ValueRow } from './recovery.ts';
 
 const checkinWeeks = weeks(checkinBaseline.baselineDays);
 const lowSd = formatDecimal(Math.abs(checkinBaseline.zNoteMax), 0);
-
-/** Solunum kartının alt satırı. */
-export function respirationNote(r: RespirationReading): string {
-  if (r.rolling === null) return bandNote(r);
-  return `${rollingLabel} ${formatDecimal(r.rolling)} · ${bandNote(r)}`;
-}
 
 export const respirationHighTitle = 'Son gece solunum alıştığından belirgin yüksek';
 
@@ -41,6 +35,18 @@ export function checkinNote(r: CheckinReading): string {
   }
   if (r.z === null) return `${checkinWeeks} hafta ort. ${formatDecimal(r.baselineMean)} · toplamın hep aynıydı, kıyas yok`;
   return `${checkinWeeks} hafta ort. ${formatDecimal(r.baselineMean)} · bugün ${formatZ(r.z)}`;
+}
+
+/** Check-in açıklama sayfasının "Senin değerlerin" satırları: bugün, ortalama ve fark (puan ve SD ayrı). */
+export function checkinRows(r: CheckinReading, total: number): ValueRow[] {
+  const rows: ValueRow[] = [{ label: 'Bugün', value: `${total} / ${wellnessTotalRange.max}` }];
+  if (r.baselineMean !== null) {
+    rows.push({ label: `${checkinWeeks} hafta ort.`, value: formatDecimal(r.baselineMean) });
+    const diff = total - r.baselineMean;
+    const sign = diff > 0 ? '+' : diff < 0 ? '−' : '';
+    rows.push({ label: 'Fark', value: `${sign}${formatDecimal(Math.abs(diff))} puan${r.z !== null ? ` (${formatZ(r.z)})` : ''}` });
+  }
+  return rows;
 }
 
 /** −1,34 → "−1,3 SD"; 0,5 → "+0,5 SD". */

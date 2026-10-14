@@ -84,7 +84,7 @@ export function demoCoachSummary(scenario: DemoScenario, s: CoachSnapshot): Audi
     if (s.sleep?.rollingHours != null && s.sleep.short) {
       out.push(
         sentence(
-          `Son ${shortSleep.rollingNights} gecenin uyku ortalaması ${formatDecimal(s.sleep.rollingHours)} saat, ${dec(shortSleep.minHours)} saatin altında.`,
+          `Son ${shortSleep.rollingNights} gecenin uyku ortalaması ${formatDecimal(Math.floor(s.sleep.rollingHours * 10 + 1e-9) / 10)} saat, ${dec(shortSleep.minHours)} saatin altında.`,
           ['sleep'],
         ),
       );

@@ -16,6 +16,7 @@ import { GroupLabel, ListGroup, ListRow } from '@/components/list';
 import { NutrientRing } from '@/components/nutrient-ring';
 import { SwipeDelete } from '@/components/swipe-delete';
 import { Text } from '@/components/text';
+import { explainers } from '@/copy/explainers';
 import { sessionKindLabels } from '@/copy/labels';
 import {
   carbsRing,
@@ -44,10 +45,15 @@ import { usePalette } from '@/theme/appearance';
 
 function SectionHead({ title, explain }: { title: string; explain: 'nutrition' | 'sweatTest' }) {
   return (
-    <View style={styles.sectionHead}>
-      <GroupLabel>{title}</GroupLabel>
-      <ExplainButton id={explain} style={styles.sectionInfo} />
-    </View>
+    <>
+      <View style={styles.sectionHead}>
+        <GroupLabel>{title}</GroupLabel>
+        <ExplainButton id={explain} style={styles.sectionInfo} />
+      </View>
+      <Text variant="caption" tone="inkMuted" style={styles.sectionHint}>
+        {explainers[explain].hint}
+      </Text>
+    </>
   );
 }
 
@@ -272,6 +278,7 @@ const styles = StyleSheet.create({
     paddingRight: layout.screenInset,
   },
   sectionInfo: { marginTop: spacing[3] },
+  sectionHint: { marginHorizontal: layout.cardInset + spacing[4], marginTop: -spacing[1], marginBottom: spacing[2] },
   note: { marginTop: spacing[1.5] },
   dayRow: { marginTop: spacing[4], paddingTop: spacing[3], borderTopWidth: StyleSheet.hairlineWidth },
   rings: { flexDirection: 'row', justifyContent: 'space-between' },

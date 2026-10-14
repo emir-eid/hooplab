@@ -100,7 +100,7 @@ export function sleepText(v: WeeklyReportView): string {
   return `${r.sleepNights} gece ölçüldü${r.sleepShort === true ? ' · ortalama kısa' : ''}`;
 }
 
-export const currentRecoveryNote = 'Haftanın ortalaması ve bant kıyası hafta bitince.';
+export const currentRecoveryNote = 'Haftanın ortalaması ve aralık kıyası hafta bitince.';
 
 // --- Gece notları ---
 
