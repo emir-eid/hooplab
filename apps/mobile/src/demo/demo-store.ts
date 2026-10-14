@@ -9,6 +9,7 @@ import type { CoachReply } from '@/data/coach';
 import type { AskEntry, AskReply } from '@/data/coach-ask';
 import type { CoachSnapshot } from '@/data/coach-snapshot';
 import type { Checkin, ExerciseToTag, NewTrainingSession, Result, TrainingSession } from '@/data/daily-log';
+import { buildEnergyView, energyFrom, type EnergyView } from '@/data/energy-view';
 import { linkCandidates, pendingExercises, type ExerciseSession } from '@/data/exercise-tagging';
 import type { SyncStatusRow } from '@/data/google-health-status';
 import { buildPainHistory, type PainHistory } from '@/data/pain-history';
@@ -83,13 +84,25 @@ export class DemoStore {
         sweat: session.sweat,
         exerciseSessionId: exerciseId,
         startedAt: session.exercise?.startTime ?? null,
+        kcal: null,
       },
     ];
     return ok(null);
   }
 
   async fetchSessions(localDate: string): Promise<Result<TrainingSession[]>> {
-    return ok(this.db.sessions.filter((s) => s.localDate === localDate));
+    return ok(this.db.sessions.filter((s) => s.localDate === localDate).map((s) => this.withKcal(s)));
+  }
+
+  /** Seansın kalorisi bağlı saat oturumundan (gerçek sorgudaki gömülü okuma gibi). */
+  private withKcal(s: TrainingSession): TrainingSession {
+    const kcal = s.exerciseSessionId ? (this.db.exercises.find((e) => e.id === s.exerciseSessionId)?.kcal ?? null) : null;
+    return { ...s, kcal };
+  }
+
+  async fetchEnergy(today: string): Promise<Result<EnergyView>> {
+    const from = energyFrom(today);
+    return ok(buildEnergyView(this.db.energy.filter((r) => r.local_date >= from && r.local_date <= today), today));
   }
 
   async fetchPendingExercises(from: string, to: string): Promise<Result<ExerciseSession[]>> {
@@ -184,6 +197,7 @@ export class DemoStore {
         })),
         earliestSession,
         healthDaily: db.healthDaily,
+        energy: db.energy,
         sleep: db.sleep,
         checkins: db.checkins.map((c) => ({ local_date: c.local_date, ...c.answers })),
         pain: db.pain,

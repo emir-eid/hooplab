@@ -23,6 +23,7 @@ function exercise(over: Partial<ExerciseSession> & Pick<ExerciseSession, 'id'>):
     exerciseType: 'SPORT',
     displayName: null,
     avgHrBpm: null,
+    kcal: null,
     dismissed: false,
     ...over,
   };
@@ -99,4 +100,10 @@ test('özet: gün bugün / dün / kısa gün adı; nabız yoksa yazılmaz', () =
     exerciseSummary({ ...e, avgHrBpm: null }, '2026-01-09', '2026-01-08').detail,
     'Pzt · 18:00 · 92 dk',
   );
+});
+
+test('özet: saatin kalorisi en yakın 10 kcal, tahmin işaretiyle (karar 0043)', () => {
+  const e = exercise({ id: 'a', avgHrBpm: 142, kcal: 643.6 });
+  assert.equal(exerciseSummary(e, '2026-01-05', '2026-01-04').detail, 'Bugün · 18:00 · 92 dk · ort. 142 nabız · ~640\u00a0kcal');
+  assert.equal(exerciseSummary({ ...e, kcal: 0 }, '2026-01-05', '2026-01-04').detail, 'Bugün · 18:00 · 92 dk · ort. 142 nabız');
 });

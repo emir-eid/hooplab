@@ -4,6 +4,7 @@
 import type { DayType } from '@hooplab/engine';
 
 import type { Result } from '@/data/daily-log';
+import type { EnergyDayRow } from '@/data/energy-view';
 import type { FluidRow, MealRow, WeightRow } from '@/data/nutrition-view';
 import type { HealthDailyRow, SleepRow } from '@/data/recovery-view';
 import {
@@ -39,7 +40,7 @@ export async function fetchWeeklyReport(weekStart: string, today: string): Promi
       first('daily_checkins'),
       supabase
         .from('health_daily')
-        .select('local_date, hrv_deep_rmssd_ms, nrem_hr_bpm, respiratory_rate_bpm, spo2_avg_pct, skin_temp_nightly_c, skin_temp_baseline_c')
+        .select('local_date, hrv_deep_rmssd_ms, nrem_hr_bpm, respiratory_rate_bpm, spo2_avg_pct, skin_temp_nightly_c, skin_temp_baseline_c, calories_kcal')
         .gte('local_date', r.health)
         .lte('local_date', end),
       supabase.from('sleep_sessions').select('local_date, minutes_asleep, is_nap').gte('local_date', r.health).lte('local_date', end),
@@ -64,6 +65,7 @@ export async function fetchWeeklyReport(weekStart: string, today: string): Promi
     sessions: sessionRows.map(({ sweat_pre_kg, ...s }) => ({ ...s, sweat: sweat_pre_kg !== null })),
     earliestSession: date(firstSession),
     healthDaily: (daily.data ?? []) as HealthDailyRow[],
+    energy: ((daily.data ?? []) as EnergyDayRow[]).map((r) => ({ local_date: r.local_date, calories_kcal: r.calories_kcal })),
     sleep: (sleep.data ?? []) as SleepRow[],
     checkins: (checkins.data ?? []) as WeeklyRows['checkins'],
     pain: (pain.data ?? []) as WeeklyPainRow[],

@@ -107,6 +107,33 @@ export const kbSources: readonly KbSource[] = [
     "summary": "## Ne söylüyor (kendi cümlelerimizle)\n\n- Çalışmaların çoğu, oranın görece yüksek olduğu dönemlerde sakatlık riskinin düşük veya orta orana göre daha yüksek olduğunu buluyor.\n- Yöntemler çok dağınık: çalışmaların hemen hepsi bağlı (coupled) hesap ve 1 haftaya 4 haftalık pencere kullanıyor, ama 14 farklı aralık sınıflaması var ve neredeyse hiçbiri aynı değil. Bu, önerilerin gücünü sınırlıyor.\n- Seans RPE ve toplam mesafe en sık kullanılan yük ölçüleri.\n\n## Uygulamada kullanılan sayılar\n\nDoğrudan eşik alınmadı. 7 / 28 günlük pencerenin yaygın olduğunun ve aralık sınırlarında uzlaşı olmadığının dayanağı.\n\n## Sınırlılıklar\n\n- Yalnız erkek sporcular; basketbol az temsil ediliyor.\n- Yalnız özet okundu."
   },
   {
+    "id": "argent-2022",
+    "title": "Recommendations for Determining the Validity of Consumer Wearables and Smartphones for the Estimation of Energy Expenditure: Expert Statement and Checklist of the INTERLIVE Network",
+    "authors": [
+      "Argent R",
+      "Hetherington-Rauth M",
+      "Stang J",
+      "Tarp J",
+      "Ortega FB",
+      "Molina-Garcia P",
+      "Schumann M",
+      "Bloch W",
+      "Cheng S",
+      "Grøntved A",
+      "Brønd JC",
+      "Ekelund U",
+      "Sardinha LB",
+      "Caulfield B"
+    ],
+    "year": 2022,
+    "type": "consensus",
+    "doi": "10.1007/s40279-022-01665-4",
+    "pmid": "35260991",
+    "journal": "Sports Medicine",
+    "population": "INTERLIVE ağının uzman bildirgesi; tüketici giyilebilirleri ve telefonlarla enerji harcaması geçerlilik çalışmalarının yöntemini inceleyen sistematik tarama (62 çalışma)",
+    "summary": "## Ne söylüyor (kendi cümlelerimizle)\n\n- Tüketici cihazlarının enerji harcaması tahminini doğrulamak için ortak bir yöntem öneriyor: günlük toplam için referans çift etiketli su (7-14 gün), belirli bir seans için dolaylı kalorimetri.\n- İncelenen 62 çalışmanın yalnız 5'i (%8) serbest yaşam koşullarında yapılmış; çoğu laboratuvarda. Günlük toplamın doğruluğu en az çalışılmış alan.\n- Kullanıcılar bu değeri diyet ve kilo yönetiminde kullandığı için geçerliliğin önemli olduğunu, ama yöntemlerin çalışmadan çalışmaya çok değiştiğini vurguluyor.\n\n## Uygulamada kullanılan sayılar\n\n| Değer | Birim | Bağlam / koşul |\n|---|---|---|\n| Günlük toplamın doğruluğu az çalışılmış | ilke | Bugün'deki günlük toplam tahmin olarak gösterilir; alımla karşılaştırılmaz (karar 0043) |\n\n## Sınırlılıklar\n\n- Hata büyüklüğü vermiyor; yöntem ve kanıt boşluğu için kaynak.\n- Tam metin okundu (Europe PMC, PMC9325806)."
+  },
+  {
     "id": "bache-mathiesen-2024",
     "title": "Causal inference did not detect any effect of jump load on knee complaints in elite men's volleyball",
     "authors": [
@@ -326,6 +353,27 @@ export const kbSources: readonly KbSource[] = [
     "summary": "## Ne söylüyor (kendi cümlelerimizle)\n\n- Bilek cilt sıcaklığı çekirdek sıcaklığının yaklaşık 1 °C altında okuyor ve onunla uyumu zayıf.\n- Fark, kişinin bulunduğu ortama (içeri / dışarıdan gelme) göre değişiyor.\n\n## Uygulamada kullanılan sayılar\n\nDoğrudan sayı alınmadı. Cilt sıcaklığı notunun \"bu bir ateş ölçümü değil; şüphede termometreyle ölç\" demesinin dayanağı.\n\n## Sınırlılıklar\n\n- Tek noktalık el termometresi ölçümü, takılı bir sensör değil; Fitbit'e aktarım dolaylı."
   },
   {
+    "id": "chevance-2022",
+    "title": "Accuracy and Precision of Energy Expenditure, Heart Rate, and Steps Measured by Combined-Sensing Fitbits Against Reference Measures: Systematic Review and Meta-analysis",
+    "authors": [
+      "Chevance G",
+      "Golaszewski NM",
+      "Tipton E",
+      "Hekler EB",
+      "Buman M",
+      "Welk GJ",
+      "Patrick K",
+      "Godino JG"
+    ],
+    "year": 2022,
+    "type": "meta-analysis",
+    "doi": "10.2196/35626",
+    "pmid": "35416777",
+    "journal": "JMIR mHealth and uHealth",
+    "population": "Nabız sensörlü Fitbit cihazları (Charge HR, Surge, Charge 2, Versa ve diğerleri); 52 çalışma, 1628 katılımcı; enerji harcaması 19 çalışmada (çoğu dolaylı kalorimetri, biri çift etiketli su)",
+    "summary": "## Ne söylüyor (kendi cümlelerimizle)\n\n- Nabız ve hareketi birlikte kullanan Fitbit'lerin enerji harcamasını referans yöntemlerle karşılaştıran Bland-Altman meta-analizi.\n- Yanlılık riski yüksek çalışmalar çıkarıldığında Fitbit dakikada ortalama 2,77 kcal az tahmin ediyor; tek bir ölçümün sapması dakikada yaklaşık −12,75 ile +7,41 kcal arasına yayılabiliyor.\n- Az tahmin ve dağınıklık orta-şiddetli yoğunlukta hafif yoğunluğa göre daha büyük; en kötü sonuç bisiklette.\n- Ortalama yanlılık küçük görünse de kişiden kişiye ve ölçümden ölçüme yayılım geniş: tek bir değer güvenilir bir ölçüm sayılmaz.\n\n## Uygulamada kullanılan sayılar\n\n| Değer | Birim | Bağlam / koşul |\n|---|---|---|\n| Ortalama az tahmin, geniş yayılım | ilke | Arayüzde değer \"Tahmin\" etiketli, en yakın 10 kcal'e yuvarlanır (karar 0043) |\n\n## Sınırlılıklar\n\n- Çalışmaların çoğu laboratuvarda ve kısa süreli; takım sporu yok. Eski Fitbit modelleri; Fitbit Air değil.\n- Tam metin okundu (Europe PMC, PMC9047731)."
+  },
+  {
     "id": "conte-2018",
     "title": "Monitoring Training Load and Well-Being During the In-Season Phase in National Collegiate Athletic Association Division I Men's Basketball",
     "authors": [
@@ -427,6 +475,24 @@ export const kbSources: readonly KbSource[] = [
     "summary": "## Ne söylüyor (kendi cümlelerimizle)\n\n- Maç sonrası toparlanmayı sıçrama ve sprint testleri ile kan göstergeleri (kreatin kinaz, kortizol, testosteron) üzerinden derliyor.\n- Performans testleri toparlandığında kas hasarı göstergeleri hala toparlanmamış olabiliyor.\n- Kreatin kinazın başlangıca dönmesi 72 saate kadar veya daha uzun sürebiliyor; futbol ve ragbi diğer top sporlarından daha uzun toparlanma gerektiriyor.\n\n## Uygulamada kullanılan sayılar\n\n| Değer | Birim | Bağlam / koşul |\n|---|---|---|\n| Kreatin kinaz toparlanması | ≤ 72 saat veya daha uzun | maç sonrası, takım top sporları |\n\n## Sınırlılıklar\n\n- Çalışmalar arasında yöntem farkı büyük; basketbol verisi sınırlı."
   },
   {
+    "id": "doherty-2024",
+    "title": "Keeping Pace with Wearables: A Living Umbrella Review of Systematic Reviews Evaluating the Accuracy of Consumer Wearable Technologies in Health Measurement",
+    "authors": [
+      "Doherty C",
+      "Baldwin M",
+      "Keogh A",
+      "Caulfield B",
+      "Argent R"
+    ],
+    "year": 2024,
+    "type": "systematic-review",
+    "doi": "10.1007/s40279-024-02077-2",
+    "pmid": "39080098",
+    "journal": "Sports Medicine",
+    "population": "Tüketici giyilebilirlerinin doğruluğunu inceleyen 24 sistematik derleme (şemsiye derleme); enerji harcaması için 8 derleme, 218 çalışma, 7734 katılımcı",
+    "summary": "## Ne söylüyor (kendi cümlelerimizle)\n\n- Sürekli güncellenen bir şemsiye derleme: tüketici giyilebilirlerinin ölçtüğü her büyüklük için sistematik derlemeleri bir araya getiriyor.\n- Enerji harcamasında cihazlar ortalamada az tahmin ediyor (grup ortalaması yaklaşık dakikada −3 kcal ya da −%3). Tek tek çalışmalardaki hata −%21,27 ile +%14,76 arasında dağılıyor.\n- Yazarlar çalışmalar arasındaki farklılık yüzünden kesin bir doğruluk yargısına varılamayacağını söylüyor; birincil çalışmaların bir kısmı kabul gören bir referans yöntem kullanmamış.\n- Enerji harcamasındaki tek yüksek kaliteli derleme Fitbit'e özgü (chevance-2022).\n\n## Uygulamada kullanılan sayılar\n\n| Değer | Birim | Bağlam / koşul |\n|---|---|---|\n| −21,27 ile +14,76 | % | Birincil çalışmalarda enerji harcaması hatasının aralığı; yön çoğunlukla az tahmin (açıklama metni, sayı arayüzde kullanılmaz) |\n\n## Sınırlılıklar\n\n- Şemsiye düzeyi: aktivite türüne göre ayrım sınırlı, takım sporu ayrı değerlendirilmemiş.\n- Fitbit Air ve profesyonel sporcular kapsamda değil.\n- Tam metin okundu (Europe PMC, PMC11560992)."
+  },
+  {
     "id": "duking-2021",
     "title": "Monitoring and adapting endurance training on the basis of heart rate variability monitored by wearable technologies: A systematic review with meta-analysis",
     "authors": [
@@ -445,6 +511,27 @@ export const kbSources: readonly KbSource[] = [
     "journal": "Journal of Science and Medicine in Sport",
     "population": "8 çalışma, 9 müdahale, 198 katılımcı; HRV'si giyilebilir cihazla ölçülen dayanıklılık sporcuları",
     "summary": "## Ne söylüyor (kendi cümlelerimizle)\n\n- Giyilebilir cihazla ölçülen HRV'ye göre ayarlanan antrenman, sabit programa göre submaksimal fizyolojik göstergelerde orta düzeyde daha iyi sonuç verdi.\n- Performans ve VO2peak üzerindeki fark küçük ve anlamlı değil; HRV yönlendirmesinde performansta yanıt vermeyen kişi sayısı daha az.\n- HRV grubunda genellikle daha az orta ve yüksek yoğunluklu seans yapıldı.\n\n## Uygulamada kullanılan sayılar\n\n| Değer | Birim | Bağlam / koşul |\n|---|---|---|\n| Giyilebilir cihaz HRV'si karar için kullanılabilir | ilke | Bileklik ölçümüyle bant yaklaşımı; etki küçük, arayüz kesinlik iddia etmez |\n\n## Sınırlılıklar\n\n- Dayanıklılık sporcuları, az sayıda çalışma, farklı protokoller.\n- Yalnız özet okundu."
+  },
+  {
+    "id": "feehan-2018",
+    "title": "Accuracy of Fitbit Devices: Systematic Review and Narrative Syntheses of Quantitative Data",
+    "authors": [
+      "Feehan LM",
+      "Geldman J",
+      "Sayre EC",
+      "Park C",
+      "Ezzat AM",
+      "Yoo JY",
+      "Hamilton CB",
+      "Li LC"
+    ],
+    "year": 2018,
+    "type": "systematic-review",
+    "doi": "10.2196/10527",
+    "pmid": "30093371",
+    "journal": "JMIR mHealth and uHealth",
+    "population": "Fitbit cihazlarının doğruluğunu inceleyen 67 çalışma; enerji harcaması için kontrollü ortamda 18 çalışma (dolaylı ya da doğrudan kalorimetri), serbest yaşamda 3 çalışma",
+    "summary": "## Ne söylüyor (kendi cümlelerimizle)\n\n- Kontrollü ortamdaki karşılaştırmaların çok azı ölçülen enerji harcamasına ±%3 yakınlıkta.\n- Hatanın yönü hareketin türüne bağlı: düz zeminde sürekli yürüyüşte Fitbit fazla tahmin ederken, dur-kalklı hareketlerde (ev işi ya da spor benzeri etkinlikler) karşılaştırmaların çoğunda az tahmin ediyor; ortalama hata yaklaşık −%12 ile −%19 arasında.\n- Yazarlar Fitbit'in enerji harcamasını tutarlı biçimde doğru ölçmediği sonucuna varıyor.\n\n## Uygulamada kullanılan sayılar\n\n| Değer | Birim | Bağlam / koşul |\n|---|---|---|\n| Dur-kalklı ve spor benzeri harekette çoğunlukla az tahmin | ilke | Basketbol seanslarının kalorisi büyük olasılıkla düşük okunur (açıklama metni) |\n\n## Sınırlılıklar\n\n- Modeller çoğunlukla 2015 öncesi; bilek ve gövdeye takılan cihazlar birlikte sentezlenmiş; karşılaştırmalar eşit ağırlıklı (meta-analiz değil).\n- Basketbol ya da sıçramalı hareket ayrıca incelenmemiş; \"spor benzeri\" etkinliklerden aktarım.\n- Tam metin okundu (Europe PMC, PMC6107736)."
   },
   {
     "id": "ferioli-2020",
@@ -958,6 +1045,27 @@ export const kbSources: readonly KbSource[] = [
     "summary": "## Ne söylüyor (kendi cümlelerimizle)\n\n- Kreatin monohidrat, antrenman sırasında yüksek yoğunluklu egzersiz kapasitesini ve yağsız kütleyi artırmak için sporcuların kullanabildiği en etkili besin takviyesi olarak değerlendiriliyor; en çok çalışılmış biçim de monohidrat.\n- Kas kreatin depolarını en hızlı artırma yolu yaklaşık 0,3 g/kg/gün kreatin monohidratı 5-7 gün almak, ardından 3-5 g/gün ile sürdürmek. Baştan 3-5 g/gün almak da depoları 3-4 haftada artırıyor, ama bu yolun ilk dönemdeki performans etkisi daha az destekleniyor.\n- Karbonhidrat ya da karbonhidrat ve proteinle birlikte almak kasa geçişi artırıyor gibi görünüyor; performansa ek katkısı belirsiz.\n- Literatürde tutarlı olarak bildirilen tek yan etki kilo artışı; yükleme sırasında kısa süreli su tutulması olabiliyor. Sağlıklı kişilerde uzun süreli kullanımda zararlı bir etki gösteren güçlü kanıt bulunmuyor.\n\n## Uygulamada kullanılan sayılar\n\nDoğrudan sayı alınmadı. Kreatin sorularında koçun dayanağı (soru-cevap, karar 0037); uygulama doz hesaplamaz.\n\n## Sınırlılıklar\n\n- Çalışmaların çoğu erkeklerde; bazı çalışmalar kadınlarda kuvvet ve kas kazanımının daha az olabileceğini gösteriyor.\n- Yazarların bir kısmı takviye sektörüyle bağlantılı (bildirgedeki çıkar beyanı); güvenlik ve etkinlik bulguları IOC uzlaşısıyla (maughan-2018) birlikte okunur.\n- Basketbola özgü bir bulgu değil; takım sporlarına aktarım IOC'nin \"tekrarlı yüksek yoğunluklu efor\" değerlendirmesine dayanıyor.\n- Takviye doping açısından ayrıca değerlendirilir (maughan-2018).\n- Tam metin okundu (açık erişim, PMC5469049)."
   },
   {
+    "id": "lambe-2026",
+    "title": "The accuracy of VO2 max, heart rate and energy expenditure measurements from Google Pixel Watch 3",
+    "authors": [
+      "Lambe R",
+      "Schumann M",
+      "Hamilton S",
+      "Donnelly L",
+      "White T",
+      "O'Reilly S",
+      "Lally S",
+      "Doherty C"
+    ],
+    "year": 2026,
+    "type": "cross-sectional",
+    "doi": "10.1371/journal.pone.0356808",
+    "pmid": "42743109",
+    "journal": "PLOS One",
+    "population": "Sağlıklı yetişkinler, n=34 (enerji harcaması analizinde 30); koşu bandında maksimal test, referans dolaylı kalorimetri",
+    "summary": "## Ne söylüyor (kendi cümlelerimizle)\n\n- Fitbit'in algoritmalarını kullanan bir Google saatinin enerji harcaması laboratuvarda dolaylı kalorimetriyle karşılaştırılmış.\n- Saat ortalamada hafifçe az tahmin etmiş; ortalama mutlak yüzde hata %15,02 (%95 GA 10,70-19,33).\n- Hata kişiden kişiye çok değişmiş: kişi bazında ortalama mutlak yüzde hata yaklaşık %2 ile %49 arasında.\n- Yazarlar sensör ve yazılım değiştiği için eski Fitbit çalışmalarının sonuçlarının yeni cihazlara taşınamayacağını belirtiyor.\n\n## Uygulamada kullanılan sayılar\n\n| Değer | Birim | Bağlam / koşul |\n|---|---|---|\n| 15 | % | Ortalama mutlak yüzde hata; tipik hata aralığının alt ucu (`enerji-harcamasi-tahmin`) |\n\n## Sınırlılıklar\n\n- Yalnız sürekli koşu bandı testi; aralıklı ya da sıçramalı hareket yok. Pixel Watch 3, Fitbit Air değil.\n- Google çalışmayı fonlamış; yazarlar bağımsız olduklarını belirtiyor.\n- Tam metin okundu (Europe PMC, PMC13577386)."
+  },
+  {
     "id": "latshang-2013",
     "title": "Are nocturnal breathing, sleep, and cognitive performance impaired at moderate altitude (1,630-2,590 m)?",
     "authors": [
@@ -1455,6 +1563,32 @@ export const kbSources: readonly KbSource[] = [
     "summary": "## Ne söylüyor (kendi cümlelerimizle)\n\n- Haftalık ln rMSSD ortalaması haftanın 1 ila 7 rastgele gününden hesaplandığında ne kadar bilgi kaybedildiği karşılaştırıldı.\n- Aşırı yüklenmeyi yakalama gücü ve performansla ilişki 3-4 günden sonra neredeyse değişmiyor; 1-2 günlük ortalama zayıf kalıyor.\n- Öneri: haftalık değerlendirme için en az 3 geçerli ölçüm.\n\n## Uygulamada kullanılan sayılar\n\n| Değer | Birim | Bağlam / koşul |\n|---|---|---|\n| Haftada en az 3 geçerli ölçüm | gün / 7 gün | 7 günlük ortalama ancak bu kadar değer varsa hesaplanır; 4 haftalık başlangıç bandı için en az 12 |\n\n## Sınırlılıklar\n\n- Triatlonlular, sabah ölçümü. Sayı basketbolcuya ve gece bileklik ölçümüne aktarılıyor.\n- Yalnız özet okundu."
   },
   {
+    "id": "reddy-2018",
+    "title": "Accuracy of Wrist-Worn Activity Monitors During Common Daily Physical Activities and Types of Structured Exercise: Evaluation Study",
+    "authors": [
+      "Reddy RK",
+      "Pooni R",
+      "Zaharieva DP",
+      "Senf B",
+      "El Youssef J",
+      "Dassau E",
+      "Doyle Iii FJ",
+      "Clements MA",
+      "Rickels MR",
+      "Patton SR",
+      "Castle JR",
+      "Riddell MC",
+      "Jacobs PG"
+    ],
+    "year": 2018,
+    "type": "cross-sectional",
+    "doi": "10.2196/10338",
+    "pmid": "30530451",
+    "journal": "JMIR mHealth and uHealth",
+    "population": "Sağlıklı yetişkinler, n=20 (27,5 ± 6,0 yaş); Fitbit Charge 2 ve Garmin vívosmart HR+; referans taşınabilir dolaylı kalorimetri; maksimal test, serbest ağırlık devresi, koşu bandı ve bisiklette yüksek yoğunluklu aralıklı antrenman, günlük işler",
+    "summary": "## Ne söylüyor (kendi cümlelerimizle)\n\n- Fitbit bütün etkinliklerde enerji harcamasını ortalama yaklaşık %19 az tahmin etmiş; ortalama mutlak yüzde hata %25,1.\n- Hata etkinliğe göre değişiyor: koşu bandında aralıklı yüksek yoğunlukta görece küçük, bilek hareketinin az olduğu bisiklette çok büyük (yaklaşık −%42), kuvvet çalışmasında mutlak hata yaklaşık %28.\n- Ölçüm cihazın egzersiz modu seçilerek yapılmış; mod seçilmezse doğruluğun düştüğü belirtiliyor.\n\n## Uygulamada kullanılan sayılar\n\n| Değer | Birim | Bağlam / koşul |\n|---|---|---|\n| 25 | % | Fitbit'in ortalama mutlak yüzde hatası (bütün etkinlikler); tipik hata aralığının içinde (`enerji-harcamasi-tahmin`) |\n\n## Sınırlılıklar\n\n- Küçük örneklem, eski model (Charge 2). Basketbola özgü sıçrama ve yön değiştirme yok.\n- Tam metin okundu (Europe PMC, PMC6305876)."
+  },
+  {
     "id": "ren-2024",
     "title": "Assessing pre-season workload variation in professional rugby union players by comparing three acute:Chronic workload ratio models based on playing positions",
     "authors": [
@@ -1647,6 +1781,27 @@ export const kbSources: readonly KbSource[] = [
     "journal": "British journal of sports medicine",
     "population": "Profesyonel erkek futbolcular, n=17 akut adduktor longus yaralanması (video analizi)",
     "summary": "## Ne söylüyor (kendi cümlelerimizle)\n\n- Akut adduktor longus yaralanmalarının çoğu temassız ve oyundaki ani bir değişikliğe hızlı tepki sırasında oldu.\n- Yaralanma anındaki hareketler: yön değiştirme (yüzde 35), şut (yüzde 29), uzanma (yüzde 24), sıçrama (yüzde 12).\n\n## Uygulamada kullanılan sayılar\n\nSayı alınmadı; yalnız nitel bulgu (eşleme veya gerekçe) için kullanılır.\n\n## Sınırlılıklar\n\n- Futbol, küçük örneklem; basketbola aktarım varsayım."
+  },
+  {
+    "id": "shcherbina-2017",
+    "title": "Accuracy in Wrist-Worn, Sensor-Based Measurements of Heart Rate and Energy Expenditure in a Diverse Cohort",
+    "authors": [
+      "Shcherbina A",
+      "Mattsson CM",
+      "Waggott D",
+      "Salisbury H",
+      "Christle JW",
+      "Hastie T",
+      "Wheeler MT",
+      "Ashley EA"
+    ],
+    "year": 2017,
+    "type": "cross-sectional",
+    "doi": "10.3390/jpm7020003",
+    "pmid": "28538708",
+    "journal": "Journal of Personalized Medicine",
+    "population": "Gönüllü yetişkinler, n=60 (29 erkek, 31 kadın); 7 bileklik (aralarında Fitbit Surge); referans dolaylı kalorimetri; oturma, yürüme, koşu, bisiklet",
+    "summary": "## Ne söylüyor (kendi cümlelerimizle)\n\n- Bilekliklerin nabız ölçümü çoğu etkinlikte kabul edilebilir doğrulukta, enerji harcaması tahmini ise belirgin biçimde daha hatalı.\n- Hiçbir cihaz enerji harcamasında %20'nin altında hataya inmemiş. Görevler genelinde medyan hata en düşük Fitbit Surge'de (%27,4), en yüksek %92,6.\n- Hata kişinin özelliklerine göre değişmiş (cinsiyet, beden kitle indeksi, ten rengi).\n- Yazarlar enerji harcaması değerlerinin dikkatle kullanılmasını öneriyor.\n\n## Uygulamada kullanılan sayılar\n\n| Değer | Birim | Bağlam / koşul |\n|---|---|---|\n| 27,4 | % | Fitbit Surge'ün görevler genelindeki medyan hatası; tipik hata aralığının üst ucuna yakın (`enerji-harcamasi-tahmin`) |\n\n## Sınırlılıklar\n\n- Yalnız sürekli tempolu etkinlikler; aralıklı egzersiz yok. Eski modeller.\n- Tam metin okundu (Europe PMC, PMC5491979)."
   },
   {
     "id": "silbernagel-2007",
@@ -2190,6 +2345,45 @@ export const kbRules: readonly KbRule[] = [
       "smarr-2020",
       "chen-2020",
       "alavi-2022"
+    ]
+  },
+  {
+    "id": "enerji-gosterim",
+    "module": "enerji",
+    "description": "Yakılan enerji en yakın 10 kcal'e yuvarlanarak gösterilir. Kartta büyük sayı bugünün son senkrona kadarki değeri (gün bitmeden eksik); altında dünün tamamı ve bugünden önceki 7 günün ortalaması.",
+    "value": {
+      "round_kcal": 10,
+      "average_days": 7,
+      "unit": "kcal"
+    },
+    "appliesTo": "Bugün'deki Yakılan enerji kartı, seans satırları, haftalık rapor",
+    "notes": "Tek tek ölçümlerin sapması dakikada birkaç kcal'e yayıldığı için (chevance-2022) birler basamağı anlamsız; 10 kcal bir gösterim tercihi, bilimsel eşik değil. 7 günlük pencere uygulamanın öbür ortalamalarıyla aynı (toparlanma-bant); kaynağa dayanmaz, eşik değildir.",
+    "sources": [
+      "chevance-2022"
+    ]
+  },
+  {
+    "id": "enerji-harcamasi-tahmin",
+    "module": "enerji",
+    "description": "Bilekliğin yakılan enerji değeri (Google Health günlük toplamı ve egzersiz oturumunun kalorisi) ölçüm değil tahmindir. Tipik hata yaklaşık %15-30; dur-kalklı ve spor benzeri harekette çoğunlukla az tahmin. Eşik ve hedef yok, günün durumuna girmez, alımla karşılaştırılmaz (enerji dengesi hesaplanmaz).",
+    "value": {
+      "typical_error_pct": [
+        15,
+        30
+      ],
+      "in_day_status": false,
+      "compared_with_intake": false
+    },
+    "appliesTo": "health_daily.calories_kcal (dinlenirken yakılan dahil günlük toplam) ve exercise_sessions.calories_kcal",
+    "notes": "Aralık laboratuvar çalışmalarındaki ortalama ya da medyan mutlak yüzde hatalardan: Fitbit algoritmalı Pixel Watch 3'te %15 (lambe-2026), Fitbit Charge 2'de %25 (reddy-2018), Fitbit Surge'de medyan %27,4 (shcherbina-2017). Kişi bazında hata %2-49'a kadar yayılabiliyor (lambe-2026). Yön çoğunlukla az tahmin (chevance-2022, doherty-2024) ama tutarlı değil; dur-kalklı harekette az tahmin (feehan-2018). Fitbit Air için yayımlanmış geçerlilik çalışması yok, basketbolda bileklik çalışması yok: aralık başka modellerden ve sürekli ya da aralıklı laboratuvar etkinliklerinden aktarıldı. Günlük toplamın serbest yaşamdaki doğruluğu en az çalışılmış alan (argent-2022: 62 çalışmanın 5'i). Alımla karşılaştırmama kaynağın doğrudan önerisi değil, HoopLab'in çıkarımı: harcamadaki bu hata ve kayıtlı alımdaki eksiklik (capling-2017, karar 0030) birleşince günlük fark anlamlı olmaz; düşük enerji yeterliliği zaten hesaplanmaz (enerji-yeterliligi, karar 0029).",
+    "sources": [
+      "lambe-2026",
+      "reddy-2018",
+      "shcherbina-2017",
+      "chevance-2022",
+      "feehan-2018",
+      "doherty-2024",
+      "argent-2022"
     ]
   },
   {

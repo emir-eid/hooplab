@@ -3,6 +3,7 @@
 // Check-in kendi son 4 haftasıyla z-skoruyla kıyaslanır; z ≤ −1 ise not, günün durumuna girmez (karar 0028).
 // Beslenme hedefi (gün tipine göre) ve bugün / dünün ter testleri (karar 0029).
 // Koçun günlük özeti (karar 0032): bütün görünümler gelince anlık değerler kurulur; kart check-in'in altında.
+// Yakılan enerji (karar 0043): bilekliğin günlük toplamı ve seans kalorisi; tahmin, alımla karşılaştırılmaz.
 
 import { sessionLoad, sweatTest, wellnessTotal, wellnessTotalRange, type CheckinReading, type DayType } from '@hooplab/engine';
 import { layout, radius, size, spacing } from '@hooplab/theme';
@@ -14,6 +15,7 @@ import { Aura } from '@/components/aura';
 import { Card } from '@/components/card';
 import { CoachCard } from '@/components/coach-card';
 import { DemoBar } from '@/components/demo-bar';
+import { EnergyCard } from '@/components/energy-section';
 import { ExplainButton } from '@/components/info-button';
 import { GroupLabel, ListGroup, ListRow } from '@/components/list';
 import { LoadSpikeRow } from '@/components/load-section';
@@ -23,6 +25,7 @@ import { PageHeader } from '@/components/page-header';
 import { NightData, RecoveryState } from '@/components/recovery-section';
 import { Screen } from '@/components/screen';
 import { Text } from '@/components/text';
+import { kcalShort } from '@/copy/energy';
 import { sessionKindLabels } from '@/copy/labels';
 import { sweatSummary } from '@/copy/nutrition';
 import { explainers } from '@/copy/explainers';
@@ -38,6 +41,8 @@ import {
   type Checkin,
   type TrainingSession,
 } from '@/data/daily-log';
+import { fetchEnergy } from '@/data/energy';
+import type { EnergyView } from '@/data/energy-view';
 import { exerciseSummary, type ExerciseSession } from '@/data/exercise-tagging';
 import { deleteMeal, fetchNutrition, saveDayType, saveMatchDay } from '@/data/nutrition';
 import type { NutritionView } from '@/data/nutrition-view';
@@ -76,6 +81,7 @@ function TodayScreen({ demo }: { demo: DemoScenario | null }) {
   const [load, setLoad] = useState<TrainingLoadView | null>(null);
   const [checkinReading, setCheckinReading] = useState<CheckinReading | null>(null);
   const [nutrition, setNutrition] = useState<NutritionView | null>(null);
+  const [energy, setEnergy] = useState<EnergyView | null>(null);
   const [coachInputs, setCoachInputs] = useState<CoachInputs | null>(null);
   const coachSnapshot = useMemo(() => (coachInputs ? buildCoachSnapshot(coachInputs) : null), [coachInputs]);
   // Koç sekmesindeki soru bugünün değerleriyle gitsin (karar 0037).
@@ -127,6 +133,10 @@ function TodayScreen({ demo }: { demo: DemoScenario | null }) {
       // Check-in kıyası ikincil: alınamazsa kart yalnız toplamı gösterir.
       readingP.then((r) => {
         if (!cancelled) setCheckinReading(r.ok ? r.value : null);
+      });
+      // Yakılan enerji ikincil: alınamazsa ya da veri yoksa kart görünmez.
+      fetchEnergy(today).then((r) => {
+        if (!cancelled) setEnergy(r.ok && !r.value.empty ? r.value : null);
       });
       // Yük notu ikincil: alınamazsa Bugün hata göstermez, not yalnız görünmez.
       loadP.then((r) => {
@@ -315,7 +325,7 @@ function TodayScreen({ demo }: { demo: DemoScenario | null }) {
                 <View style={styles.rowText}>
                   <Text variant="rowLabel">{sessionKindLabels[s.kind]}</Text>
                   <Text variant="caption" tone="inkMuted">
-                    {`${s.durationMin} dk · RPE ${s.rpe}${s.minutesPlayed !== null ? ` · ${s.minutesPlayed} dk oynadı` : ''}${s.exerciseSessionId ? ' · saatle eşleşti' : ''}${sweatNote(s)}`}
+                    {`${s.durationMin} dk · RPE ${s.rpe}${s.minutesPlayed !== null ? ` · ${s.minutesPlayed} dk oynadı` : ''}${s.exerciseSessionId ? ' · saatle eşleşti' : ''}${kcalNote(s)}${sweatNote(s)}`}
                   </Text>
                 </View>
                 <Text variant="callout">{`${sessionLoad(s.rpe, s.durationMin) ?? '–'} AU`}</Text>
@@ -325,6 +335,8 @@ function TodayScreen({ demo }: { demo: DemoScenario | null }) {
         </>
       ) : null}
 
+      {energy ? <EnergyCard view={energy} /> : null}
+
       {recovery && !recovery.empty ? <NightData view={recovery} /> : null}
     </Screen>
   );
@@ -332,6 +344,12 @@ function TodayScreen({ demo }: { demo: DemoScenario | null }) {
 
 function sweatResult(s: TrainingSession) {
   return s.sweat ? sweatTest({ ...s.sweat, urineL: s.sweat.urineL ?? 0, durationMin: s.durationMin }) : null;
+}
+
+/** Seans satırına bağlı saat oturumunun kalorisi (tahmin, karar 0043). */
+function kcalNote(s: TrainingSession): string {
+  const k = kcalShort(s.kcal);
+  return k ? ` · ${k}` : '';
 }
 
 /** Seans satırına ter testinin kısa özeti. */

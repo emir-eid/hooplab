@@ -26,6 +26,7 @@ function rowsOf(db: DemoDb): WeeklyRows {
     })),
     earliestSession: db.sessions.map((s) => s.localDate).sort()[0] ?? null,
     healthDaily: db.healthDaily,
+    energy: db.energy,
     sleep: db.sleep,
     checkins: db.checkins.map((c) => ({ local_date: c.local_date, ...c.answers })),
     pain: db.pain,
@@ -43,6 +44,7 @@ const emptyRows: WeeklyRows = {
   sessions: [],
   earliestSession: null,
   healthDaily: [],
+  energy: [],
   sleep: [],
   checkins: [],
   pain: [],
@@ -138,7 +140,20 @@ test('boş hesap: rapor üretilir, her bölüm boş', () => {
   assert.deepEqual(v.recovery.counts, { insufficient: 7 });
   assert.equal(v.checkin.n, 0);
   assert.equal(v.weight.mean, null);
+  assert.equal(v.energy.total, null);
   assert.throws(() => buildWeeklyReportView(emptyRows, '2026-10-19', today));
+});
+
+test('yakılan enerji: biten haftanın toplamı ve önceki hafta, süren haftada bugün ortalamaya girmez (karar 0043)', () => {
+  const rows = demo('green');
+  const sum = (from: string, to: string) =>
+    rows.energy.filter((r) => r.local_date >= from && r.local_date <= to).reduce((a, r) => a + (r.calories_kcal ?? 0), 0);
+  const done = buildWeeklyReportView(rows, lastWeek, today).energy;
+  assert.equal(done.total, sum(lastWeek, '2026-10-11'));
+  assert.equal(done.days, 7);
+  assert.equal(done.previousTotal, sum('2026-09-28', '2026-10-04'));
+  const current = buildWeeklyReportView(rows, weekStartOf(today), today).energy;
+  assert.equal(current.days, current.meanDays + 1);
 });
 
 test('ilk hafta: en eski kaydın haftası', () => {

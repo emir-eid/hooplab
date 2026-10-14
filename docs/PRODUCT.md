@@ -24,6 +24,7 @@ Kod public ve MIT lisanslı. Başkası kendi Supabase ve Google Cloud hesabıyla
 | 4 | **Uyku** | Süre, düzen, evreler; maç ve seyahat takvimi | Uyku borcu, düzen sapmaları; maç öncesi ve seyahat önerileri | 2-3 |
 | 5 | **Beslenme** | Gün tipi (dinlenme / antrenman / maç), kilo, basit öğün kaydı | Günlük karbonhidrat ve protein hedefi (g/kg); düşük enerji yeterliliği uyarısı | 2 |
 | 6 | **Hidrasyon** | Antrenman öncesi ve sonrası tartı, içilen sıvı, süre | Ter oranı, antrenman sonrası sıvı hedefi; %2'den fazla kilo kaybı uyarısı | 2 |
+| 6a | **Yakılan enerji** (tahmin) | Bilekliğin günlük toplam kalorisi ve egzersiz oturumu kalorisi (Google Health) | Bugün'de günlük toplam (şu ana kadar), seans satırında oturum kalorisi, haftalık raporda toplam; "Tahmin" etiketli, kaynaklı hata payı; eşik ve hedef yok, alımla karşılaştırılmaz ([0043](decisions/0043-yakilan-enerji.md)) | 4 |
 | 7 | **Takviye** | Kullanıcının sorusu veya mevcut takviyeleri | Yalnız kanıtı güçlü olanlar hakkında bilgi (koçta soru-cevap; kaynaklar IOC uzlaşısı, ISSN kreatin ve kafein bildirgeleri, basketbolda kafein meta-analizi; doz yalnız kaynaktan aktarılır, kişisel doz yok); her zaman doping riski uyarısı, kaynağa bağlı ([0038](decisions/0038-takviye-ve-doping.md)) | 3 |
 | 8 | **AI koç** | Hesaplanmış değerler, maç günü işareti ve kanıt tabanı | Günlük özet (Bugün'de, check-in'den sonra, [0033](decisions/0033-koc-ozeti-check-in-sonrasi.md)); soru-cevap (Koç sekmesi: tek soru tek yanıt, bugünün sayılarıyla, günde 10 soru, örnek sorular, geçmiş, [0037](decisions/0037-koc-soru-cevap.md)); her cümle kaynağa veya hesaplanmış değere alıntılı, kaynak yoksa "yeterli kanıt yok"; kırmızı bayrak ve takviyede kodla sabit metin ([0032](decisions/0032-ai-koc-tasarimi.md)) | 3 |
 
@@ -42,7 +43,7 @@ Basketbola özgü odak: sıçrama yükü ve patellar / Aşil tendonu, ani duruş
 | **Ağrı haritası:** bölge ve taraf bazında 0-10 ağrı / sertlik (NRS) | Check-in içinde | 15 saniye | Bölgeler: baldır, Aşil, ayak bileği, patellar tendon, quadriceps, hamstring, adduktor, kalça, bel, omuz; bel dışında sol / sağ ayrı ([0017](decisions/0017-sabah-check-in-olcegi.md)) |
 | **Sabah kilo** | Her sabah (isteğe bağlı) | 5 saniye | |
 | **Ter testi:** öncesi / sonrası tartı, içilen sıvı | Ara sıra (farklı koşullarda) | 1 dakika | |
-| **Beslenme ve su** | Gün içinde (basit) | Öğün başına 15 saniye | Kalori sayacı değil; karbonhidrat / protein kaba tahmini. Besin listesinden, etiketten gram ya da Bugün'deki halkadan doğrudan gram |
+| **Beslenme ve su** | Gün içinde (basit) | Öğün başına 15 saniye | Kalori sayacı değil (alım tarafı; yakılan enerji cihazdan, tahmin olarak gösterilir ama alımla karşılaştırılmaz, [0043](decisions/0043-yakilan-enerji.md)); karbonhidrat / protein kaba tahmini. Besin listesinden, etiketten gram ya da Bugün'deki halkadan doğrudan gram |
 | **Takvim:** maç günleri, seyahat (saat dilimi) | Haftalık | | Faz 1'de elle; otomatik kaynak açık soru. Faz 3'te Bugün'de tek dokunuşluk "Bugün maç var" işareti ([0032](decisions/0032-ai-koc-tasarimi.md), [0036](decisions/0036-mac-gunu-isareti.md)): işaretli gün beslenmede yoğun, koç maça hazırlık dilini kullanır |
 
 İlke: girdi yükü düşük kalmalı. Her ekran tek elle, birkaç dokunuşla doldurulabilmeli.

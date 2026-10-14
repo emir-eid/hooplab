@@ -6,6 +6,7 @@ import { addIsoDays, defaultContentTags, type ContentTag, type DayType, type Wel
 import type { DayState } from '@hooplab/theme';
 
 import type { TrainingSession } from '@/data/daily-log';
+import type { EnergyDayRow } from '@/data/energy-view';
 import type { ExerciseSession } from '@/data/exercise-tagging';
 import type { SyncStatusRow } from '@/data/google-health-status';
 import type { FluidRow, MealRow } from '@/data/nutrition-view';
@@ -33,6 +34,8 @@ export interface DemoDb {
   pain: DemoPainRow[];
   sessions: TrainingSession[];
   exercises: ExerciseSession[];
+  /** Sentetik günlük toplam kalori (karar 0043); bugünkü, `now`a kadar geçen kısım. */
+  energy: EnergyDayRow[];
   /** Sentetik sabah kiloları (kg). */
   weights: { local_date: string; weight_kg: number }[];
   /** Gün tipi düzeltmeleri; başta boş. */
@@ -99,6 +102,7 @@ function historySessions(scenario: DemoScenario, today: string): TrainingSession
       contentTags: daysAgo >= 14 || daysAgo === 2 ? null : demoTags(kind, daysAgo),
       startedAt: null,
       sweat: null,
+      kcal: null,
       id: `demo-session-${daysAgo}-${kind}`,
       localDate: addIsoDays(today, -daysAgo),
       kind,
@@ -203,6 +207,7 @@ export function createDemoDb(scenario: DemoScenario, today: string, now: Date): 
       exerciseType: 'BASKETBALL',
       displayName: null,
       avgHrBpm: 138,
+      kcal: 984,
       dismissed: false,
     },
     {
@@ -214,6 +219,7 @@ export function createDemoDb(scenario: DemoScenario, today: string, now: Date): 
       exerciseType: 'STRENGTH_TRAINING',
       displayName: null,
       avgHrBpm: 112,
+      kcal: 357,
       dismissed: false,
     },
     {
@@ -225,6 +231,7 @@ export function createDemoDb(scenario: DemoScenario, today: string, now: Date): 
       exerciseType: 'WALKING',
       displayName: null,
       avgHrBpm: 92,
+      kcal: 143,
       dismissed: false,
     },
   ];
@@ -243,6 +250,8 @@ export function createDemoDb(scenario: DemoScenario, today: string, now: Date): 
       startedAt: at(yesterday, 10, 0),
       // Ter testi (karar 0029): kırmızıda kayıp %2'nin üstünde, diğerlerinde altında.
       sweat: { preKg: 92.4, postKg: scenario === 'red' ? 90.2 : 91.1, fluidL: scenario === 'red' ? 0.6 : 1.2, urineL: null },
+      // Kalori bağlı saat oturumundan okunur (demo deposu doldurur).
+      kcal: null,
     },
   ];
 
@@ -332,6 +341,21 @@ export function createDemoDb(scenario: DemoScenario, today: string, now: Date): 
     );
   }
 
+  // Günlük toplam kalori: günün sırasından türetilir (rastgele üreteç ilerlemesin). Bugünkü değer günün
+  // geçen kısmı kadar: gerçek senkronda da bugün şu ana kadardır. Son senkron 40 dakika önce.
+  const syncedAt = new Date(now.getTime() - 40 * 60_000);
+  const dayFraction = (syncedAt.getHours() * 60 + syncedAt.getMinutes()) / (24 * 60);
+  const energy: EnergyDayRow[] = [];
+  for (let i = historyDays - 1; i >= 0; i--) {
+    const date = addIsoDays(today, -i);
+    const full = 3150 + 45 * (((i * 5) % 7) - 3) + 12 * ((i * 3) % 11) + (sessions.some((x) => x.localDate === date) ? 420 : 0);
+    energy.push({
+      local_date: date,
+      calories_kcal: i === 0 ? Math.round(full * dayFraction) : full,
+      updated_at: syncedAt.toISOString(),
+    });
+  }
+
   const connectedAt = new Date(now.getTime() - 2 * 86_400_000).toISOString();
   return {
     healthDaily,
@@ -340,6 +364,7 @@ export function createDemoDb(scenario: DemoScenario, today: string, now: Date): 
     pain,
     sessions,
     exercises,
+    energy,
     weights,
     dayTypes: {},
     matchDays: [],
@@ -350,7 +375,7 @@ export function createDemoDb(scenario: DemoScenario, today: string, now: Date): 
       connected_at: connectedAt,
       synced_from: addIsoDays(today, -(historyDays - 1)),
       synced_through: today,
-      last_success_at: new Date(now.getTime() - 40 * 60_000).toISOString(),
+      last_success_at: syncedAt.toISOString(),
       last_error: null,
     },
   };

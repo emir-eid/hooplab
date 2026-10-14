@@ -3,6 +3,7 @@
 
 import { durationLimits } from '@hooplab/engine';
 
+import { kcalShort } from '../copy/energy.ts';
 import type { SessionKind } from '../copy/labels.ts';
 import { formatShortDay } from '../utils/format-date.ts';
 
@@ -17,6 +18,8 @@ export interface ExerciseSession {
   exerciseType: string;
   displayName: string | null;
   avgHrBpm: number | null;
+  /** Saatin oturum kalorisi (bileklik tahmini, karar 0043). */
+  kcal: number | null;
   dismissed: boolean;
 }
 
@@ -91,7 +94,7 @@ export function formatStartClock(e: Pick<ExerciseSession, 'startTime' | 'startUt
 }
 
 /**
- * Listede ve formda tek satırlık özet: "Basketbol" / "Dün · 18:05 · 92 dk · ort. 142 nabız".
+ * Listede ve formda tek satırlık özet: "Basketbol" / "Dün · 18:05 · 92 dk · ort. 142 nabız · ~640 kcal".
  * Gün, cihazın bugünü ve dünüyle karşılaştırılır; daha eskiyse kısa gün adı.
  */
 export function exerciseSummary(
@@ -103,6 +106,8 @@ export function exerciseSummary(
   const minutes = wallClockMinutes(e);
   const parts = [day, formatStartClock(e), minutes === null ? '' : `${minutes} dk`];
   if (e.avgHrBpm !== null) parts.push(`ort. ${e.avgHrBpm} nabız`);
+  const kcal = kcalShort(e.kcal);
+  if (kcal) parts.push(kcal);
   return { title: exerciseLabel(e), detail: parts.filter((p) => p !== '').join(' · ') };
 }
 

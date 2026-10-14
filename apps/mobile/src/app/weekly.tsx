@@ -17,6 +17,7 @@ import { PageHeader } from '@/components/page-header';
 import { Tile } from '@/components/recovery-section';
 import { Screen } from '@/components/screen';
 import { Text } from '@/components/text';
+import { previousWeekEnergyText, weeklyEnergyDetail, weeklyEnergyFooter, weeklyEnergyLabel } from '@/copy/energy';
 import { wellnessLabels } from '@/copy/labels';
 import { bandDigits, bandNote, formatBand, formatDecimal, formatRolling, formatSleep, levelLabels, levelStates } from '@/copy/recovery';
 import { spotName } from '@/copy/region-load';
@@ -163,6 +164,7 @@ function Report({ view }: { view: WeeklyReportView }) {
       <PainBlock view={view} />
       <NutritionBlock view={view} />
       <WeightBlock view={view} />
+      <EnergyBlock view={view} />
     </>
   );
 }
@@ -599,6 +601,23 @@ function WeightBlock({ view }: { view: WeeklyReportView }) {
         label={w.mean === null ? 'Bu hafta tartı yok' : `${formatDecimal(w.mean)} kg`}
         detail={w.mean === null ? undefined : `${w.n} tartı${change ? ` · ${change}` : ''}`}
       />
+    </ListGroup>
+  );
+}
+
+// --- Yakılan enerji (karar 0043) ---
+
+function EnergyBlock({ view }: { view: WeeklyReportView }) {
+  const e = view.energy;
+  const previous = previousWeekEnergyText(e);
+  return (
+    <ListGroup label="Yakılan enerji · tahmin" footer={weeklyEnergyFooter}>
+      <ListRow
+        label={weeklyEnergyLabel(e)}
+        detail={weeklyEnergyDetail(e, view.phase === 'current')}
+        onPress={() => openExplainer('energy')}
+      />
+      {previous ? <ListRow label="Önceki hafta" value={previous} /> : null}
     </ListGroup>
   );
 }

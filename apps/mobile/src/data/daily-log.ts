@@ -53,6 +53,8 @@ export interface TrainingSession {
   /** Saat oturumundan gelen başlangıç (ISO); elle girilende null. */
   startedAt: string | null;
   sweat: SweatEntry | null;
+  /** Eşleşen saat oturumunun kalorisi (bileklik tahmini, karar 0043); eşleşme ya da değer yoksa null. */
+  kcal: number | null;
 }
 
 export interface NewTrainingSession {
@@ -141,6 +143,15 @@ export async function insertSession(session: NewTrainingSession): Promise<Result
   return { ok: true, value: null };
 }
 
+interface KcalEmbed {
+  calories_kcal: number | null;
+}
+
+function embeddedKcal(e: KcalEmbed | KcalEmbed[] | null): number | null {
+  const one = Array.isArray(e) ? e[0] : e;
+  return one?.calories_kcal ?? null;
+}
+
 interface SessionRow {
   id: string;
   local_date: string;
@@ -155,10 +166,15 @@ interface SessionRow {
   sweat_post_kg: number | null;
   sweat_fluid_l: number | null;
   sweat_urine_l: number | null;
+  /**
+   * Bağlı saat oturumu (training_sessions.exercise_session_id üzerinden). PostgREST çoğa-bir ilişkide nesne döner;
+   * şemasız istemcinin çıkardığı tip dizi dediği için ikisi de kabul edilir.
+   */
+  exercise_sessions: KcalEmbed | KcalEmbed[] | null;
 }
 
 const sessionColumns =
-  'id, local_date, kind, duration_min, rpe, minutes_played, content_tags, exercise_session_id, started_at, sweat_pre_kg, sweat_post_kg, sweat_fluid_l, sweat_urine_l';
+  'id, local_date, kind, duration_min, rpe, minutes_played, content_tags, exercise_session_id, started_at, sweat_pre_kg, sweat_post_kg, sweat_fluid_l, sweat_urine_l, exercise_sessions(calories_kcal)';
 
 function sessionFromRow(r: SessionRow): TrainingSession {
   return {
@@ -175,6 +191,7 @@ function sessionFromRow(r: SessionRow): TrainingSession {
       r.sweat_pre_kg !== null && r.sweat_post_kg !== null
         ? { preKg: Number(r.sweat_pre_kg), postKg: Number(r.sweat_post_kg), fluidL: Number(r.sweat_fluid_l ?? 0), urineL: r.sweat_urine_l === null ? null : Number(r.sweat_urine_l) }
         : null,
+    kcal: embeddedKcal(r.exercise_sessions),
   };
 }
 
@@ -188,7 +205,7 @@ export async function fetchSessions(localDate: string): Promise<Result<TrainingS
     .eq('local_date', localDate)
     .order('created_at', { ascending: true });
   if (error) return { ok: false, message: offline };
-  return { ok: true, value: (data as SessionRow[]).map(sessionFromRow) };
+  return { ok: true, value: (data as unknown as SessionRow[]).map(sessionFromRow) };
 }
 
 // --- Seans etiketleme ---
@@ -202,11 +219,12 @@ interface ExerciseRow {
   exercise_type: string;
   display_name: string | null;
   avg_hr_bpm: number | null;
+  calories_kcal: number | null;
   dismissed_at: string | null;
 }
 
 const exerciseColumns =
-  'id, local_date, start_time, end_time, start_utc_offset_s, exercise_type, display_name, avg_hr_bpm, dismissed_at';
+  'id, local_date, start_time, end_time, start_utc_offset_s, exercise_type, display_name, avg_hr_bpm, calories_kcal, dismissed_at';
 
 function exerciseFromRow(r: ExerciseRow): ExerciseSession {
   return {
@@ -218,6 +236,7 @@ function exerciseFromRow(r: ExerciseRow): ExerciseSession {
     exerciseType: r.exercise_type,
     displayName: r.display_name,
     avgHrBpm: r.avg_hr_bpm,
+    kcal: r.calories_kcal,
     dismissed: r.dismissed_at !== null,
   };
 }
@@ -241,7 +260,7 @@ export async function fetchPendingExercises(from: string, to: string): Promise<R
     ok: true,
     value: pendingExercises(
       (exercises.data as ExerciseRow[]).map(exerciseFromRow),
-      (sessions.data as SessionRow[]).map(sessionFromRow),
+      (sessions.data as unknown as SessionRow[]).map(sessionFromRow),
     ),
   };
 }

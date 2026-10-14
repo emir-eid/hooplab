@@ -24,6 +24,7 @@ import {
   weightLimits,
   checkinBaseline,
   durationLimits,
+  energyRule,
   respirationNightRule,
   nightRhrRule,
   nightSpo2Rule,
@@ -295,4 +296,14 @@ test('gece işaretleri kuralla aynı (karar 0039)', () => {
   assert.equal(skin.consecutive_nights, skinTempRule.consecutiveNights);
   assert.equal(skin.in_day_status, false);
   assert.equal(rule('hastalik-isaretleri.json', 'hastalik-isareti-yonlendirme').value.in_day_status, false);
+});
+
+test('yakılan enerji kuralla aynı (karar 0043)', () => {
+  const shown = rule('enerji.json', 'enerji-gosterim').value;
+  assert.equal(shown.round_kcal, energyRule.roundKcal);
+  assert.equal(shown.average_days, energyRule.averageDays);
+  const est = rule('enerji.json', 'enerji-harcamasi-tahmin').value;
+  assert.deepEqual(est.typical_error_pct, [...energyRule.typicalErrorPct]);
+  assert.equal(est.in_day_status, false);
+  assert.equal(est.compared_with_intake, false);
 });

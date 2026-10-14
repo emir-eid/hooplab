@@ -17,6 +17,7 @@ import {
   readRespiration,
   readSleep,
   readWeeklyCheckin,
+  readWeeklyEnergy,
   readWeeklyLoad,
   readWeeklyWeight,
   recoveryLookbackDays,
@@ -33,11 +34,13 @@ import {
   type RangePosition,
   type SessionKind,
   type WeeklyCheckin,
+  type WeeklyEnergy,
   type WeeklyLoadReading,
   type WeeklyWeight,
   type WellnessAnswers,
 } from '@hooplab/engine';
 
+import type { EnergyDayRow } from './energy-view.ts';
 import { buildNutritionView, toWeightSeries, weightFrom, type FluidRow, type MealRow, type WeightRow } from './nutrition-view.ts';
 import { painMapFromRows, painOf } from './pain-map.ts';
 import { nightlySleep, type HealthDailyRow, type SleepRow } from './recovery-view.ts';
@@ -66,6 +69,8 @@ export interface WeeklyRows {
   /** Bütün geçmişteki ilk seans günü (Trend'deki gibi). */
   earliestSession: string | null;
   healthDaily: HealthDailyRow[];
+  /** Günlük toplam kalori (karar 0043); health_daily ile aynı pencere (önceki haftayı kapsar). */
+  energy: EnergyDayRow[];
   sleep: SleepRow[];
   checkins: ({ local_date: string } & Partial<WellnessAnswers>)[];
   pain: WeeklyPainRow[];
@@ -150,6 +155,8 @@ export interface WeeklyReportView {
     sweatTests: number;
   };
   weight: WeeklyWeight;
+  /** Yakılan enerji: haftanın toplamı, gün ortalaması, önceki hafta (tahmin, eşik yok; karar 0043). */
+  energy: WeeklyEnergy;
 }
 
 const emptyParts = (): LoadParts => ({ game: 0, court: 0, gym: 0, light: 0 });
@@ -280,6 +287,11 @@ export function buildWeeklyReportView(rows: WeeklyRows, weekStart: string, today
       sweatTests: weekSessions.filter((s) => s.sweat).length,
     },
     weight: readWeeklyWeight(toWeightSeries(rows.weights), weekStart, today),
+    energy: readWeeklyEnergy(
+      rows.energy.map((r) => ({ date: r.local_date, value: r.calories_kcal })),
+      weekStart,
+      today,
+    ),
   };
 }
 

@@ -1,0 +1,21 @@
+{
+  "module": "enerji",
+  "rules": [
+    {
+      "id": "enerji-harcamasi-tahmin",
+      "description": "Bilekliğin yakılan enerji değeri (Google Health günlük toplamı ve egzersiz oturumunun kalorisi) ölçüm değil tahmindir. Tipik hata yaklaşık %15-30; dur-kalklı ve spor benzeri harekette çoğunlukla az tahmin. Eşik ve hedef yok, günün durumuna girmez, alımla karşılaştırılmaz (enerji dengesi hesaplanmaz).",
+      "value": { "typical_error_pct": [15, 30], "in_day_status": false, "compared_with_intake": false },
+      "applies_to": "health_daily.calories_kcal (dinlenirken yakılan dahil günlük toplam) ve exercise_sessions.calories_kcal",
+      "sources": ["lambe-2026", "reddy-2018", "shcherbina-2017", "chevance-2022", "feehan-2018", "doherty-2024", "argent-2022"],
+      "notes": "Aralık laboratuvar çalışmalarındaki ortalama ya da medyan mutlak yüzde hatalardan: Fitbit algoritmalı Pixel Watch 3'te %15 (lambe-2026), Fitbit Charge 2'de %25 (reddy-2018), Fitbit Surge'de medyan %27,4 (shcherbina-2017). Kişi bazında hata %2-49'a kadar yayılabiliyor (lambe-2026). Yön çoğunlukla az tahmin (chevance-2022, doherty-2024) ama tutarlı değil; dur-kalklı harekette az tahmin (feehan-2018). Fitbit Air için yayımlanmış geçerlilik çalışması yok, basketbolda bileklik çalışması yok: aralık başka modellerden ve sürekli ya da aralıklı laboratuvar etkinliklerinden aktarıldı. Günlük toplamın serbest yaşamdaki doğruluğu en az çalışılmış alan (argent-2022: 62 çalışmanın 5'i). Alımla karşılaştırmama kaynağın doğrudan önerisi değil, HoopLab'in çıkarımı: harcamadaki bu hata ve kayıtlı alımdaki eksiklik (capling-2017, karar 0030) birleşince günlük fark anlamlı olmaz; düşük enerji yeterliliği zaten hesaplanmaz (enerji-yeterliligi, karar 0029)."
+    },
+    {
+      "id": "enerji-gosterim",
+      "description": "Yakılan enerji en yakın 10 kcal'e yuvarlanarak gösterilir. Kartta büyük sayı bugünün son senkrona kadarki değeri (gün bitmeden eksik); altında dünün tamamı ve bugünden önceki 7 günün ortalaması.",
+      "value": { "round_kcal": 10, "average_days": 7, "unit": "kcal" },
+      "applies_to": "Bugün'deki Yakılan enerji kartı, seans satırları, haftalık rapor",
+      "sources": ["chevance-2022"],
+      "notes": "Tek tek ölçümlerin sapması dakikada birkaç kcal'e yayıldığı için (chevance-2022) birler basamağı anlamsız; 10 kcal bir gösterim tercihi, bilimsel eşik değil. 7 günlük pencere uygulamanın öbür ortalamalarıyla aynı (toparlanma-bant); kaynağa dayanmaz, eşik değildir."
+    }
+  ]
+}

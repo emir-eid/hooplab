@@ -40,6 +40,12 @@ const explainerMetrics: Record<ExplainerId, readonly MetricKey[]> = {
   sweatTest: ['sweatTest'],
   // Haftalık rapor koça gitmez; kuralları ilgili ölçümlerinkiler (karar 0040).
   weeklyReport: ['load', 'hrv', 'rhr', 'sleep', 'checkin', 'pain', 'nutrition'],
+  energy: [],
+};
+
+/** Koça hiç gitmeyen açıklama sayfaları ve nedeni. */
+const notInCoach: Partial<Record<ExplainerId, string>> = {
+  energy: 'Yakılan enerji koçun anlık değerlerine girmez: tahmin, eşiği yok, alımla karşılaştırılmaz (karar 0043).',
 };
 
 /** Koçta olup açıklama sayfasında olmayan kurallar ve nedeni. */
@@ -49,6 +55,10 @@ const coachOnlyRules: Record<string, string> = {
 
 test('her açıklama sayfasının kuralları koçun ilgili ölçümünde', () => {
   for (const [id, metrics] of Object.entries(explainerMetrics) as [ExplainerId, readonly MetricKey[]][]) {
+    if (notInCoach[id]) {
+      assert.equal(metrics.length, 0, id);
+      continue;
+    }
     const coach = new Set(metrics.flatMap((m) => metricRules[m]));
     for (const rule of explainers[id].rules) assert.ok(coach.has(rule), `${id} → ${rule} koçta yok`);
   }
