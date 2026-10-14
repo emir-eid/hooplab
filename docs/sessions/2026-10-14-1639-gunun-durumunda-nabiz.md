@@ -1,9 +1,9 @@
 # 2026-10-14 16:39 — Günün durumunda nabız (karar 0041)
 
 - **Faz:** 4 (Faz 1'in TestFlight maddesi Apple onayını bekliyor)
-- **Durum:** açık (/rep)
+- **Durum:** kapandı (/kapat, 2026-10-14 17:26)
 - **Model / efor:** Opus 5.5, yüksek
-- **Commit'ler:** `359b00e` (plan: kullanıcı istekleri sıraya), `0e77ad8` (Blok 1), Blok 2'nin rep commit'i
+- **Commit'ler:** `359b00e` (plan: kullanıcı istekleri sıraya), `0e77ad8` (Blok 1), `6e31fd7` (Blok 2), bu raporun kapanış commit'i
 
 ## Blok 1 — Günün durumunda nabız: NREM uyku nabzı, yalnız HRV ile birlikte (16:39)
 
