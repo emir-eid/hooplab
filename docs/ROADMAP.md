@@ -81,7 +81,7 @@ Her faz, bitiş kriteri karşılanınca `/kapat` ile kapanır: faz özeti `docs/
 
 - [x] Gece işaretleri: dinlenik nabız, SpO2, cilt sıcaklığında kaynaklı "doktora danış" notu (2026-10-13, [0039](decisions/0039-gece-isaretleri.md); 0038'de ertelenen fizyolojik kırmızı bayrak eşikleri)
 - [ ] Bildirimler
-- [ ] Haftalık rapor
+- [x] Haftalık rapor: takvim haftası, yalnız motorun sayıları, Trend'den açılır (2026-10-14, [0040](decisions/0040-haftalik-rapor.md)); koç yorumu ve PDF paylaşımı sonra
 - [ ] Maç günü ve seyahat protokolleri
 - [ ] Performans skill'i (Vercel React Native kuralları) ve performans turu
 - [ ] iOS uçtan uca test (EAS Workflows + Maestro veya EAS Simulator)

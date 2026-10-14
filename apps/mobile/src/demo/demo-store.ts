@@ -18,6 +18,7 @@ import type { MealInput } from '@/data/nutrition';
 import { buildNutritionView, distinctRecent, recentMealDays, toMeals, toStoredItems, weightFrom, type NutritionView } from '@/data/nutrition-view';
 import { buildRegionLoadView, regionFrom, type RegionLoadView } from '@/data/region-load-view';
 import { buildTrainingLoadView, loadChartDays, type TrainingLoadView } from '@/data/training-load-view';
+import { buildWeeklyReportView, firstWeekOf, type WeeklyReport } from '@/data/weekly-report-view';
 import { askDemoOnlySamples } from '@/copy/coach-ask';
 import { demoAnswer } from '@/demo/demo-ask';
 import { demoCoachSummary } from '@/demo/demo-coach';
@@ -165,6 +166,40 @@ export class DemoStore {
     return ok(
       buildNutritionView(today, weights, sessions, this.db.dayTypes[today] ?? null, this.db.meals, this.db.fluids, this.db.matchDays.includes(today)),
     );
+  }
+
+  async fetchWeeklyReport(weekStart: string, today: string): Promise<Result<WeeklyReport>> {
+    const db = this.db;
+    const earliest = (dates: string[]) => dates.reduce<string | null>((min, d) => (min === null || d < min ? d : min), null);
+    const earliestSession = earliest(db.sessions.map((s) => s.localDate));
+    const view = buildWeeklyReportView(
+      {
+        sessions: db.sessions.map((s) => ({
+          local_date: s.localDate,
+          rpe: s.rpe,
+          duration_min: s.durationMin,
+          kind: s.kind,
+          minutes_played: s.minutesPlayed,
+          sweat: s.sweat !== null,
+        })),
+        earliestSession,
+        healthDaily: db.healthDaily,
+        sleep: db.sleep,
+        checkins: db.checkins.map((c) => ({ local_date: c.local_date, ...c.answers })),
+        pain: db.pain,
+        weights: db.weights,
+        dayTypes: Object.entries(db.dayTypes).map(([local_date, day_type]) => ({ local_date, day_type })),
+        matchDays: db.matchDays,
+        meals: db.meals,
+        fluids: db.fluids,
+      },
+      weekStart,
+      today,
+    );
+    return ok({
+      view,
+      firstWeek: firstWeekOf([earliestSession, earliest(db.healthDaily.map((r) => r.local_date)), earliest(db.checkins.map((c) => c.local_date))]),
+    });
   }
 
   async fetchRecentMeals(today: string): Promise<Result<Meal[]>> {

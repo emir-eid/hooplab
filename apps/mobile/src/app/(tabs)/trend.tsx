@@ -1,16 +1,19 @@
-// Trend: antrenman yükü (karar 0025). Uyku ve toparlanma eğrileri sonra.
+// Trend: haftalık rapora giriş (karar 0040) ve antrenman yükü (karar 0025). Uyku ve toparlanma eğrileri sonra.
 
+import { addIsoDays, weekEndOf, weekLength, weekStartOf } from '@hooplab/engine';
 import { layout, spacing } from '@hooplab/theme';
-import { useFocusEffect } from 'expo-router';
+import { router, useFocusEffect } from 'expo-router';
 import { useCallback, useState } from 'react';
 import { StyleSheet, View } from 'react-native';
 
 import { ComingSoon } from '@/components/coming-soon';
 import { DemoBar } from '@/components/demo-bar';
+import { ListGroup, ListRow } from '@/components/list';
 import { TrainingLoadSection } from '@/components/load-section';
 import { PageHeader } from '@/components/page-header';
 import { Screen } from '@/components/screen';
 import { Text } from '@/components/text';
+import { weekRangeText, weeklyTitle } from '@/copy/weekly-report';
 import { fetchTrainingLoad } from '@/data/training-load';
 import type { TrainingLoadView } from '@/data/training-load-view';
 import type { DemoScenario } from '@/demo/demo-data';
@@ -57,6 +60,9 @@ function TrendScreen({ demo }: { demo: DemoScenario | null }) {
           {error}
         </Text>
       ) : null}
+      <View style={styles.weekly}>
+        <WeeklyEntry />
+      </View>
       {load ? <TrainingLoadSection view={load} /> : null}
       <View style={styles.later}>
         <ComingSoon title="Haftalar boyunca" body="Uyku ve toparlanma eğrileri de hesap motoruyla birlikte burada olacak." />
@@ -65,7 +71,22 @@ function TrendScreen({ demo }: { demo: DemoScenario | null }) {
   );
 }
 
+/** Biten son haftanın raporuna giriş; sayı göstermez (rapor ekranı kendi verisini çeker). */
+function WeeklyEntry() {
+  const lastWeek = addIsoDays(weekStartOf(toLocalDate(new Date())), -weekLength);
+  return (
+    <ListGroup>
+      <ListRow
+        label={weeklyTitle}
+        detail={`Biten hafta · ${weekRangeText(lastWeek, weekEndOf(lastWeek))}`}
+        onPress={() => router.push({ pathname: '/weekly', params: { week: lastWeek } })}
+      />
+    </ListGroup>
+  );
+}
+
 const styles = StyleSheet.create({
+  weekly: { marginTop: spacing[2] },
   error: { marginTop: spacing[3], marginHorizontal: layout.screenInset },
   later: { marginTop: layout.cardGap },
 });

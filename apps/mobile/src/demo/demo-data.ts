@@ -295,6 +295,43 @@ export function createDemoDb(scenario: DemoScenario, today: string, now: Date): 
     },
   ];
 
+  const fluids: FluidRow[] = [
+    { id: 'demo-fluid-1', local_date: today, volume_ml: 500, created_at: at(today, 5, 0) },
+    { id: 'demo-fluid-2', local_date: today, volume_ml: 250, created_at: at(today, 6, 30) },
+    { id: 'demo-fluid-3', local_date: today, volume_ml: 750, created_at: at(today, 8, 0) },
+  ];
+
+  // Haftalık rapor (karar 0040) için geçmiş öğün ve içişler: 2-13 gün önce, bazı günler kayıtsız. Bugün ve dün
+  // yukarıdaki gibi kalır (tekrar listesi yalnız en yeni üç öğünü gösterir). Ayrı tohum: diğer değerler kaymaz.
+  const mr = rng(20261014);
+  const templates: MealRow['items'][][] = [
+    [
+      [{ food: 'yulaf', portions: 2 }, { food: 'sut', portions: 1 }, { food: 'muz', portions: 1 }],
+      [{ food: 'pilav-pirinc', portions: 2 }, { food: 'tavuk-gogsu', portions: 2 }],
+      [{ food: 'makarna', portions: 2 }, { food: 'kofte', portions: 1.5 }],
+    ],
+    [
+      [{ food: 'yumurta', portions: 3 }, { food: 'ekmek-tam', portions: 2 }],
+      [{ food: 'makarna', portions: 3 }, { food: 'tavuk-gogsu', portions: 2 }, { food: 'yogurt', portions: 1 }],
+      [{ food: 'pilav-pirinc', portions: 3 }, { food: 'kofte', portions: 2 }],
+    ],
+  ];
+  const slots = ['breakfast', 'lunch', 'dinner'] as const;
+  for (let i = 13; i >= 2; i--) {
+    const date = addIsoDays(today, -i);
+    if (mr() < 0.2) continue;
+    const day = templates[i % templates.length]!;
+    day.forEach((items, k) =>
+      meals.push({ id: `demo-meal-${i}-${k}`, local_date: date, slot: slots[k]!, created_at: at(date, 6 + 5 * k, 0), items }),
+    );
+    if (mr() < 0.3) continue;
+    fluids.push(
+      { id: `demo-fluid-${i}-1`, local_date: date, volume_ml: 750, created_at: at(date, 7, 0) },
+      { id: `demo-fluid-${i}-2`, local_date: date, volume_ml: 500 + 250 * Math.floor(mr() * 3), created_at: at(date, 12, 0) },
+      { id: `demo-fluid-${i}-3`, local_date: date, volume_ml: 750, created_at: at(date, 18, 0) },
+    );
+  }
+
   const connectedAt = new Date(now.getTime() - 2 * 86_400_000).toISOString();
   return {
     healthDaily,
@@ -307,11 +344,7 @@ export function createDemoDb(scenario: DemoScenario, today: string, now: Date): 
     dayTypes: {},
     matchDays: [],
     meals,
-    fluids: [
-      { id: 'demo-fluid-1', local_date: today, volume_ml: 500, created_at: at(today, 5, 0) },
-      { id: 'demo-fluid-2', local_date: today, volume_ml: 250, created_at: at(today, 6, 30) },
-      { id: 'demo-fluid-3', local_date: today, volume_ml: 750, created_at: at(today, 8, 0) },
-    ],
+    fluids,
     syncStatus: {
       state: 'connected',
       connected_at: connectedAt,

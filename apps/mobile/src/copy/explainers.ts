@@ -345,6 +345,23 @@ export const explainers = {
       'mcdermott-2017',
     ],
   },
+  weeklyReport: {
+    title: 'Haftalık rapor',
+    basis: 'computed',
+    what: "Pazartesiden pazara bir haftanın özeti: yük, toparlanma, gece notları, check-in, ağrı, beslenme, sıvı ve kilo. Her gün Bugün ve Trend'deki hesapla okunur; rapor yalnız bunları toplar, sayar ve ortalar.",
+    read: [
+      `Biten haftada yük, haftanın son günü (pazar) "bugün" sayılarak hesaplanır: haftanın toplamı, önceki hafta, değişim, ${loadWeek.averageWeeks} hafta ortalaması, monotonluk ve gerilim. Monotonluk ve gerilim önceki ${loadWeek.averageWeeks} haftanınkiyle yan yana gösterilir; eşik yok.`,
+      `HRV ve dinlenik nabız: haftanın ${recoveryBand.rollingDays} günlük ortalaması, haftadan önceki ${dec(recoveryBand.baselineDays / 7)} haftanın bandıyla. Günlerin durumu her gün kendi bandıyla okunur.`,
+      `Check-in: haftanın ortalama toplamı, haftadan önceki ${checkinBaseline.baselineDays} günün ortalamasıyla; "alıştığından belirgin düşük" notunun düştüğü günler sayılır.`,
+      'Ağrı her gün ayrı gösterilir; en yüksek ya da ortalama alınmaz.',
+      'Beslenmede yalnız öğün kaydı olan günler sayılır: o günün karbonhidrat ve proteini hedef aralığının altında, içinde ya da üstünde. Kayıt eksikse alım düşük görünür; bu bir uyarı değil.',
+      'Süren haftada yalnız bugüne kadarki günler sayılır; değişim, bant kıyası ve monotonluk hafta bitince gelir.',
+    ],
+    reference: 'Raporun kendi eşiği yok: her sayı ilgili ölçümün kuralından ve kaynağından gelir. Ayrıntısı için o ölçümün açıklamasına bak.',
+    limits: 'Kaydedilmemiş seans dinlenme günü, girilmemiş öğün düşük alım gibi görünür. Kaydın başladığı haftadan öncesine gidilemez.',
+    rules: ['yuk-haftalik', 'toparlanma-bant', 'uyku-kisa', 'checkin-kisisel', 'bolge-agri-izleme', 'alim-hedef-kiyasi'],
+    sources: ['andrade-2020', 'manresa-rocamora-2021', 'walsh-2021', 'saw-2016', 'silbernagel-2007', 'capling-2017'],
+  },
   sweatTest: {
     title: 'Ter testi',
     basis: 'computed',

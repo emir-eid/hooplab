@@ -38,6 +38,8 @@ const explainerMetrics: Record<ExplainerId, readonly MetricKey[]> = {
   painMonitoring: ['pain'],
   nutrition: ['nutrition', 'fluid'],
   sweatTest: ['sweatTest'],
+  // Haftalık rapor koça gitmez; kuralları ilgili ölçümlerinkiler (karar 0040).
+  weeklyReport: ['load', 'hrv', 'rhr', 'sleep', 'checkin', 'pain', 'nutrition'],
 };
 
 /** Koçta olup açıklama sayfasında olmayan kurallar ve nedeni. */

@@ -84,6 +84,7 @@ function RootNavigator() {
           <Stack.Screen name="grams" options={{ presentation: 'modal' }} />
           <Stack.Screen name="water" options={{ presentation: 'modal' }} />
           <Stack.Screen name="recovery-method" />
+          <Stack.Screen name="weekly" />
           <Stack.Screen
             name="explain/[id]"
             options={{
