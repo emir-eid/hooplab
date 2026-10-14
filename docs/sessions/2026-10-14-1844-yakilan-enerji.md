@@ -1,9 +1,9 @@
 # 2026-10-14 18:44 — Yakılan enerji
 
 - **Faz:** 4 (Faz 1'in TestFlight maddesi Apple onayını bekliyor)
-- **Durum:** açık (/rep)
+- **Durum:** kapandı (/kapat, 2026-10-14 18:49)
 - **Model / efor:** Opus 5.5, orta
-- **Commit'ler:** bu bloğun `/rep` commit'i
+- **Commit'ler:** `b88eabc` (Blok 1), bu raporun kapanış commit'i
 
 ## Blok 1 — Yakılan enerji (karar 0043) (18:44)
 
