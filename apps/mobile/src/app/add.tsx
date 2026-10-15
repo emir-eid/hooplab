@@ -22,6 +22,8 @@ export default function AddScreen() {
         <ListRow label="Seans kaydı" value="30 sn" onPress={() => router.replace('/session-new')} />
         <ListRow label="Öğün" value="15 sn" onPress={() => router.replace('/meal-new')} />
         <ListRow label="Su" value="2 sn" onPress={() => router.replace('/water')} />
+        <ListRow label="Maç" value="Takvim" onPress={() => router.replace('/match-edit')} />
+        <ListRow label="Seyahat" value="Takvim" onPress={() => router.replace('/trip-edit')} />
       </ListGroup>
     </View>
   );

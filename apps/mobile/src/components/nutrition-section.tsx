@@ -193,7 +193,11 @@ export function NutritionSection({ view, onDayType, onDeleteMeal, sweatFluidL }:
             ))}
           </ChipSet>
           <Text variant="caption" tone="inkMuted" style={styles.note}>
-            {dayTypeNote(view.dayType, view.inferred, view.override, view.matchDay)}
+            {dayTypeNote(view.dayType, view.inferred, view.override, {
+              today: view.matchDay,
+              tomorrow: view.matches.tomorrow !== null,
+              yesterday: view.matches.yesterday !== null,
+            })}
           </Text>
         </View>
       </Card>

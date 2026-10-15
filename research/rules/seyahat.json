@@ -1,0 +1,29 @@
+{
+  "module": "seyahat",
+  "rules": [
+    {
+      "id": "seyahat-yorgunlugu",
+      "description": "Seyahat günü (saat farkı olsun olmasın): seyahat yorgunluğu yönden ve saat farkından bağımsızdır. Bugün'de yolculuk günü notu: sıvı ve yemeği önceden planla, fırsat oldukça kısa uyku, uyku borcunu yolculukta kapatmaya çalışma, kafein yatmadan en az 6 saat önce kesilir, alkol yok. Saat farkı olmayan uçuşlarda takım sporcularında performans göstergeleri belirgin düşmüyor, ama uyanıklık, ruh hali ve yorgunluk algısı kötüleşiyor. Eşik yok; günün durumu değişmez.",
+      "value": { "caffeine_before_sleep_hours": 6, "alcohol": false },
+      "applies_to": "kullanıcının seyahat kaydettiği gidiş ve dönüş günleri",
+      "sources": ["janse-van-rensburg-2021", "janse-van-rensburg-2020", "roberts-2019"],
+      "notes": "Uzman konsensüsü (janse-van-rensburg-2021, Tablo 3 metin): seyahat yorgunluğu yönetimi; kafein ve alkol satırları buradan. Sistematik derleme (janse-van-rensburg-2020) seyahat yorgunluğu için hiç müdahale çalışması bulamadı, jet lag için sporcu kanıtı düşük kaliteli: öneriler uzman uzlaşısı olarak sunulur. Gece geç ya da sabah çok erken yola çıkış ve doğuya uçuşun uykuyu bozması elit sporcu meta-analizinden (roberts-2019, yalnız özet)."
+    },
+    {
+      "id": "jet-lag-uyum",
+      "description": "Jet lag hızlıca 3 veya daha fazla saat dilimi geçilince beklenir. Kaba kural: iç saat batıya gidişte günde yaklaşık 2 saat (saat dilimi başına yarım gün), doğuya gidişte günde yaklaşık 1 saat (saat dilimi başına bir gün) uyum sağlar. Uygulama kalan uyumu bu hızla gün gün tahmin eder ('Tahmin'); dönüşte, varış yerinde ne kadar uyum sağlandıysa o kadar ters yönde aynı hızla. Doğuya 8 saatten fazla gidişte iç saati geri alarak uyum daha kolay olabilir (notta söylenir, tahmin değişmez). Günün durumu değişmez; jet lag için ayrı eşik yok.",
+      "value": { "min_time_zones": 3, "hours_per_day": { "west": 2, "east": 1 }, "east_delay_above_hours": 8, "label": "Tahmin" },
+      "applies_to": "saat farkı 3 saat veya daha fazla olan seyahat (varış yerinde ve dönüşten sonra)",
+      "sources": ["janse-van-rensburg-2021", "roach-2019", "leota-2022", "fowler-2017"],
+      "notes": "Uyum hızı konsensüsün 'kaba kural'ı (janse-van-rensburg-2021, metin); kişiden kişiye fark büyük. Leota 2022 (NBA) iki yön için de günde 1 saat varsaydı; doğunun basketbolda daha zararlı olduğu bulgusu oradan (lig içi en fazla 3 saat). Doğu yolculuğunun uyku ve performansa daha çok zarar verdiği küçük bir izleme çalışmasından (fowler-2017, 8 saat dilimi, n=10). Uyumun iç saatin en düşük noktasına göre ışıkla hızlandırılabileceği ve 'bol güneş' önerisinin doğuda ters etki yapabileceği anlatı derlemesinden (roach-2019); kişisel ışık penceresi hesaplanmaz (kullanıcı kararı, 2026-10-15)."
+    },
+    {
+      "id": "jet-lag-varis",
+      "description": "Varıştan sonraki ilk günler: antrenman düşük-orta yoğunlukta; uyku ve yemek yerel saate göre; kafein yerel sabahta, öğleden sonra geç ve akşam yok. Doğuya uzun yolculuktan sonra sürat ve aralıklı koşu performansı en çok ilk 72 saatte düşüyor. İsteğe bağlı: saat farkı büyükse uçuştan önceki 3-4 günde yatış ve kalkışı hedef yöne günde 30-60 dakika kaydırmak (takım takviminde çoğu zaman uygulanamaz).",
+      "value": { "first_hours": 72, "pre_shift_min_per_day": [30, 60], "pre_shift_days": [3, 4] },
+      "applies_to": "saat farkı 3 saat veya daha fazla olan seyahat",
+      "sources": ["janse-van-rensburg-2021", "fowler-2017", "roach-2019"],
+      "notes": "Varışta düşük-orta yoğunluk ve kafein zamanlaması konsensüsün metin tablosundan (janse-van-rensburg-2021, Tablo 3). 72 saat: antrenmanlı erkeklerde 8 saat dilimi doğu yolculuğu (fowler-2017, yalnız özet; basketbola özgü değil). Uçuş öncesi kaydırma anlatı derlemesinden (roach-2019, metin); melatonin dozları uygulamada verilmez, melatonin anılırsa hekim ve doping uyarısıyla (takviye-doping-riski)."
+    }
+  ]
+}

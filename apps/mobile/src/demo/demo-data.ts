@@ -2,7 +2,7 @@
 // yalnız ekranların üç durumu (Hazır / Kontrollü / Toparlan) inandırıcı göstermesi için seçildi.
 // Saf modül: veritabanı satırlarıyla aynı biçimde üretir, motor ve ekranlar gerçek veriyle aynı yoldan okur.
 
-import { addIsoDays, defaultContentTags, type ContentTag, type DayType, type WellnessAnswers } from '@hooplab/engine';
+import { addIsoDays, defaultContentTags, type ContentTag, type DayType, type Match, type Trip, type WellnessAnswers } from '@hooplab/engine';
 import type { DayState } from '@hooplab/theme';
 
 import type { TrainingSession } from '@/data/daily-log';
@@ -42,8 +42,10 @@ export interface DemoDb {
   weights: { local_date: string; weight_kg: number }[];
   /** Gün tipi düzeltmeleri; başta boş. */
   dayTypes: Record<string, DayType>;
-  /** "Bugün maç var" işaretli günler (karar 0036); başta boş. */
-  matchDays: string[];
+  /** Maç takvimi (karar 0036, 0046): bugünden 3 ve 6 gün sonra iki sentetik maç; bugün ve dünü / yarını boş. */
+  matches: Match[];
+  /** Seyahatler (karar 0047); başta boş. */
+  trips: Trip[];
   /** Sentetik öğünler (karar 0030): bugün kahvaltı, dün üç öğün; satır biçiminde. */
   meals: MealRow[];
   /** Sentetik içişler (karar 0031): bugün sabah üç içiş. */
@@ -379,7 +381,11 @@ export function createDemoDb(scenario: DemoScenario, today: string, now: Date): 
     energyHours,
     weights,
     dayTypes: {},
-    matchDays: [],
+    matches: [
+      { date: addIsoDays(today, 3), startTime: '19:00', venue: 'home' },
+      { date: addIsoDays(today, 6), startTime: '20:30', venue: 'away' },
+    ],
+    trips: [],
     meals,
     fluids,
     syncStatus: {

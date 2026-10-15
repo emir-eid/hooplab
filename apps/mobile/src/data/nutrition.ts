@@ -1,6 +1,7 @@
 // Beslenme hedefi verisi (karar 0029): sabah kiloları, gün tipi düzeltmesi, bugünün seansları; kilo ve gün tipi kaydı.
 // Öğün kaydı (karar 0030): bugünün öğünleri, son öğünler (tekrar için), öğün ekleme / düzeltme / silme.
-// Maç günü işareti (karar 0036): işaretli gün yoğun sayılır; işaret satır ekler, kaldırmak siler.
+// Maç günü işareti (karar 0036) ve maç takvimi (0046): maç günü ve dünü / yarını maç çevresi sayılır; işaret satır ekler,
+// kaldırmak siler. Takvim ekranının sorguları matches.ts'te.
 // Erişimi RLS korur (karar 0015). Demo modu açıksa bellekteki demo deposuna gider (karar 0022).
 
 import {
@@ -18,6 +19,7 @@ import {
 } from '@hooplab/engine';
 
 import type { Result } from '@/data/daily-log';
+import { aroundRange, toMatches, type MatchRow } from '@/data/match-view';
 import {
   buildNutritionView,
   distinctRecent,
@@ -41,26 +43,29 @@ export async function fetchNutrition(today: string): Promise<Result<NutritionVie
   const demo = demoStore();
   if (demo) return demo.fetchNutrition(today);
   if (!supabase) return { ok: false, message: offline };
+  const around = aroundRange(today);
   const [weights, override, sessions, meals, fluids, match] = await Promise.all([
     supabase.from('body_weights').select('local_date, weight_kg').gte('local_date', weightFrom(today)).lte('local_date', today),
     supabase.from('day_types').select('day_type').eq('local_date', today).maybeSingle(),
-    supabase.from('training_sessions').select('kind, duration_min').eq('local_date', today),
+    supabase.from('training_sessions').select('local_date, kind, duration_min').gte('local_date', addIsoDays(today, -1)).lte('local_date', today),
     supabase.from('meals').select(mealColumns).eq('local_date', today),
     supabase.from('fluid_intakes').select('id, local_date, volume_ml, created_at').eq('local_date', today),
-    supabase.from('match_days').select('local_date').eq('local_date', today).maybeSingle(),
+    supabase.from('match_days').select('local_date, start_time, venue').gte('local_date', around.from).lte('local_date', around.to),
   ]);
   if (weights.error || override.error || sessions.error || meals.error || fluids.error || match.error) return { ok: false, message: offline };
-  const rows = (sessions.data ?? []) as { kind: SessionKind; duration_min: number }[];
+  const rows = (sessions.data ?? []) as { local_date: string; kind: SessionKind; duration_min: number }[];
+  const on = (date: string) => rows.filter((s) => s.local_date === date).map((s) => ({ kind: s.kind, durationMin: s.duration_min }));
   return {
     ok: true,
     value: buildNutritionView(
       today,
       (weights.data ?? []) as WeightRow[],
-      rows.map((s) => ({ kind: s.kind, durationMin: s.duration_min })),
+      on(today),
       (override.data as { day_type: DayType } | null)?.day_type ?? null,
       (meals.data ?? []) as MealRow[],
       (fluids.data ?? []) as FluidRow[],
-      match.data !== null,
+      toMatches((match.data ?? []) as MatchRow[]),
+      on(addIsoDays(today, -1)),
     ),
   };
 }

@@ -5,18 +5,32 @@
 import { addIsoDays, type DayValue } from './recovery.ts';
 import type { SessionKind } from './region-load.ts';
 
-export const dayTypes = ['rest', 'training', 'high'] as const;
+export const dayTypes = ['rest', 'training', 'match', 'high'] as const;
 export type DayType = (typeof dayTypes)[number];
 
-/** rules/beslenme.json → karbonhidrat-gun-tipi (g/kg/gün) */
+/** rules/beslenme.json → karbonhidrat-gun-tipi (g/kg/gün). Maç çevresi: maçtan önceki gün, maç günü, sonraki gün (karar 0046). */
 export const carbTargets: Readonly<Record<DayType, readonly [number, number]>> = {
   rest: [3, 5],
   training: [5, 7],
+  match: [6, 8],
   high: [8, 10],
 };
 
-/** rules/beslenme.json → karbonhidrat-gun-tipi: yoğun gün koşulu. */
-export const highDayRule = { minutesAtLeast: 180, kinds: ['game'] as readonly SessionKind[] } as const;
+/** rules/beslenme.json → karbonhidrat-gun-tipi: yoğun gün koşulu (seansların toplam süresi). */
+export const highDayRule = { minutesAtLeast: 180 } as const;
+
+/**
+ * rules/beslenme.json → karbonhidrat-gun-tipi: maç çevresi. Maç seansı kaydı o günü maç günü yapar;
+ * maçtan bir gün önce ve bir gün sonra da maç çevresidir (mac-oncesi-gun, mac-sonrasi).
+ */
+export const matchDayRule = { kinds: ['game'] as readonly SessionKind[], offsets: [-1, 0, 1] as readonly number[] } as const;
+
+/** Gün tipi için maç bilgisi: bugün maç var mı (takvim ya da işaret), dün ya da yarın maç var mı. */
+export interface MatchDayFlags {
+  today?: boolean;
+  /** Dün maç vardı ya da yarın maç var (matchDayRule.offsets). */
+  adjacent?: boolean;
+}
 
 /** rules/beslenme.json → protein-gunluk. noAddedGainAbove: meta-analizde bu değerin üstü ek kas kazanımı getirmedi (açıklamada anılır, tavan değil). */
 export const proteinTarget = {
@@ -37,15 +51,16 @@ export function isValidWeight(kg: number): boolean {
 }
 
 /**
- * O günün seanslarından gün tipi: seans yoksa dinlenme, maç ya da toplam ≥ 180 dk ise yoğun, değilse antrenman.
- * "Bugün maç var" işaretli gün maç seansı kaydedilmemiş olsa da yoğundur (rules/mac.json → mac-gunu, karar 0036).
+ * Gün tipi, bu sırayla (karbonhidrat-gun-tipi, karar 0046): bugün maç varsa (takvim, işaret ya da maç seansı kaydı)
+ * maç çevresi; seansların toplamı ≥ 180 dk ise yoğun; dün ya da yarın maç varsa maç çevresi; seans varsa antrenman;
+ * yoksa dinlenme. Maç sabahı maç seansı henüz kaydedilmemiş olsa da gün maç çevresidir (mac-gunu).
  */
-export function inferDayType(sessions: readonly { kind: SessionKind; durationMin: number }[], matchDay = false): DayType {
-  if (matchDay) return 'high';
-  if (sessions.length === 0) return 'rest';
+export function inferDayType(sessions: readonly { kind: SessionKind; durationMin: number }[], match: MatchDayFlags = {}): DayType {
+  if (match.today || sessions.some((s) => matchDayRule.kinds.includes(s.kind))) return 'match';
   const minutes = sessions.reduce((a, s) => a + s.durationMin, 0);
-  if (minutes >= highDayRule.minutesAtLeast || sessions.some((s) => highDayRule.kinds.includes(s.kind))) return 'high';
-  return 'training';
+  if (minutes >= highDayRule.minutesAtLeast) return 'high';
+  if (match.adjacent) return 'match';
+  return sessions.length === 0 ? 'rest' : 'training';
 }
 
 export interface TargetWeight {

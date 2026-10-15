@@ -9,7 +9,16 @@
 // Gitmeyenler (DATA-INVENTORY): ad, kilo, ham seriler, tarihli gece değerleri. Kilo yalnız gram hedeflerinin
 // içinde dolaylıdır.
 
-import { addIsoDays, type CheckinReading, type MetricReading, type SweatTestResult } from '@hooplab/engine';
+import {
+  addIsoDays,
+  postMatchCarbs,
+  preMatchPlan,
+  type CheckinReading,
+  type Match,
+  type MetricReading,
+  type SweatTestResult,
+  type TravelReading,
+} from '@hooplab/engine';
 
 import {
   parseSnapshot,
@@ -36,6 +45,8 @@ export interface CoachInputs {
   nutrition: NutritionView | null;
   /** Bugünkü seansın ter testi (karar 0029); yoksa null. */
   sweat: SweatTestResult | null;
+  /** Bugünün seyahat okuması (karar 0047); yoksa null. */
+  travel?: TravelReading | null;
 }
 
 type Limit = readonly [number, number];
@@ -151,6 +162,49 @@ export function buildCoachSnapshot(input: CoachInputs): CoachSnapshot {
     // Su hedefsiz bir kayıt (karar 0031): hiç içiş yoksa "0 L" gönderilmez.
     const fluid = within(n.fluidL, L.liters);
     if (fluid !== null && fluid > 0) snapshot.fluid = { totalL: fluid };
+
+    // Maç çevresi (karar 0046): yalnız saat ve yer; zamanlama ve gramlar motorun. Kilo kendisi gitmez.
+    const m = n.matches;
+    if ((m.today || m.tomorrow || m.yesterday) && n.matchDay === input.matchDay) {
+      const brief = (x: Match | null) => (x ? { startTime: x.startTime, venue: x.venue } : null);
+      const kg = n.weight?.kg ?? null;
+      const plan = m.today ? preMatchPlan(m.today, kg) : null;
+      const post = postMatchCarbs(kg).gramsPerHour;
+      const ml = plan?.fluidMl && within(plan.fluidMl[0], L.milliliters) !== null && within(plan.fluidMl[1], L.milliliters) !== null ? plan.fluidMl : null;
+      snapshot.match = {
+        yesterday: brief(m.yesterday),
+        today: brief(m.today),
+        tomorrow: brief(m.tomorrow),
+        plan: plan
+          ? {
+              meal: [plan.meal.from, plan.meal.to],
+              mealCarbsG: grams(plan.mealCarbsG),
+              fluid: [plan.fluid.from, plan.fluid.to],
+              fluidMl: ml ? [ml[0], ml[1]] : null,
+              nap: plan.nap ? [plan.nap.from, plan.nap.to] : null,
+              postCarbsGPerHour: within(post, L.grams),
+            }
+          : null,
+      };
+    }
+  }
+
+  // Seyahat (karar 0047): evre, saat farkı ve motorun uyum tahmini; şehir ve tarih gitmez.
+  const t = input.travel;
+  const days = (x: number | null) => within(x, L.travelDays);
+  if (t && within(t.trip.offsetHours, L.offsetHours) !== null) {
+    snapshot.travel = {
+      phase: t.phase,
+      offsetHours: t.trip.offsetHours,
+      direction: t.direction,
+      jetLag: t.jetLag,
+      daysUntil: days(t.daysUntil),
+      dayAway: days(t.dayAway),
+      totalDays: days(t.totalDays),
+      remainingDays: days(t.remainingDays),
+      firstHours: t.firstHours,
+      eastDelayHint: t.eastDelayHint,
+    };
   }
 
   const s = input.sweat;

@@ -112,10 +112,10 @@ test('demo özeti maç günü: her senaryoda hazırlık dili, denetçiden geçer
   for (const today of days) {
     for (const scenario of demoScenarios) {
       const db = createDemoDb(scenario, today, now);
-      db.matchDays.push(today);
+      db.matches.push({ date: today, startTime: null, venue: null });
       const snapshot = buildCoachSnapshot(demoInputs(db, today, now));
       assert.equal(snapshot.matchDay, true);
-      assert.equal(snapshot.nutrition?.dayType, 'high', `${scenario} @ ${today}: maç günü yoğun`);
+      assert.equal(snapshot.nutrition?.dayType, 'match', `${scenario} @ ${today}: maç günü maç çevresi`);
       const { summary, audit } = asResponse(snapshot, scenario);
       assert.ok(summary.length >= 4 && summary.length <= 7, `${scenario} @ ${today}: ${summary.length} cümle`);
       assert.deepEqual(audit.problems, [], `${scenario} @ ${today}`);
@@ -125,10 +125,12 @@ test('demo özeti maç günü: her senaryoda hazırlık dili, denetçiden geçer
   }
 });
 
-test('kartın maç günü kaynakları: kanıt tabanında yalnız mac-gunu kuralına bağlı olanlar', () => {
-  const others = new Set(kbRules.filter((r) => r.id !== 'mac-gunu').flatMap((r) => r.sources));
-  const mac = kbRules.find((r) => r.id === 'mac-gunu')!;
-  assert.deepEqual([...matchDayOnlySources].sort(), mac.sources.filter((id) => !others.has(id)).sort());
+test('kartın maç ve seyahat kaynakları: kanıt tabanında yalnız mac.json ve seyahat.json kurallarına bağlı olanlar', () => {
+  const travelRules = new Set(['seyahat-yorgunlugu', 'jet-lag-uyum', 'jet-lag-varis']);
+  const isMatch = (id: string) => id.startsWith('mac-') || travelRules.has(id);
+  const others = new Set(kbRules.filter((r) => !isMatch(r.id)).flatMap((r) => r.sources));
+  const mac = new Set(kbRules.filter((r) => isMatch(r.id)).flatMap((r) => r.sources));
+  assert.deepEqual([...matchDayOnlySources].sort(), [...mac].filter((id) => !others.has(id)).sort());
 });
 
 test('denetçi bu yolda gerçekten kırılır: demo cümlesindeki sayı değişince özet reddedilir', () => {

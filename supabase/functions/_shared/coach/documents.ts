@@ -15,16 +15,21 @@ import {
   type CoachSnapshot,
   type DayLevel,
   type DayType,
+  type MatchBrief,
+  type TravelContext,
+  type TravelDirection,
+  type TravelPhase,
   type MetricKey,
   type Range,
   type RecoverySignal,
+  type Venue,
   type WellnessItem,
 } from './snapshot.ts';
 
 /** Günün sayıları belgesinde bir blok. `id` ölçüm anahtarı, dizilerde `regions.0` gibi. */
 export interface NumbersBlock {
   id: string;
-  metric: MetricKey | 'day';
+  metric: MetricKey | 'day' | 'travel';
   text: string;
   /** Tahmin olan değer (CLAUDE.md §3); denetçi bu bloğa dayanan cümlede "tahmin" sözünü arar. */
   estimate: boolean;
@@ -78,6 +83,12 @@ function ruleValue(kb: Kb, ruleId: string, key: string): KbRuleValue {
 function ruleNumber(kb: Kb, ruleId: string, key: string): number {
   const v = ruleValue(kb, ruleId, key);
   if (typeof v !== 'number') throw new MissingRuleValueError(ruleId, key);
+  return v;
+}
+
+function ruleString(kb: Kb, ruleId: string, key: string): string {
+  const v = ruleValue(kb, ruleId, key);
+  if (typeof v !== 'string') throw new MissingRuleValueError(ruleId, key);
   return v;
 }
 
@@ -138,7 +149,7 @@ export const levelLabels: Record<DayLevel, string> = {
   recover: 'Toparlan',
   insufficient: 'Bant oluşuyor',
 };
-export const dayTypeLabels: Record<DayType, string> = { rest: 'Dinlenme', training: 'Antrenman', high: 'Yoğun' };
+export const dayTypeLabels: Record<DayType, string> = { rest: 'Dinlenme', training: 'Antrenman', match: 'Maç çevresi', high: 'Yoğun' };
 export const regionLabels: Record<BodyRegion, string> = {
   calf: 'Baldır',
   achilles: 'Aşil',
@@ -382,15 +393,89 @@ function blocksFor(snapshot: CoachSnapshot, key: MetricKey, kb: Kb): NumbersBloc
   }
 }
 
-/** Günün sayıları: ilk blok maç günü, sonra bulunan her ölçüm sabit sırayla. */
-export function numbersBlocks(snapshot: CoachSnapshot, kb: Kb): NumbersBlock[] {
-  const day: NumbersBlock = {
-    id: 'day',
-    metric: 'day',
-    text: snapshot.matchDay ? 'Maç günü: bugün maç var.' : 'Maç günü: bugün maç işaretlenmedi.',
-    estimate: false,
+const venueLabels: Record<Venue, string> = { home: 'iç saha', away: 'deplasman' };
+
+function briefText(m: MatchBrief): string {
+  return [m.startTime ? `başlama ${m.startTime}` : 'başlama saati girilmedi', m.venue ? venueLabels[m.venue] : null].filter(Boolean).join(', ');
+}
+
+/**
+ * Maç çevresi (karar 0046): bugün, yarın, dün. Zamanlama ve gramlar uygulamanın motorundan; uyku kısalması
+ * kanıt tabanındaki kural değerinden (mac-sonrasi), başlama saatine göre seçilir. Eşik değil, grup ortalaması.
+ */
+function matchDayText(snapshot: CoachSnapshot, kb: Kb): string {
+  const m = snapshot.match;
+  if (!m) return snapshot.matchDay ? 'Maç günü: bugün maç var.' : 'Maç günü: bugün maç işaretlenmedi.';
+  const parts: string[] = [];
+  if (m.today) {
+    parts.push(`Maç günü: bugün maç var (${briefText(m.today)}).`);
+    if (m.plan) {
+      const p = m.plan;
+      const carbs = p.mealCarbsG ? `, ${p.mealCarbsG[0]}–${p.mealCarbsG[1]} g karbonhidrat` : '';
+      const ml = p.fluidMl ? ` ${p.fluidMl[0]}–${p.fluidMl[1]} mL` : '';
+      parts.push(`Maç öncesi ana öğün ${p.meal[0]}–${p.meal[1]} arası${carbs}. Sıvı ${p.fluid[0]}–${p.fluid[1]} arası${ml}.`);
+      if (p.nap) parts.push(`Şekerleme penceresi ${p.nap[0]}–${p.nap[1]}.`);
+      if (p.postCarbsGPerHour !== null) {
+        parts.push(`Maçtan sonra ${ruleNumber(kb, 'mac-sonrasi', 'post_carbs_hours')} saat, saatte ~${p.postCarbsGPerHour} g karbonhidrat.`);
+      }
+    }
+  } else {
+    parts.push('Maç günü: bugün maç yok.');
+  }
+  if (m.tomorrow) parts.push(`Yarın maç var (${briefText(m.tomorrow)}); bugün maçtan önceki gün.`);
+  if (m.yesterday) {
+    const start = m.yesterday.startTime;
+    let sleep = '';
+    if (start) {
+      const night = start >= ruleString(kb, 'mac-sonrasi', 'night_start');
+      const loss = ruleValue(kb, 'mac-sonrasi', 'sleep_shorter_min') as { readonly [k: string]: KbRuleValue };
+      const minutes = night ? loss.night : loss.day;
+      if (typeof minutes !== 'number') throw new MissingRuleValueError('mac-sonrasi', 'sleep_shorter_min');
+      sleep = ` ${night ? 'Akşam' : 'Gündüz'} maçı gecesi için grup ortalaması uyku kısalması ~${minutes} dakika.`;
+    }
+    parts.push(`Dün maç vardı (${briefText(m.yesterday)}); bugün maçtan sonraki gün.${sleep}`);
+  }
+  return parts.join(' ');
+}
+
+const directionWords: Record<TravelDirection, string> = { east: 'doğu', west: 'batı' };
+
+/**
+ * Seyahat bloğu (karar 0047): evre, saat farkı, motorun uyum tahmini (gün; "Tahmin"). Uyum hızı kanıt tabanındaki
+ * kural değerinden (jet-lag-uyum). Şehir ve tarih yok.
+ */
+function travelText(t: TravelContext, kb: Kb): string {
+  const sign = t.offsetHours > 0 ? '+' : '−';
+  const offset =
+    t.offsetHours === 0
+      ? 'saat farkı yok'
+      : `saat farkı ${sign}${Math.abs(t.offsetHours)} saat (${directionWords[t.offsetHours > 0 ? 'east' : 'west']})`;
+  const phase: Record<TravelPhase, string> = {
+    before: t.daysUntil !== null ? `Seyahat ${t.daysUntil} gün sonra` : 'Seyahat yaklaşıyor',
+    departure: 'Bugün gidiş yolculuğu',
+    away: t.dayAway !== null ? `Seyahatin ${t.dayAway}. günü` : 'Seyahatte',
+    return: 'Bugün dönüş yolculuğu',
+    after: 'Dönüşten sonraki günler',
   };
-  return [day, ...presentMetrics(snapshot).flatMap((key) => blocksFor(snapshot, key, kb))];
+  const parts = [`Seyahat: ${phase[t.phase]}, ${offset}.`];
+  if (t.jetLag && t.direction) {
+    const perDay = (ruleValue(kb, 'jet-lag-uyum', 'hours_per_day') as { readonly [k: string]: KbRuleValue })[t.direction];
+    if (typeof perDay !== 'number') throw new MissingRuleValueError('jet-lag-uyum', 'hours_per_day');
+    parts.push(`Jet lag bekleniyor; uyum yönü ${directionWords[t.direction]}, kaba kurala göre günde ~${perDay} saat.`);
+    if (t.phase === 'before' && t.totalDays !== null) parts.push(`Tahmini uyum ~${t.totalDays} gün.`);
+    else if (t.remainingDays !== null) parts.push(t.remainingDays === 0 ? 'Tahmini uyum tamamlandı.' : `Tahmini kalan uyum ~${t.remainingDays} gün.`);
+    if (t.firstHours) parts.push(`Varıştan sonraki ilk ${ruleNumber(kb, 'jet-lag-varis', 'first_hours')} saat içinde.`);
+    if (t.eastDelayHint) parts.push(`Doğuya ${ruleNumber(kb, 'jet-lag-uyum', 'east_delay_above_hours')} saatten fazla fark.`);
+  }
+  return parts.join(' ');
+}
+
+/** Günün sayıları: ilk blok maç günü ve çevresi, varsa seyahat, sonra bulunan her ölçüm sabit sırayla. */
+export function numbersBlocks(snapshot: CoachSnapshot, kb: Kb): NumbersBlock[] {
+  const day: NumbersBlock = { id: 'day', metric: 'day', text: matchDayText(snapshot, kb), estimate: false };
+  const t = snapshot.travel;
+  const travel: NumbersBlock[] = t ? [{ id: 'travel', metric: 'travel', text: travelText(t, kb), estimate: t.jetLag }] : [];
+  return [day, ...travel, ...presentMetrics(snapshot).flatMap((key) => blocksFor(snapshot, key, kb))];
 }
 
 export function sourceDocument(source: KbSource): DocumentParam {

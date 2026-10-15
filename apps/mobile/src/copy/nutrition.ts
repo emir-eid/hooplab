@@ -28,16 +28,28 @@ import { formatDecimal } from './recovery.ts';
 export const dayTypeLabels: Record<DayType, string> = {
   rest: 'Dinlenme',
   training: 'Antrenman',
+  match: 'Maç çevresi',
   high: 'Yoğun',
 };
 
 const range = (r: readonly [number, number], digits = 0) =>
   `${formatDecimal(r[0], digits)}–${formatDecimal(r[1], digits)}`;
 
-export function dayTypeNote(dayType: DayType, inferred: DayType, override: DayType | null, matchDay = false): string {
+/** Gün tipinin nereden çıktığı (karar 0029, 0046). `around`: dün / bugün / yarın maç var mı. */
+export function dayTypeNote(
+  dayType: DayType,
+  inferred: DayType,
+  override: DayType | null,
+  around: { today: boolean; tomorrow: boolean; yesterday: boolean } = { today: false, tomorrow: false, yesterday: false },
+): string {
   if (override === null) {
-    if (matchDay) return 'bugün maç işaretli';
-    return dayType === 'rest' ? 'bugün seans kaydı yok' : dayType === 'high' ? `maç ya da ${highDayRule.minutesAtLeast / 60} saat ve üstü seans` : 'bugünkü seanslarından';
+    if (dayType === 'match') {
+      if (around.today) return 'bugün maç var';
+      if (around.tomorrow) return 'yarın maç var';
+      return around.yesterday ? 'dün maç vardı' : 'dün maç seansı kaydın var';
+    }
+    if (dayType === 'high') return `bugün ${highDayRule.minutesAtLeast / 60} saat ve üstü seans`;
+    return dayType === 'rest' ? 'bugün seans kaydı yok' : 'bugünkü seanslarından';
   }
   return `senin seçimin · kayıtlardan: ${dayTypeLabels[inferred].toLocaleLowerCase('tr')}`;
 }

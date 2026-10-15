@@ -2,7 +2,7 @@
 // soruyla birlikte bunları gönderir. Bugün henüz yüklenmediyse (ör. uygulama Koç'ta açıldı) Koç aynı veriyi
 // kendisi çeker. Değerler yazılmaz; başka bir günün değeri gönderilmez.
 
-import { sweatTest } from '@hooplab/engine';
+import { sweatTest, travelReading } from '@hooplab/engine';
 
 import { buildCoachSnapshot, type CoachSnapshot } from '@/data/coach-snapshot';
 import { fetchCheckin, fetchCheckinReading, fetchSessions, type TrainingSession } from '@/data/daily-log';
@@ -10,6 +10,8 @@ import { fetchNutrition } from '@/data/nutrition';
 import { fetchRecovery } from '@/data/recovery';
 import { fetchRegionLoad } from '@/data/region-load';
 import { fetchTrainingLoad } from '@/data/training-load';
+import { tripRange } from '@/data/trip-view';
+import { fetchTrips } from '@/data/trips';
 import { demoStore } from '@/demo/demo-mode';
 
 // Demo ve gerçek hesap ayrı: demodan çıkınca sentetik değerler gerçek soruya gitmesin.
@@ -35,7 +37,8 @@ export function todaySweat(sessions: readonly TrainingSession[]) {
  */
 export async function coachSnapshotFor(localDate: string): Promise<CoachSnapshot | null> {
   if (latest && latest.snapshot.date === localDate && latest.demo === (demoStore() !== null)) return latest.snapshot;
-  const [checkin, sessions, recovery, nutrition, reading, load, regions] = await Promise.all([
+  const trips = tripRange(localDate);
+  const [checkin, sessions, recovery, nutrition, reading, load, regions, tripsR] = await Promise.all([
     fetchCheckin(localDate),
     fetchSessions(localDate),
     fetchRecovery(localDate),
@@ -43,6 +46,7 @@ export async function coachSnapshotFor(localDate: string): Promise<CoachSnapshot
     fetchCheckinReading(localDate),
     fetchTrainingLoad(localDate),
     fetchRegionLoad(localDate, new Date()),
+    fetchTrips(trips.from, trips.to),
   ]);
   if (!checkin.ok) return null;
   const snapshot = buildCoachSnapshot({
@@ -54,6 +58,7 @@ export async function coachSnapshotFor(localDate: string): Promise<CoachSnapshot
     regions: regions.ok ? regions.value : null,
     nutrition: nutrition.ok ? nutrition.value : null,
     sweat: sessions.ok ? todaySweat(sessions.value) : null,
+    travel: tripsR.ok ? travelReading(localDate, tripsR.value) : null,
   });
   rememberCoachSnapshot(snapshot);
   return snapshot;

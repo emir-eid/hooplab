@@ -3,11 +3,43 @@
   "rules": [
     {
       "id": "mac-gunu",
-      "description": "Kullanıcı Bugün'de 'Bugün maç var' işaretler (karar 0036). İşaretli gün beslenmede yoğun gün sayılır (karbonhidrat-gun-tipi: maç varsa yoğun); günün durumu (gunun-durumu) değişmez. Koç o gün toparlanma dili yerine maça hazırlık dilini kullanır: ısınma, karbonhidrat ve sıvı, maç sonrası toparlanma; her biri bu kuralın kaynaklarına alıntılı. Süre, miktar veya zamanlama önerilmez; eşik yok.",
-      "value": { "day_type": "high" },
-      "applies_to": "kullanıcının maç işaretlediği gün",
-      "sources": ["fradkin-2010", "mcgowan-2015", "davis-2022", "kerksick-2018", "sawka-2007", "osterberg-2009", "doeven-2018"],
-      "notes": "Isınma: performansa yararı meta-analizden (fradkin-2010), mekanizma ve bekleme süresinde sıcak kalma anlatı derlemesinden (mcgowan-2015); ikisi de basketbola özgü değil. Karbonhidrat: basketbol derlemesi (davis-2022) ve ISSN derlemesi (kerksick-2018); maç gününe aktarım karbonhidrat-gun-tipi kuralındaki varsayımla aynı. Sıvı: ACSM tutum bildirgesi (sawka-2007) ve NBA'de ter kaybı (osterberg-2009). Maç sonrası toparlanma: takım sporlarında sistematik derleme (doeven-2018); basketbol verisi sınırlı. Ayrıntılı maç günü ve seyahat protokolü Faz 4'te (ROADMAP)."
+      "description": "Maç günü: maç takviminde bugüne kayıtlı maç ya da Bugün'deki 'Bugün maç var' işareti (karar 0036, 0046). İşaretli gün beslenmede maç çevresi gün tipidir (karbonhidrat-gun-tipi: 6-8 g/kg); günün durumu (gunun-durumu) değişmez. Koç o gün toparlanma dili yerine maça hazırlık dilini kullanır: ısınma, karbonhidrat ve sıvı, maç sonrası toparlanma; her biri bu kuralın kaynaklarına alıntılı. Süre veya miktar önerilmez; maç saati biliniyorsa öğün ve sıvı zamanlaması mac-oncesi-ogun kuralından gelir.",
+      "value": { "day_type": "match" },
+      "applies_to": "maç günü",
+      "sources": ["fradkin-2010", "mcgowan-2015", "davis-2022", "kerksick-2018", "sawka-2007", "osterberg-2009", "doeven-2018", "collins-2021"],
+      "notes": "Isınma: performansa yararı meta-analizden (fradkin-2010), mekanizma ve bekleme süresinde sıcak kalma anlatı derlemesinden (mcgowan-2015); ikisi de basketbola özgü değil. Karbonhidrat: basketbol derlemesi (davis-2022), ISSN derlemesi (kerksick-2018) ve maç günü çerçevesi UEFA uzman grubu bildirgesinden (collins-2021, futbol). Sıvı: ACSM tutum bildirgesi (sawka-2007) ve NBA'de ter kaybı (osterberg-2009). Maç sonrası toparlanma: takım sporlarında sistematik derleme (doeven-2018); basketbol verisi sınırlı."
+    },
+    {
+      "id": "mac-oncesi-gun",
+      "description": "Maçtan önceki gün (MD-1): maç takviminde yarına kayıtlı maç varsa Bugün'de 'Yarın maç' notu. Beslenmede maç çevresi gün tipi (karbonhidrat-gun-tipi: en az 6-8 g/kg). Maçtan önceki gece uykuya dalmak zorlaşabilir; bu yaygın ve duruma bağlıdır, genel bir uyku sorunu sayılmaz. Günün durumu değişmez; eşik yok.",
+      "value": { "day_offset": -1, "day_type": "match" },
+      "applies_to": "maç takviminde ertesi güne maç kayıtlı gün",
+      "sources": ["collins-2021", "juliff-2015", "walsh-2021"],
+      "notes": "Karbonhidrat: UEFA uzman grubu bildirgesi (collins-2021), MD-1 antrenmanı genelde hafif ve karbonhidrat en az 6-8 g/kg; futboldan aktarım. Uyku: elit sporcularda anket (juliff-2015, n=283), önemli yarışma öncesi gecelerde kötü uyku sık (%64) ve en çok uykuya dalmakta zorlanma; öz bildirim, 'önemli yarışma' sıradan lig maçından farklı olabilir. Uyku önceliği genel olarak uzman konsensüsünden (walsh-2021)."
+    },
+    {
+      "id": "mac-oncesi-ogun",
+      "description": "Maç saati biliniyorsa maç öncesi öğün ve sıvı zamanlaması: karbonhidratlı, kolay sindirilen ana öğün başlamadan 3-4 saat önce (1-3 g/kg karbonhidrat); başlamadan 2-4 saat önce 5-7 mL/kg sıvı. Gram ve mililitre sabah kilosuyla hesaplanır (karbonhidrat-gun-tipi ile aynı kilo). Rehber aralık; kişisel plan ve mide toleransı antrenmanda denenir.",
+      "value": { "meal_hours_before": [3, 4], "meal_carbs_per_kg": [1, 3], "fluid_hours_before": [2, 4], "fluid_ml_per_kg": [5, 7] },
+      "applies_to": "maç takviminde başlama saati girilmiş maç günü",
+      "sources": ["collins-2021", "williams-2015", "gentle-2014"],
+      "notes": "Sayılar UEFA uzman grubu bildirgesinden (collins-2021, futbol; yazarların kabul edilmiş el yazması okundu). Takım sporu derlemesi (williams-2015) yaklaşık 3 saat önce kolay sindirilen yüksek karbonhidratlı öğünü yerleşik öneri sayıyor ve maçtan hemen önce büyük şeker yüklemesinin basketbol testinde ilk çeyrekte kan şekerini düşürdüğünü aktarıyor. Basketbola özgü tek öğün çalışması (gentle-2014, n=10) proteinli öğünde mide yakınmasının arttığını gösteriyor; öğünün antrenmanda denenmesi önerisi buradan. Basketbolda maç saatine göre zamanlamayı sınayan çalışma bulunamadı; akşam maçı için ayrı zamanlama verilmiyor."
+    },
+    {
+      "id": "mac-gunu-sekerleme",
+      "description": "Maç günü öğleden sonra kısa şekerleme isteğe bağlıdır: çalışmalarda yarar en çok 30-60 dakika süren ve 12:30-16:50 arasında yapılan şekerlemelerde, uyanıştan sonra performansa 1 saatten fazla kaldığında görüldü. Gece uykusunun yerine geçmez; maç saati biliniyorsa uyanışın maçtan en az 1 saat önce olması notta söylenir.",
+      "value": { "minutes": [30, 60], "window": ["12:30", "16:50"], "wake_before_hours": 1 },
+      "applies_to": "maç günü (bilgi notu)",
+      "sources": ["mesas-2023", "janse-van-rensburg-2021"],
+      "notes": "RCT meta-analizi (mesas-2023; 22 çalışma, 291 erkek, 164'ü sporcu), çalışmalar arası heterojenlik yüksek, testler laboratuvar ve saha testleri, basketbola özgü değil; akşam maçı öncesi şekerlemenin o geceki uykuya etkisi incelenmemiş. Seyahat konsensüsünün (janse-van-rensburg-2021) görsel tablosu 13:00-16:00 arası 30 dakikadan kısa şekerleme diyor; süre farkı açıklamada yazılır, meta-analizin aralığı kullanılır."
+    },
+    {
+      "id": "mac-sonrasi",
+      "description": "Maç gecesi ve maçtan sonraki gün (MD+1). Maç gecesi uyku kısalır: akşam başlayan maçlarda (18:00 ve sonrası) önceki geceye göre ortalama yaklaşık 80 dakika, gündüz maçlarında yaklaşık 20 dakika. Maçtan sonraki 4 saat saatte yaklaşık 1 g/kg karbonhidrat. MD+1'de beslenme maç çevresi gün tipi (karbonhidrat-gun-tipi: 6-8 g/kg); sıçrama ve sürat 24-48 saat düşük kalabilir, kas ağrısı en çok 24-48 saatte. Günün durumu değişmez; MD+1 notu düşük HRV ve kısa uykunun maçla ilgili olabileceğini söyler. Eşik değil, grup ortalaması.",
+      "value": { "night_start": "18:00", "sleep_shorter_min": { "night": 80, "day": 20 }, "post_carbs_per_kg_per_hour": 1, "post_carbs_hours": 4, "day_offset": 1, "day_type": "match", "performance_hours": [24, 48], "soreness_hours": [24, 48] },
+      "applies_to": "maç günü akşamı ve maçtan sonraki gün",
+      "sources": ["roberts-2019", "fox-2020", "pernigoni-2024", "collins-2021", "doeven-2018"],
+      "notes": "Uyku: elit sporcularda nesnel uyku ölçen gözlemsel çalışmaların meta-analizi (roberts-2019, 54 çalışma; yalnız özet okundu) ve yarı profesyonel erkek basketbolcularda maç gecesi geç uykuya dalış ve yüksek yüklü maç sonrası kısa uyku (fox-2020, n=7). Basketbol sistematik derlemesi (pernigoni-2024) sıçrama ve süratte 24-48 saat süren düşüş ve 24-48 saatte kas ağrısı buluyor, uykuda belirgin etki bulmuyor; uyku konusunda kaynaklar çelişiyor. Karbonhidrat: collins-2021 (futbol). Toparlanma yöntemleri: doeven-2018. Kişinin kendi maç gecesi uykusu yine kendi aralığıyla okunur; 80 dakika eşik değil."
     }
   ]
 }

@@ -92,6 +92,35 @@ test('maç günü bloğu', () => {
   assert.equal(numbersBlocks(s, kb)[0]!.text, 'Maç günü: bugün maç var.');
 });
 
+test('maç çevresi bloğu (karar 0046): bugünün zamanlaması, yarın ve dün; uyku kısalması kural değerinden', () => {
+  const brief = (startTime: string | null) => ({ startTime, venue: 'away' as const });
+  const s: CoachSnapshot = {
+    ...fullSnapshot(),
+    matchDay: true,
+    match: {
+      yesterday: brief('20:30'),
+      today: brief('19:00'),
+      tomorrow: null,
+      plan: { meal: ['15:00', '16:00'], mealCarbsG: [80, 240], fluid: ['15:00', '17:00'], fluidMl: [400, 560], nap: ['12:30', '16:50'], postCarbsGPerHour: 80 },
+    },
+  };
+  const day = numbersBlocks(s, kb)[0]!.text;
+  assert.match(day, /bugün maç var \(başlama 19:00, deplasman\)/);
+  assert.match(day, /ana öğün 15:00–16:00 arası, 80–240 g karbonhidrat/);
+  assert.match(day, /Sıvı 15:00–17:00 arası 400–560 mL/);
+  assert.match(day, /Şekerleme penceresi 12:30–16:50/);
+  assert.match(day, /Maçtan sonra 4 saat, saatte ~80 g/);
+  assert.match(day, /Akşam maçı gecesi için grup ortalaması uyku kısalması ~80 dakika/);
+  const md1: CoachSnapshot = { ...fullSnapshot(), matchDay: false, match: { yesterday: brief('13:00'), today: null, tomorrow: brief(null), plan: null } };
+  const t = numbersBlocks(md1, kb)[0]!.text;
+  assert.match(t, /bugün maç yok/);
+  assert.match(t, /Yarın maç var \(başlama saati girilmedi, deplasman\)/);
+  assert.match(t, /Gündüz maçı gecesi için grup ortalaması uyku kısalması ~20 dakika/);
+  // Kurallar: bugün maç (öğün, şekerleme, sonrası), dün maç (sonrası), yarın maç (önceki gün)
+  assert.deepEqual(snapshotRuleIds(s, []), ['mac-gunu', 'mac-oncesi-ogun', 'mac-gunu-sekerleme', 'mac-sonrasi']);
+  assert.deepEqual(snapshotRuleIds(md1, []), ['mac-oncesi-gun', 'mac-sonrasi']);
+});
+
 test('metinde "â" yok ve tarih yok (tarihteki sayılar modele izin olmasın)', () => {
   for (const b of numbersBlocks(fullSnapshot(), kb)) {
     assert.doesNotMatch(b.text, /â/, b.id);
@@ -143,4 +172,21 @@ test('uyku saati aşağı kesilir: 7 saatin hemen altı "7,0" yazıp kısa denme
   const s = fullSnapshot();
   const sleep = { ...s.sleep!, rollingHours: 6.996, short: true };
   assert.match(text({ ...s, sleep }, 'sleep') ?? '', /ortalaması 6,9 saat \(6 sa 59 dk\)\. .*uyku kısa\./);
+});
+
+test('seyahat bloğu (karar 0047): evre, saat farkı, uyum tahmini kural değerinden; tahmin işaretli', () => {
+  const base = { offsetHours: 7, direction: 'east' as const, jetLag: true, daysUntil: null, dayAway: 3, totalDays: 7, remainingDays: 5, firstHours: true, eastDelayHint: false };
+  const s: CoachSnapshot = { ...fullSnapshot(), travel: { ...base, phase: 'away' } };
+  const block = numbersBlocks(s, kb).find((b) => b.id === 'travel')!;
+  assert.equal(block.estimate, true);
+  assert.match(block.text, /Seyahatin 3\. günü, saat farkı \+7 saat \(doğu\)/);
+  assert.match(block.text, /günde ~1 saat/);
+  assert.match(block.text, /Tahmini kalan uyum ~5 gün/);
+  assert.match(block.text, /ilk 72 saat/);
+  assert.deepEqual(snapshotRuleIds(s, []), ['jet-lag-uyum', 'jet-lag-varis']);
+  const day0: CoachSnapshot = { ...fullSnapshot(), travel: { ...base, offsetHours: 0, direction: null, jetLag: false, dayAway: null, totalDays: null, remainingDays: null, firstHours: false, phase: 'departure' } };
+  const b0 = numbersBlocks(day0, kb).find((b) => b.id === 'travel')!;
+  assert.equal(b0.text, 'Seyahat: Bugün gidiş yolculuğu, saat farkı yok.');
+  assert.equal(b0.estimate, false);
+  assert.deepEqual(snapshotRuleIds(day0, []), ['seyahat-yorgunlugu']);
 });

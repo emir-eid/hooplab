@@ -138,3 +138,28 @@ test('maç günü: kuralı önce gelir, dikkat seçiminde de kalır; işaretsiz 
   assert.ok(!snapshotRuleIds(fullSnapshot()).includes('mac-gunu'));
   for (const id of matchDayRules) assert.ok(kbRules.some((r) => r.id === id), id);
 });
+
+test('maç çevresi (karar 0046): geçerli olan kabul, bozuk saat / bilinmeyen alan / tutarsız işaret reddedilir', () => {
+  const brief = { startTime: '19:00', venue: 'home' };
+  const plan = { meal: ['15:00', '16:00'], mealCarbsG: [80, 240], fluid: ['15:00', '17:00'], fluidMl: [400, 560], nap: null, postCarbsGPerHour: 80 };
+  const base = { ...fullSnapshot(), matchDay: true };
+  const ok = parseSnapshot(asRequestBody({ ...base, match: { yesterday: null, today: brief, tomorrow: null, plan } }));
+  assert.equal(ok.ok, true);
+  // Alan yoksa (eski istemci) yine geçerli
+  assert.equal(parseSnapshot(asRequestBody(base)).ok, true);
+  const bad = (match: unknown, matchDay = true) => parseSnapshot(asRequestBody({ ...base, matchDay, match }));
+  assert.equal(bad({ yesterday: null, today: { startTime: '25:00', venue: null }, tomorrow: null, plan: null }).ok, false);
+  assert.equal(bad({ yesterday: null, today: { ...brief, city: 'X' }, tomorrow: null, plan: null }).ok, false);
+  assert.equal(bad({ yesterday: null, today: brief, tomorrow: null, plan: null }, false).ok, false);
+  assert.equal(bad({ yesterday: null, today: { startTime: null, venue: null }, tomorrow: null, plan }).ok, false);
+  assert.equal(bad({ yesterday: null, today: brief, tomorrow: null, plan: { ...plan, meal: ['16:00', '15:00'] } }).ok, false);
+});
+
+test('seyahat (karar 0047): geçerli kabul; bilinmeyen alan, aralık dışı saat farkı ve kesirli gün reddedilir', () => {
+  const travel = { phase: 'away', offsetHours: -6, direction: 'west', jetLag: true, daysUntil: null, dayAway: 2, totalDays: 3, remainingDays: 2, firstHours: true, eastDelayHint: false };
+  assert.equal(parseSnapshot(asRequestBody({ ...fullSnapshot(), travel })).ok, true);
+  assert.equal(parseSnapshot(asRequestBody({ ...fullSnapshot(), travel: { ...travel, city: 'X' } })).ok, false);
+  assert.equal(parseSnapshot(asRequestBody({ ...fullSnapshot(), travel: { ...travel, offsetHours: 20 } })).ok, false);
+  assert.equal(parseSnapshot(asRequestBody({ ...fullSnapshot(), travel: { ...travel, remainingDays: 1.5 } })).ok, false);
+  assert.equal(parseSnapshot(asRequestBody({ ...fullSnapshot(), travel: { ...travel, phase: 'flying' } })).ok, false);
+});

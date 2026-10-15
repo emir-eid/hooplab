@@ -7,15 +7,19 @@ import { addIsoDays, dayFluidL, inferDayType, isValidFluidMl, nutritionTargets, 
 
 const today = '2026-10-31';
 
-test('gün tipi: seans yoksa dinlenme, kısa seans antrenman, maç ya da ≥ 180 dk yoğun', () => {
+test('gün tipi: seans yoksa dinlenme, kısa seans antrenman, ≥ 180 dk yoğun, maç ve çevresi maç çevresi (karar 0046)', () => {
   assert.equal(inferDayType([]), 'rest');
   assert.equal(inferDayType([{ kind: 'team_practice', durationMin: 110 }]), 'training');
-  assert.equal(inferDayType([{ kind: 'shooting', durationMin: 30 }, { kind: 'game', durationMin: 40 }]), 'high');
   assert.equal(inferDayType([{ kind: 'team_practice', durationMin: 120 }, { kind: 'strength', durationMin: 60 }]), 'high');
   assert.equal(inferDayType([{ kind: 'team_practice', durationMin: 120 }, { kind: 'strength', durationMin: 59 }]), 'training');
-  // Maç işareti: maç seansı henüz kaydedilmemiş sabah da yoğun gün (mac-gunu).
-  assert.equal(inferDayType([], true), 'high');
-  assert.equal(inferDayType([{ kind: 'shooting', durationMin: 30 }], true), 'high');
+  // Maç seansı kaydı, takvim ya da işaret: maç seansı henüz kaydedilmemiş sabah da maç çevresi (mac-gunu).
+  assert.equal(inferDayType([{ kind: 'shooting', durationMin: 30 }, { kind: 'game', durationMin: 40 }]), 'match');
+  assert.equal(inferDayType([], { today: true }), 'match');
+  assert.equal(inferDayType([{ kind: 'team_practice', durationMin: 200 }], { today: true }), 'match');
+  // Dün ya da yarın maç: maç çevresi; ama 180 dk ve üstü seans günü yoğun kalır.
+  assert.equal(inferDayType([], { adjacent: true }), 'match');
+  assert.equal(inferDayType([{ kind: 'shooting', durationMin: 45 }], { adjacent: true }), 'match');
+  assert.equal(inferDayType([{ kind: 'team_practice', durationMin: 180 }], { adjacent: true }), 'high');
 });
 
 test('hedef kilo: son 7 günün ortalaması; yoksa son ölçüm; geçersiz ve gelecek sayılmaz', () => {

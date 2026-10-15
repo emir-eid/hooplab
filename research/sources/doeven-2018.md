@@ -31,3 +31,4 @@ verified_on: 2026-10-07
 
 - `rules/bolge.json` → `bolge-toparlanma-penceresi`
 - `rules/mac.json` → `mac-gunu`
+- `rules/mac.json` → `mac-sonrasi`

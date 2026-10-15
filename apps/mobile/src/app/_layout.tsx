@@ -87,6 +87,9 @@ function RootNavigator() {
           <Stack.Screen name="meal-new" options={{ presentation: 'modal' }} />
           <Stack.Screen name="grams" options={{ presentation: 'modal' }} />
           <Stack.Screen name="water" options={{ presentation: 'modal' }} />
+          <Stack.Screen name="match-edit" options={{ presentation: 'modal' }} />
+          <Stack.Screen name="trip-edit" options={{ presentation: 'modal' }} />
+          <Stack.Screen name="matches" />
           <Stack.Screen name="recovery-method" />
           <Stack.Screen name="weekly" />
           <Stack.Screen

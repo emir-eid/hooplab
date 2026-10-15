@@ -2,14 +2,17 @@
 // Uygulama her öne gelişte, check-in kaydında ve tercih değişince planı baştan kurar: önce HoopLab'in kendi
 // bildirimleri silinir, sonra plan yeniden yazılır. Demo ve web önizlemesinde hiçbir şey zamanlanmaz.
 
+import { addIsoDays } from '@hooplab/engine';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import * as Notifications from 'expo-notifications';
 import { Platform } from 'react-native';
 
 import { fetchCheckin } from '@/data/daily-log';
 import { fetchSyncStatus } from '@/data/google-health';
+import { fetchMatches } from '@/data/matches';
 import {
   anyEnabled,
+  checkinDaysAhead,
   parseNotificationPrefs,
   planNotifications,
   type NotificationPrefs,
@@ -101,14 +104,17 @@ export function refreshNotifications(): Promise<void> {
         return;
       }
       const now = new Date();
-      const [checkin, sync] = await Promise.all([
-        prefs.checkin.enabled ? fetchCheckin(toLocalDate(now)) : Promise.resolve(null),
+      const today = toLocalDate(now);
+      const [checkin, sync, matches] = await Promise.all([
+        prefs.checkin.enabled ? fetchCheckin(today) : Promise.resolve(null),
         prefs.reconnect.enabled ? fetchSyncStatus() : Promise.resolve(null),
+        prefs.match.enabled ? fetchMatches(today, addIsoDays(today, checkinDaysAhead)) : Promise.resolve(null),
       ]);
       const plan = planNotifications(prefs, {
         now,
         checkinDoneToday: checkin?.ok === true && checkin.value !== null,
         sync: sync?.ok && sync.value ? { state: sync.value.state, connected_at: sync.value.connected_at } : null,
+        matches: matches?.ok ? matches.value : [],
       });
       await clearOwn();
       await schedule(plan);

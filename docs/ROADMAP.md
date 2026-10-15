@@ -85,7 +85,7 @@ Her faz, bitiş kriteri karşılanınca `/kapat` ile kapanır: faz özeti `docs/
 - [x] Yakılan kalori: günlük toplam, seans başına, haftalık raporda; "Tahmin" etiketli, kaynaklı (2026-10-14, [0043](decisions/0043-yakilan-enerji.md)); saatlik grafik (2026-10-15, [0044](decisions/0044-saatlik-yakilan-enerji.md))
 - [x] Bildirimler, yerel: sabah check-in ve Google izni hatırlatması (2026-10-15, [0045](decisions/0045-yerel-bildirimler.md)); sunucu bildirimleri (push) TestFlight'tan sonra, maç sabahı hatırlatması maç takvimiyle
 - [x] Haftalık rapor: takvim haftası, yalnız motorun sayıları, Trend'den açılır (2026-10-14, [0040](decisions/0040-haftalik-rapor.md)); koç yorumu ve PDF paylaşımı sonra
-- [ ] Maç günü ve seyahat protokolleri (maç takvimi ve maç sabahı hatırlatması dahil, 0045)
+- [x] Maç günü ve seyahat protokolleri (2026-10-15): maç takvimi, MD-1 / MD / MD+1 notları, maç çevresi gün tipi 6-8 g/kg, maç sabahı hatırlatması ([0046](decisions/0046-mac-takvimi-ve-mac-cevresi.md)); seyahat yorgunluğu ve jet lag uyum tahmini ([0047](decisions/0047-seyahat-ve-jet-lag.md))
 - [ ] Performans skill'i (Vercel React Native kuralları) ve performans turu
 - [ ] iOS uçtan uca test (EAS Workflows + Maestro veya EAS Simulator)
 - [ ] Portfolyo sayfası

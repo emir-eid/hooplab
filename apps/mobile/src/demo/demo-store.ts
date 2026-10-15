@@ -1,7 +1,7 @@
 // Demo modunun bellekteki veritabanı (karar 0022): veri fonksiyonlarıyla aynı imzalar, ağ yok.
 // Kayıtlar (check-in, seans, etiketleme) yalnız bellekte; uygulama kapanınca veya senaryo değişince sıfırlanır.
 
-import { addIsoDays, checkinBaseline, readCheckin, type CheckinReading, type DayType, type Meal } from '@hooplab/engine';
+import { addIsoDays, checkinBaseline, readCheckin, type CheckinReading, type DayType, type Match, type Meal, type Trip } from '@hooplab/engine';
 
 import { routingNotes } from '../../../../supabase/functions/_shared/coach/contract.ts';
 
@@ -182,9 +182,18 @@ export class DemoStore {
   async fetchNutrition(today: string): Promise<Result<NutritionView>> {
     const from = weightFrom(today);
     const weights = this.db.weights.filter((w) => w.local_date >= from && w.local_date <= today);
-    const sessions = this.db.sessions.filter((s) => s.localDate === today);
+    const on = (date: string) => this.db.sessions.filter((s) => s.localDate === date);
     return ok(
-      buildNutritionView(today, weights, sessions, this.db.dayTypes[today] ?? null, this.db.meals, this.db.fluids, this.db.matchDays.includes(today)),
+      buildNutritionView(
+        today,
+        weights,
+        on(today),
+        this.db.dayTypes[today] ?? null,
+        this.db.meals,
+        this.db.fluids,
+        this.db.matches,
+        on(addIsoDays(today, -1)),
+      ),
     );
   }
 
@@ -210,7 +219,7 @@ export class DemoStore {
         pain: db.pain,
         weights: db.weights,
         dayTypes: Object.entries(db.dayTypes).map(([local_date, day_type]) => ({ local_date, day_type })),
-        matchDays: db.matchDays,
+        matches: db.matches,
         meals: db.meals,
         fluids: db.fluids,
       },
@@ -275,8 +284,37 @@ export class DemoStore {
   }
 
   async saveMatchDay(localDate: string, matchDay: boolean): Promise<Result<null>> {
-    const rest = this.db.matchDays.filter((d) => d !== localDate);
-    this.db.matchDays = matchDay ? [...rest, localDate] : rest;
+    if (!matchDay) return this.deleteMatch(localDate);
+    if (this.db.matches.some((m) => m.date === localDate)) return ok(null);
+    return this.saveMatch({ date: localDate, startTime: null, venue: null });
+  }
+
+  async fetchMatches(from: string, to: string): Promise<Result<Match[]>> {
+    return ok(this.db.matches.filter((m) => m.date >= from && m.date <= to).sort((a, b) => (a.date < b.date ? -1 : 1)));
+  }
+
+  async saveMatch(match: Match): Promise<Result<null>> {
+    this.db.matches = [...this.db.matches.filter((m) => m.date !== match.date), { ...match }];
+    return ok(null);
+  }
+
+  async deleteMatch(localDate: string): Promise<Result<null>> {
+    this.db.matches = this.db.matches.filter((m) => m.date !== localDate);
+    return ok(null);
+  }
+
+  async fetchTrips(from: string, to: string): Promise<Result<Trip[]>> {
+    return ok(this.db.trips.filter((t) => t.departDate >= from && t.departDate <= to).sort((a, b) => (a.departDate < b.departDate ? -1 : 1)));
+  }
+
+  async saveTrip(trip: Trip): Promise<Result<null>> {
+    const id = trip.id ?? `demo-trip-${this.nextId++}`;
+    this.db.trips = [...this.db.trips.filter((t) => t.id !== id), { ...trip, id }];
+    return ok(null);
+  }
+
+  async deleteTrip(id: string): Promise<Result<null>> {
+    this.db.trips = this.db.trips.filter((t) => t.id !== id);
     return ok(null);
   }
 

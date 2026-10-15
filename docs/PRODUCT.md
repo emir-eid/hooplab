@@ -44,7 +44,7 @@ Basketbola özgü odak: sıçrama yükü ve patellar / Aşil tendonu, ani duruş
 | **Sabah kilo** | Her sabah (isteğe bağlı) | 5 saniye | |
 | **Ter testi:** öncesi / sonrası tartı, içilen sıvı | Ara sıra (farklı koşullarda) | 1 dakika | |
 | **Beslenme ve su** | Gün içinde (basit) | Öğün başına 15 saniye | Kalori sayacı değil (alım tarafı; yakılan enerji cihazdan, tahmin olarak gösterilir ama alımla karşılaştırılmaz, [0043](decisions/0043-yakilan-enerji.md)); karbonhidrat / protein kaba tahmini. Besin listesinden, etiketten gram ya da Bugün'deki halkadan doğrudan gram |
-| **Takvim:** maç günleri, seyahat (saat dilimi) | Haftalık | | Faz 1'de elle; otomatik kaynak açık soru. Faz 3'te Bugün'de tek dokunuşluk "Bugün maç var" işareti ([0032](decisions/0032-ai-koc-tasarimi.md), [0036](decisions/0036-mac-gunu-isareti.md)): işaretli gün beslenmede yoğun, koç maça hazırlık dilini kullanır |
+| **Takvim:** maç günleri, seyahat (saat dilimi) | Haftalık | | Faz 1'de elle; otomatik kaynak açık soru. Faz 3'te Bugün'de tek dokunuşluk "Bugün maç var" işareti ([0032](decisions/0032-ai-koc-tasarimi.md), [0036](decisions/0036-mac-gunu-isareti.md)): işaretli gün beslenmede yoğun, koç maça hazırlık dilini kullanır. Faz 4'te takvim: maçlar (saat, yer) ve seyahatler (saat farkı); Bugün'de maç çevresi ve seyahat kartları, maç sabahı hatırlatması ([0046](decisions/0046-mac-takvimi-ve-mac-cevresi.md), [0047](decisions/0047-seyahat-ve-jet-lag.md)) |
 
 İlke: girdi yükü düşük kalmalı. Her ekran tek elle, birkaç dokunuşla doldurulabilmeli.
 
@@ -99,6 +99,6 @@ Planlama sırasında anılan çalışmalar. Doğrulanıp `research/sources`'a gi
 | Fitbit Air hangi alanları üretiyor, hangi çözünürlükte? | Faz 0 (ölçüm) |
 | ~~Check-in ölçeği (1-5, 1-7 veya 0-10)?~~ 1-5, 5 = en iyi ([0017](decisions/0017-sabah-check-in-olcegi.md)) | Faz 1 ✓ |
 | Kas / tendon modelinin bölge listesi ve hareket → bölge eşlemesi | Faz 2 başı |
-| Maç takvimi elle mi girilecek, otomatik bir kaynak var mı? | Faz 1 |
+| ~~Maç takvimi elle mi girilecek, otomatik bir kaynak var mı?~~ Elle, hızlı formla: tarih, saat, iç saha / deplasman; seyahat ayrı (gidiş, dönüş, saat farkı) ([0046](decisions/0046-mac-takvimi-ve-mac-cevresi.md), [0047](decisions/0047-seyahat-ve-jet-lag.md)) | Faz 4 ✓ |
 | Takım staff'ıyla paylaşım isteniyor mu? | Faz 4 |
 | ~~Günün durumu maç gününü bilmeli mi?~~ Durumun kendisi değişmez; Bugün'e "Bugün maç var" işareti gelir, koç maç günü hazırlık dilini kullanır ([0032](decisions/0032-ai-koc-tasarimi.md)). Ayrıntılı protokol Faz 4'te | Faz 3 ✓ (koç), Faz 4 (protokol) |

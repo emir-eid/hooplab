@@ -5,6 +5,8 @@
 import {
   addIsoDays,
   dayFluidL,
+  matchDayRule,
+  matchesAround,
   dayIntake,
   inferDayType,
   mealSlots,
@@ -13,6 +15,8 @@ import {
   type DayIntake,
   type DayType,
   type DayValue,
+  type Match,
+  type MatchesAround,
   type Meal,
   type MealItem,
   type MealSlot,
@@ -40,8 +44,12 @@ export interface NutritionView {
   inferred: DayType;
   /** Kullanıcının düzeltmesi; yoksa null. */
   override: DayType | null;
-  /** "Bugün maç var" işaretli mi (karar 0036); işaretli gün yoğun sayılır. */
+  /** Bugün maç var mı (takvim ya da "Bugün maç var" işareti, karar 0036, 0046); maç günü maç çevresi sayılır. */
   matchDay: boolean;
+  /** Dünün, bugünün ve yarının maçı (karar 0046). */
+  matches: MatchesAround;
+  /** Dün ya da yarın maç (ya da dün maç seansı): gün maç çevresi sayılır. */
+  aroundMatch: boolean;
   weight: TargetWeight | null;
   /** Bugün sabah kilosu girildi mi (değeri). */
   todayWeight: number | null;
@@ -130,10 +138,14 @@ export function buildNutritionView(
   override: DayType | null,
   mealRows: readonly MealRow[] = [],
   fluidRows: readonly FluidRow[] = [],
-  matchDay = false,
+  matchList: readonly Match[] = [],
+  yesterdaySessions: readonly { kind: SessionKind }[] = [],
 ): NutritionView {
   const weights = toWeightSeries(weightRows).filter((w) => w.date >= weightFrom(today) && w.date <= today);
-  const inferred = inferDayType(todaySessions, matchDay);
+  const matches = matchesAround(today, matchList);
+  const matchDay = matches.today !== null;
+  const aroundMatch = matches.yesterday !== null || matches.tomorrow !== null || yesterdaySessions.some((s) => matchDayRule.kinds.includes(s.kind));
+  const inferred = inferDayType(todaySessions, { today: matchDay, adjacent: aroundMatch });
   const dayType = override ?? inferred;
   const weight = targetWeight(weights, today);
   const targets = nutritionTargets(dayType, weight?.kg ?? null);
@@ -145,6 +157,8 @@ export function buildNutritionView(
     inferred,
     override,
     matchDay,
+    matches,
+    aroundMatch,
     weight,
     todayWeight: weights.find((w) => w.date === today)?.value ?? null,
     weights,

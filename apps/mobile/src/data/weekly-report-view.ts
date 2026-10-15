@@ -29,6 +29,7 @@ import {
   type BodySpot,
   type DayLevel,
   type DayType,
+  type Match,
   type IllnessSignKey,
   type MetricReading,
   type RangePosition,
@@ -76,7 +77,8 @@ export interface WeeklyRows {
   pain: WeeklyPainRow[];
   weights: WeightRow[];
   dayTypes: { local_date: string; day_type: DayType }[];
-  matchDays: string[];
+  /** Haftanın bir gün öncesinden bir gün sonrasına maçlar (maç çevresi gün tipi için, karar 0046). */
+  matches: Match[];
   meals: MealRow[];
   fluids: FluidRow[];
 }
@@ -238,7 +240,8 @@ export function buildWeeklyReportView(rows: WeeklyRows, weekStart: string, today
       rows.dayTypes.find((d) => d.local_date === date)?.day_type ?? null,
       rows.meals,
       rows.fluids,
-      rows.matchDays.includes(date),
+      rows.matches,
+      sessionRows.filter((s) => s.local_date === addIsoDays(date, -1)),
     ),
   );
   const withMeals = nutritionDays.filter((n) => n.meals.length > 0);

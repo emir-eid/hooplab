@@ -1,15 +1,15 @@
 // Ben → Bildirimler (karar 0045): yerel hatırlatmaların açılıp kapatıldığı yer. Anahtar açılınca izin istenir;
 // iOS izni reddedildiyse yalnız Ayarlar'dan açılabilir. Tercih bu cihazda saklanır, sunucuya gitmez.
 
-import { layout, radius, spacing } from '@hooplab/theme';
+import { layout, spacing } from '@hooplab/theme';
 import { useFocusEffect } from 'expo-router';
 import { useCallback, useState } from 'react';
-import { Linking, Pressable, StyleSheet, Switch, View } from 'react-native';
+import { Linking, StyleSheet, Switch, View } from 'react-native';
 
-import { Icon } from '@/components/icon';
 import { ListGroup, ListRow } from '@/components/list';
 import { PageHeader } from '@/components/page-header';
 import { Screen } from '@/components/screen';
+import { StepButton } from '@/components/step-button';
 import { Text } from '@/components/text';
 import {
   checkinTimeRange,
@@ -67,12 +67,40 @@ export default function NotificationsScreen() {
     />
   );
 
-  const step = (direction: 1 | -1) => {
-    const t = stepCheckinTime(prefs.checkin.hour, prefs.checkin.minute, direction);
-    void update({ ...prefs, checkin: { ...prefs.checkin, ...t } }, false);
+  // Saatli tercihin (check-in, maç sabahı) saat seçici satırı.
+  const timeRow = (key: 'checkin' | 'match') => {
+    const p = prefs[key];
+    const minutes = p.hour * 60 + p.minute;
+    const clock = formatClock(p.hour, p.minute);
+    const step = (direction: 1 | -1) => {
+      const t = stepCheckinTime(p.hour, p.minute, direction);
+      void update({ ...prefs, [key]: { ...p, ...t } }, false);
+    };
+    return (
+      <ListRow
+        label="Saat"
+        accessory={
+          <View style={styles.stepper}>
+            <StepButton
+              icon="chevronBack"
+              label="15 dakika erken"
+              enabled={available && minutes > checkinTimeRange.firstMinute}
+              onPress={() => step(-1)}
+            />
+            <Text variant="callout" style={styles.clock} accessibilityLabel={`Saat ${clock}`}>
+              {clock}
+            </Text>
+            <StepButton
+              icon="chevron"
+              label="15 dakika geç"
+              enabled={available && minutes < checkinTimeRange.lastMinute}
+              onPress={() => step(1)}
+            />
+          </View>
+        }
+      />
+    );
   };
-  const minutes = prefs.checkin.hour * 60 + prefs.checkin.minute;
-  const clock = formatClock(prefs.checkin.hour, prefs.checkin.minute);
 
   const unavailableNote = !notificationsSupported
     ? 'Bildirimler yalnız iPhone uygulamasında çalışır; web önizlemesinde zamanlanmaz.'
@@ -94,30 +122,20 @@ export default function NotificationsScreen() {
             void update({ ...prefs, checkin: { ...prefs.checkin, enabled: v } }, v),
           )}
         />
-        {prefs.checkin.enabled ? (
-          <ListRow
-            label="Saat"
-            accessory={
-              <View style={styles.stepper}>
-                <StepButton
-                  icon="chevronBack"
-                  label="15 dakika erken"
-                  enabled={available && minutes > checkinTimeRange.firstMinute}
-                  onPress={() => step(-1)}
-                />
-                <Text variant="callout" style={styles.clock} accessibilityLabel={`Saat ${clock}`}>
-                  {clock}
-                </Text>
-                <StepButton
-                  icon="chevron"
-                  label="15 dakika geç"
-                  enabled={available && minutes < checkinTimeRange.lastMinute}
-                  onPress={() => step(1)}
-                />
-              </View>
-            }
-          />
-        ) : null}
+        {prefs.checkin.enabled ? timeRow('checkin') : null}
+      </ListGroup>
+
+      <ListGroup
+        label="Maç sabahı"
+        footer="Maç takvimindeki günlerde seçtiğin saatte; maç saatini ve öğün, sıvı notlarının Bugün'de olduğunu hatırlatır."
+      >
+        <ListRow
+          label="Hatırlat"
+          accessory={toggle('Maç sabahı hatırlatması', prefs.match.enabled, (v) =>
+            void update({ ...prefs, match: { ...prefs.match, enabled: v } }, v),
+          )}
+        />
+        {prefs.match.enabled ? timeRow('match') : null}
       </ListGroup>
 
       <ListGroup
@@ -163,41 +181,8 @@ export default function NotificationsScreen() {
   );
 }
 
-function StepButton({
-  icon,
-  label,
-  enabled,
-  onPress,
-}: {
-  icon: 'chevron' | 'chevronBack';
-  label: string;
-  enabled: boolean;
-  onPress: () => void;
-}) {
-  const palette = usePalette();
-  return (
-    <Pressable
-      onPress={onPress}
-      disabled={!enabled}
-      hitSlop={spacing[2]}
-      accessibilityRole="button"
-      accessibilityLabel={label}
-      accessibilityState={{ disabled: !enabled }}
-      style={({ pressed }) => [
-        styles.step,
-        { backgroundColor: palette.band, opacity: enabled ? 1 : 0.35 },
-        pressed && styles.pressed,
-      ]}
-    >
-      <Icon name={icon} color={palette.ink} size={16} strokeWidth={2.2} />
-    </Pressable>
-  );
-}
-
 const styles = StyleSheet.create({
   stepper: { flexDirection: 'row', alignItems: 'center', gap: spacing[2] },
   clock: { minWidth: 48, textAlign: 'center', fontVariant: ['tabular-nums'] },
-  step: { width: 32, height: 32, borderRadius: radius.full, alignItems: 'center', justifyContent: 'center' },
-  pressed: { opacity: 0.6 },
   note: { marginHorizontal: layout.screenInset, marginTop: spacing[4] },
 });

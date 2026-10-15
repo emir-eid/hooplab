@@ -97,7 +97,8 @@ export function basisTarget(blockId: string): BasisTarget {
 
 /** Blok kimliğinin dayanaklar listesindeki adı. */
 export function basisLabel(blockId: string): string {
-  if (blockId === 'day') return 'Maç günü işareti';
+  if (blockId === 'day') return 'Maç takvimi';
+  if (blockId === 'travel') return explainers.travel.title;
   const target = basisTarget(blockId);
   if (!target) return 'Günün sayıları';
   return target.kind === 'method' ? 'Günün durumu' : explainers[target.id].title;
@@ -110,15 +111,16 @@ export function basisLabel(blockId: string): string {
 export type SummaryTopic = 'match' | 'recovery' | 'load' | 'nutrition';
 export const summaryTopics = ['match', 'recovery', 'load', 'nutrition'] as const satisfies readonly SummaryTopic[];
 export const summaryTopicLabels: Record<SummaryTopic, string> = {
-  match: 'Maç günü',
+  match: 'Maç ve seyahat',
   recovery: 'Toparlanma',
   load: 'Yük ve vücut',
   nutrition: 'Beslenme ve sıvı',
 };
 
-const metricTopics: Record<MetricKey | 'day', SummaryTopic> = {
+const metricTopics: Record<MetricKey | 'day' | 'travel', SummaryTopic> = {
   // Maç günü bloğuna alıntı yapan cümle ve ardındaki kaynaklı cümleler (ısınma, maç sonrası) ayrı konu (karar 0036).
   day: 'match',
+  travel: 'match',
   status: 'recovery',
   hrv: 'recovery',
   rhr: 'recovery',
@@ -149,18 +151,34 @@ export interface SummaryLayout {
 }
 
 /**
- * Yalnız maç günü kuralına (rules/mac.json → mac-gunu) bağlı kaynaklar: ısınma. Yalnız bunlara alıntı yapan cümle
- * önündeki cümleden bağımsız olarak "Maç günü" konusuna girer (karar 0036; gerçek özette ısınma cümleleri nabız
- * cümlesinin ardından Toparlanma'ya düşmüştü). Liste demo-coach.test.ts'te kanıt tabanıyla denetlenir.
+ * Yalnız maç çevresi ve seyahat kurallarına (rules/mac.json, rules/seyahat.json) bağlı kaynaklar: ısınma, maç öncesi
+ * öğün, şekerleme, maç gecesi uykusu, maç sonrası toparlanma, seyahat yorgunluğu, jet lag. Yalnız bunlara alıntı yapan
+ * cümle önündeki cümleden bağımsız olarak "Maç ve seyahat" konusuna girer (karar 0036, 0046, 0047; gerçek özette ısınma
+ * cümleleri nabız cümlesinin ardından Toparlanma'ya düşmüştü). Liste demo-coach.test.ts'te kanıt tabanıyla denetlenir.
  */
-export const matchDayOnlySources: readonly string[] = ['fradkin-2010', 'mcgowan-2015'];
+export const matchDayOnlySources: readonly string[] = [
+  'fowler-2017',
+  'fox-2020',
+  'fradkin-2010',
+  'gentle-2014',
+  'janse-van-rensburg-2020',
+  'janse-van-rensburg-2021',
+  'juliff-2015',
+  'leota-2022',
+  'mcgowan-2015',
+  'mesas-2023',
+  'pernigoni-2024',
+  'roach-2019',
+  'roberts-2019',
+  'williams-2015',
+];
 
 function topicOf(s: AuditSentence): SummaryTopic | null {
   const metric = s.numbers[0]?.split('.')[0];
   if (metric === undefined) {
     return s.sources.length > 0 && s.sources.every((id) => matchDayOnlySources.includes(id)) ? 'match' : null;
   }
-  return metric in metricTopics ? metricTopics[metric as MetricKey | 'day'] : null;
+  return metric in metricTopics ? metricTopics[metric as MetricKey | 'day' | 'travel'] : null;
 }
 
 /**

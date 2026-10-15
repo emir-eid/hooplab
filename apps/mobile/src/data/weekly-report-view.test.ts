@@ -32,7 +32,7 @@ function rowsOf(db: DemoDb): WeeklyRows {
     pain: db.pain,
     weights: db.weights,
     dayTypes: [],
-    matchDays: db.matchDays,
+    matches: db.matches,
     meals: db.meals,
     fluids: db.fluids,
   };
@@ -50,7 +50,7 @@ const emptyRows: WeeklyRows = {
   pain: [],
   weights: [],
   dayTypes: [],
-  matchDays: [],
+  matches: [],
   meals: [],
   fluids: [],
 };
@@ -114,7 +114,7 @@ test('beslenme: öğünlü günler hedef aralığına göre sayılır, kilo yoks
       { id: 'f1', local_date: '2026-10-06', volume_ml: 1000 },
       { id: 'f2', local_date: '2026-10-08', volume_ml: 2000 },
     ],
-    matchDays: ['2026-10-10'],
+    matches: [{ date: '2026-10-10', startTime: null, venue: null }],
   };
   const v = buildWeeklyReportView(rows, lastWeek, today);
   // Dinlenme günü (seans yok): karbonhidrat 3-5 g/kg = 270-450 g, protein 108-180 g.
@@ -123,7 +123,8 @@ test('beslenme: öğünlü günler hedef aralığına göre sayılır, kilo yoks
   assert.equal(v.nutrition.mealDays, 2);
   assert.equal(v.nutrition.noTarget, 0);
   assert.equal(v.nutrition.matchDays, 1);
-  assert.deepEqual(v.nutrition.dayTypes, { rest: 6, high: 1 });
+  // Maç günü ile bir gün öncesi ve sonrası maç çevresi (karar 0046).
+  assert.deepEqual(v.nutrition.dayTypes, { rest: 4, match: 3 });
   assert.equal(v.nutrition.fluidDays, 2);
   assert.equal(v.nutrition.fluidMeanL, 1.5);
 

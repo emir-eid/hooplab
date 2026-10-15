@@ -4,8 +4,21 @@
 // Beslenme hedefi (gün tipine göre) ve bugün / dünün ter testleri (karar 0029).
 // Koçun günlük özeti (karar 0032): bütün görünümler gelince anlık değerler kurulur; kart check-in'in altında.
 // Yakılan enerji (karar 0043): bilekliğin günlük toplamı ve seans kalorisi; tahmin, alımla karşılaştırılmaz.
+// Maç çevresi (karar 0046): yarın, bugün ya da dün maç varsa kaynaklı notlar; altında takvim satırı.
+// Seyahat (karar 0047): yaklaşan seyahat, yolculuk günü ve jet lag uyum tahmini.
 
-import { sessionLoad, sweatTest, wellnessTotal, wellnessTotalRange, type CheckinReading, type DayType } from '@hooplab/engine';
+import {
+  addIsoDays,
+  sessionLoad,
+  sweatTest,
+  travelReading,
+  wellnessTotal,
+  wellnessTotalRange,
+  type CheckinReading,
+  type DayType,
+  type Match,
+  type TravelReading,
+} from '@hooplab/engine';
 import { layout, radius, size, spacing } from '@hooplab/theme';
 import { router, useFocusEffect } from 'expo-router';
 import { useCallback, useEffect, useMemo, useState } from 'react';
@@ -20,6 +33,7 @@ import { ExplainButton } from '@/components/info-button';
 import { GroupLabel, ListGroup, ListRow } from '@/components/list';
 import { LoadSpikeRow } from '@/components/load-section';
 import { MatchDayToggle } from '@/components/match-day-toggle';
+import { MatchCalendarRow, MatchCard, TravelCard } from '@/components/match-section';
 import { NutritionSection, SweatResults } from '@/components/nutrition-section';
 import { PageHeader } from '@/components/page-header';
 import { NightData, RecoveryState } from '@/components/recovery-section';
@@ -42,6 +56,10 @@ import {
   type TrainingSession,
 } from '@/data/daily-log';
 import { fetchEnergy } from '@/data/energy';
+import { matchDaysAhead } from '@/data/match-view';
+import { fetchMatches } from '@/data/matches';
+import { tripRange } from '@/data/trip-view';
+import { fetchTrips } from '@/data/trips';
 import type { EnergyView } from '@/data/energy-view';
 import { exerciseSummary, type ExerciseSession } from '@/data/exercise-tagging';
 import { deleteMeal, fetchNutrition, saveDayType, saveMatchDay } from '@/data/nutrition';
@@ -53,6 +71,7 @@ import { fetchTrainingLoad } from '@/data/training-load';
 import type { TrainingLoadView } from '@/data/training-load-view';
 import type { DemoScenario } from '@/demo/demo-data';
 import { useDemoScenario } from '@/demo/demo-mode';
+import { refreshNotifications } from '@/notifications/scheduler';
 import { usePalette } from '@/theme/appearance';
 import { formatDayHeader } from '@/utils/format-date';
 import { addDays, toLocalDate } from '@/utils/local-date';
@@ -82,6 +101,8 @@ function TodayScreen({ demo }: { demo: DemoScenario | null }) {
   const [checkinReading, setCheckinReading] = useState<CheckinReading | null>(null);
   const [nutrition, setNutrition] = useState<NutritionView | null>(null);
   const [energy, setEnergy] = useState<EnergyView | null>(null);
+  const [nextMatch, setNextMatch] = useState<Match | null>(null);
+  const [travel, setTravel] = useState<TravelReading | null>(null);
   const [coachInputs, setCoachInputs] = useState<CoachInputs | null>(null);
   const coachSnapshot = useMemo(() => (coachInputs ? buildCoachSnapshot(coachInputs) : null), [coachInputs]);
   // Koç sekmesindeki soru bugünün değerleriyle gitsin (karar 0037).
@@ -138,13 +159,23 @@ function TodayScreen({ demo }: { demo: DemoScenario | null }) {
       fetchEnergy(today).then((r) => {
         if (!cancelled) setEnergy(r.ok && !r.value.empty ? r.value : null);
       });
+      // Sıradaki maç (bugünden sonra) takvim satırında; ikincil.
+      fetchMatches(addIsoDays(today, 1), addIsoDays(today, matchDaysAhead)).then((r) => {
+        if (!cancelled) setNextMatch(r.ok ? (r.value[0] ?? null) : null);
+      });
+      // Seyahat okuması ikincil (karar 0047); koçun anlık değerlerine de gider.
+      const trips = tripRange(today);
+      const tripsP = fetchTrips(trips.from, trips.to);
+      tripsP.then((r) => {
+        if (!cancelled) setTravel(r.ok ? travelReading(today, r.value) : null);
+      });
       // Yük notu ikincil: alınamazsa Bugün hata göstermez, not yalnız görünmez.
       loadP.then((r) => {
         if (!cancelled) setLoad(r.ok ? r.value : null);
       });
       // Koçun anlık değerleri: hepsi gelince bir kez. Alınamayan bölüm gönderilmez (özet eksik değerle yazılır).
-      Promise.all([checkinP, sessionsP, recoveryP, nutritionP, readingP, loadP, fetchRegionLoad(today, new Date())]).then(
-        ([checkin, sessions, recoveryR, nutritionR, reading, loadR, regions]) => {
+      Promise.all([checkinP, sessionsP, recoveryP, nutritionP, readingP, loadP, fetchRegionLoad(today, new Date()), tripsP]).then(
+        ([checkin, sessions, recoveryR, nutritionR, reading, loadR, regions, tripsR]) => {
           if (cancelled || !checkin.ok) return;
           setCoachInputs({
             today,
@@ -155,6 +186,7 @@ function TodayScreen({ demo }: { demo: DemoScenario | null }) {
             regions: regions.ok ? regions.value : null,
             nutrition: nutritionR.ok ? nutritionR.value : null,
             sweat: sessions.ok ? todaySweat(sessions.value) : null,
+            travel: tripsR.ok ? travelReading(today, tripsR.value) : null,
           });
         },
       );
@@ -182,10 +214,11 @@ function TodayScreen({ demo }: { demo: DemoScenario | null }) {
       .map(sweatResult)
       .find((r) => r?.shortRecoveryFluidL)?.shortRecoveryFluidL ?? null;
 
-  // Maç işareti beslenme hedefini (yoğun gün) ve koçun anlık değerlerini değiştirir (karar 0036).
+  // Maç işareti beslenme hedefini (maç çevresi) ve koçun anlık değerlerini değiştirir (karar 0036, 0046).
   async function changeMatchDay(matchDay: boolean) {
     const r = await saveMatchDay(today, matchDay);
     if (!r.ok) return setError(r.message);
+    void refreshNotifications();
     const n = await fetchNutrition(today);
     if (!n.ok) return;
     setNutrition(n.value);
@@ -207,6 +240,9 @@ function TodayScreen({ demo }: { demo: DemoScenario | null }) {
 
       {recovery ? <RecoveryState view={recovery} matchDay={nutrition?.matchDay ?? false} /> : null}
       {nutrition ? <MatchDayToggle matchDay={nutrition.matchDay} onChange={(m) => void changeMatchDay(m)} /> : null}
+      {nutrition ? <MatchCalendarRow next={nextMatch} /> : null}
+      {nutrition ? <MatchCard around={nutrition.matches} weightKg={nutrition.weight?.kg ?? null} /> : null}
+      <TravelCard reading={travel} />
       {recoveryError ? (
         <Text variant="footnoteMedium" style={[styles.error, { color: palette.statusInk.red }]} accessibilityRole="alert">
           {recoveryError}

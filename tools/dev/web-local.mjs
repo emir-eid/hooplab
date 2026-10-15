@@ -31,7 +31,8 @@ if (!unconfigured) {
 }
 console.log(`[web-local] ${unconfigured ? 'Bağlantı değerleri boş (kurulumsuz)' : `Yerel Supabase: ${url}`} · port ${port}`);
 
-const child = spawn('npx', ['expo', 'start', '--web', '--port', port], {
+// --clear: Metro önbelleğini temizler (paylaşılan dosya değişikliği pakete girmediyse; LESSONS).
+const child = spawn('npx', ['expo', 'start', '--web', '--port', port, ...(args.includes('--clear') ? ['--clear'] : [])], {
   cwd: new URL('../../apps/mobile/', import.meta.url),
   stdio: 'inherit',
   shell,

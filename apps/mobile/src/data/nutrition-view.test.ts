@@ -3,6 +3,8 @@
 import assert from 'node:assert/strict';
 import { test } from 'node:test';
 
+import { addIsoDays } from '@hooplab/engine';
+
 import { buildNutritionView, toMeals, toStoredItems, toWeightSeries } from './nutrition-view.ts';
 
 const today = '2026-10-31';
@@ -22,9 +24,9 @@ test('numeric metin olarak da gelse kilo okunur, sıralanır', () => {
 
 test('gün tipi seanslardan; düzeltme varsa o kullanılır', () => {
   const v = buildNutritionView(today, [{ local_date: today, weight_kg: 90 }], [{ kind: 'game', durationMin: 100 }], null);
-  assert.equal(v.inferred, 'high');
-  assert.equal(v.dayType, 'high');
-  assert.deepEqual(v.targets.carbsG, [720, 900]);
+  assert.equal(v.inferred, 'match');
+  assert.equal(v.dayType, 'match');
+  assert.deepEqual(v.targets.carbsG, [540, 720]);
   assert.equal(v.todayWeight, 90);
   const o = buildNutritionView(today, [], [{ kind: 'game', durationMin: 100 }], 'rest');
   assert.equal(o.dayType, 'rest');
@@ -80,4 +82,19 @@ test('bugünün öğünleri günün alımına girer; başka günün öğünü gi
   assert.equal(v.intake.carbsG, 100);
   assert.equal(v.intake.carbsPosition, 'below');
   assert.equal(v.intake.mealsAtProteinDose, 1);
+});
+
+test('maç çevresi: takvimde bugün, dün ya da yarın maç; dün maç seansı da sayılır (karar 0046)', () => {
+  const at = (d: number) => addIsoDays(today, d);
+  const match = (date: string) => ({ date, startTime: '19:00', venue: 'away' as const });
+  const v = buildNutritionView(today, [], [], null, [], [], [match(at(1)), match(at(5))]);
+  assert.equal(v.matchDay, false);
+  assert.equal(v.aroundMatch, true);
+  assert.equal(v.matches.tomorrow?.date, at(1));
+  assert.equal(v.dayType, 'match');
+  assert.equal(buildNutritionView(today, [], [], null, [], [], [match(today)]).matchDay, true);
+  assert.equal(buildNutritionView(today, [], [], null, [], [], [], [{ kind: 'game' }]).dayType, 'match');
+  assert.equal(buildNutritionView(today, [], [], null, [], [], [match(at(2))]).dayType, 'rest');
+  // 180 dakika ve üstü antrenman dünü / yarını maç olsa da yoğun
+  assert.equal(buildNutritionView(today, [], [{ kind: 'team_practice', durationMin: 190 }], null, [], [], [match(at(-1))]).dayType, 'high');
 });

@@ -29,7 +29,10 @@ export const bodyRegions = [
 ] as const;
 export const bodySides = ['left', 'right', 'center'] as const;
 export const painNoteReasons = ['high', 'notDecreasing'] as const;
-export const dayTypes = ['rest', 'training', 'high'] as const;
+export const dayTypes = ['rest', 'training', 'match', 'high'] as const;
+export const venues = ['home', 'away'] as const;
+export const travelPhases = ['before', 'departure', 'away', 'return', 'after'] as const;
+export const travelDirections = ['east', 'west'] as const;
 export const rangePositions = ['below', 'within', 'above'] as const;
 
 export type DayLevel = (typeof dayLevels)[number];
@@ -41,6 +44,9 @@ export type BodySide = (typeof bodySides)[number];
 export type PainNoteReason = (typeof painNoteReasons)[number];
 export type DayType = (typeof dayTypes)[number];
 export type RangePosition = (typeof rangePositions)[number];
+export type Venue = (typeof venues)[number];
+export type TravelPhase = (typeof travelPhases)[number];
+export type TravelDirection = (typeof travelDirections)[number];
 
 export type Range = readonly [number, number];
 
@@ -156,11 +162,58 @@ export interface SweatMetric {
   fluidTargetL: Range | null;
 }
 
+/** Takvimdeki bir maç (karar 0046): başlama saati "SS:DD" ve yer; bilinmiyorsa null. Rakip, şehir yok. */
+export interface MatchBrief {
+  startTime: string | null;
+  venue: Venue | null;
+}
+
+export type ClockRange = readonly [string, string];
+
+/** Bugünün maçı için motorun zamanlaması (mac-oncesi-ogun, mac-gunu-sekerleme, mac-sonrasi); gram ve mL kiloyla. */
+export interface MatchPlan {
+  meal: ClockRange;
+  mealCarbsG: Range | null;
+  fluid: ClockRange;
+  fluidMl: Range | null;
+  nap: ClockRange | null;
+  postCarbsGPerHour: number | null;
+}
+
+/** Maç çevresi (karar 0046): dün, bugün, yarın. Alan yoksa takvimde maç yok (eski istemci de göndermez). */
+export interface MatchContext {
+  yesterday: MatchBrief | null;
+  today: MatchBrief | null;
+  tomorrow: MatchBrief | null;
+  plan: MatchPlan | null;
+}
+
+/**
+ * Seyahat (karar 0047): bugünün evresi, saat farkı ve motorun uyum tahmini (gün). Şehir ve tarih gitmez.
+ * Alan yoksa bugün ilgili seyahat yok.
+ */
+export interface TravelContext {
+  phase: TravelPhase;
+  /** Varılan yer − ev (saat; + doğu, − batı). */
+  offsetHours: number;
+  /** Bu evredeki uyum yönü (dönüşten sonra ters); saat farkı yoksa null. */
+  direction: TravelDirection | null;
+  jetLag: boolean;
+  daysUntil: number | null;
+  dayAway: number | null;
+  totalDays: number | null;
+  remainingDays: number | null;
+  firstHours: boolean;
+  eastDelayHint: boolean;
+}
+
 export interface CoachSnapshot {
   version: typeof snapshotVersion;
   /** Sporcunun yerel günü (YYYY-MM-DD). Modele gitmez; kayıt anahtarıdır. */
   date: string;
   matchDay: boolean;
+  match?: MatchContext;
+  travel?: TravelContext;
   status?: StatusMetric;
   hrv?: BandMetric;
   rhr?: BandMetric;
@@ -254,9 +307,42 @@ export function attentionMetrics(snapshot: CoachSnapshot): MetricKey[] {
 /** Maç günü işaretliyse koçun hazırlık dili için kural (rules/mac.json; ısınma, karbonhidrat, sıvı, maç sonrası). */
 export const matchDayRules: readonly string[] = ['mac-gunu'];
 
-/** Anlık değerlerin kullandığı kurallar: maç günüyse önce onunki, sonra ölçüm sırasıyla, tekrarsız. */
+/**
+ * Maç çevresinin kuralları (karar 0046): bugün maç varsa maç günü ve maç sonrası (saat biliniyorsa öğün, şekerleme
+ * penceresi varsa şekerleme), yarın maç varsa maçtan önceki gün, dün maç vardıysa maç sonrası.
+ */
+export function matchRuleIds(snapshot: CoachSnapshot): string[] {
+  const m = snapshot.match;
+  const ids: string[] = snapshot.matchDay ? [...matchDayRules] : [];
+  if (m?.today) {
+    if (m.plan) ids.push('mac-oncesi-ogun');
+    if (m.plan?.nap) ids.push('mac-gunu-sekerleme');
+    ids.push('mac-sonrasi');
+  }
+  if (m?.tomorrow) ids.push('mac-oncesi-gun');
+  if (m?.yesterday) ids.push('mac-sonrasi');
+  return [...new Set(ids)];
+}
+
+/**
+ * Seyahatin kuralları (karar 0047): yolculuk günü seyahat yorgunluğu; jet lag'de uyum ve (öncesinde ya da ilk 72 saatte)
+ * varış kuralı.
+ */
+export function travelRuleIds(snapshot: CoachSnapshot): string[] {
+  const t = snapshot.travel;
+  if (!t) return [];
+  const ids: string[] = [];
+  if (t.phase === 'departure' || t.phase === 'return') ids.push('seyahat-yorgunlugu');
+  if (t.jetLag) {
+    ids.push('jet-lag-uyum');
+    if (t.phase === 'before' || t.firstHours) ids.push('jet-lag-varis');
+  }
+  return ids;
+}
+
+/** Anlık değerlerin kullandığı kurallar: önce maç çevresi ve seyahatinkiler, sonra ölçüm sırasıyla, tekrarsız. */
 export function snapshotRuleIds(snapshot: CoachSnapshot, metrics: readonly MetricKey[] = presentMetrics(snapshot)): string[] {
-  return [...new Set([...(snapshot.matchDay ? matchDayRules : []), ...metrics.flatMap((key) => metricRules[key])])];
+  return [...new Set([...matchRuleIds(snapshot), ...travelRuleIds(snapshot), ...metrics.flatMap((key) => metricRules[key])])];
 }
 
 // --- Doğrulama ---
@@ -379,6 +465,9 @@ export const snapshotLimits = {
   grams: [0, 5000],
   meals: [0, 30],
   liters: [0, 30],
+  milliliters: [0, 10_000],
+  offsetHours: [-12, 14],
+  travelDays: [0, 400],
   litersPerHour: [0, 10],
   percent: [-100, 100],
 } as const satisfies Record<string, readonly [number, number]>;
@@ -543,10 +632,83 @@ const parsers: { [K in MetricKey]: (c: Checker, value: unknown, path: string) =>
   },
 };
 
+const clockPattern = /^([01]\d|2[0-3]):[0-5]\d$/;
+
+function parseClock(c: Checker, value: unknown, path: string): string {
+  if (typeof value !== 'string' || !clockPattern.test(value)) {
+    c.fail(path, 'SS:DD olmalı');
+    return '00:00';
+  }
+  return value;
+}
+
+function parseClockRange(c: Checker, value: unknown, path: string): ClockRange {
+  const items = c.array(value, path, 2);
+  if (items.length !== 2) {
+    c.fail(path, 'iki elemanlı [başlangıç, bitiş] olmalı');
+    return ['00:00', '00:00'];
+  }
+  const from = parseClock(c, items[0], `${path}[0]`);
+  const to = parseClock(c, items[1], `${path}[1]`);
+  if (from > to) c.fail(path, 'başlangıç bitişten sonra');
+  return [from, to];
+}
+
+function parseBrief(c: Checker, value: unknown, path: string): MatchBrief | null {
+  if (value === null) return null;
+  const o = c.object(value, path, ['startTime', 'venue']);
+  if (!o) return null;
+  return {
+    startTime: o.startTime === null ? null : parseClock(c, o.startTime, `${path}.startTime`),
+    venue: c.nullableOneOf(o.venue, `${path}.venue`, venues),
+  };
+}
+
+function parseMatch(c: Checker, value: unknown, path: string): MatchContext | null {
+  const o = c.object(value, path, ['yesterday', 'today', 'tomorrow', 'plan']);
+  if (!o) return null;
+  const today = parseBrief(c, o.today, `${path}.today`);
+  let plan: MatchPlan | null = null;
+  if (o.plan !== null) {
+    const p = c.object(o.plan, `${path}.plan`, ['meal', 'mealCarbsG', 'fluid', 'fluidMl', 'nap', 'postCarbsGPerHour']);
+    if (p) {
+      plan = {
+        meal: parseClockRange(c, p.meal, `${path}.plan.meal`),
+        mealCarbsG: c.nullableRange(p.mealCarbsG, `${path}.plan.mealCarbsG`, ...snapshotLimits.grams),
+        fluid: parseClockRange(c, p.fluid, `${path}.plan.fluid`),
+        fluidMl: c.nullableRange(p.fluidMl, `${path}.plan.fluidMl`, ...snapshotLimits.milliliters),
+        nap: p.nap === null ? null : parseClockRange(c, p.nap, `${path}.plan.nap`),
+        postCarbsGPerHour: c.nullableNumber(p.postCarbsGPerHour, `${path}.plan.postCarbsGPerHour`, ...snapshotLimits.grams),
+      };
+    }
+    if (today === null || today.startTime === null) c.fail(`${path}.plan`, 'bugün saati bilinen maç yoksa plan olmaz');
+  }
+  return { yesterday: parseBrief(c, o.yesterday, `${path}.yesterday`), today, tomorrow: parseBrief(c, o.tomorrow, `${path}.tomorrow`), plan };
+}
+
+function parseTravel(c: Checker, value: unknown, path: string): TravelContext | null {
+  const keys = ['phase', 'offsetHours', 'direction', 'jetLag', 'daysUntil', 'dayAway', 'totalDays', 'remainingDays', 'firstHours', 'eastDelayHint'];
+  const o = c.object(value, path, keys);
+  if (!o) return null;
+  const days = (v: unknown, p: string) => c.nullableNumber(v, `${path}.${p}`, ...snapshotLimits.travelDays, { integer: true });
+  return {
+    phase: c.oneOf(o.phase, `${path}.phase`, travelPhases),
+    offsetHours: c.number(o.offsetHours, `${path}.offsetHours`, ...snapshotLimits.offsetHours, { integer: true }),
+    direction: c.nullableOneOf(o.direction, `${path}.direction`, travelDirections),
+    jetLag: c.boolean(o.jetLag, `${path}.jetLag`),
+    daysUntil: days(o.daysUntil, 'daysUntil'),
+    dayAway: days(o.dayAway, 'dayAway'),
+    totalDays: days(o.totalDays, 'totalDays'),
+    remainingDays: days(o.remainingDays, 'remainingDays'),
+    firstHours: c.boolean(o.firstHours, `${path}.firstHours`),
+    eastDelayHint: c.boolean(o.eastDelayHint, `${path}.eastDelayHint`),
+  };
+}
+
 /** İstek gövdesindeki anlık değerleri doğrular. Hata varsa hepsini döndürür; kısmen geçerli veri kabul edilmez. */
 export function parseSnapshot(input: unknown): SnapshotResult {
   const c = new Checker();
-  const o = c.object(input, 'snapshot', ['version', 'date', 'matchDay', ...metricKeys]);
+  const o = c.object(input, 'snapshot', ['version', 'date', 'matchDay', 'match', 'travel', ...metricKeys]);
   if (!o) return { ok: false, errors: c.errors };
 
   if (o.version !== snapshotVersion) c.fail('snapshot.version', `${snapshotVersion} olmalı`);
@@ -555,6 +717,15 @@ export function parseSnapshot(input: unknown): SnapshotResult {
     date: c.isoDate(o.date, 'snapshot.date'),
     matchDay: c.boolean(o.matchDay, 'snapshot.matchDay'),
   };
+  if (o.match !== undefined) {
+    const match = parseMatch(c, o.match, 'snapshot.match');
+    if (match) snapshot.match = match;
+    if (match && (match.today !== null) !== snapshot.matchDay) c.fail('snapshot.match.today', 'matchDay ile aynı olmalı');
+  }
+  if (o.travel !== undefined) {
+    const travel = parseTravel(c, o.travel, 'snapshot.travel');
+    if (travel) snapshot.travel = travel;
+  }
   for (const key of metricKeys) {
     if (o[key] === undefined) continue;
     const parsed = parsers[key](c, o[key], `snapshot.${key}`);

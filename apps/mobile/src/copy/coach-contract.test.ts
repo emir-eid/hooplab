@@ -12,7 +12,7 @@ import {
   sideLabels as coachSides,
   wellnessTitles as coachWellness,
 } from '../../../../supabase/functions/_shared/coach/documents.ts';
-import { metricRules, type MetricKey } from '../../../../supabase/functions/_shared/coach/snapshot.ts';
+import { matchRuleIds, metricRules, travelRuleIds, type MetricKey } from '../../../../supabase/functions/_shared/coach/snapshot.ts';
 import { explainers, type ExplainerId } from './explainers.ts';
 import { regionLabels, sideLabels, wellnessLabels } from './labels.ts';
 import { dayTypeLabels } from './nutrition.ts';
@@ -40,8 +40,32 @@ const explainerMetrics: Record<ExplainerId, readonly MetricKey[]> = {
   sweatTest: ['sweatTest'],
   // Haftalık rapor koça gitmez; kuralları ilgili ölçümlerinkiler (karar 0040).
   weeklyReport: ['load', 'hrv', 'rhr', 'sleep', 'checkin', 'pain', 'nutrition'],
+  // Maç çevresinin kuralları ölçümden değil anlık değerlerdeki maç bilgisinden gelir (matchRuleIds, karar 0046).
+  match: ['nutrition'],
+  // Seyahatin kuralları anlık değerlerdeki seyahat bilgisinden gelir (travelRuleIds, karar 0047).
+  travel: [],
   energy: [],
 };
+
+/** Takvimde dün, bugün (saatli, şekerleme penceresiyle) ve yarın maç olan bir günün maç kuralları. */
+const brief = { startTime: '19:00', venue: null };
+const allMatchRules = matchRuleIds({
+  version: 1,
+  date: '2026-11-02',
+  matchDay: true,
+  match: {
+    yesterday: brief,
+    today: brief,
+    tomorrow: brief,
+    plan: { meal: ['15:00', '16:00'], mealCarbsG: null, fluid: ['15:00', '17:00'], fluidMl: null, nap: ['12:30', '16:50'], postCarbsGPerHour: null },
+  },
+});
+
+/** Yolculuk günü ve jet lag'in ilk saatleri olan bir seyahatin kuralları. */
+const travelBase = { offsetHours: 7, direction: 'east' as const, jetLag: true, daysUntil: null, dayAway: 1, totalDays: 7, remainingDays: 7, firstHours: true, eastDelayHint: false };
+const allTravelRules = [
+  ...travelRuleIds({ version: 1, date: '2026-11-02', matchDay: false, travel: { ...travelBase, phase: 'departure' } }),
+];
 
 /** Koça hiç gitmeyen açıklama sayfaları ve nedeni. */
 const notInCoach: Partial<Record<ExplainerId, string>> = {
@@ -59,7 +83,8 @@ test('her açıklama sayfasının kuralları koçun ilgili ölçümünde', () =>
       assert.equal(metrics.length, 0, id);
       continue;
     }
-    const coach = new Set(metrics.flatMap((m) => metricRules[m]));
+    const extra = id === 'match' ? allMatchRules : id === 'travel' ? allTravelRules : [];
+    const coach = new Set([...metrics.flatMap((m) => metricRules[m]), ...extra]);
     for (const rule of explainers[id].rules) assert.ok(coach.has(rule), `${id} → ${rule} koçta yok`);
   }
 });

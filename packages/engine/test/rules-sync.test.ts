@@ -15,6 +15,15 @@ import {
   gainNoteRule,
   highDayRule,
   inferDayType,
+  matchDayRule,
+  arrivalRule,
+  jetLagRule,
+  travelFatigueRule,
+  tripOffsetLimits,
+  matchNapRule,
+  postMatchRule,
+  preMatchMealRule,
+  venues,
   mealLimits,
   mealSlots,
   portionMultipliers,
@@ -139,7 +148,8 @@ test('beslenme hedefleri ve ter testi kuralla aynı (karar 0029)', () => {
   for (const t of dayTypes) assert.deepEqual(carbs[t], [...carbTargets[t]], t);
   assert.equal(carbs.high_when_minutes_at_least, highDayRule.minutesAtLeast);
   assert.equal(carbs.weight_days, targetWeightDays);
-  assert.deepEqual(carbs.high_when_kind, [...highDayRule.kinds]);
+  assert.deepEqual(carbs.match_when_kind, [...matchDayRule.kinds]);
+  assert.deepEqual(carbs.match_day_offsets, [...matchDayRule.offsets]);
   const protein = rule('beslenme.json', 'protein-gunluk').value;
   assert.deepEqual(protein.range, [...proteinTarget.range]);
   assert.equal(protein.per_meal, proteinTarget.perMeal);
@@ -161,7 +171,7 @@ test('veritabanındaki kilo, gün tipi ve ter testi giriş aralıkları motorla 
   assert.match(migrations, new RegExp(`sweat_pre_kg between ${weightLimits.min} and ${weightLimits.max}`));
   assert.match(migrations, new RegExp(`sweat_fluid_l between 0 and ${sweatInputLimits.fluidMaxL}`));
   assert.match(migrations, new RegExp(`sweat_urine_l between 0 and ${sweatInputLimits.urineMaxL}`));
-  const m = migrations.match(/check \(day_type in \(([^)]*)\)\)/);
+  const m = [...migrations.matchAll(/check \(day_type in \(([^)]*)\)\)/g)].at(-1);
   assert.ok(m, 'day_type CHECK bulunamadı');
   assert.deepEqual([...m[1]!.matchAll(/'([a-z_]+)'/g)].map((x) => x[1]), [...dayTypes]);
 });
@@ -271,9 +281,46 @@ test('veritabanındaki bölge listesi motorla aynı', () => {
   assert.deepEqual(dbRegions, [...bodyRegions]);
 });
 
-test('maç günü işareti kuralla aynı gün tipini verir', () => {
-  const { value } = rule('mac.json', 'mac-gunu');
-  assert.equal(inferDayType([], true), value.day_type);
+test('maç günü ve çevresi kuralla aynı (karar 0036, 0046)', () => {
+  assert.equal(inferDayType([], { today: true }), rule('mac.json', 'mac-gunu').value.day_type);
+  const before = rule('mac.json', 'mac-oncesi-gun').value;
+  const after = rule('mac.json', 'mac-sonrasi').value;
+  assert.equal(inferDayType([], { adjacent: true }), before.day_type);
+  assert.equal(inferDayType([], { adjacent: true }), after.day_type);
+  assert.deepEqual([before.day_offset, 0, after.day_offset], [...matchDayRule.offsets]);
+  const meal = rule('mac.json', 'mac-oncesi-ogun').value;
+  assert.deepEqual(meal.meal_hours_before, [...preMatchMealRule.mealHoursBefore]);
+  assert.deepEqual(meal.meal_carbs_per_kg, [...preMatchMealRule.mealCarbsPerKg]);
+  assert.deepEqual(meal.fluid_hours_before, [...preMatchMealRule.fluidHoursBefore]);
+  assert.deepEqual(meal.fluid_ml_per_kg, [...preMatchMealRule.fluidMlPerKg]);
+  const nap = rule('mac.json', 'mac-gunu-sekerleme').value;
+  assert.deepEqual(nap.minutes, [...matchNapRule.minutes]);
+  assert.deepEqual(nap.window, [...matchNapRule.window]);
+  assert.equal(nap.wake_before_hours, matchNapRule.wakeBeforeHours);
+  assert.equal(after.night_start, postMatchRule.nightStart);
+  assert.deepEqual(after.sleep_shorter_min, postMatchRule.sleepShorterMin);
+  assert.equal(after.post_carbs_per_kg_per_hour, postMatchRule.postCarbsPerKgPerHour);
+  assert.equal(after.post_carbs_hours, postMatchRule.postCarbsHours);
+  assert.deepEqual(after.performance_hours, [...postMatchRule.performanceHours]);
+  assert.deepEqual(after.soreness_hours, [...postMatchRule.sorenessHours]);
+  const m = migrations.match(/check \(venue in \(([^)]*)\)\)/);
+  assert.ok(m, 'match_days.venue CHECK yok');
+  assert.deepEqual([...m[1]!.matchAll(/'([a-z_]+)'/g)].map((x) => x[1]), [...venues]);
+});
+
+test('seyahat ve jet lag kuralla aynı (karar 0047)', () => {
+  const fatigue = rule('seyahat.json', 'seyahat-yorgunlugu').value;
+  assert.equal(fatigue.caffeine_before_sleep_hours, travelFatigueRule.caffeineBeforeSleepHours);
+  assert.equal(fatigue.alcohol, travelFatigueRule.alcohol);
+  const lag = rule('seyahat.json', 'jet-lag-uyum').value;
+  assert.equal(lag.min_time_zones, jetLagRule.minTimeZones);
+  assert.deepEqual(lag.hours_per_day, jetLagRule.hoursPerDay);
+  assert.equal(lag.east_delay_above_hours, jetLagRule.eastDelayAboveHours);
+  const arrival = rule('seyahat.json', 'jet-lag-varis').value;
+  assert.equal(arrival.first_hours, arrivalRule.firstHours);
+  assert.deepEqual(arrival.pre_shift_min_per_day, [...arrivalRule.preShiftMinPerDay]);
+  assert.deepEqual(arrival.pre_shift_days, [...arrivalRule.preShiftDays]);
+  assert.match(migrations, new RegExp(`offset_hours between ${tripOffsetLimits.min} and ${tripOffsetLimits.max}`));
 });
 
 test('gece işaretleri kuralla aynı (karar 0039)', () => {

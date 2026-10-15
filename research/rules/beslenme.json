@@ -3,11 +3,11 @@
   "rules": [
     {
       "id": "karbonhidrat-gun-tipi",
-      "description": "Günlük karbonhidrat hedefi gün tipine göre (g/kg/gün, sabah kilosuyla): dinlenme 3-5, antrenman 5-7, yoğun 8-10. Gün tipi o günün seans kayıtlarından: seans yoksa dinlenme, seans varsa antrenman, maç varsa (maç seansı kaydı ya da Bugün'deki 'Bugün maç var' işareti, mac-gunu) ya da seansların toplam süresi 180 dakika veya üstüyse yoğun. Kullanıcı gün tipini değiştirebilir.",
-      "value": { "rest": [3, 5], "training": [5, 7], "high": [8, 10], "high_when_minutes_at_least": 180, "high_when_kind": ["game"], "weight_days": 7, "unit": "g/kg/gün" },
+      "description": "Günlük karbonhidrat hedefi gün tipine göre (g/kg/gün, sabah kilosuyla): dinlenme 3-5, antrenman 5-7, maç çevresi 6-8, yoğun 8-10. Gün tipi kayıtlardan, bu sırayla: bugün maç varsa (maç takviminde ya da 'Bugün maç var' işaretiyle, ya da maç seansı kaydı; mac-gunu) maç çevresi; seansların toplam süresi 180 dakika veya üstüyse yoğun; dün maç vardıysa ya da yarın maç varsa (mac-oncesi-gun, mac-sonrasi) maç çevresi; seans varsa antrenman; yoksa dinlenme. Kullanıcı gün tipini değiştirebilir.",
+      "value": { "rest": [3, 5], "training": [5, 7], "match": [6, 8], "high": [8, 10], "high_when_minutes_at_least": 180, "match_when_kind": ["game"], "match_day_offsets": [-1, 0, 1], "weight_days": 7, "unit": "g/kg/gün" },
       "applies_to": "her gün; kilo son 7 günün sabah kilosu ortalamasından (yoksa son ölçüm)",
-      "sources": ["davis-2022", "kerksick-2018", "thomas-2016"],
-      "notes": "Antrenman günü 5-7 basketbol derlemesinden (davis-2022). Dinlenme 3-5 ve yoğun 8-10 ISSN derlemesinden (kerksick-2018): 3-5 genel fitness için, 8-10 günde 3-6 saat yoğun antrenman için; sporcunun dinlenme gününe ve basketbolda maç gününe aktarım varsayım. davis-2022 takım sporlarında 5-12 aralığı veriyor, üst ucu çok dakika oynayan oyuncu için. 180 dakika eşiği kerksick-2018'in '3-6 saat' alt ucu. Ortak bildirgenin (thomas-2016) tam metnine erişilemedi; aralıklar ondan doğrudan alınmadı. Hedef bir rehber aralık, eşik ya da uyarı değil; kişisel plan için spor diyetisyeni (thomas-2016)."
+      "sources": ["davis-2022", "kerksick-2018", "thomas-2016", "collins-2021"],
+      "notes": "Antrenman günü 5-7 basketbol derlemesinden (davis-2022). Maç çevresi 6-8 UEFA uzman grubu bildirgesinden (collins-2021): maçtan önceki gün en az 6-8, maç günü ve maçtan sonraki gün 6-8; futboldan basketbola aktarım varsayım (karar 0046; önceden maç günü yoğun 8-10 sayılıyordu). Dinlenme 3-5 ve yoğun 8-10 ISSN derlemesinden (kerksick-2018): 3-5 genel fitness için, 8-10 günde 3-6 saat yoğun antrenman için; sporcunun dinlenme gününe aktarım varsayım. davis-2022 takım sporlarında 5-12 aralığı veriyor, üst ucu çok dakika oynayan oyuncu için. 180 dakika eşiği kerksick-2018'in '3-6 saat' alt ucu. Ortak bildirgenin (thomas-2016) tam metnine erişilemedi; aralıklar ondan doğrudan alınmadı. Hedef bir rehber aralık, eşik ya da uyarı değil; kişisel plan için spor diyetisyeni (thomas-2016)."
     },
     {
       "id": "protein-gunluk",

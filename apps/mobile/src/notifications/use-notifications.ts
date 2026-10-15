@@ -8,7 +8,7 @@ import { AppState } from 'react-native';
 
 import { notificationsSupported, refreshNotifications } from '@/notifications/scheduler';
 
-const routes = new Set(['/checkin', '/me/google-health']);
+const routes = new Set(['/checkin', '/me/google-health', '/']);
 
 if (notificationsSupported) {
   Notifications.setNotificationHandler({
@@ -37,6 +37,6 @@ export function useNotifications(signedIn: boolean, ready: boolean) {
     if (response.actionIdentifier !== Notifications.DEFAULT_ACTION_IDENTIFIER) return;
     const route = response.notification.request.content.data?.route;
     Notifications.clearLastNotificationResponse();
-    if (typeof route === 'string' && routes.has(route)) router.push(route as '/checkin' | '/me/google-health');
+    if (typeof route === 'string' && routes.has(route)) router.push(route as '/checkin' | '/me/google-health' | '/');
   }, [response, ready, signedIn]);
 }

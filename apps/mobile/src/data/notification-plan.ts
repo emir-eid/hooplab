@@ -1,4 +1,5 @@
 // Yerel bildirim planı (karar 0045): hangi bildirim ne zaman. Saf modül; zamanlama `notifications/scheduler.ts`'te.
+// Maç sabahı hatırlatması (karar 0046): maç takvimindeki günlerde seçilen saatte; metinde yalnız maç saati.
 // Bildirimler telefonda zamanlanır, sunucu ve push yok. Metinlerde sağlık değeri yok: kilit ekranında görünürler.
 
 import { TOKEN_LIFETIME_DAYS, type SyncState } from './google-health-status.ts';
@@ -6,11 +7,13 @@ import { TOKEN_LIFETIME_DAYS, type SyncState } from './google-health-status.ts';
 export interface NotificationPrefs {
   checkin: { enabled: boolean; hour: number; minute: number };
   reconnect: { enabled: boolean };
+  match: { enabled: boolean; hour: number; minute: number };
 }
 
 export const defaultNotificationPrefs: NotificationPrefs = {
   checkin: { enabled: false, hour: 8, minute: 30 },
   reconnect: { enabled: false },
+  match: { enabled: false, hour: 9, minute: 0 },
 };
 
 /** Check-in saati seçimi: 05:00-12:00, 15 dakikalık adım (gösterim tercihi, eşik değil). */
@@ -23,7 +26,7 @@ export const reconnectLeadHours = [24, 3] as const;
 /** Senkron durmuşsa hatırlatmanın saati (yerel). */
 export const reconnectMorningHour = 9;
 
-export type NotificationKind = 'checkin' | 'reconnect';
+export type NotificationKind = 'checkin' | 'reconnect' | 'match';
 
 export interface PlannedNotification {
   id: string;
@@ -32,7 +35,7 @@ export interface PlannedNotification {
   title: string;
   body: string;
   /** Dokununca açılacak ekran. */
-  route: '/checkin' | '/me/google-health';
+  route: '/checkin' | '/me/google-health' | '/';
 }
 
 export interface PlanContext {
@@ -40,6 +43,8 @@ export interface PlanContext {
   /** Bugünün check-in'i tamam mı (cihazın yerel günü). */
   checkinDoneToday: boolean;
   sync: { state: SyncState; connected_at: string | null } | null;
+  /** Maç takvimi (yerel tarih ve başlama saati); bilinmiyorsa boş. */
+  matches?: readonly { date: string; startTime: string | null }[];
 }
 
 const pad2 = (n: number) => String(n).padStart(2, '0');
@@ -62,22 +67,29 @@ export function stepCheckinTime(hour: number, minute: number, direction: 1 | -1)
   return { hour: Math.floor(next / 60), minute: next % 60 };
 }
 
+type TimedPref = { enabled: boolean; hour: number; minute: number };
+
+/** Saatli tercihi okur; saat aralık dışı ya da adımsızsa varsayılan saat. */
+function parseTimed(c: Partial<TimedPref> | undefined, fallback: TimedPref): TimedPref {
+  const minutes = c && Number.isInteger(c.hour) && Number.isInteger(c.minute) ? c.hour! * 60 + c.minute! : NaN;
+  const { firstMinute, lastMinute, stepMinutes } = checkinTimeRange;
+  const validTime = minutes >= firstMinute && minutes <= lastMinute && minutes % stepMinutes === 0;
+  return {
+    enabled: c?.enabled === true,
+    hour: validTime ? c!.hour! : fallback.hour,
+    minute: validTime ? c!.minute! : fallback.minute,
+  };
+}
+
 /** Saklanan tercihi okur; bozuk ya da eksik alan varsayılana düşer. */
 export function parseNotificationPrefs(raw: string | null): NotificationPrefs {
   if (!raw) return defaultNotificationPrefs;
   try {
     const v = JSON.parse(raw) as Partial<NotificationPrefs>;
-    const c = v.checkin;
-    const minutes = c && Number.isInteger(c.hour) && Number.isInteger(c.minute) ? c.hour * 60 + c.minute : NaN;
-    const { firstMinute, lastMinute, stepMinutes } = checkinTimeRange;
-    const validTime = minutes >= firstMinute && minutes <= lastMinute && minutes % stepMinutes === 0;
     return {
-      checkin: {
-        enabled: c?.enabled === true,
-        hour: validTime ? c!.hour : defaultNotificationPrefs.checkin.hour,
-        minute: validTime ? c!.minute : defaultNotificationPrefs.checkin.minute,
-      },
+      checkin: parseTimed(v.checkin, defaultNotificationPrefs.checkin),
       reconnect: { enabled: v.reconnect?.enabled === true },
+      match: parseTimed(v.match, defaultNotificationPrefs.match),
     };
   } catch {
     return defaultNotificationPrefs;
@@ -85,7 +97,7 @@ export function parseNotificationPrefs(raw: string | null): NotificationPrefs {
 }
 
 export function anyEnabled(prefs: NotificationPrefs): boolean {
-  return prefs.checkin.enabled || prefs.reconnect.enabled;
+  return prefs.checkin.enabled || prefs.reconnect.enabled || prefs.match.enabled;
 }
 
 export function planNotifications(prefs: NotificationPrefs, ctx: PlanContext): PlannedNotification[] {
@@ -134,6 +146,22 @@ export function planNotifications(prefs: NotificationPrefs, ctx: PlanContext): P
         title: 'Google Health senkronu durdu',
         body: 'Yeniden bağlanınca kaldığı yerden devam eder: Ben → Google Health.',
         route: '/me/google-health',
+      });
+    }
+  }
+
+  if (prefs.match.enabled) {
+    for (let d = 0; d < checkinDaysAhead; d++) {
+      const at = new Date(now.getFullYear(), now.getMonth(), now.getDate() + d, prefs.match.hour, prefs.match.minute);
+      const match = (ctx.matches ?? []).find((m) => m.date === localIso(at));
+      if (!match || at <= now) continue;
+      plan.push({
+        id: `hooplab-match-${localIso(at)}`,
+        kind: 'match',
+        at,
+        title: 'Bugün maç günü',
+        body: match.startTime ? `Maç ${match.startTime}. Öğün ve sıvı saatleri Bugün'de.` : "Öğün ve sıvı notları Bugün'de.",
+        route: '/',
       });
     }
   }

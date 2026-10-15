@@ -19,6 +19,7 @@ import {
 const prefs = (over: Partial<NotificationPrefs> = {}): NotificationPrefs => ({
   checkin: { enabled: true, hour: 8, minute: 30 },
   reconnect: { enabled: true },
+  match: { enabled: false, hour: 9, minute: 0 },
   ...over,
 });
 const at = (d: Date) => [d.getDate(), d.getHours(), d.getMinutes()];
@@ -81,15 +82,35 @@ test('senkron durmuşsa bir sonraki sabah 09:00 tek hatırlatma', () => {
   assert.equal(after.length, 1);
 });
 
+test('maç sabahı (karar 0046): takvimdeki günlerde seçilen saatte; geçmiş saat atlanır; metinde yalnız maç saati', () => {
+  const only = prefs({ checkin: { enabled: false, hour: 8, minute: 30 }, reconnect: { enabled: false }, match: { enabled: true, hour: 9, minute: 0 } });
+  const matches = [
+    { date: '2026-10-15', startTime: '19:00' },
+    { date: '2026-10-18', startTime: null },
+    { date: '2026-10-30', startTime: '20:00' },
+  ];
+  const plan = planNotifications(only, { now: new Date(2026, 9, 15, 7, 0), checkinDoneToday: false, sync: null, matches });
+  assert.deepEqual(plan.map((p) => p.id), ['hooplab-match-2026-10-15', 'hooplab-match-2026-10-18']);
+  assert.deepEqual(at(plan[0]!.at), [15, 9, 0]);
+  assert.equal(plan[0]!.body, "Maç 19:00. Öğün ve sıvı saatleri Bugün'de.");
+  assert.equal(plan[0]!.route, '/');
+  assert.doesNotMatch(plan[1]!.body, /\d/);
+  const late = planNotifications(only, { now: new Date(2026, 9, 15, 10, 0), checkinDoneToday: false, sync: null, matches });
+  assert.deepEqual(late.map((p) => p.id), ['hooplab-match-2026-10-18']);
+  assert.deepEqual(planNotifications(prefs({ match: { enabled: false, hour: 9, minute: 0 } }), { now: new Date(2026, 9, 15, 7, 0), checkinDoneToday: true, sync: null, matches }).filter((p) => p.kind === 'match'), []);
+});
+
 test('plan zamana göre sıralı; metinlerde sayı yok (kilit ekranında sağlık değeri görünmez)', () => {
   const connected = new Date(2026, 9, 12, 11, 55);
-  const plan = planNotifications(prefs(), {
+  const plan = planNotifications(prefs({ match: { enabled: true, hour: 9, minute: 0 } }), {
     now: new Date(2026, 9, 15, 7, 0),
     checkinDoneToday: false,
     sync: { state: 'connected', connected_at: connected.toISOString() },
+    matches: [{ date: '2026-10-16', startTime: '19:00' }],
   });
   for (let i = 1; i < plan.length; i++) assert.ok(plan[i]!.at >= plan[i - 1]!.at);
-  for (const p of plan) assert.doesNotMatch(`${p.title} ${p.body}`, /\d/);
+  // Maç bildiriminde yalnız başlama saati var (sağlık değeri değil).
+  for (const p of plan) assert.doesNotMatch(`${p.title} ${p.body}`.replace(/\b\d{2}:\d{2}\b/, ''), /\d/);
   assert.equal(new Set(plan.map((p) => p.id)).size, plan.length);
 });
 
@@ -105,6 +126,7 @@ test('saat seçimi 05:00-12:00 arasında 15 dakika adımla; bozuk tercih varsay�
   assert.deepEqual(parseNotificationPrefs(JSON.stringify({ checkin: { enabled: true, hour: 3, minute: 0 }, reconnect: { enabled: 'evet' } })), {
     checkin: { enabled: true, hour: 8, minute: 30 },
     reconnect: { enabled: false },
+    match: { enabled: false, hour: 9, minute: 0 },
   });
   const saved = prefs({ checkin: { enabled: true, hour: 7, minute: 15 } });
   assert.deepEqual(parseNotificationPrefs(JSON.stringify(saved)), saved);

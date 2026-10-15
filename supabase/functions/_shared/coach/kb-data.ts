@@ -374,6 +374,50 @@ export const kbSources: readonly KbSource[] = [
     "summary": "## Ne söylüyor (kendi cümlelerimizle)\n\n- Nabız ve hareketi birlikte kullanan Fitbit'lerin enerji harcamasını referans yöntemlerle karşılaştıran Bland-Altman meta-analizi.\n- Yanlılık riski yüksek çalışmalar çıkarıldığında Fitbit dakikada ortalama 2,77 kcal az tahmin ediyor; tek bir ölçümün sapması dakikada yaklaşık −12,75 ile +7,41 kcal arasına yayılabiliyor.\n- Az tahmin ve dağınıklık orta-şiddetli yoğunlukta hafif yoğunluğa göre daha büyük; en kötü sonuç bisiklette.\n- Ortalama yanlılık küçük görünse de kişiden kişiye ve ölçümden ölçüme yayılım geniş: tek bir değer güvenilir bir ölçüm sayılmaz.\n\n## Uygulamada kullanılan sayılar\n\n| Değer | Birim | Bağlam / koşul |\n|---|---|---|\n| Ortalama az tahmin, geniş yayılım | ilke | Arayüzde değer \"Tahmin\" etiketli, en yakın 10 kcal'e yuvarlanır (karar 0043) |\n\n## Sınırlılıklar\n\n- Çalışmaların çoğu laboratuvarda ve kısa süreli; takım sporu yok. Eski Fitbit modelleri; Fitbit Air değil.\n- Tam metin okundu (Europe PMC, PMC9047731)."
   },
   {
+    "id": "collins-2021",
+    "title": "UEFA expert group statement on nutrition in elite football. Current evidence to inform practical recommendations and guide future research",
+    "authors": [
+      "Collins J",
+      "Maughan RJ",
+      "Gleeson M",
+      "Bilsborough J",
+      "Jeukendrup A",
+      "Morton JP",
+      "Phillips SM",
+      "Armstrong L",
+      "Burke LM",
+      "Close GL",
+      "Duffield R",
+      "Larson-Meyer E",
+      "Louis J",
+      "Medina D",
+      "Meyer F",
+      "Rollo I",
+      "Sundgot-Borgen J",
+      "Wall BT",
+      "Boullosa B",
+      "Dupont G",
+      "Lizarraga A",
+      "Res P",
+      "Bizzini M",
+      "Castagna C",
+      "Cowie CM",
+      "D'Hooghe M",
+      "Geyer H",
+      "Meyer T",
+      "Papadimitriou N",
+      "Vouillamoz M",
+      "McCall A"
+    ],
+    "year": 2021,
+    "type": "consensus",
+    "doi": "10.1136/bjsports-2019-101961",
+    "pmid": "33097528",
+    "journal": "British Journal of Sports Medicine",
+    "population": "Elit futbolcular, erkek ve kadın (UEFA uzman grubu; ayrıca hakemler ve akademi oyuncuları için ayrı bölümler)",
+    "summary": "## Ne söylüyor (kendi cümlelerimizle)\n\n- Maçtan önceki gün (MD-1) antrenman genelde hafiftir; kas ve karaciğer glikojenini doldurmak için karbonhidrat günde kilo başına en az 6-8 g olmalı. Oyuncuların gerçek alımı çoğu zaman bunun altında (yaklaşık 4 g/kg) kalıyor; karbonhidrat yağın (gerekirse proteinin) yerine artırılıyor.\n- Maç günü de aynı 6-8 g/kg/gün çerçevesi içinde, başlama saatinden 3-4 saat önce kilo başına 1-3 g karbonhidrat içeren bir öğün öneriliyor. Öğün kolay sindirilmeli; katı bir hedefe uymaktan çok oyuncunun kendini iyi hissetmesi gözetilmeli.\n- Bir gecelik açlıkta karaciğer glikojeni yaklaşık yarıya inebiliyor; bu yüzden maç öncesi öğün özellikle öğle saatindeki maçlarda önemli, önceki günün beslenmesi de hazırlığın parçası.\n- Maça sıvı açığı olmadan başlamak için başlamadan 2-4 saat önce kilo başına 5-7 mL sıvı; maç sırasında ısınmadan sonra ve devre arasında yaklaşık 30-60 g karbonhidrat öneriliyor.\n- Maçtan sonra 4 saat boyunca saatte kilo başına yaklaşık 1 g karbonhidrat; maçtan sonraki gün (MD+1) ve sıkışık fikstürde maçlar arasındaki 48-72 saatte yine 6-8 g/kg/gün. Antrenman günlerinde ihtiyaç yüke göre 3-8 g/kg/gün arasında kayıyor; MD-1 ve MD+1 bu aralığın üst ucunda.\n\n## Uygulamada kullanılan sayılar\n\n| Değer | Birim | Bağlam / koşul |\n|---|---|---|\n| en az 6-8 | g/kg/gün karbonhidrat | MD-1 (maçtan önceki gün), elit futbol |\n| 6-8 | g/kg/gün karbonhidrat | Maç günü genel çerçeve; MD+1 ve sıkışık fikstürde maçlar arası 48-72 saat |\n| 1-3 | g/kg karbonhidrat | Maç öncesi öğün |\n| 3-4 | saat | Maç öncesi öğün ile başlama arası |\n| 5-7 | mL/kg sıvı | Başlamadan 2-4 saat önce |\n| ≈ 30-60 | g karbonhidrat | Isınmadan sonra ve devre arasında (oyun sırasında ≈ 30-60 g/saat) |\n| ≈ 1 | g/kg/saat karbonhidrat | Maçtan sonraki 4 saat |\n| 3-8 | g/kg/gün karbonhidrat | Antrenman günleri, yüke göre (MD-1 ve MD+1 dışındaki günler için örnek 3-6) |\n\n## Sınırlılıklar\n\n- Futbola özgü; basketbola aktarım bir varsayım. Futbol maçı 90 dakika ve tek devre arası, basketbolda daha sık mola ve oyuncu değişikliği var; enerji ve glikojen maliyeti farklı olabilir. Metin, elit maçın glikojen maliyetinin henüz bilinmediğini kendisi söylüyor.\n- Uzman grubu bildirgesi: sistematik tarama değil, uzmanların bilgi ve deneyimine dayanan anlatı sentezi. Sayılar kişisel doz değil, genel aralık.\n- Akşam maçı için ayrı bir zamanlama verilmiyor; 3-4 saat kuralı başlama saatine göre genel.\n- Yayıncı sayfası otomatik isteğe kapalıydı (BMJ bot doğrulaması); yazarların kabul edilmiş el yazması okundu (Loughborough Üniversitesi deposu, figshare 13270088, CC BY-NC). Son sürümle küçük ifade farkları olabilir; sayılar yayımlanan sürümle karşılaştırılamadı.\n- Yazarların bir kısmının spor beslenmesi şirketleriyle bağı var (biri Gatorade Sports Science Institute / PepsiCo çalışanı, diğerleri danışmanlık ve araştırma desteği); karbonhidrat ve sporcu ürünleri konusunda çıkar çatışması olabilir."
+  },
+  {
     "id": "conte-2018",
     "title": "Monitoring Training Load and Well-Being During the In-Season Phase in National Collegiate Athletic Association Division I Men's Basketball",
     "authors": [
@@ -611,6 +655,45 @@ export const kbSources: readonly KbSource[] = [
     "summary": "## Ne söylüyor (kendi cümlelerimizle)\n\n- Seans RPE yöntemi, kalp atım hızına dayalı nesnel bir yükle karşılaştırıldı. Hem sabit ve aralıklı bisiklet egzersizinde hem basketbol antrenmanında iki yöntem arasında tutarlı bir ilişki bulundu.\n- Seans RPE ile hesaplanan mutlak değer, kalp atımı yöntemininkinden yüksek çıktı; iki bölümdeki ilişki ise neredeyse aynıydı.\n- Yazarların sonucu: seans RPE, egzersiz türünden bağımsız olarak antrenmanı sayısallaştırmanın geçerli bir yolu.\n\n## Uygulamada kullanılan sayılar\n\nÖlçek ve hesap bu çalışmanın yöntemi; ayrıntılar açık erişimli `haddad-2017` derlemesinden doğrulandı.\n\n| Değer | Birim | Bağlam / koşul |\n|---|---|---|\n| 0-10 | RPE (değiştirilmiş CR-10) | Seans bittikten sonra, tüm seans için tek puan |\n| RPE × süre | AU (keyfi birim) | Seans yükü |\n\n## Sınırlılıklar\n\n- Küçük örneklemler; basketbol bölümü kolej düzeyinde.\n- Yalnız özet okundu."
   },
   {
+    "id": "fowler-2017",
+    "title": "Greater Effect of East versus West Travel on Jet Lag, Sleep, and Team Sport Performance",
+    "authors": [
+      "Fowler PM",
+      "Knez W",
+      "Crowcroft S",
+      "Mendham AE",
+      "Miller J",
+      "Sargent C",
+      "Halson S",
+      "Duffield R"
+    ],
+    "year": 2017,
+    "type": "cohort",
+    "doi": "10.1249/MSS.0000000000001374",
+    "pmid": "28719491",
+    "journal": "Medicine and Science in Sports and Exercise",
+    "population": "Fiziksel olarak antrenmanlı erkekler, n=10 (elit veya basketbolcu değil); Avustralya ile Katar arasında 8 saat dilimi, yaklaşık 21 saatlik uçuş, önce batıya sonra doğuya",
+    "summary": "## Ne söylüyor (kendi cümlelerimizle)\n\n- Aynı kişiler yolculuktan iki hafta önce ve 8 saat dilimi geçen batı ve doğu yolculuklarının ardından ilk 4 gün, sabah ve akşam test edilmiş (sıçrama, 20 m sürat, Yo-Yo aralıklı koşu; algısal ölçekler; bileklik ve uyku günlüğü).\n- Doğuya yolculuktan sonra uyku daha geç başlayıp daha geç bitmiş, yatakta geçen süre ve uyku süresi kısalmış; batıda ve yolculuk öncesinde bu görülmemiş.\n- Jet lag, yorgunluk ve motivasyon puanları doğuda hem öncesine hem batıya göre kötü; batıda da yolculuk öncesine göre kötü.\n- Aralıklı koşu ve sürat performansı doğu yolculuğundan sonra düşmüş; düşüş özellikle varıştan sonraki ilk 72 saatte belirgin.\n\n## Uygulamada kullanılan sayılar\n\n| Değer | Birim | Bağlam / koşul |\n|---|---|---|\n| 72 | saat | Doğuya uzun uçuştan sonra sürat ve aralıklı koşu performansının en çok etkilendiği dönem (8 saat dilimi, n=10) |\n| Doğu > batı | yön | Uyku, jet lag, yorgunluk ve motivasyon doğu yolculuğundan sonra daha kötü; yönü belirtmek için kullanılır, eşik değil |\n\n## Sınırlılıklar\n\n- Yalnız özet okundu (dergi tam metni açık erişimli değil, PMC'de yok).\n- Küçük örneklem (n=10), antrenmanlı ama elit olmayan erkekler; basketbola özgü değil.\n- Batı yolculuğu her zaman önce, doğu (dönüş) sonra yapılmış; sıra etkisi ve eve dönüşün etkisi yönden ayrılamaz.\n- Uyku bileklikle ve günlükle ölçülmüş; iç saat fazı ölçülmemiş.\n- Makale için yayıncının bir düzeltme notu var (PMID 29337714); içeriği okunamadı. Geri çekilme yok."
+  },
+  {
+    "id": "fox-2020",
+    "title": "Losing Sleep Over It: Sleep in Basketball Players Affected by Game But Not Training Workloads",
+    "authors": [
+      "Fox JL",
+      "Scanlan AT",
+      "Stanton R",
+      "O'Grady CJ",
+      "Sargent C"
+    ],
+    "year": 2020,
+    "type": "cohort",
+    "doi": "10.1123/ijspp.2019-0676",
+    "pmid": "32814308",
+    "journal": "International Journal of Sports Physiology and Performance",
+    "population": "Yarı profesyonel erkek basketbolcular, n=7; hazırlık ve sezon içi dönem",
+    "summary": "## Ne söylüyor (kendi cümlelerimizle)\n\n- Antrenman ve maç yükünü (ivmeölçer PlayerLoad, nabız bölgeleri, seans RPE) ölçüp aynı gecenin uykusunu bileklik ve uyku günlüğüyle izliyor.\n- Maç gecelerinde uykuya dalış saati, antrenman veya maç olmayan gecelere göre daha geç.\n- Yükü yüksek maçlardan sonra yatakta geçen süre ve uyku süresi kısalıyor.\n- Antrenman yükü, düşük de yüksek de olsa, uyku süresini ve kalitesini değiştirmiyor; etki maça özgü.\n- Yazarlar yüksek yüklü maçın ertesi günü için şekerleme ve antrenman / seyahat saatini kaydırmayı öneriyor.\n\n## Uygulamada kullanılan sayılar\n\n| Değer | Birim | Bağlam / koşul |\n|---|---|---|\n| (sayı kullanılmıyor) | | Maç gecesi daha geç uykuya dalış ve yüksek yüklü maç sonrası kısa uyku nitel olarak anlatılır; dakika farkı özette yok |\n\n## Sınırlılıklar\n\n- Çok küçük örneklem (7 oyuncu), tek takım, yarı profesyonel düzey.\n- Maç saatleri özette verilmiyor; geç uyku dalışının ne kadarının akşam maçından, ne kadarının yük veya uyarılmışlıktan geldiği ayrıştırılamıyor.\n- Bileklik tabanlı uyku ölçümü; polisomnografiyle doğrulanmış değil.\n- Yalnız özet okundu (Human Kinetics, Europe PMC'de tam metin yok)."
+  },
+  {
     "id": "fradkin-2010",
     "title": "Effects of warming-up on physical performance: a systematic review with meta-analysis",
     "authors": [
@@ -707,6 +790,23 @@ export const kbSources: readonly KbSource[] = [
     "journal": "Journal of Strength and Conditioning Research",
     "population": "Profesyonel Avustralya futbolcuları, bir takım, yarışma dönemi (1835 kayıt)",
     "summary": "## Ne söylüyor (kendi cümlelerimizle)\n\n- Sabah iyi oluş z-skoru maçtan sonraki gün belirgin düşüyor; maçtan maça süre (6, 7, 8 gün) ve sezonun dönemi bu düşüşü değiştiriyor.\n- Maç ve maç dışındaki koşullar hesaba katılınca antrenman yükünün haftalık iyi oluş profiline ayrıca etkisi bulunmadı.\n- Yazarlar iyi oluştaki \"kırmızı bayrakların\" sporcunun kendi tipik haftalık profiline göre konmasını öneriyor.\n\n## Uygulamada kullanılan sayılar\n\nDoğrudan sayı alınmadı. Check-in'in popülasyon eşiğiyle değil sporcunun kendi geçmişine göre okunmasının ve maç ertesi düşüşün olağan sayılmasının dayanağı.\n\n## Sınırlılıklar\n\n- Avustralya futbolu, tek takım; basketbola aktarım varsayım.\n- HoopLab şimdilik haftanın gününe veya maçtan geçen süreye göre ayrı bir profil kurmuyor; maç ertesi düşüş bu yüzden açıklama metninde anlatılıyor.\n- Yalnız özet okundu."
+  },
+  {
+    "id": "gentle-2014",
+    "title": "A randomised trial of pre-exercise meal composition on performance and muscle damage in well-trained basketball players",
+    "authors": [
+      "Gentle HL",
+      "Love TD",
+      "Howe AS",
+      "Black KE"
+    ],
+    "year": 2014,
+    "type": "rct",
+    "doi": "10.1186/1550-2783-11-33",
+    "pmid": "25053925",
+    "journal": "Journal of the International Society of Sports Nutrition",
+    "population": "İyi antrenmanlı erkek basketbolcular, n=10 (Yeni Zelanda, yaş ortalaması 22; çapraz desen, gece açlığından sonra sabah testi)",
+    "summary": "## Ne söylüyor (kendi cümlelerimizle)\n\n- Basketbolda maç öncesi öğünün bileşimini doğrudan sınayan az sayıdaki çalışmadan biri: oyuncular aynı enerjili iki öğünden birini yedi, 90 dakika sonra 87 dakikalık bir basketbol maçı simülasyonu yaptı.\n- Öğünlerden biri yalnız karbonhidrat (kilo başına 2 g), diğeri karbonhidrat ve protein (kilo başına 1'er g) içeriyordu.\n- Proteinli öğünden sonra kas hasarı göstergesi (kreatin kinaz) daha az yükseldi, kan şekeri egzersiz boyunca daha yüksek kaldı ve son çeyrekte serbest atış isabeti daha iyiydi. Sıçrama yüksekliğinde fark yoktu; sprintte yalnız bir eğilim görüldü.\n- Proteinli öğün bulantı, geğirme ve şişkinliği artırdı. Yazarlar bunu oyuncuların bu kadar yüksek protein dozuna alışık olmamasına bağlıyor ve maç öncesi öğünün miktar ve zamanlamasının antrenmanda denenerek bulunmasını öneriyor.\n\n## Uygulamada kullanılan sayılar\n\n| Değer | Birim | Bağlam / koşul |\n|---|---|---|\n| 90 | dakika | Öğün ile maç simülasyonu arası (çalışma deseni, öneri değil) |\n| 2 | g/kg karbonhidrat | Yalnız karbonhidrat öğünü (çalışma dozu) |\n| 1 + 1 | g/kg karbonhidrat + protein | Proteinli öğün (çalışma dozu); mide-bağırsak yakınması arttı |\n\n## Sınırlılıklar\n\n- Küçük örneklem (n=10), yalnız erkek, gerçek maç değil simülasyon; çok sayıda karşılaştırma yapıldı ve bulguların çoğu tek bir ölçümde.\n- Gece açlığından sonra sabah testi; akşam maçı ve gün içinde yenen öğünlerle aynı durum değil.\n- Plasebo veya öğünsüz koşul yok; yalnız iki öğün birbiriyle karşılaştırıldı. Zamanlama (90 dakika) sınanmadı, sabit tutuldu.\n- Protein dozu (1 g/kg) yüksek ve oyunculara yabancıydı; bulantı sonucu bu dozla sınırlı.\n- Whey proteini üretici firma tarafından bağışlandı; yazarlar çıkar çatışması olmadığını bildiriyor.\n- Tam metin okundu (açık erişim, CC BY)."
   },
   {
     "id": "gibson-2016",
@@ -976,6 +1076,88 @@ export const kbSources: readonly KbSource[] = [
     "summary": "## Ne söylüyor (kendi cümlelerimizle)\n\n- Direnç egzersizi ve protein alımı kas protein sentezini birlikte uyarır; protein egzersizden önce ya da sonra alındığında etki artar.\n- Kas kütlesini kazanmak ve korumak için egzersiz yapan çoğu kişide günde 1,4-2,0 g/kg protein yeterli.\n- Kalori açığındaki dönemlerde yağsız kütleyi korumak için daha yüksek alım (2,3-3,1 g/kg/gün) gerekebilir.\n- Öğün başına doz ve dağılım önerileri yaşa ve son egzersize göre değişiyor; dozların gün içine dağıtılması öneriliyor.\n\n## Uygulamada kullanılan sayılar\n\nDoğrudan sayı alınmadı. Günlük protein aralığının (1,2-2,0 g/kg, davis-2022) bağımsız bir tutum bildirgesiyle örtüştüğünün dayanağı (1,4-2,0).\n\n## Sınırlılıklar\n\n- Kas kütlesi odaklı; takım sporu toparlanmasına özgü değil.\n- Yalnız özet okundu."
   },
   {
+    "id": "janse-van-rensburg-2020",
+    "title": "How to manage travel fatigue and jet lag in athletes? A systematic review of interventions",
+    "authors": [
+      "Janse van Rensburg DCC",
+      "Jansen van Rensburg A",
+      "Fowler P",
+      "Fullagar H",
+      "Stevens D",
+      "Halson S",
+      "Bender A",
+      "Vincent G",
+      "Claassen-Smithers A",
+      "Dunican I",
+      "Roach GD",
+      "Sargent C",
+      "Lastella M",
+      "Cronje T"
+    ],
+    "year": 2020,
+    "type": "systematic-review",
+    "doi": "10.1136/bjsports-2019-101635",
+    "pmid": "32303523",
+    "journal": "British Journal of Sports Medicine",
+    "population": "Sporcular; sporcu çalışması bulunmayan müdahalelerde sağlıklı yetişkinler. 22 çalışma (14 RCT, 8 RCT dışı); ilaç dışı müdahalelerde 600, ilaç müdahalelerinde 1.202 katılımcı",
+    "summary": "## Ne söylüyor (kendi cümlelerimizle)\n\n- Gerçek uçuş veya laboratuvarda kaydırılmış saat koşullarında seyahat yorgunluğu ve jet lag için uygulanan müdahaleleri (egzersiz, uyku, ışık, beslenme; melatonin, uyku ilaçları, uyarıcılar vb.) tarıyor.\n- Seyahat yorgunluğunu yönetmeye yönelik hiçbir çalışma bulunamamış.\n- Jet lag için sporculara özgü yalnız 12 çalışma var; sporcularda jet lag yönetimine dair kanıtın kalitesi düşük.\n- Yazarlar sporcularda, sahada ve birden çok müdahaleyi birlikte ele alan daha iyi tasarlanmış çalışmalar gerektiği sonucuna varıyor.\n\n## Uygulamada kullanılan sayılar\n\n| Değer | Birim | Bağlam / koşul |\n|---|---|---|\n| (sayı kullanılmıyor) | | Kanıt düzeyini gösterir: uygulama ve koç seyahat önerilerini \"kanıtı sınırlı, uzman uzlaşısı\" diye sunar, kesin etki vaat etmez |\n\n## Sınırlılıklar\n\n- Yalnız özet okundu (tam metin açık erişimli değil, PMC'de yok).\n- Basketbola özgü değil; sporcu çalışması olmayan müdahalelerde sağlıklı yetişkin verisi kullanılmış.\n- Dahil edilen çalışmalar az, küçük ve tasarımları farklı; özet düzeyinde etki büyüklüğü verilmiyor.\n- Yazarların çoğu janse-van-rensburg-2021 konsensüsünün de yazarı; iki kaynak bağımsız kanıt sayılmaz."
+  },
+  {
+    "id": "janse-van-rensburg-2021",
+    "title": "Managing Travel Fatigue and Jet Lag in Athletes: A Review and Consensus Statement",
+    "authors": [
+      "Janse van Rensburg DC",
+      "Jansen van Rensburg A",
+      "Fowler PM",
+      "Bender AM",
+      "Stevens D",
+      "Sullivan KO",
+      "Fullagar HHK",
+      "Alonso JM",
+      "Biggins M",
+      "Claassen-Smithers A",
+      "Collins R",
+      "Dohi M",
+      "Driller MW",
+      "Dunican IC",
+      "Gupta L",
+      "Halson SL",
+      "Lastella M",
+      "Miles KH",
+      "Nedelec M",
+      "Page T",
+      "Roach G",
+      "Sargent C",
+      "Singh M",
+      "Vincent GE",
+      "Vitale JA",
+      "Botha T"
+    ],
+    "year": 2021,
+    "type": "consensus",
+    "doi": "10.1007/s40279-021-01502-0",
+    "pmid": "34263388",
+    "journal": "Sports Medicine",
+    "population": "Seyahat eden sporcular (26 araştırmacı ve klinisyenden oluşan uzman paneli, 11 ülke; öneriler büyük ölçüde laboratuvar, genel nüfus ve askeri çalışmalardan aktarılmış)",
+    "summary": "## Ne söylüyor (kendi cümlelerimizle)\n\n- Seyahat yorgunluğu ile jet lag iki ayrı durumdur. Seyahat yorgunluğu yönden ve saat farkından bağımsız olarak her uzun yolculukta görülebilir; tek bir yolculuktan sonra akut, sezon boyunca tekrar eden yolculuklarla birikimli olabilir. Jet lag ise hızlıca 3 veya daha fazla saat dilimi geçildiğinde ortaya çıkar ve iç saat yeni saate uyunca tamamen geçer.\n- Saat dilimi geçmeyen uçuşlarla ilgili takım sporu çalışmalarında performans göstergelerinde belirgin bir düşüş görülmemiş; buna karşılık uyanıklık, motivasyon ve ruh hali gibi algısal ölçütler kötüleşmiş.\n- Kaba bir kural olarak iç saat batıya gidişte daha hızlı (geciktirme), doğuya gidişte daha yavaş (ilerletme) uyum sağlar. Doğuya 8 saatten fazla gidişte saati ileri değil geri alarak uyum sağlamak daha kolay olabilir.\n- Jet lag yönetiminin temeli uykuyu korumak, ışığa çıkma ve ışıktan kaçınmayı iç saatin en düşük noktasına (CBTmin) göre zamanlamak ve gerekirse hekim denetiminde melatonindir. Yanlış zamanda ışık veya melatonin uyumu ters yöne itebilir.\n- 1-3 günlük kısa ziyaretlerde iç saati kaydırmaya çalışmak yerine uyku ve yemek saatlerini varış yerine uydurmak, uyku borcunu kısa uykularla azaltmak önerilir.\n- Kanıt zayıftır: öneriler ilkelerden ve uzman görüşünden türetilmiştir. Panel, doğrulanmamış jet lag hesaplayıcı uygulamalarına karşı uyarır.\n\n## Uygulamada kullanılan sayılar\n\nNot: \"Görsel\" yazan satırlar makalenin metninde değil, Tablo 4 ve Şekil 4-5 görsellerinde yer alır (yayıncının görsellerinden okundu, metin aramasıyla doğrulanamaz).\n\n| Değer | Birim | Bağlam / koşul |\n|---|---|---|\n| ≥ 3 | saat dilimi | Hızlı geçişte jet lag beklenir; altında yalnız seyahat yorgunluğu konuşulur |\n| Batı: 0,5 gün / saat dilimi (≈ 2 sa/gün); doğu: 1 gün / saat dilimi (≈ 1 sa/gün) | gün | Müdahalesiz doğal uyum için kaba kural (\"rule of thumb\"); bireysel fark büyük |\n| > 8 | saat (doğu) | Saati geri alarak (geciktirerek) uyum tercih edilebilir |\n| 0-3 (en güçlü), 0-6 (etkili) | saat | CBTmin'in iki yanında ışığa çıkmanın faz kaydırma penceresi; parlak ışık ≥ 2500 lx |\n| ~2 | saat | Melatonin salgısının başlaması (DLMO) olağan yatış saatinden önce |\n| ~7 | saat | CBTmin, DLMO'dan sonra (görsel, Tablo 4); 23:00-07:00 uyuyan için ~04:00 |\n| 1-3 | gün | Kısa ziyaret: iç saat kaydırılmaz, uyku ve yemek saatleri varış yerine uydurulur (görsel, Tablo 4) |\n| ≤ 72 | saat | Varıştan sonra azaltılmış antrenman, yoğunluk ve hareket karmaşıklığı sınırlı (görsel, Şekil 4) |\n| 30-60 | dk/gün | Uçuştan önceki 3-4 günde yatış, kalkış ve yemek saatini hedef yöne kaydırma (görsel, Şekil 5; Şekil 4'te \"en fazla 1 sa\"). Takım sporcularında çoğu zaman uygulanamaz |\n| 7-9 | saat/gün | Uyku hedefi, öncesinde ve sonrasında (görsel, Şekil 4) |\n| ± 6 | saat | Yatmadan önce kafeinden kaçınma (Tablo 3, metin) |\n| < 30 dk, 13:00-16:00 | dk, saat | Varış sonrası kısa şekerleme (görsel, Şekil 4) |\n| 1 | mg/kg | Kafein dozu, sabah ve öğleden sonra erken (görsel, Tablo 4 ve Şekil 4). Kişisel doz: uygulama doz önermez |\n| 0,5-10 (3-5 en uygun) | mg | Melatonin doz aralığı (görsel, Şekil 4). Kişisel doz: uygulama doz önermez |\n\nMelatonin bir takviyedir. Kullanılacaksa önce hekimle konuşulur, güncel WADA listesine bakılır ve bağımsız partide test edilmiş (batch-tested) ürün seçilir; takviyelerde bulaşma yoluyla yasaklı madde riski vardır. Makale de tüm farmakolojik müdahalelerde güncel WADA kurallarının gözetilmesini ister.\n\n## Sınırlılıklar\n\n- Uzman konsensüsü; panelin kendi değerlendirmesine göre sporculara özgü kanıt az ve düşük kaliteli. Öneriler laboratuvar, genel nüfus ve askeri çalışmalardan aktarılmış.\n- Basketbola özgü değil; NBA yalnız seyahat yükü örneği olarak geçiyor.\n- \"Saat dilimi başına gün\" kuralı bir ortalama tahmindir; kronotip ve kişisel farklar uyumu değiştirir. Leota 2022 gibi çalışmalar her iki yön için 1 sa/gün kullanır.\n- Şekillerde iç tutarsızlık var: Şekil 4-5 başlığında batı için \"CBTmin advance\" yazıyor (metin ve Tablo 4 \"delay\" diyor); Şekil 4 uçuş sırasında melatonini \"düşünülebilir\" derken Şekil 5 \"önerilmez\" diyor. Uygulama metindeki ifadeyi esas alır.\n- Önerilerin çoğu tablo ve şekil görsellerinde; tam metin Europe PMC'den (PMC8279034) okundu, görseller yayıncı sunucusundan açıldı.\n- Yazarlar çıkar çatışması bildirmemiş."
+  },
+  {
+    "id": "juliff-2015",
+    "title": "Understanding sleep disturbance in athletes prior to important competitions",
+    "authors": [
+      "Juliff LE",
+      "Halson SL",
+      "Peiffer JJ"
+    ],
+    "year": 2015,
+    "type": "cross-sectional",
+    "doi": "10.1016/j.jsams.2014.02.007",
+    "pmid": "24629327",
+    "journal": "Journal of Science and Medicine in Sport",
+    "population": "Elit Avustralyalı sporcular (bireysel ve takım sporları), n=283, yaş 24±5",
+    "summary": "## Ne söylüyor (kendi cümlelerimizle)\n\n- Anket çalışması: sporcuların yaklaşık üçte ikisi son bir yılda önemli bir yarışmadan önceki gecelerde en az bir kez daha kötü uyuduğunu bildirmiş.\n- En sık sorun uykuya dalmakta zorlanma; başlıca neden yarışmayı düşünmek ve gerginlik.\n- Bu kötü uyku duruma bağlı: aynı sporcularda genel bir uyku sorununa işaret etmiyor.\n- Takım sporcularının çoğu kötü uykuyla baş etmek için bir yöntem kullanmıyor; bireysel sporcular daha çok gevşeme ve okuma kullanıyor.\n\n## Uygulamada kullanılan sayılar\n\n| Değer | Birim | Bağlam / koşul |\n|---|---|---|\n| %64 | sporcu oranı | Önemli yarışmadan önceki gecelerde en az bir kez kötü uyku bildirimi (son 12 ay, öz bildirim) |\n| %82 | sorun bildirenler içinde oran | Uykuya dalmakta zorlanma, en sık sorun |\n\nMaçtan önceki gece (MD-1) kötü uykunun yaygın ve durumsal olduğunu anlatmak için kullanılır; bir eşik değildir.\n\n## Sınırlılıklar\n\n- Kesitsel, geriye dönük anket; uyku ölçülmemiş, hatırlanan algı soruluyor.\n- \"Önemli yarışma\" tanımı sporcuya bırakılmış; sıradan lig maçı öncesine doğrudan aktarılamaz.\n- Özetteki cinsiyet dağılımı (129 erkek + 157 kadın) toplam n=283 ile tutmuyor; tam metin okunmadığı için netleştirilemedi.\n- Basketbola özgü değil.\n- Yalnız özet okundu (Elsevier, Europe PMC'de tam metin yok)."
+  },
+  {
     "id": "kalkhoven-2021",
     "title": "Training Load and Injury: Causal Pathways and Future Directions",
     "authors": [
@@ -1083,6 +1265,27 @@ export const kbSources: readonly KbSource[] = [
     "journal": "Sleep",
     "population": "800 m altında yaşayan 51 sağlıklı genç erkek (medyan yaş 24); çapraz randomize, 490 m, 1.630 m ve 2.590 m'de uyku çalışması",
     "summary": "## Ne söylüyor (kendi cümlelerimizle)\n\n- Sağlıklı genç erkeklerde gece ortalama oksijen doygunluğu alçakta yaklaşık %96.\n- Orta yükseklikte belirgin düşüyor: yaklaşık 1.600 m'de %94, 2.600 m'de %90-91; ikinci gece biraz düzeliyor.\n\n## Uygulamada kullanılan sayılar\n\nDoğrudan eşik alınmadı. Gece SpO2 notunun olası nedenler arasında yüksekliği saymasının dayanağı; genç sağlıklı erkekte alçakta gece ortalamasının notun mutlak alt sınırının üstünde kaldığını da gösteriyor.\n\n## Sınırlılıklar\n\n- Yalnız özet okundu. Yalnız erkekler, kısa süreli (birkaç gün) yükseklik."
+  },
+  {
+    "id": "leota-2022",
+    "title": "Eastward Jet Lag is Associated with Impaired Performance and Game Outcome in the National Basketball Association",
+    "authors": [
+      "Leota J",
+      "Hoffman D",
+      "Czeisler MÉ",
+      "Mascaro L",
+      "Drummond SPA",
+      "Anderson C",
+      "Rajaratnam SMW",
+      "Facer-Childs ER"
+    ],
+    "year": 2022,
+    "type": "cohort",
+    "doi": "10.3389/fphys.2022.892681",
+    "pmid": "35784873",
+    "journal": "Frontiers in Physiology",
+    "population": "NBA normal sezonu, 2011/12-2020/21 arası 10 sezon, 30 takım, 11.481 maç (takım düzeyinde veri, bireysel oyuncu ölçümü yok)",
+    "summary": "## Ne söylüyor (kendi cümlelerimizle)\n\n- Jet lag, maçlar arasındaki dinlenme günleri boyunca günde 1 saat uyum varsayılarak hesaplanmış; kalan saat farkına göre maçlar \"doğu jet lag'i\", \"batı jet lag'i\" ve \"jet lag yok\" diye ayrılmış.\n- Ev sahibi takımlar doğu jet lag'iyle oynadığında sayı farkı, ribaund farkı ve isabet oranı farkı (eFG%) kötüleşmiş, galibiyet oranı da sınırda anlamlı biçimde düşmüş. Batı jet lag'inde böyle bir ilişki yok.\n- Doğu jet lag'i büyüdükçe (1 saatten 2 saate) ev sahibinin sayı farkı daha çok düşmüş.\n- Doğuya gidilen ama araya yeterli dinlenme günü giren maçlarda performans, hiç yolculuk yapılmayan maçlardan farklı değil: yeterli toparlanma penceresi doğu dezavantajını ortadan kaldırıyor.\n- Deplasman takımlarında jet lag ile performans arasında anlamlı ilişki bulunmamış.\n\n## Uygulamada kullanılan sayılar\n\n| Değer | Birim | Bağlam / koşul |\n|---|---|---|\n| 1 | saat/gün | Çalışmanın jet lag hesabında kullandığı uyum hızı (her iki yön); bir model varsayımı, ölçüm değil |\n| -6,03 | % | Doğu jet lag'iyle ev sahibi galibiyet oranı değişimi (p = 0,051, sınırda) |\n| -1,29 | sayı | Doğu jet lag'iyle ev sahibi sayı farkı değişimi |\n| -4,53 / -0,72 | sayı | 2 saat / 1 saat doğu jet lag'inde ev sahibi sayı farkı değişimi (1 saat sınırda, p = 0,07) |\n\nBu sayılar takım düzeyinde ortalamalardır; uygulama bunları kişiye tahmin olarak aktarmaz, yalnız \"doğu yönü ve kısa toparlanma basketbolda daha zararlı\" bulgusunu kaynaklı anlatmak için kullanır.\n\n## Sınırlılıklar\n\n- Gözlemsel, geriye dönük lig verisi; nedensellik kurulamaz.\n- Gerçek yolculuk bilgisi yok: her takımın maçtan hemen sonra bir sonraki şehre gittiği varsayılmış (yazarlar da belirtiyor).\n- Bireysel uyku, iç saat veya yük ölçülmemiş; kronotip hesaba katılmamış.\n- Kuzey Amerika içi yolculuk, en fazla 3 saat fark; maç anında hiç 3 saatlik jet lag yok. Kıtalar arası 4+ saatlik yolculuğa doğrudan aktarılamaz.\n- Etki yalnız ev sahibi takımlarda görülmüş; deplasmanda neden görülmediği belirsiz.\n- Bazı yazarların uyku ve giyilebilir şirketlerle (ör. WHOOP, Vanda) bu çalışmayla ilgisiz bağları bildirilmiş.\n- Tam metin Europe PMC'den (PMC9245584) okundu."
   },
   {
     "id": "lian-2005",
@@ -1287,6 +1490,26 @@ export const kbSources: readonly KbSource[] = [
     "journal": "International Journal of Sports Physiology and Performance",
     "population": "Profesyonel rugby ligi oyuncuları (erkek), n=12, aynı takım",
     "summary": "## Ne söylüyor (kendi cümlelerimizle)\n\n- Maçlar arası 5, 7 ve 9 günlük döngülerde sıçrama performansı, algılanan yorgunluk, genel iyi oluş ve kas ağrısı izlendi; antrenman yükü seans RPE yöntemiyle ölçüldü.\n- Maçtan sonraki 48 saatte sıçrama değerleri, yorgunluk algısı, iyi oluş ve kas ağrısı belirgin biçimde kötüleşti.\n- Sıçrama değişkenlerinin çoğu yaklaşık 4 günde başlangıç düzeyine döndü; uygun antrenmanla algısal ölçümlerin de 4 gün içinde toparlanabildiği görüldü.\n- Öznel iyi oluş maddeleri maç yüküne günler içinde tepki veriyor; yani günlük takipte anlamlı sinyal taşıyor.\n\n## Uygulamada kullanılan sayılar\n\nBu çalışmadan doğrudan sayı alınmadı (ölçek aralığı `zhang-2026`'dan). \"Maçtan sonra yaklaşık 48 saat bozulma, yaklaşık 4 günde toparlanma\" gözlemi Faz 2'deki toparlanma yorumları için aday; kural yazılmadan önce tam metin ve basketbol kaynaklarıyla karşılaştırılacak.\n\n## Sınırlılıklar\n\n- Rugby ligi (temaslı); basketbolun yük profili farklı.\n- Küçük örneklem (n=12), tek takım.\n- Yalnız özet okundu."
+  },
+  {
+    "id": "mesas-2023",
+    "title": "Is daytime napping an effective strategy to improve sport-related cognitive and physical performance and reduce fatigue? A systematic review and meta-analysis of randomised controlled trials",
+    "authors": [
+      "Mesas AE",
+      "Núñez de Arenas-Arroyo S",
+      "Martinez-Vizcaino V",
+      "Garrido-Miguel M",
+      "Fernández-Rodríguez R",
+      "Bizzozero-Peroni B",
+      "Torres-Costoso AI"
+    ],
+    "year": 2023,
+    "type": "meta-analysis",
+    "doi": "10.1136/bjsports-2022-106355",
+    "pmid": "36690376",
+    "journal": "British Journal of Sports Medicine",
+    "population": "22 RCT, 291 erkek katılımcı (164 antrenmanlı sporcu, 127 fiziksel olarak aktif yetişkin), 18-35 yaş",
+    "summary": "## Ne söylüyor (kendi cümlelerimizle)\n\n- Gündüz şekerlemesinin spora ilişkin bilişsel ve fiziksel performansa ve yorgunluk algısına etkisini randomize kontrollü çalışmalardan derliyor.\n- Normal bir gece uykusundan sonra öğleden sonra yapılan şekerleme bilişsel ve fiziksel performansı artırmış, yorgunluk algısını azaltmış.\n- Etki, gece uykusu kısıtlandığında da görülmüş.\n- Fayda en çok 30 dakika ile 1 saatten kısa süren şekerlemelerde ve uyanıştan teste 1 saatten fazla zaman kaldığında ortaya çıkmış.\n\n## Uygulamada kullanılan sayılar\n\n| Değer | Birim | Bağlam / koşul |\n|---|---|---|\n| 30 - <60 | dakika | En çok fayda görülen şekerleme süresi |\n| 12:30 - 16:50 (en sık 14:00) | saat | Çalışmalarda şekerlemenin yapıldığı aralık |\n| > 1 | saat | Uyanış ile performans testi arasındaki süre; fayda bu durumda daha yüksek. Akşam maçında şekerlemenin maça yakın olmaması için bağlam |\n\nMaç günü öğleden sonrası için öneri metninde kullanılır. Şekerleme gece uykusunun yerine geçen bir öneri olarak sunulmaz.\n\n## Sınırlılıklar\n\n- Katılımcıların tamamı erkek; kadınlara genellenemez.\n- Çalışmalar arası heterojenlik yüksek (I² %71-90).\n- Performans testleri laboratuvar ve sahaya özgü testler; gerçek maç performansı değil, basketbola özgü değil.\n- Akşam maçı öncesi şekerlemenin o geceki uykuya etkisi bu derlemede incelenmemiş.\n- Yalnız özet okundu (BMJ tam metni otomatik isteğe kapalı, Europe PMC'de tam metin yok)."
   },
   {
     "id": "miller-2005",
@@ -1526,6 +1749,26 @@ export const kbSources: readonly KbSource[] = [
     "summary": "## Ne söylüyor (kendi cümlelerimizle)\n\n- Basketbolda ayak bileği burkulmaları sık olarak rakibin ayağına basarak inişte oluyor.\n- Ani içe dönme bağlarda yüksek gerinim yaratıyor; mekanizma birikmiş yükten çok anlık travma.\n\n## Uygulamada kullanılan sayılar\n\nSayı alınmadı; yalnız nitel bulgu (eşleme veya gerekçe) için kullanılır.\n\n## Sınırlılıklar\n\n- Dört vaka; yalnız mekanizma tanımı."
   },
   {
+    "id": "pernigoni-2024",
+    "title": "Match-related fatigue in basketball: A systematic review",
+    "authors": [
+      "Pernigoni M",
+      "Ferioli D",
+      "Calleja-González J",
+      "Sansone P",
+      "Tessitore A",
+      "Scanlan AT",
+      "Conte D"
+    ],
+    "year": 2024,
+    "type": "systematic-review",
+    "doi": "10.1080/02640414.2024.2409555",
+    "pmid": "39374409",
+    "journal": "Journal of Sports Sciences",
+    "population": "Basketbolcular (farklı düzey ve cinsiyetler); 44 çalışma, 23 Ocak 2024'e kadar",
+    "summary": "## Ne söylüyor (kendi cümlelerimizle)\n\n- Basketbol maçı sonrasında ve yoğun maç takviminde yorgunluk tepkilerini performans, fizyolojik belirteç, sporcu bildirimi ve uyku açısından derliyor.\n- Sıçrama ve sürat maç bitiminde düşüyor; düşüş sıçramada (yalnız erkeklerde) ve süratte 24-48 saat sürebiliyor.\n- Kas hasarı belirteçleri ağırlıkla maçtan 13-72 saat sonra, inflamasyon 13-48 saat sonra yüksek; kas ağrısı en çok 24-48 saatte.\n- Uyku ölçütlerinde belirgin bir maç etkisi bulunmamış.\n- Yoğun takvim üzerine çalışma az; erkeklerde kas hasarı, inflamasyon, yorgunluk ve iyi oluşta kötüleşme işaretleri var.\n\n## Uygulamada kullanılan sayılar\n\n| Değer | Birim | Bağlam / koşul |\n|---|---|---|\n| 24-48 | saat | Maç sonrası sıçrama (erkeklerde) ve süratte süren düşüş; MD+1 notunda \"toparlanma ertesi gün sürüyor olabilir\" bağlamı |\n| 24-48 | saat | Kas ağrısının en belirgin olduğu aralık |\n| 13-72 | saat | Kas hasarı belirteçlerinin ağırlıkla yüksek olduğu aralık |\n\nBu aralıklar maç sonrası günler için açıklama bağlamıdır; kullanıcının kendi check-in ve nabız verisi yerine geçmez.\n\n## Sınırlılıklar\n\n- Dahil edilen çalışmalar düzey, cinsiyet ve ölçüm yöntemi bakımından farklı; özette birleşik (meta-analitik) bir etki büyüklüğü verilmiyor.\n- Uykuda etki görülmemesi Roberts 2019 ve Fox 2020 ile çelişiyor gibi; uyku ölçen çalışma sayısı ve yöntemleri özetten okunamıyor.\n- Yoğun takvim (arka arkaya maç) kanıtı sınırlı ve yalnız erkek oyunculardan.\n- Yalnız özet okundu (Taylor & Francis, Europe PMC'de tam metin yok)."
+  },
+  {
     "id": "plews-2013",
     "title": "Training Adaptation and Heart Rate Variability in Elite Endurance Athletes: Opening the Door to Effective Monitoring",
     "authors": [
@@ -1648,6 +1891,37 @@ export const kbSources: readonly KbSource[] = [
     "journal": "BMJ Open",
     "population": "Lihtenştayn'da 1.163 yetişkin (ortalama yaş 44); 66 laboratuvarla doğrulanmış COVID-19 vakası; geceleri bileğe takılan sensör bileklik (Ava)",
     "summary": "## Ne söylüyor (kendi cümlelerimizle)\n\n- Bilek cilt sıcaklığı enfeksiyonun kuluçka, belirti öncesi ve belirtili dönemlerinde kişinin kendi başlangıç düzeyine göre adım adım yükseldi; belirtili dönemde ortalama artış yaklaşık 0,3 °C.\n- İyileşme döneminde de yaklaşık 0,2 °C yüksek kaldı.\n- Çok sinyalli bir model vakaların yaklaşık üçte ikisini belirtilerden önce yakaladı ama özgüllüğü düşüktü.\n\n## Uygulamada kullanılan sayılar\n\n| Değer | Birim | Bağlam / koşul |\n|---|---|---|\n| +0,3 | °C | Cilt sıcaklığı notu: gece değeri cihazın kişisel tabanının en az bu kadar üstünde, iki gece üst üste (tahmin) |\n\n## Sınırlılıklar\n\n- 0,3 °C grup düzeyinde ortalama bir etki, doğrulanmış bir uyarı eşiği değil; tek gece için duyarlılık ve özgüllük verilmedi. İyileşmede de yüksek kalması ve geceden geceye oynama yanlış alarm üretebilir.\n- Ara analiz, tek merkez, küçük COVID alt örneklemi. Yazarlardan bazıları cihaz üreticisinin çalışanı.\n- Ölçüm yeri Fitbit'le aynı (bilek), ama cihaz ve algoritma farklı."
+  },
+  {
+    "id": "roach-2019",
+    "title": "Interventions to Minimize Jet Lag After Westward and Eastward Flight",
+    "authors": [
+      "Roach GD",
+      "Sargent C"
+    ],
+    "year": 2019,
+    "type": "narrative-review",
+    "doi": "10.3389/fphys.2019.00927",
+    "pmid": "31417411",
+    "journal": "Frontiers in Physiology",
+    "population": "Sporcular hedef alınmış (Tokyo 2020 öncesi); öneriler laboratuvarda sağlıklı yetişkinlerden elde edilen faz yanıt eğrilerine dayanıyor",
+    "summary": "## Ne söylüyor (kendi cümlelerimizle)\n\n- Uzun uçuştan sonra iç saat bir süre çıkış yerinin saatine göre çalışır; jet lag bu uyumsuzluktan doğar. Batıya gidince iç saatin geri, doğuya gidince ileri kayması gerekir.\n- İç saatin en düşük noktası (CBTmin) olağan uyku saatinden tahmin edilir: 23:00-07:00 uyuyan biri için yaklaşık 04:00. En uykulu ve en düşük performanslı saatler bu noktanın birkaç saat çevresidir.\n- Işık CBTmin'den önce iç saati geri, sonra ileri iter; bu yüzden \"yeni yerde bol güneş al\" tavsiyesi batıda işe yarar ama doğuya uzun yolculukta çelişkili sinyal verip uyumu yavaşlatabilir.\n- Doğuya ve batıya 3, 6, 9 ve 12 saatlik farklar için ışığa çıkma, ışıktan kaçınma ve melatonin takvimi öneriyor. 12 saatlik farkta iç saat geri kaymaya daha yatkın olduğu için geciktirerek uyum daha yaygın.\n- Pratikte asıl hedef kısmi uyumdur: CBTmin yeni yerin gece uykusunun içine düştüğünde uyku ve performans belirgin düzelir; tam uyum daha uzun sürer.\n- Işık ve melatonin takvimlerinin sahadaki etkinliği birlikte test edilmemiş; melatonin tek başına saha çalışmalarının meta-analizinde etkili bulunmuş.\n\n## Uygulamada kullanılan sayılar\n\n| Değer | Birim | Bağlam / koşul |\n|---|---|---|\n| ~2 sa önce / ~7 sa sonra | saat | Melatonin başlangıcı olağan yatıştan ~2 sa önce; CBTmin melatonin başlangıcından ~7 sa sonra (23:00-07:00 uyuyan için ~04:00) |\n| 2-3 | saat | CBTmin'in iki yanı en uykulu ve en düşük performanslı dönem |\n| ~3 | saat | Yolculuk sırasında batı: CBTmin'den önceki ~3 saatte ışık, sonraki ~3 saatte ışıktan kaçın; doğu: tersi |\n| 3-6 | saat | Işığın en büyük kaymayı yarattığı pencere, CBTmin'in iki yanında (konsensüs 0-3 sa diyor; iki kaynak tam örtüşmüyor) |\n| Batı 3/6/9 sa → kısmi gün 1/2/3, tam gün 4/6/7; doğu 3/6/9 sa → kısmi gün 1/3/5, tam gün 4/6/8; 12 sa → kısmi 6-7, tam 10 | gün | Önerilen ışık ve melatonin takvimi uygulandığında beklenen uyum (modelden; müdahalesiz doğal hız değil). Doğunun daha yavaş olduğunu gösterir |\n| 30-60 | dk/gün | Uçuştan önceki 3-4 günde yatış ve kalkışı hedef yöne kaydırma (isteğe bağlı) |\n| ≤ 1 | saat | Işıktan kaçınma döneminde şekerleme süresi, gece uykusunu bozmasın diye |\n| 3,0 mg; doğu: CBTmin'den ~11,5 sa önce, batı: CBTmin'den ~4 sa sonra | mg, saat | Melatonin dozu ve zamanlaması (kişisel doz). Uygulama doz önermez |\n\nMelatonin bir takviyedir. Makale de sporcu kullanacaksa yasaklı madde listesinin kontrol edilmesini ve saflık ile doz doğruluğu için güvenilir tedarikçi seçilmesini şart koşar. Uygulama melatonini ancak \"hekimle konuş, güncel WADA listesine bak, bağımsız partide test edilmiş (batch-tested) ürün seç\" uyarısıyla anar.\n\n## Sınırlılıklar\n\n- Uzman derlemesi; öneriler laboratuvar faz yanıt eğrilerinden türetilmiş, sporcularda sahada denenmemiş (yazarlar da belirtiyor).\n- Basketbola özgü değil.\n- CBTmin ölçülmüyor, uyku saatinden tahmin ediliyor; takvimler sabit uyku saati ve 13:00 varış varsayıyor.\n- Melatonin zamanlamalarının dayandığı eğriler için uyum iyiliği verisi yok; yazarlar kesinliğin temkinle okunmasını istiyor.\n- Yazarlar janse-van-rensburg-2021 konsensüsünün de yazarları arasında; bağımsız kanıt sayılmaz.\n- Tam metin Europe PMC'den (PMC6684967) okundu. Çıkar çatışması bildirilmemiş."
+  },
+  {
+    "id": "roberts-2019",
+    "title": "Effects of training and competition on the sleep of elite athletes: a systematic review and meta-analysis",
+    "authors": [
+      "Roberts SSH",
+      "Teo WP",
+      "Warmington SA"
+    ],
+    "year": 2019,
+    "type": "meta-analysis",
+    "doi": "10.1136/bjsports-2018-099322",
+    "pmid": "30217831",
+    "journal": "British Journal of Sports Medicine",
+    "population": "Elit sporcular; 54 gözlemsel çalışma, uykunun nesnel ölçüldüğü (toplam uyku süresi ve/veya uyku verimi)",
+    "summary": "## Ne söylüyor (kendi cümlelerimizle)\n\n- Elit sporcularda uykuyu nesnel ölçen gözlemsel çalışmaları derleyip yarışma ve antrenmanın uykuya etkisini meta-analizle hesaplıyor.\n- Yarışma gecesi, önceki gecelere göre toplam uyku süresi kısalıyor; çalışmaların çoğunda sporcular o gece uyku süresi önerisine ulaşamamış.\n- Akşam başlayan yarışmalarda (18:00 ve sonrası) kayıp, gündüz yarışmalarına göre çok daha büyük; uyku verimi de yalnız akşam yarışmasından sonra düşüyor.\n- Yarışma dışında da sporcular sık sık uyku önerisinin altında kalıyor. Çok erken antrenman (07:00 öncesi), antrenman yükünde ani artış (%25'in üstü), gece geç ya da sabah çok erken yola çıkış, doğuya uçuş ve yüksek rakım uykuyu bozan etkenler arasında.\n\n## Uygulamada kullanılan sayılar\n\n| Değer | Birim | Bağlam / koşul |\n|---|---|---|\n| ~80 dk daha kısa toplam uyku | dakika | Akşam yarışması (başlangıç ≥ 18:00) gecesi, önceki geceye göre; grup ortalaması |\n| ~20 dk daha kısa toplam uyku | dakika | Gündüz yarışması gecesi, önceki geceye göre |\n| ~60 dk daha kısa toplam uyku | dakika | Tüm yarışma geceleri birlikte, önceki gecelere göre |\n| %3-4 daha düşük uyku verimi | yüzde puan | Yalnız akşam yarışması gecesi; gündüz yarışmasında değişmiyor |\n\nBu sayılar \"maç gecesi uykunun kısalması beklenen bir şey\" açıklamasında bağlam olarak kullanılır; kullanıcının kendi maç gecesi uykusu yine kendi baseline'ıyla kıyaslanır, 80 dk bir eşik değildir.\n\n## Sınırlılıklar\n\n- Farklı sporlardan elit sporcular; basketbola özgü değil, kadın-erkek ayrımı özetten okunamıyor.\n- Çalışmalar gözlemsel; yarışma gecesindeki kaybın nedeni (geç bitiş, uyarılmışlık, seyahat, kafein) ayrıştırılmıyor.\n- Ölçüm aktigrafi ve benzeri cihazlarla; cihazlar arası fark var.\n- Yalnız özet okundu (BMJ tam metni otomatik isteğe kapalı, Europe PMC'de tam metin yok)."
   },
   {
     "id": "roete-2021",
@@ -2046,6 +2320,21 @@ export const kbSources: readonly KbSource[] = [
     "journal": "Journal of the American Dietetic Association",
     "population": "Yok (değişim listelerindeki besinlerin bileşim veritabanı; diyabet ve kilo kontrolü için öğün planlama)",
     "summary": "## Ne söylüyor (kendi cümlelerimizle)\n\n- Değişim listeleri, besinleri benzer karbonhidrat, protein ve yağ içeren gruplara ayırıp her gruba tek bir \"birim\" değeri veren eski bir öğün planlama yöntemi.\n- 1995 listelerindeki besinlerin bileşimi incelendiğinde grup ortalamaları birim değerlerine yakın çıktı, ama besinden besine sapma ve aralık büyüktü.\n- Yöntemin bilimsel temeli ve klinik etkinliği üzerine az araştırma var.\n\n## Uygulamada kullanılan sayılar\n\nSayı kullanılmıyor. \"Porsiyon birimi\" yöntemini seçmeme gerekçesi (karar 0030): grup ortalaması tutsa da tek bir besindeki hata büyük olabilir.\n\n| Değer | Birim | Bağlam / koşul |\n|---|---|---|\n| — | — | — |\n\n## Sınırlılıklar\n\n- Diyabet ve kilo kontrolü bağlamı, sporcu değil; ABD besinleri.\n- Yalnız özet okundu."
+  },
+  {
+    "id": "williams-2015",
+    "title": "Carbohydrate Nutrition and Team Sport Performance",
+    "authors": [
+      "Williams C",
+      "Rollo I"
+    ],
+    "year": 2015,
+    "type": "narrative-review",
+    "doi": "10.1007/s40279-015-0399-3",
+    "pmid": "26553494",
+    "journal": "Sports Medicine",
+    "population": "Takım sporu oyuncuları (derleme; çoğu çalışma futbol benzeri aralıklı koşu protokolüyle üniversite düzeyinde erkek oyuncular, birkaçı basketbola uyarlanmış protokol)",
+    "summary": "## Ne söylüyor (kendi cümlelerimizle)\n\n- Takım sporlarında tekrarlanan kısa sprintler kas glikojenini azaltıyor; glikojen düşükken sonraki sprint ve koşu performansı düşüyor. Maçtan önce kas ve karaciğer karbonhidrat depolarını artırmak yorgunluğu geciktiriyor.\n- Maç öncesi karbonhidrat yüklemesi: futbolcularda 48 saat yüksek karbonhidratlı diyet, düşük karbonhidratlıya göre kas glikojenini yükseltti ve simüle maçta yüksek şiddetli koşuyu artırdı; teknik beceride fark görülmedi.\n- Egzersizden yaklaşık 3 saat önce sindirimi kolay, yüksek karbonhidratlı bir öğün yerleşik öneri. Yazarlara göre maç günü öğününde yüksek glisemik indeksli karbonhidrat, kısa ve yüksek şiddetli efor için düşük glisemik indeksliden daha uygun.\n- Basketbola uyarlanmış bir testte egzersizden 45 dakika önce tek seferde 75 g şeker, ilk çeyrekte kan şekerini düşürdü ve turnike atışı ile sprinti kötüleştirdi; son çeyrekte sprint farkı kalmadı. Maçtan hemen önce büyük bir şeker yüklemesi bu yüzden dikkat ister.\n- Maç ve antrenmandan hemen sonra karbonhidrat glikojeni hızla yeniliyor; ertesi gün yine oynayacak oyuncu için önemli.\n\n## Uygulamada kullanılan sayılar\n\n| Değer | Birim | Bağlam / koşul |\n|---|---|---|\n| ≈ 3 | saat | Maç öncesi yüksek karbonhidratlı öğün ile egzersiz arası (yerleşik öneri, genel) |\n| 2,5 | g/kg karbonhidrat | Bir çalışmada 3 saat önce yenen yüksek glisemik indeksli öğün; kas glikojeni ≈ %11-15 arttı (çalışma dozu, öneri değil) |\n| 48 | saat | Futbolcularda maç öncesi yüksek karbonhidratlı diyet (yükleme) süresi |\n| 75 g, 45 dk önce | g şeker | Basketbol simülasyonu: ilk çeyrekte hipoglisemi ve beceri düşüşü (kaçınılacak örnek) |\n\n## Sınırlılıklar\n\n- Anlatı derlemesi (kanıt düzeyi 4); çalışmaların çoğu küçük örneklemli (6-10 kişi) ve futbol benzeri laboratuvar protokolleri. Basketbol verisi yalnız uyarlanmış simülasyon testlerinden.\n- Kesin g/kg önerisi vermiyor; 2,5 g/kg bir çalışmanın dozu. Maçtan önceki gün için sayısal bir hedef yok.\n- Gatorade Sports Science Institute (PepsiCo) destekli ek sayıda yayımlandı; ikinci yazar GSSI çalışanı, ilk yazar GSSI'den ücret aldı. Karbonhidrat ve spor içeceği konusunda çıkar çatışması olabilir.\n- Tam metin okundu (açık erişim, CC BY)."
   },
   {
     "id": "williams-2017",
@@ -2516,9 +2805,54 @@ export const kbRules: readonly KbRule[] = [
     ]
   },
   {
+    "id": "jet-lag-uyum",
+    "module": "seyahat",
+    "description": "Jet lag hızlıca 3 veya daha fazla saat dilimi geçilince beklenir. Kaba kural: iç saat batıya gidişte günde yaklaşık 2 saat (saat dilimi başına yarım gün), doğuya gidişte günde yaklaşık 1 saat (saat dilimi başına bir gün) uyum sağlar. Uygulama kalan uyumu bu hızla gün gün tahmin eder ('Tahmin'); dönüşte, varış yerinde ne kadar uyum sağlandıysa o kadar ters yönde aynı hızla. Doğuya 8 saatten fazla gidişte iç saati geri alarak uyum daha kolay olabilir (notta söylenir, tahmin değişmez). Günün durumu değişmez; jet lag için ayrı eşik yok.",
+    "value": {
+      "min_time_zones": 3,
+      "hours_per_day": {
+        "west": 2,
+        "east": 1
+      },
+      "east_delay_above_hours": 8,
+      "label": "Tahmin"
+    },
+    "appliesTo": "saat farkı 3 saat veya daha fazla olan seyahat (varış yerinde ve dönüşten sonra)",
+    "notes": "Uyum hızı konsensüsün 'kaba kural'ı (janse-van-rensburg-2021, metin); kişiden kişiye fark büyük. Leota 2022 (NBA) iki yön için de günde 1 saat varsaydı; doğunun basketbolda daha zararlı olduğu bulgusu oradan (lig içi en fazla 3 saat). Doğu yolculuğunun uyku ve performansa daha çok zarar verdiği küçük bir izleme çalışmasından (fowler-2017, 8 saat dilimi, n=10). Uyumun iç saatin en düşük noktasına göre ışıkla hızlandırılabileceği ve 'bol güneş' önerisinin doğuda ters etki yapabileceği anlatı derlemesinden (roach-2019); kişisel ışık penceresi hesaplanmaz (kullanıcı kararı, 2026-10-15).",
+    "sources": [
+      "janse-van-rensburg-2021",
+      "roach-2019",
+      "leota-2022",
+      "fowler-2017"
+    ]
+  },
+  {
+    "id": "jet-lag-varis",
+    "module": "seyahat",
+    "description": "Varıştan sonraki ilk günler: antrenman düşük-orta yoğunlukta; uyku ve yemek yerel saate göre; kafein yerel sabahta, öğleden sonra geç ve akşam yok. Doğuya uzun yolculuktan sonra sürat ve aralıklı koşu performansı en çok ilk 72 saatte düşüyor. İsteğe bağlı: saat farkı büyükse uçuştan önceki 3-4 günde yatış ve kalkışı hedef yöne günde 30-60 dakika kaydırmak (takım takviminde çoğu zaman uygulanamaz).",
+    "value": {
+      "first_hours": 72,
+      "pre_shift_min_per_day": [
+        30,
+        60
+      ],
+      "pre_shift_days": [
+        3,
+        4
+      ]
+    },
+    "appliesTo": "saat farkı 3 saat veya daha fazla olan seyahat",
+    "notes": "Varışta düşük-orta yoğunluk ve kafein zamanlaması konsensüsün metin tablosundan (janse-van-rensburg-2021, Tablo 3). 72 saat: antrenmanlı erkeklerde 8 saat dilimi doğu yolculuğu (fowler-2017, yalnız özet; basketbola özgü değil). Uçuş öncesi kaydırma anlatı derlemesinden (roach-2019, metin); melatonin dozları uygulamada verilmez, melatonin anılırsa hekim ve doping uyarısıyla (takviye-doping-riski).",
+    "sources": [
+      "janse-van-rensburg-2021",
+      "fowler-2017",
+      "roach-2019"
+    ]
+  },
+  {
     "id": "karbonhidrat-gun-tipi",
     "module": "beslenme",
-    "description": "Günlük karbonhidrat hedefi gün tipine göre (g/kg/gün, sabah kilosuyla): dinlenme 3-5, antrenman 5-7, yoğun 8-10. Gün tipi o günün seans kayıtlarından: seans yoksa dinlenme, seans varsa antrenman, maç varsa (maç seansı kaydı ya da Bugün'deki 'Bugün maç var' işareti, mac-gunu) ya da seansların toplam süresi 180 dakika veya üstüyse yoğun. Kullanıcı gün tipini değiştirebilir.",
+    "description": "Günlük karbonhidrat hedefi gün tipine göre (g/kg/gün, sabah kilosuyla): dinlenme 3-5, antrenman 5-7, maç çevresi 6-8, yoğun 8-10. Gün tipi kayıtlardan, bu sırayla: bugün maç varsa (maç takviminde ya da 'Bugün maç var' işaretiyle, ya da maç seansı kaydı; mac-gunu) maç çevresi; seansların toplam süresi 180 dakika veya üstüyse yoğun; dün maç vardıysa ya da yarın maç varsa (mac-oncesi-gun, mac-sonrasi) maç çevresi; seans varsa antrenman; yoksa dinlenme. Kullanıcı gün tipini değiştirebilir.",
     "value": {
       "rest": [
         3,
@@ -2528,23 +2862,33 @@ export const kbRules: readonly KbRule[] = [
         5,
         7
       ],
+      "match": [
+        6,
+        8
+      ],
       "high": [
         8,
         10
       ],
       "high_when_minutes_at_least": 180,
-      "high_when_kind": [
+      "match_when_kind": [
         "game"
+      ],
+      "match_day_offsets": [
+        -1,
+        0,
+        1
       ],
       "weight_days": 7,
       "unit": "g/kg/gün"
     },
     "appliesTo": "her gün; kilo son 7 günün sabah kilosu ortalamasından (yoksa son ölçüm)",
-    "notes": "Antrenman günü 5-7 basketbol derlemesinden (davis-2022). Dinlenme 3-5 ve yoğun 8-10 ISSN derlemesinden (kerksick-2018): 3-5 genel fitness için, 8-10 günde 3-6 saat yoğun antrenman için; sporcunun dinlenme gününe ve basketbolda maç gününe aktarım varsayım. davis-2022 takım sporlarında 5-12 aralığı veriyor, üst ucu çok dakika oynayan oyuncu için. 180 dakika eşiği kerksick-2018'in '3-6 saat' alt ucu. Ortak bildirgenin (thomas-2016) tam metnine erişilemedi; aralıklar ondan doğrudan alınmadı. Hedef bir rehber aralık, eşik ya da uyarı değil; kişisel plan için spor diyetisyeni (thomas-2016).",
+    "notes": "Antrenman günü 5-7 basketbol derlemesinden (davis-2022). Maç çevresi 6-8 UEFA uzman grubu bildirgesinden (collins-2021): maçtan önceki gün en az 6-8, maç günü ve maçtan sonraki gün 6-8; futboldan basketbola aktarım varsayım (karar 0046; önceden maç günü yoğun 8-10 sayılıyordu). Dinlenme 3-5 ve yoğun 8-10 ISSN derlemesinden (kerksick-2018): 3-5 genel fitness için, 8-10 günde 3-6 saat yoğun antrenman için; sporcunun dinlenme gününe aktarım varsayım. davis-2022 takım sporlarında 5-12 aralığı veriyor, üst ucu çok dakika oynayan oyuncu için. 180 dakika eşiği kerksick-2018'in '3-6 saat' alt ucu. Ortak bildirgenin (thomas-2016) tam metnine erişilemedi; aralıklar ondan doğrudan alınmadı. Hedef bir rehber aralık, eşik ya da uyarı değil; kişisel plan için spor diyetisyeni (thomas-2016).",
     "sources": [
       "davis-2022",
       "kerksick-2018",
-      "thomas-2016"
+      "thomas-2016",
+      "collins-2021"
     ]
   },
   {
@@ -2580,12 +2924,12 @@ export const kbRules: readonly KbRule[] = [
   {
     "id": "mac-gunu",
     "module": "mac",
-    "description": "Kullanıcı Bugün'de 'Bugün maç var' işaretler (karar 0036). İşaretli gün beslenmede yoğun gün sayılır (karbonhidrat-gun-tipi: maç varsa yoğun); günün durumu (gunun-durumu) değişmez. Koç o gün toparlanma dili yerine maça hazırlık dilini kullanır: ısınma, karbonhidrat ve sıvı, maç sonrası toparlanma; her biri bu kuralın kaynaklarına alıntılı. Süre, miktar veya zamanlama önerilmez; eşik yok.",
+    "description": "Maç günü: maç takviminde bugüne kayıtlı maç ya da Bugün'deki 'Bugün maç var' işareti (karar 0036, 0046). İşaretli gün beslenmede maç çevresi gün tipidir (karbonhidrat-gun-tipi: 6-8 g/kg); günün durumu (gunun-durumu) değişmez. Koç o gün toparlanma dili yerine maça hazırlık dilini kullanır: ısınma, karbonhidrat ve sıvı, maç sonrası toparlanma; her biri bu kuralın kaynaklarına alıntılı. Süre veya miktar önerilmez; maç saati biliniyorsa öğün ve sıvı zamanlaması mac-oncesi-ogun kuralından gelir.",
     "value": {
-      "day_type": "high"
+      "day_type": "match"
     },
-    "appliesTo": "kullanıcının maç işaretlediği gün",
-    "notes": "Isınma: performansa yararı meta-analizden (fradkin-2010), mekanizma ve bekleme süresinde sıcak kalma anlatı derlemesinden (mcgowan-2015); ikisi de basketbola özgü değil. Karbonhidrat: basketbol derlemesi (davis-2022) ve ISSN derlemesi (kerksick-2018); maç gününe aktarım karbonhidrat-gun-tipi kuralındaki varsayımla aynı. Sıvı: ACSM tutum bildirgesi (sawka-2007) ve NBA'de ter kaybı (osterberg-2009). Maç sonrası toparlanma: takım sporlarında sistematik derleme (doeven-2018); basketbol verisi sınırlı. Ayrıntılı maç günü ve seyahat protokolü Faz 4'te (ROADMAP).",
+    "appliesTo": "maç günü",
+    "notes": "Isınma: performansa yararı meta-analizden (fradkin-2010), mekanizma ve bekleme süresinde sıcak kalma anlatı derlemesinden (mcgowan-2015); ikisi de basketbola özgü değil. Karbonhidrat: basketbol derlemesi (davis-2022), ISSN derlemesi (kerksick-2018) ve maç günü çerçevesi UEFA uzman grubu bildirgesinden (collins-2021, futbol). Sıvı: ACSM tutum bildirgesi (sawka-2007) ve NBA'de ter kaybı (osterberg-2009). Maç sonrası toparlanma: takım sporlarında sistematik derleme (doeven-2018); basketbol verisi sınırlı.",
     "sources": [
       "fradkin-2010",
       "mcgowan-2015",
@@ -2593,6 +2937,108 @@ export const kbRules: readonly KbRule[] = [
       "kerksick-2018",
       "sawka-2007",
       "osterberg-2009",
+      "doeven-2018",
+      "collins-2021"
+    ]
+  },
+  {
+    "id": "mac-gunu-sekerleme",
+    "module": "mac",
+    "description": "Maç günü öğleden sonra kısa şekerleme isteğe bağlıdır: çalışmalarda yarar en çok 30-60 dakika süren ve 12:30-16:50 arasında yapılan şekerlemelerde, uyanıştan sonra performansa 1 saatten fazla kaldığında görüldü. Gece uykusunun yerine geçmez; maç saati biliniyorsa uyanışın maçtan en az 1 saat önce olması notta söylenir.",
+    "value": {
+      "minutes": [
+        30,
+        60
+      ],
+      "window": [
+        "12:30",
+        "16:50"
+      ],
+      "wake_before_hours": 1
+    },
+    "appliesTo": "maç günü (bilgi notu)",
+    "notes": "RCT meta-analizi (mesas-2023; 22 çalışma, 291 erkek, 164'ü sporcu), çalışmalar arası heterojenlik yüksek, testler laboratuvar ve saha testleri, basketbola özgü değil; akşam maçı öncesi şekerlemenin o geceki uykuya etkisi incelenmemiş. Seyahat konsensüsünün (janse-van-rensburg-2021) görsel tablosu 13:00-16:00 arası 30 dakikadan kısa şekerleme diyor; süre farkı açıklamada yazılır, meta-analizin aralığı kullanılır.",
+    "sources": [
+      "mesas-2023",
+      "janse-van-rensburg-2021"
+    ]
+  },
+  {
+    "id": "mac-oncesi-gun",
+    "module": "mac",
+    "description": "Maçtan önceki gün (MD-1): maç takviminde yarına kayıtlı maç varsa Bugün'de 'Yarın maç' notu. Beslenmede maç çevresi gün tipi (karbonhidrat-gun-tipi: en az 6-8 g/kg). Maçtan önceki gece uykuya dalmak zorlaşabilir; bu yaygın ve duruma bağlıdır, genel bir uyku sorunu sayılmaz. Günün durumu değişmez; eşik yok.",
+    "value": {
+      "day_offset": -1,
+      "day_type": "match"
+    },
+    "appliesTo": "maç takviminde ertesi güne maç kayıtlı gün",
+    "notes": "Karbonhidrat: UEFA uzman grubu bildirgesi (collins-2021), MD-1 antrenmanı genelde hafif ve karbonhidrat en az 6-8 g/kg; futboldan aktarım. Uyku: elit sporcularda anket (juliff-2015, n=283), önemli yarışma öncesi gecelerde kötü uyku sık (%64) ve en çok uykuya dalmakta zorlanma; öz bildirim, 'önemli yarışma' sıradan lig maçından farklı olabilir. Uyku önceliği genel olarak uzman konsensüsünden (walsh-2021).",
+    "sources": [
+      "collins-2021",
+      "juliff-2015",
+      "walsh-2021"
+    ]
+  },
+  {
+    "id": "mac-oncesi-ogun",
+    "module": "mac",
+    "description": "Maç saati biliniyorsa maç öncesi öğün ve sıvı zamanlaması: karbonhidratlı, kolay sindirilen ana öğün başlamadan 3-4 saat önce (1-3 g/kg karbonhidrat); başlamadan 2-4 saat önce 5-7 mL/kg sıvı. Gram ve mililitre sabah kilosuyla hesaplanır (karbonhidrat-gun-tipi ile aynı kilo). Rehber aralık; kişisel plan ve mide toleransı antrenmanda denenir.",
+    "value": {
+      "meal_hours_before": [
+        3,
+        4
+      ],
+      "meal_carbs_per_kg": [
+        1,
+        3
+      ],
+      "fluid_hours_before": [
+        2,
+        4
+      ],
+      "fluid_ml_per_kg": [
+        5,
+        7
+      ]
+    },
+    "appliesTo": "maç takviminde başlama saati girilmiş maç günü",
+    "notes": "Sayılar UEFA uzman grubu bildirgesinden (collins-2021, futbol; yazarların kabul edilmiş el yazması okundu). Takım sporu derlemesi (williams-2015) yaklaşık 3 saat önce kolay sindirilen yüksek karbonhidratlı öğünü yerleşik öneri sayıyor ve maçtan hemen önce büyük şeker yüklemesinin basketbol testinde ilk çeyrekte kan şekerini düşürdüğünü aktarıyor. Basketbola özgü tek öğün çalışması (gentle-2014, n=10) proteinli öğünde mide yakınmasının arttığını gösteriyor; öğünün antrenmanda denenmesi önerisi buradan. Basketbolda maç saatine göre zamanlamayı sınayan çalışma bulunamadı; akşam maçı için ayrı zamanlama verilmiyor.",
+    "sources": [
+      "collins-2021",
+      "williams-2015",
+      "gentle-2014"
+    ]
+  },
+  {
+    "id": "mac-sonrasi",
+    "module": "mac",
+    "description": "Maç gecesi ve maçtan sonraki gün (MD+1). Maç gecesi uyku kısalır: akşam başlayan maçlarda (18:00 ve sonrası) önceki geceye göre ortalama yaklaşık 80 dakika, gündüz maçlarında yaklaşık 20 dakika. Maçtan sonraki 4 saat saatte yaklaşık 1 g/kg karbonhidrat. MD+1'de beslenme maç çevresi gün tipi (karbonhidrat-gun-tipi: 6-8 g/kg); sıçrama ve sürat 24-48 saat düşük kalabilir, kas ağrısı en çok 24-48 saatte. Günün durumu değişmez; MD+1 notu düşük HRV ve kısa uykunun maçla ilgili olabileceğini söyler. Eşik değil, grup ortalaması.",
+    "value": {
+      "night_start": "18:00",
+      "sleep_shorter_min": {
+        "night": 80,
+        "day": 20
+      },
+      "post_carbs_per_kg_per_hour": 1,
+      "post_carbs_hours": 4,
+      "day_offset": 1,
+      "day_type": "match",
+      "performance_hours": [
+        24,
+        48
+      ],
+      "soreness_hours": [
+        24,
+        48
+      ]
+    },
+    "appliesTo": "maç günü akşamı ve maçtan sonraki gün",
+    "notes": "Uyku: elit sporcularda nesnel uyku ölçen gözlemsel çalışmaların meta-analizi (roberts-2019, 54 çalışma; yalnız özet okundu) ve yarı profesyonel erkek basketbolcularda maç gecesi geç uykuya dalış ve yüksek yüklü maç sonrası kısa uyku (fox-2020, n=7). Basketbol sistematik derlemesi (pernigoni-2024) sıçrama ve süratte 24-48 saat süren düşüş ve 24-48 saatte kas ağrısı buluyor, uykuda belirgin etki bulmuyor; uyku konusunda kaynaklar çelişiyor. Karbonhidrat: collins-2021 (futbol). Toparlanma yöntemleri: doeven-2018. Kişinin kendi maç gecesi uykusu yine kendi aralığıyla okunur; 80 dakika eşik değil.",
+    "sources": [
+      "roberts-2019",
+      "fox-2020",
+      "pernigoni-2024",
+      "collins-2021",
       "doeven-2018"
     ]
   },
@@ -2708,6 +3154,22 @@ export const kbRules: readonly KbRule[] = [
       "foster-2001",
       "haddad-2017",
       "burger-2024"
+    ]
+  },
+  {
+    "id": "seyahat-yorgunlugu",
+    "module": "seyahat",
+    "description": "Seyahat günü (saat farkı olsun olmasın): seyahat yorgunluğu yönden ve saat farkından bağımsızdır. Bugün'de yolculuk günü notu: sıvı ve yemeği önceden planla, fırsat oldukça kısa uyku, uyku borcunu yolculukta kapatmaya çalışma, kafein yatmadan en az 6 saat önce kesilir, alkol yok. Saat farkı olmayan uçuşlarda takım sporcularında performans göstergeleri belirgin düşmüyor, ama uyanıklık, ruh hali ve yorgunluk algısı kötüleşiyor. Eşik yok; günün durumu değişmez.",
+    "value": {
+      "caffeine_before_sleep_hours": 6,
+      "alcohol": false
+    },
+    "appliesTo": "kullanıcının seyahat kaydettiği gidiş ve dönüş günleri",
+    "notes": "Uzman konsensüsü (janse-van-rensburg-2021, Tablo 3 metin): seyahat yorgunluğu yönetimi; kafein ve alkol satırları buradan. Sistematik derleme (janse-van-rensburg-2020) seyahat yorgunluğu için hiç müdahale çalışması bulamadı, jet lag için sporcu kanıtı düşük kaliteli: öneriler uzman uzlaşısı olarak sunulur. Gece geç ya da sabah çok erken yola çıkış ve doğuya uçuşun uykuyu bozması elit sporcu meta-analizinden (roberts-2019, yalnız özet).",
+    "sources": [
+      "janse-van-rensburg-2021",
+      "janse-van-rensburg-2020",
+      "roberts-2019"
     ]
   },
   {

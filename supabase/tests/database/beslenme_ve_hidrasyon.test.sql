@@ -40,7 +40,7 @@ select lives_ok(
   'A gün tipini düzeltebilir'
 );
 select throws_ok(
-  $$ insert into public.day_types (local_date, day_type) values ('2026-01-06', 'match') $$,
+  $$ insert into public.day_types (local_date, day_type) values ('2026-01-06', 'game_day') $$,
   '23514', null,
   'bilinmeyen gün tipi reddedilir'
 );

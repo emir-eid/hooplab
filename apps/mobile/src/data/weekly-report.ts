@@ -1,10 +1,11 @@
 // Haftalık rapor verisi (karar 0040): haftanın ve kıyas pencerelerinin satırları tek seferde.
 // Erişimi RLS korur (karar 0015): sahibi yalnız kendi satırlarını okur. Demo modu bellekteki depoya gider (karar 0022).
 
-import type { DayType } from '@hooplab/engine';
+import { addIsoDays, type DayType } from '@hooplab/engine';
 
 import type { Result } from '@/data/daily-log';
 import type { EnergyDayRow } from '@/data/energy-view';
+import { toMatches, type MatchRow } from '@/data/match-view';
 import type { FluidRow, MealRow, WeightRow } from '@/data/nutrition-view';
 import type { HealthDailyRow, SleepRow } from '@/data/recovery-view';
 import {
@@ -52,7 +53,7 @@ export async function fetchWeeklyReport(weekStart: string, today: string): Promi
       supabase.from('pain_reports').select('local_date, region, side, pain').gte('local_date', r.week).lte('local_date', end),
       supabase.from('body_weights').select('local_date, weight_kg').gte('local_date', r.weights).lte('local_date', end),
       supabase.from('day_types').select('local_date, day_type').gte('local_date', r.week).lte('local_date', end),
-      supabase.from('match_days').select('local_date').gte('local_date', r.week).lte('local_date', end),
+      supabase.from('match_days').select('local_date, start_time, venue').gte('local_date', addIsoDays(r.week, -1)).lte('local_date', addIsoDays(r.end, 1)),
       supabase.from('meals').select('id, local_date, slot, items, created_at').gte('local_date', r.week).lte('local_date', end),
       supabase.from('fluid_intakes').select('id, local_date, volume_ml, created_at').gte('local_date', r.week).lte('local_date', end),
     ]);
@@ -71,7 +72,7 @@ export async function fetchWeeklyReport(weekStart: string, today: string): Promi
     pain: (pain.data ?? []) as WeeklyPainRow[],
     weights: (weights.data ?? []) as WeightRow[],
     dayTypes: (dayTypes.data ?? []) as { local_date: string; day_type: DayType }[],
-    matchDays: ((match.data ?? []) as { local_date: string }[]).map((m) => m.local_date),
+    matches: toMatches((match.data ?? []) as MatchRow[]),
     meals: (meals.data ?? []) as MealRow[],
     fluids: (fluids.data ?? []) as FluidRow[],
   };
