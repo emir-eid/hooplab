@@ -82,10 +82,10 @@ Her faz, bitiş kriteri karşılanınca `/kapat` ile kapanır: faz özeti `docs/
 - [x] Gece işaretleri: dinlenik nabız, SpO2, cilt sıcaklığında kaynaklı "doktora danış" notu (2026-10-13, [0039](decisions/0039-gece-isaretleri.md); 0038'de ertelenen fizyolojik kırmızı bayrak eşikleri)
 - [x] Günün durumunda nabız: NREM uyku nabzı, yalnız HRV ile birlikte (2026-10-14, [0041](decisions/0041-gunun-durumunda-nabiz.md))
 - [x] Okunabilirlik turu (2026-10-14, [0042](decisions/0042-okunabilirlik-kartlar-ve-kisaca.md)): kartlarda bugünkü değer ve kişisel ortalama ayrı sayılarla; her ölçümde sade dilde tek cümlelik açıklama, açıklama sayfalarında "Kısaca" bölümü; durumu belirleyen ölçümlerde hedef yön ve kişisel aralık (kullanıcı isteği 2026-10-14)
-- [ ] Yakılan kalori: günlük toplam, seans başına, haftalık raporda; "Tahmin" etiketli, kaynaklı (veri senkronda var; kullanıcı isteği 2026-10-14)
-- [ ] Bildirimler
+- [x] Yakılan kalori: günlük toplam, seans başına, haftalık raporda; "Tahmin" etiketli, kaynaklı (2026-10-14, [0043](decisions/0043-yakilan-enerji.md)); saatlik grafik (2026-10-15, [0044](decisions/0044-saatlik-yakilan-enerji.md))
+- [x] Bildirimler, yerel: sabah check-in ve Google izni hatırlatması (2026-10-15, [0045](decisions/0045-yerel-bildirimler.md)); sunucu bildirimleri (push) TestFlight'tan sonra, maç sabahı hatırlatması maç takvimiyle
 - [x] Haftalık rapor: takvim haftası, yalnız motorun sayıları, Trend'den açılır (2026-10-14, [0040](decisions/0040-haftalik-rapor.md)); koç yorumu ve PDF paylaşımı sonra
-- [ ] Maç günü ve seyahat protokolleri
+- [ ] Maç günü ve seyahat protokolleri (maç takvimi ve maç sabahı hatırlatması dahil, 0045)
 - [ ] Performans skill'i (Vercel React Native kuralları) ve performans turu
 - [ ] iOS uçtan uca test (EAS Workflows + Maestro veya EAS Simulator)
 - [ ] Portfolyo sayfası

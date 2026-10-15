@@ -12,6 +12,7 @@ import { GestureHandlerRootView } from 'react-native-gesture-handler';
 
 import { SessionProvider, useSession } from '@/auth/session';
 import { useDemoScenario } from '@/demo/demo-mode';
+import { useNotifications } from '@/notifications/use-notifications';
 import { AppearanceProvider, useAppearance } from '@/theme/appearance';
 import { fontMap } from '@/theme/fonts';
 
@@ -46,6 +47,9 @@ function RootNavigator() {
   useEffect(() => {
     if (loaded) SplashScreen.hide();
   }, [loaded]);
+
+  // Yerel bildirimler (karar 0045): plan yenileme ve bildirime dokununca açılan ekran.
+  useNotifications(session !== null && demo === null, loaded);
 
   if (!loaded) return null;
 

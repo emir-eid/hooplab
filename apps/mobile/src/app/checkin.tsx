@@ -14,6 +14,7 @@ import { ScaleQuestion } from '@/components/scale-question';
 import { Text } from '@/components/text';
 import { wellnessLabels } from '@/copy/labels';
 import { fetchCheckin, saveCheckin } from '@/data/daily-log';
+import { refreshNotifications } from '@/notifications/scheduler';
 import type { PainMap } from '@/data/pain-map';
 import { usePalette } from '@/theme/appearance';
 import { toLocalDate } from '@/utils/local-date';
@@ -55,6 +56,8 @@ export default function CheckinScreen() {
     setError(null);
     const result = await saveCheckin(localDate, { answers, pain });
     if (result.ok) {
+      // Bugünün check-in hatırlatması artık gerekmez (karar 0045).
+      void refreshNotifications();
       router.back();
     } else {
       setError(result.message);

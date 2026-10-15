@@ -9,8 +9,10 @@ import { PageHeader } from '@/components/page-header';
 import { Screen } from '@/components/screen';
 import { fetchSyncStatus } from '@/data/google-health';
 import { describeConnection } from '@/data/google-health-status';
+import { anyEnabled } from '@/data/notification-plan';
 import type { DemoScenario } from '@/demo/demo-data';
 import { startDemo, stopDemo, useDemoScenario } from '@/demo/demo-mode';
+import { loadNotificationPrefs } from '@/notifications/scheduler';
 import { useAppearance } from '@/theme/appearance';
 
 const themeLabels: Record<ThemePreference, string> = {
@@ -29,12 +31,14 @@ function MeScreen({ demo }: { demo: DemoScenario | null }) {
   const { preferences } = useAppearance();
   const { session, signOut } = useSession();
   const [healthSummary, setHealthSummary] = useState<string | undefined>(undefined);
+  const [notificationSummary, setNotificationSummary] = useState<string | undefined>(undefined);
 
   useFocusEffect(
     useCallback(() => {
       void fetchSyncStatus().then((result) => {
         setHealthSummary(result.ok ? describeConnection(result.value, new Date()).summary : undefined);
       });
+      void loadNotificationPrefs().then((p) => setNotificationSummary(anyEnabled(p) ? 'Açık' : 'Kapalı'));
     }, []),
   );
 
@@ -65,6 +69,11 @@ function MeScreen({ demo }: { demo: DemoScenario | null }) {
           label="Görünüm"
           value={themeLabels[preferences.theme]}
           onPress={() => router.push('/me/appearance')}
+        />
+        <ListRow
+          label="Bildirimler"
+          {...(notificationSummary ? { value: notificationSummary } : {})}
+          onPress={() => router.push('/me/notifications')}
         />
       </ListGroup>
       {demo ? (

@@ -13,6 +13,7 @@ import { PageHeader } from '@/components/page-header';
 import { PrimaryButton } from '@/components/primary-button';
 import { Screen } from '@/components/screen';
 import { disconnectGoogleHealth, fetchSyncStatus, startConnect, syncNow } from '@/data/google-health';
+import { refreshNotifications } from '@/notifications/scheduler';
 import {
   type ConnectionView,
   describeConnection,
@@ -70,6 +71,8 @@ export default function GoogleHealthScreen() {
       if (outcome) setMessage(outcome.message);
     }
     await refresh();
+    // Yeni bağlantıyla izin hatırlatmaları yeniden kurulur (karar 0045).
+    void refreshNotifications();
     setBusy(null);
   };
 
@@ -89,6 +92,7 @@ export default function GoogleHealthScreen() {
     const result = await disconnectGoogleHealth();
     setMessage(result.ok ? 'Bağlantı kesildi. Gelmiş veriler uygulamada kalır.' : result.message);
     await refresh();
+    void refreshNotifications();
     setBusy(null);
   };
 

@@ -3,7 +3,7 @@
 - **Faz:** 4 (Faz 1'in TestFlight maddesi Apple onayını bekliyor)
 - **Durum:** açık (/rep)
 - **Model / efor:** Opus 5.5, orta
-- **Commit'ler:** bu bloğun rep commit'i
+- **Commit'ler:** `8a9011b` (Blok 1), Blok 2'nin rep commit'i
 
 ## Blok 1 — Saatlik yakılan kalori grafiği (karar 0044) (12:26)
 
@@ -58,8 +58,43 @@ Kullanıcı isteği (STATE sıradaki iş 1): Bugün'deki "Yakılan enerji" kart�
 ### Öğrenilenler
 - LESSONS "Google Health / veri": `rollUp` sınırları ve biçimi, `ghealth` CLI token'ının da 7 günde düşmesi. "Önizleme ve maketler": yarı ölçekte tıklama ve sentetik jest.
 
+## Blok 2 — Yerel bildirimler (karar 0045) (13:34)
+
+### Amaç
+STATE'teki sıradaki iş (Faz 4: bildirimler). Kullanıcı Google yeniden bağlanma, sabah check-in ve maç günü hatırlatmasını seçti.
+
+### Yapılanlar
+- **Doğrulama:**
+  - Expo SDK 57 belgesine göre yerel bildirimler Expo Go'da çalışıyor; push ayrı derleme istiyor.
+  - `npx expo install expo-notifications` (57.0.23). API tip dosyalarından doğrulandı: `scheduleNotificationAsync` (DATE / TIME_INTERVAL), izin, `useLastNotificationResponse`, `setNotificationHandler`.
+- **Plan (saf):** `apps/mobile/src/data/notification-plan.ts` ve testi (6 test).
+  - Check-in: seçilen saatte, 7 gün ileriye, yapılmış gün atlanır.
+  - Google izni: bağlanmadan 7 gün sonra dolar; 24 ve 3 saat önce hatırlatma, durmuşsa ertesi 09:00.
+  - Metinde rakam yok (test). Tercih ayrıştırma ve saat adımı da testli.
+- **Telefon tarafı:**
+  - `notifications/scheduler.ts`: tercih AsyncStorage'da; izin; kendi bildirimlerini silip planı yeniden yazma; deneme bildirimi.
+  - `notifications/use-notifications.ts`: öne gelince yenileme, öndeyken afiş, dokununca ekran açma.
+  - Kök düzene bağlandı. Check-in kaydında ve Google bağlantısı kurulup kesilince plan yenileniyor.
+- **Ekran:** `app/(tabs)/me/notifications.tsx` (iki anahtar, saat −/+, deneme, reddedilmiş izinde Ayarlar). Ben'de "Bildirimler · Açık / Kapalı" satırı.
+- **Doğrulama:**
+  - Tip denetimi ve 170 uygulama testi temiz.
+  - Web önizlemesinde ekran 390×844'te (web'de anahtarlar pasif, not doğru, konsol temiz).
+  - Metro `--clear` ile yeniden başlatıldı. Kullanıcı iPhone'da izin verdi; deneme bildirimi geldi.
+- **Belgeler:** karar [0045](../decisions/0045-yerel-bildirimler.md), ROADMAP (kalori ve yerel bildirim tamam, maç sabahı hatırlatması maç takvimine), DATA-INVENTORY, CHANGELOG, LESSONS.
+
+### Kararlar
+- [0045 Yerel bildirimler](../decisions/0045-yerel-bildirimler.md): yalnız telefonda zamanlanan bildirim; metinde sağlık değeri yok; maç günü hatırlatması maç takvimiyle; yapılandırma eklentisi push gelince.
+
+### Sorunlar ve hatalar
+- Maç günü hatırlatması bu işte yapılamadı: "Bugün maç var" yalnız o gün konuyor, maç sabahı için tarihin önceden bilinmesi gerekiyor. Kullanıcıya söylendi, sıradaki işe taşındı.
+- Web önizlemesinde demoyu açan tıklama ilk denemede sayfa geçişine denk geldi; yeniden denendi.
+
+### Öğrenilenler
+- LESSONS "Expo / React Native": yerel bildirim Expo Go'da çalışır, push derleme ister; eklenti `aps-environment` ekler; paket sonrası Metro `--clear`.
+
 ## Açık kalanlar
-- Google Health bağlantısının sınırı 2026-10-19 11:55 (uygulamadan yeniden bağlan).
+- Google Health bağlantısının sınırı 2026-10-19 11:55 (uygulamadan yeniden bağlan; bildirim 18 Ekim 11:55'te hatırlatacak).
+- Bildirimlerin gerçek zamanlamada (sabah check-in, izin hatırlatması) geldiği henüz görülmedi; yalnız deneme bildirimi görüldü.
 
 ## Sıradaki adım
-- Faz 4'ün sonraki işi (bildirimler, maç günü ve seyahat protokolleri; ROADMAP).
+- Maç günü ve seyahat protokolleri (maç takvimi ve maç sabahı hatırlatması dahil).

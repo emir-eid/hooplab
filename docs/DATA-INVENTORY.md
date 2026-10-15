@@ -21,6 +21,7 @@ Hangi veri nerede durur, hangi servise ne gider, ne kadar saklanır, nasıl sili
 | Google OAuth Web istemcisi sırrı, yenileme token'ı, OAuth durumu (tek kullanımlık, 15 dk) | Kullanıcının Google Cloud projesi; izin ekranı | Supabase secrets; `google_health_tokens`, `google_health_oauth_states` (yalnız `service_role`) | Yalnız Edge Functions; uygulama ve kullanıcı oturumu okuyamaz |
 | Kişisel denylist | Sahibi | `private/guard-denylist.txt` + Drive yedeği + GitHub Actions secret | Gizlilik bekçisi (değerleri hiçbir yere yazdırmaz) |
 | Görünüm tercihi: tema (Sistem / Açık / Koyu), haleyi canlandır | Uygulama | Cihazda AsyncStorage (`hooplab.appearance.v1`); web önizlemesinde tarayıcının localStorage'ı | Yalnız uygulama; hiçbir servise gitmez |
+| Bildirim tercihi (check-in hatırlatması ve saati, Google izni hatırlatması) ve telefonda zamanlanmış yerel bildirimler (2026-10-15'ten beri, [0045](decisions/0045-yerel-bildirimler.md)) | Uygulama | Tercih cihazda AsyncStorage (`hooplab.notifications.v1`); zamanlanmış bildirimler iOS'un yerel bildirim deposunda. Metinlerde sağlık değeri yok | Yalnız uygulama ve iOS; sunucuya, Apple'ın push servisine ya da Expo'ya gitmez (push token alınmaz) |
 | Kod, belgeler, sentetik demo verisi | Geliştirme | GitHub (ileride public) | Herkes |
 | Demo modundaki sentetik sporcu ve demoda girilen kayıtlar | Uygulama içinde üretilir (`apps/mobile/src/demo`, [0022](decisions/0022-demo-modu.md)) | Yalnız cihazın belleği; hiçbir servise gitmez, uygulama kapanınca silinir | Cihazı kullanan |
 
