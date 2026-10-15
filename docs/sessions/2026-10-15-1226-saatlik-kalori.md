@@ -1,9 +1,9 @@
 # 2026-10-15 12:26 — Saatlik yakılan kalori grafiği
 
 - **Faz:** 4 (Faz 1'in TestFlight maddesi Apple onayını bekliyor)
-- **Durum:** açık (/rep)
+- **Durum:** kapandı (/kapat, 2026-10-15 13:51)
 - **Model / efor:** Opus 5.5, orta
-- **Commit'ler:** `8a9011b` (Blok 1), Blok 2'nin rep commit'i
+- **Commit'ler:** `8a9011b` (Blok 1), `e3e2f5e` (Blok 2), bu raporun kapanış commit'i
 
 ## Blok 1 — Saatlik yakılan kalori grafiği (karar 0044) (12:26)
 
