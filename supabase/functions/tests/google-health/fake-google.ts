@@ -15,6 +15,8 @@ export interface FakeGoogleOptions {
   failTypes?: string[];
   // Token değişiminde verilecek kapsam (eksik kapsam senaryosu).
   grantedScope?: string;
+  // rollUp bu andan sonraki pencereleri döndürmez (gerçek API gelecek saati vermez). Varsayılan: sınır yok.
+  now?: Date;
 }
 
 export interface FakeCall {
@@ -25,6 +27,7 @@ export interface FakeCall {
   to?: string;
   family?: string;
   pageToken?: string;
+  windowSize?: string;
 }
 
 const MAX_ROLLUP_DAYS: Record<string, number> = { 'heart-rate': 14, 'total-calories': 14 };
@@ -95,6 +98,12 @@ function rollupValue(type: string, iso: string): Record<string, unknown> {
     default:
       return {};
   }
+}
+
+// Saatlik sentetik yakılan enerji: gece düşük, gündüz yüksek (gerçek bir kişiye ait değil).
+export function fakeHourlyKcal(hourStartMs: number): number {
+  const h = new Date(hourStartMs).getUTCHours();
+  return 70 + (h >= 6 && h <= 18 ? 40 + (h % 5) * 15 : 0) + 0.25;
 }
 
 function sleepPoint(iso: string): Record<string, unknown> {
@@ -203,12 +212,56 @@ export function createFakeGoogle(options: FakeGoogleOptions = {}) {
       return json({ timeZone: options.timeZone ?? 'Europe/Istanbul' });
     }
 
-    const match = /\/users\/me\/dataTypes\/([a-z0-9-]+)\/dataPoints(:dailyRollUp)?$/.exec(path);
+    const match = /\/users\/me\/dataTypes\/([a-z0-9-]+)\/dataPoints(:dailyRollUp|:rollUp)?$/.exec(path);
     if (!match) return json({ error: { code: 404, status: 'NOT_FOUND' } }, 404);
     const dataType = match[1] as string;
     if (options.failTypes?.includes(dataType)) {
       calls.push({ method: request.method, path, dataType });
       return json({ error: { code: 403, status: 'PERMISSION_DENIED' } }, 403);
+    }
+
+    if (match[2] === ':rollUp') {
+      const body = (await request.json()) as {
+        range?: { startTime?: string; endTime?: string };
+        windowSize?: string;
+        dataSourceFamily?: string;
+        pageSize?: number;
+      };
+      const start = Date.parse(body.range?.startTime ?? '');
+      const end = Date.parse(body.range?.endTime ?? '');
+      calls.push({
+        method: 'POST',
+        path,
+        dataType,
+        ...(body.range?.startTime ? { from: body.range.startTime } : {}),
+        ...(body.range?.endTime ? { to: body.range.endTime } : {}),
+        ...(body.windowSize ? { windowSize: body.windowSize } : {}),
+        ...(body.dataSourceFamily ? { family: body.dataSourceFamily } : {}),
+      });
+      // Gerçek API (2026-10-15 ölçümü): 14 günü aşan aralık ve kısa aile adı INVALID_ARGUMENT; pageSize kabul.
+      const windowS = /^(\d+)s$/.exec(body.windowSize ?? '')?.[1];
+      if (!windowS || Number.isNaN(start) || Number.isNaN(end) || end <= start) {
+        return json({ error: { code: 400, status: 'INVALID_ARGUMENT' } }, 400);
+      }
+      if (body.dataSourceFamily !== undefined && !body.dataSourceFamily.startsWith('users/me/dataSourceFamilies/')) {
+        return json({ error: { code: 400, status: 'INVALID_ARGUMENT' } }, 400);
+      }
+      if ((end - start) / 86_400_000 > (MAX_ROLLUP_DAYS[dataType] ?? 90)) {
+        return json({ error: { code: 400, status: 'INVALID_ARGUMENT' } }, 400);
+      }
+      if (dataType !== 'total-calories') return json({ error: { code: 400, status: 'INVALID_ARGUMENT' } }, 400);
+      const step = Number(windowS) * 1000;
+      const limit = options.now ? Math.min(end, options.now.getTime()) : end;
+      const points = [];
+      for (let t = start; t < limit; t += step) {
+        points.push({
+          startTime: new Date(t).toISOString(),
+          endTime: new Date(Math.min(t + step, end)).toISOString(),
+          totalCalories: { kcalSum: fakeHourlyKcal(t) },
+        });
+      }
+      // Gerçek API gibi en yeniden eskiye.
+      return json({ rollupDataPoints: points.reverse() });
     }
 
     if (match[2]) {

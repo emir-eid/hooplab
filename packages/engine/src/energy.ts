@@ -10,6 +10,8 @@ import { elapsedDates, weekEndOf, weekLength } from './weekly.ts';
 export const energyRule = {
   /** Kartta "ortalama" penceresi: bugünden önceki tam günler. */
   averageDays: 7,
+  /** Saatlik grafikte bugünden geriye gidilebilen gün (karar 0044); senkron bugün + bu kadar günü çeker. */
+  hourlyDaysBack: 7,
   /** Gösterim adımı (kcal): tahminin hatası tek kaloriyi anlamsız kılar. */
   roundKcal: 10,
   /** Laboratuvar çalışmalarında tipik ortalama mutlak yüzde hata (açıklama metni; eşik değil). */

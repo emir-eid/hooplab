@@ -146,6 +146,7 @@ function storeFor(db: Db, userId: string): SyncStore {
     upsertDaily: (rows) => upsert('health_daily', 'user_id,local_date', rows),
     upsertSleep: (rows) => upsert('sleep_sessions', 'user_id,source_id', rows),
     upsertExercise: (rows) => upsert('exercise_sessions', 'user_id,source_id', rows),
+    upsertHourlyEnergy: (rows) => upsert('health_hourly_energy', 'user_id,hour_start', rows),
   };
 }
 
@@ -206,7 +207,7 @@ export async function syncUser(
   const window = planWindow((status?.synced_through as string | null) ?? null, today);
   let result: SyncResult;
   try {
-    result = await syncWindow(client, storeFor(db, userId), window);
+    result = await syncWindow(client, storeFor(db, userId), window, timeZone);
   } catch (err) {
     const code = err instanceof GoogleApiError ? err.code : 'internal';
     await updateStatus(db, userId, { last_error: code.slice(0, 200), time_zone: timeZone });

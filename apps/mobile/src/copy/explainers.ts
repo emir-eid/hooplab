@@ -383,7 +383,7 @@ export const explainers = {
     title: 'Yakılan enerji',
     basis: 'estimate',
     hint: 'Bilekliğin yakılan kalori tahmini; dinlenirken yakılan da dahil.',
-    what: `Bilekliğin bir günde yaktığını tahmin ettiği enerji (kcal): vücudun dinlenirken harcadığı ve hareketle harcanan birlikte. Kartta büyük sayı bugünün son senkrona kadarki değeri; gün bitmeden eksiktir. Altında dünün tamamı ve bugünden önceki ${energyRule.averageDays} günün ortalaması. Seans satırlarındaki değer saatin o oturum için tahmini.`,
+    what: `Bilekliğin bir günde yaktığını tahmin ettiği enerji (kcal): vücudun dinlenirken harcadığı ve hareketle harcanan birlikte. Kartta büyük sayı bugünün son senkrona kadarki değeri; gün bitmeden eksiktir. Altında dünün tamamı ve bugünden önceki ${energyRule.averageDays} günün ortalaması. Kartın grafiği günü saat saat gösterir: bir saate dokununca o saatte yakılan görünür, oklarla geriye ${energyRule.hourlyDaysBack} gün gidilir; bugünün son çubuğu süren saattir. Seans satırlarındaki değer saatin o oturum için tahmini.`,
     read: [
       'Ölçüm değil tahmin: saat kaloriyi hareketten ve nabızdan hesaplar.',
       `Laboratuvar çalışmalarında bilekliklerin kalori tahmini ölçülen değerden ortalama yaklaşık %${energyRule.typicalErrorPct[0]}-${energyRule.typicalErrorPct[1]} sapıyor; bazı kişilerde fark çok daha büyük.`,
@@ -394,7 +394,7 @@ export const explainers = {
     reference:
       'Hata aralığı, Fitbit saatlerinin ve Fitbit algoritmasını kullanan bir Google saatinin solunum gazı ölçümüyle (dolaylı kalorimetri) karşılaştırıldığı laboratuvar çalışmalarından. Ortalamada düşük tahmin eğilimi bir Fitbit meta-analizinden ve giyilebilir cihaz derlemelerini toplayan bir şemsiye derlemeden; dur-kalklı harekette düşük tahmin bir Fitbit sistematik derlemesinden. Bir uzman bildirgesine göre günlük toplamın gerçek hayattaki doğruluğu en az çalışılmış alan.',
     limits:
-      'Fitbit Air için yayımlanmış bir doğruluk çalışması yok; basketbolda bileklikle yapılmış bir çalışma da yok. Bugünün değeri son senkrona kadardır, gün bitince tamamlanır.',
+      'Fitbit Air için yayımlanmış bir doğruluk çalışması yok; basketbolda bileklikle yapılmış bir çalışma da yok. Saatlik değerin ayrı bir doğruluk çalışması da yok; günün tahminiyle aynı hatayı taşır. Bugünün değeri son senkrona kadardır, gün bitince tamamlanır.',
     rules: ['enerji-harcamasi-tahmin', 'enerji-gosterim'],
     sources: ['lambe-2026', 'reddy-2018', 'shcherbina-2017', 'chevance-2022', 'feehan-2018', 'doherty-2024', 'argent-2022'],
   },

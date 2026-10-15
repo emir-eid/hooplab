@@ -140,6 +140,19 @@ export interface DailyRollUpDataPointsResponse {
   nextPageToken?: string;
 }
 
+// rollUp yanıtındaki pencere (fiziksel zaman aralığı): tipine göre tek bir değer alanı dolu.
+// Ölçüm 2026-10-15: pencereler en yeniden eskiye, saat başına oturur; süren saat de gelir, gelecek gelmez.
+export interface RollupDataPoint {
+  startTime?: string;
+  endTime?: string;
+  totalCalories?: { kcalSum?: number };
+}
+
+export interface RollUpDataPointsResponse {
+  rollupDataPoints?: RollupDataPoint[];
+  nextPageToken?: string;
+}
+
 export interface Settings {
   timeZone?: string;
 }

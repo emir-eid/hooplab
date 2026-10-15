@@ -9,7 +9,7 @@ import type { CoachReply } from '@/data/coach';
 import type { AskEntry, AskReply } from '@/data/coach-ask';
 import type { CoachSnapshot } from '@/data/coach-snapshot';
 import type { Checkin, ExerciseToTag, NewTrainingSession, Result, TrainingSession } from '@/data/daily-log';
-import { buildEnergyView, energyFrom, type EnergyView } from '@/data/energy-view';
+import { buildEnergyView, energyFrom, energyHoursFrom, type EnergyView } from '@/data/energy-view';
 import { linkCandidates, pendingExercises, type ExerciseSession } from '@/data/exercise-tagging';
 import type { SyncStatusRow } from '@/data/google-health-status';
 import { buildPainHistory, type PainHistory } from '@/data/pain-history';
@@ -102,7 +102,14 @@ export class DemoStore {
 
   async fetchEnergy(today: string): Promise<Result<EnergyView>> {
     const from = energyFrom(today);
-    return ok(buildEnergyView(this.db.energy.filter((r) => r.local_date >= from && r.local_date <= today), today));
+    const hoursFrom = energyHoursFrom(today);
+    return ok(
+      buildEnergyView(
+        this.db.energy.filter((r) => r.local_date >= from && r.local_date <= today),
+        today,
+        this.db.energyHours.filter((r) => r.local_date >= hoursFrom && r.local_date <= today),
+      ),
+    );
   }
 
   async fetchPendingExercises(from: string, to: string): Promise<Result<ExerciseSession[]>> {

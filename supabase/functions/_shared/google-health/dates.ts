@@ -49,6 +49,54 @@ export function todayInTimeZone(timeZone: string | null | undefined, now: Date):
   }
 }
 
+// Verilen anın verilen IANA dilimindeki yerel tarihi ve saati (0-23). Geçersiz dilimde UTC.
+export function localDateHour(instant: Date, timeZone: string | null | undefined): { date: string; hour: number } {
+  let parts: Intl.DateTimeFormatPart[];
+  try {
+    parts = new Intl.DateTimeFormat('en-CA', {
+      timeZone: timeZone || 'UTC',
+      year: 'numeric',
+      month: '2-digit',
+      day: '2-digit',
+      hour: '2-digit',
+      hourCycle: 'h23',
+    }).formatToParts(instant);
+  } catch {
+    return { date: instant.toISOString().slice(0, 10), hour: instant.getUTCHours() };
+  }
+  const get = (type: string) => parts.find((p) => p.type === type)?.value ?? '';
+  return { date: `${get('year')}-${get('month')}-${get('day')}`, hour: Number(get('hour')) % 24 };
+}
+
+// Dilimin verilen andaki UTC farkı (ms): yerel duvar saati − UTC.
+function zoneOffsetMs(t: number, timeZone: string): number {
+  const parts = new Intl.DateTimeFormat('en-CA', {
+    timeZone,
+    year: 'numeric',
+    month: '2-digit',
+    day: '2-digit',
+    hour: '2-digit',
+    minute: '2-digit',
+    second: '2-digit',
+    hourCycle: 'h23',
+  }).formatToParts(new Date(t));
+  const get = (type: string) => Number(parts.find((p) => p.type === type)?.value ?? 0);
+  const wall = Date.UTC(get('year'), get('month') - 1, get('day'), get('hour') % 24, get('minute'), get('second'));
+  return wall - Math.floor(t / 1000) * 1000;
+}
+
+// Yerel takvim gününün başladığı an (ISO, UTC). Yaz saati geçişinde fark yeniden hesaplanır. Geçersiz dilimde UTC.
+export function zonedMidnightUtc(isoDate: string, timeZone: string | null | undefined): string {
+  const guess = Date.parse(`${isoDate}T00:00:00Z`);
+  try {
+    const first = guess - zoneOffsetMs(guess, timeZone || 'UTC');
+    const t = guess - zoneOffsetMs(first, timeZone || 'UTC');
+    return new Date(t).toISOString();
+  } catch {
+    return new Date(guess).toISOString();
+  }
+}
+
 // [from, to) aralığını en fazla maxDays günlük parçalara böler (API'nin 14 / 90 gün sınırı).
 export function chunkRange(fromIso: string, toIso: string, maxDays: number): Array<[string, string]> {
   if (maxDays < 1) throw new Error('maxDays en az 1 olmalı');

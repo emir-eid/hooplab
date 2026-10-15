@@ -302,6 +302,7 @@ test('yakılan enerji kuralla aynı (karar 0043)', () => {
   const shown = rule('enerji.json', 'enerji-gosterim').value;
   assert.equal(shown.round_kcal, energyRule.roundKcal);
   assert.equal(shown.average_days, energyRule.averageDays);
+  assert.equal(shown.hourly_days_back, energyRule.hourlyDaysBack);
   const est = rule('enerji.json', 'enerji-harcamasi-tahmin').value;
   assert.deepEqual(est.typical_error_pct, [...energyRule.typicalErrorPct]);
   assert.equal(est.in_day_status, false);

@@ -7,9 +7,28 @@ import {
   refreshAccessToken,
   WEARABLES_FAMILY,
 } from '../../_shared/google-health/client.ts';
-import { parseDailyRollupPoint, parseExercise, parseSleep, type DailyRow, type ExerciseRow, type SleepRow } from '../../_shared/google-health/parse.ts';
-import { BACKFILL_DAYS, planWindow, statusAfterSync, SYNCED_TYPES, type SyncStore, syncWindow } from '../../_shared/google-health/sync.ts';
-import { createFakeGoogle, EXPIRED_REFRESH_TOKEN, FAKE_ACCESS_TOKEN } from './fake-google.ts';
+import { localDateHour, zonedMidnightUtc } from '../../_shared/google-health/dates.ts';
+import {
+  parseDailyRollupPoint,
+  parseExercise,
+  parseHourlyEnergy,
+  parseSleep,
+  type DailyRow,
+  type ExerciseRow,
+  type HourlyEnergyRow,
+  type SleepRow,
+} from '../../_shared/google-health/parse.ts';
+import {
+  BACKFILL_DAYS,
+  HOURLY_ENERGY_DAYS,
+  HOURLY_ENERGY_TYPE,
+  planWindow,
+  statusAfterSync,
+  SYNCED_TYPES,
+  type SyncStore,
+  syncWindow,
+} from '../../_shared/google-health/sync.ts';
+import { createFakeGoogle, EXPIRED_REFRESH_TOKEN, FAKE_ACCESS_TOKEN, fakeHourlyKcal } from './fake-google.ts';
 
 const API = 'https://saglik.test/v4';
 const noSleep = async () => {};
@@ -18,6 +37,7 @@ function memoryStore() {
   const daily = new Map<string, DailyRow>();
   const sleep: SleepRow[] = [];
   const exercise: ExerciseRow[] = [];
+  const hourly = new Map<string, HourlyEnergyRow>();
   const store: SyncStore = {
     async upsertDaily(rows) {
       const keys = JSON.stringify(Object.keys(rows[0] ?? {}).sort());
@@ -31,8 +51,11 @@ function memoryStore() {
     async upsertExercise(rows) {
       exercise.push(...rows);
     },
+    async upsertHourlyEnergy(rows) {
+      for (const r of rows) hourly.set(r.hour_start, r);
+    },
   };
-  return { store, daily, sleep, exercise };
+  return { store, daily, sleep, exercise, hourly };
 }
 
 test('pencere: ilk senkron 90 gün geriye, sonrakiler son 7 günü yeniden çeker', () => {
@@ -184,7 +207,7 @@ test('değer alanı olmayan gün atlanır: veri yok sıfır değildir', () => {
 test('kısmi hatada senkron tarihi ilerlemez; sonraki senkron aynı pencereyi yeniden dener', () => {
   const window = planWindow(null, '2026-10-04');
   const partial = statusAfterSync(
-    { window, counts: { daily: 17, sleep: 15, exercise: 3 }, errors: [{ type: 'steps', code: 'INVALID_ARGUMENT' }] },
+    { window, counts: { daily: 17, sleep: 15, exercise: 3, hourly: 192 }, errors: [{ type: 'steps', code: 'INVALID_ARGUMENT' }] },
     '2026-10-04',
     null,
   );
@@ -194,15 +217,100 @@ test('kısmi hatada senkron tarihi ilerlemez; sonraki senkron aynı pencereyi ye
   // İlerlemediği için sonraki pencere yine 90 gün.
   assert.deepEqual(planWindow(null, '2026-10-04'), window);
 
-  const ok = statusAfterSync({ window, counts: { daily: 90, sleep: 90, exercise: 40 }, errors: [] }, '2026-10-04', null);
+  const ok = statusAfterSync({ window, counts: { daily: 90, sleep: 90, exercise: 40, hourly: 192 }, errors: [] }, '2026-10-04', null);
   assert.deepEqual(ok.advance, { synced_through: '2026-10-04', synced_from: '2026-07-07' });
   assert.equal(ok.lastError, null);
 
   const allFailed = statusAfterSync(
-    { window, counts: { daily: 0, sleep: 0, exercise: 0 }, errors: SYNCED_TYPES.map((type) => ({ type, code: 'UNAVAILABLE' })) },
+    { window, counts: { daily: 0, sleep: 0, exercise: 0, hourly: 0 }, errors: SYNCED_TYPES.map((type) => ({ type, code: 'UNAVAILABLE' })) },
     '2026-10-04',
     null,
   );
   assert.equal(allFailed.outcome, 'error');
   assert.ok((allFailed.lastError ?? '').length <= 200);
+});
+
+test('saat dilimi: yerel gece yarısı UTC anına, an yerel gün ve saate çevrilir', () => {
+  assert.equal(zonedMidnightUtc('2026-10-15', 'Europe/Istanbul'), '2026-10-14T21:00:00.000Z');
+  assert.equal(zonedMidnightUtc('2026-10-15', 'UTC'), '2026-10-15T00:00:00.000Z');
+  // Yaz saati geçiş günü (Berlin, 29 Mart): gece yarısı hala UTC+1, ertesi gün UTC+2.
+  assert.equal(zonedMidnightUtc('2026-03-29', 'Europe/Berlin'), '2026-03-28T23:00:00.000Z');
+  assert.equal(zonedMidnightUtc('2026-03-30', 'Europe/Berlin'), '2026-03-29T22:00:00.000Z');
+  // Geçersiz dilim UTC'ye düşer.
+  assert.equal(zonedMidnightUtc('2026-10-15', 'Yok/Boyle'), '2026-10-15T00:00:00.000Z');
+  assert.deepEqual(localDateHour(new Date('2026-10-14T21:30:00Z'), 'Europe/Istanbul'), { date: '2026-10-15', hour: 0 });
+  assert.deepEqual(localDateHour(new Date('2026-10-14T20:59:59Z'), 'Europe/Istanbul'), { date: '2026-10-14', hour: 23 });
+  assert.deepEqual(localDateHour(new Date('2026-10-14T21:30:00Z'), null), { date: '2026-10-14', hour: 21 });
+});
+
+test('saatlik enerji: tek rollUp isteği, son 8 gün, yerel gece yarısından, bileklik ailesi', async () => {
+  const google = createFakeGoogle();
+  const client = new GoogleHealthClient(google.fetch, FAKE_ACCESS_TOKEN, API, noSleep);
+  const { store, hourly } = memoryStore();
+  // İlk senkron 90 gün; saatlik yalnız son 8 gün.
+  const result = await syncWindow(client, store, planWindow(null, '2026-10-15'), 'Europe/Istanbul');
+
+  assert.deepEqual(result.errors, []);
+  const calls = google.calls.filter((c) => c.path.endsWith(':rollUp'));
+  assert.equal(calls.length, 1);
+  assert.equal(calls[0]?.dataType, 'total-calories');
+  assert.equal(calls[0]?.windowSize, '3600s');
+  assert.equal(calls[0]?.family, WEARABLES_FAMILY);
+  assert.equal(calls[0]?.from, '2026-10-07T21:00:00.000Z');
+  assert.equal(calls[0]?.to, '2026-10-15T21:00:00.000Z');
+
+  assert.equal(HOURLY_ENERGY_DAYS, 8);
+  assert.equal(hourly.size, HOURLY_ENERGY_DAYS * 24);
+  assert.equal(result.counts.hourly, hourly.size);
+  assert.ok((SYNCED_TYPES as readonly string[]).includes(HOURLY_ENERGY_TYPE));
+  assert.deepEqual(hourly.get('2026-10-07T21:00:00.000Z'), {
+    hour_start: '2026-10-07T21:00:00.000Z',
+    local_date: '2026-10-08',
+    local_hour: 0,
+    kcal: Math.round(fakeHourlyKcal(Date.parse('2026-10-07T21:00:00Z')) * 10) / 10,
+  });
+  const days = new Set([...hourly.values()].map((r) => r.local_date));
+  assert.equal(days.size, 8);
+  assert.ok(days.has('2026-10-15') && !days.has('2026-10-07'));
+});
+
+test('saatlik enerji: süren gün geçmiş ve süren saatlerle gelir; kısa pencere kendi günleriyle sınırlı', async () => {
+  const google = createFakeGoogle({ now: new Date('2026-10-15T07:30:00Z') });
+  const client = new GoogleHealthClient(google.fetch, FAKE_ACCESS_TOKEN, API, noSleep);
+  const { store, hourly } = memoryStore();
+  await syncWindow(client, store, { from: '2026-10-14', to: '2026-10-16' }, 'Europe/Istanbul');
+  const rows = [...hourly.values()];
+  const today = rows.filter((r) => r.local_date === '2026-10-15').map((r) => r.local_hour).sort((a, b) => a - b);
+  // 07:30Z = yerel 10:30: 00..10 saatleri, süren saat dahil.
+  assert.deepEqual(today, [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10]);
+  assert.equal(rows.filter((r) => r.local_date === '2026-10-14').length, 24);
+  assert.equal(rows.length, 35);
+});
+
+test('saatlik enerji: değeri olmayan pencere atlanır, sıfır korunur', () => {
+  assert.equal(parseHourlyEnergy({ startTime: '2026-10-14T21:00:00Z' }, 'Europe/Istanbul'), null);
+  assert.equal(parseHourlyEnergy({ totalCalories: { kcalSum: 80 } }, 'Europe/Istanbul'), null);
+  assert.equal(parseHourlyEnergy({ startTime: 'bozuk', totalCalories: { kcalSum: 80 } }, 'UTC'), null);
+  assert.deepEqual(parseHourlyEnergy({ startTime: '2026-10-14T21:00:00Z', totalCalories: { kcalSum: 0 } }, 'Europe/Istanbul'), {
+    hour_start: '2026-10-14T21:00:00.000Z',
+    local_date: '2026-10-15',
+    local_hour: 0,
+    kcal: 0,
+  });
+});
+
+test('sahte Google rollUp: 14 günü aşan aralık ve kısa aile adı reddedilir (gerçek API ölçümü)', async () => {
+  const google = createFakeGoogle();
+  const client = new GoogleHealthClient(google.fetch, FAKE_ACCESS_TOKEN, API, noSleep);
+  const ok = await client.rollUp('total-calories', '2026-09-30T21:00:00Z', '2026-10-14T21:00:00Z', 3600, WEARABLES_FAMILY);
+  assert.equal(ok.length, 336);
+  assert.ok(Date.parse(ok[0]?.startTime ?? '') > Date.parse(ok[1]?.startTime ?? ''), 'en yeniden eskiye');
+  await assert.rejects(
+    client.rollUp('total-calories', '2026-09-29T21:00:00Z', '2026-10-14T21:00:00Z', 3600, WEARABLES_FAMILY),
+    /INVALID_ARGUMENT/,
+  );
+  await assert.rejects(
+    client.rollUp('total-calories', '2026-10-13T21:00:00Z', '2026-10-14T21:00:00Z', 3600, 'google-wearables'),
+    /INVALID_ARGUMENT/,
+  );
 });

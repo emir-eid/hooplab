@@ -2350,14 +2350,15 @@ export const kbRules: readonly KbRule[] = [
   {
     "id": "enerji-gosterim",
     "module": "enerji",
-    "description": "Yakılan enerji en yakın 10 kcal'e yuvarlanarak gösterilir. Kartta büyük sayı bugünün son senkrona kadarki değeri (gün bitmeden eksik); altında dünün tamamı ve bugünden önceki 7 günün ortalaması.",
+    "description": "Yakılan enerji en yakın 10 kcal'e yuvarlanarak gösterilir. Kartta büyük sayı bugünün son senkrona kadarki değeri (gün bitmeden eksik); altında dünün tamamı ve bugünden önceki 7 günün ortalaması. Kartın saatlik grafiği bugünü ve geriye 7 günü saat saat gösterir (karar 0044); saatlik değer de tahmindir ve aynı adımla yuvarlanır.",
     "value": {
       "round_kcal": 10,
       "average_days": 7,
+      "hourly_days_back": 7,
       "unit": "kcal"
     },
-    "appliesTo": "Bugün'deki Yakılan enerji kartı, seans satırları, haftalık rapor",
-    "notes": "Tek tek ölçümlerin sapması dakikada birkaç kcal'e yayıldığı için (chevance-2022) birler basamağı anlamsız; 10 kcal bir gösterim tercihi, bilimsel eşik değil. 7 günlük pencere uygulamanın öbür ortalamalarıyla aynı (toparlanma-bant); kaynağa dayanmaz, eşik değildir.",
+    "appliesTo": "Bugün'deki Yakılan enerji kartı ve saatlik grafiği, seans satırları, haftalık rapor",
+    "notes": "Tek tek ölçümlerin sapması dakikada birkaç kcal'e yayıldığı için (chevance-2022) birler basamağı anlamsız; 10 kcal bir gösterim tercihi, bilimsel eşik değil. 7 günlük pencere uygulamanın öbür ortalamalarıyla aynı (toparlanma-bant); kaynağa dayanmaz, eşik değildir. Saatlik grafikte geriye 7 gün de aynı pencere; senkron bu yüzden bugün ve önceki 7 günün saatlerini çeker. Saatlik değerin ayrı bir doğruluk kaynağı yok: kaynaklar dakika ve etkinlik düzeyinde ölçtü (chevance-2022), saatlik toplam bu hatayı taşır.",
     "sources": [
       "chevance-2022"
     ]

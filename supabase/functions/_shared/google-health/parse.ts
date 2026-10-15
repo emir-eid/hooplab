@@ -6,9 +6,10 @@ import type {
   DataPoint,
   Exercise,
   Int64,
+  RollupDataPoint,
   Sleep,
 } from './api-types.ts';
-import { civilToIso, durationSeconds } from './dates.ts';
+import { civilToIso, durationSeconds, localDateHour } from './dates.ts';
 
 export type DailyRow = { local_date: string } & Record<string, number | string | null>;
 
@@ -260,4 +261,22 @@ export function parseExercise(point: DataPoint): ExerciseRow | null {
     hr_zone_peak_s: zoneSeconds(e, 'peakTime'),
     source_updated_at: e.updateTime ?? null,
   };
+}
+
+// Saatlik yakılan enerji (karar 0044): rollUp penceresi → satır. Yerel gün ve saat, sporcunun Google hesabındaki
+// saat dilimine göre senkronda yazılır (uygulama dilim bilmeden günü sorgular). Değer yoksa satır yok.
+export interface HourlyEnergyRow {
+  hour_start: string;
+  local_date: string;
+  local_hour: number;
+  kcal: number;
+}
+
+export function parseHourlyEnergy(point: RollupDataPoint, timeZone: string | null): HourlyEnergyRow | null {
+  const kcal = toNumber(point.totalCalories?.kcalSum);
+  if (kcal === null || kcal < 0 || !point.startTime) return null;
+  const start = new Date(point.startTime);
+  if (Number.isNaN(start.getTime())) return null;
+  const { date, hour } = localDateHour(start, timeZone);
+  return { hour_start: start.toISOString(), local_date: date, local_hour: hour, kcal: round(kcal, 1) as number };
 }

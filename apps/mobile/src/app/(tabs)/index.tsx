@@ -335,7 +335,7 @@ function TodayScreen({ demo }: { demo: DemoScenario | null }) {
         </>
       ) : null}
 
-      {energy ? <EnergyCard view={energy} /> : null}
+      {energy ? <EnergyCard view={energy} today={today} /> : null}
 
       {recovery && !recovery.empty ? <NightData view={recovery} /> : null}
     </Screen>

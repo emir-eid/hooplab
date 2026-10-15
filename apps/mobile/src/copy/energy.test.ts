@@ -5,7 +5,22 @@ import { test } from 'node:test';
 
 import { energyRule } from '@hooplab/engine';
 
-import { averageLabel, energyNote, energyPageRows, energyRows, formatKcal, kcalShort, previousWeekEnergyText, weeklyEnergyDetail, weeklyEnergyLabel } from './energy.ts';
+import {
+  averageLabel,
+  dayNote,
+  energyChartSpoken,
+  energyDayLabel,
+  energyNote,
+  energyPageRows,
+  energyRows,
+  formatKcal,
+  hourNote,
+  hourRange,
+  kcalShort,
+  previousWeekEnergyText,
+  weeklyEnergyDetail,
+  weeklyEnergyLabel,
+} from './energy.ts';
 
 test('kcal en yakın 10a yuvarlanır, binlik nokta', () => {
   assert.equal(formatKcal(3244), '3.240');
@@ -26,10 +41,10 @@ test('bugünün değeri şu ana kadar; veri yoksa söylenir', () => {
   assert.equal(energyNote(reading, null), 'Bugün şu ana kadar');
   assert.equal(energyNote({ ...reading, today: null }, null), 'Bugün için henüz veri yok');
   assert.deepEqual(energyRows(reading), [
-    { label: 'Dün (tam gün)', value: '3.100 kcal' },
-    { label: `${energyRule.averageDays} gün ort.`, value: '3.050 kcal' },
+    { label: 'Dün (tam gün)', value: '3.100 kcal' },
+    { label: `${energyRule.averageDays} gün ort.`, value: '3.050 kcal' },
   ]);
-  assert.deepEqual(energyPageRows(reading)[0], { label: 'Bugün şu ana kadar', value: '1.500 kcal' });
+  assert.deepEqual(energyPageRows(reading)[0], { label: 'Bugün şu ana kadar', value: '1.500 kcal' });
 });
 
 test('haftalık metinler: süren haftada bugün eksik', () => {
@@ -39,4 +54,26 @@ test('haftalık metinler: süren haftada bugün eksik', () => {
   assert.equal(weeklyEnergyDetail(w, false), '3 gün · gün ort. 3.100 kcal');
   assert.equal(previousWeekEnergyText(w), '21.000 kcal · 7 gün');
   assert.equal(weeklyEnergyLabel({ ...w, total: null }), 'Bu hafta veri yok');
+});
+
+test('saatlik: saat aralığı, gün adı, notlar ve ekran okuyucu metni', () => {
+  assert.equal(hourRange(0), '00:00-01:00');
+  assert.equal(hourRange(23), '23:00-24:00');
+  assert.equal(energyDayLabel('2026-10-14', '2026-10-14'), 'Bugün');
+  assert.equal(energyDayLabel('2026-10-13', '2026-10-14'), 'Dün');
+  assert.equal(energyDayLabel('2026-10-12', '2026-10-14'), 'Pzt 12 Ekim');
+  assert.equal(hourNote(true), 'Süren saat, şu ana kadar');
+  assert.equal(hourNote(false), 'O saatte yakılan');
+
+  const hours = Array.from({ length: 24 }, (_, h): number | null => (h === 18 ? 412 : h < 20 ? 90 : null));
+  const day = { date: '2026-10-12', hours, total: 2120, partialHour: null };
+  const reading = { today: 1400, yesterday: 3200, average: 3100, averageN: 7 };
+  assert.equal(dayNote(day, '2026-10-14', reading, null), 'Tam gün');
+  assert.equal(dayNote({ ...day, total: null }, '2026-10-14', reading, null), 'Bu gün için veri yok');
+  assert.equal(dayNote({ ...day, date: '2026-10-14' }, '2026-10-14', reading, null), 'Bugün şu ana kadar');
+  assert.equal(
+    energyChartSpoken(day, '2026-10-14'),
+    'Pzt 12 Ekim, saat saat yakılan enerji. Toplam yaklaşık 2.120 kilokalori. En yüksek saat 18:00-19:00, yaklaşık 410 kilokalori.',
+  );
+  assert.equal(energyChartSpoken({ ...day, total: null, hours: hours.map(() => null) }, '2026-10-14'), 'Pzt 12 Ekim, saatlik yakılan enerji yok.');
 });

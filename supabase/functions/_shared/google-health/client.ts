@@ -1,5 +1,5 @@
 // Google Health API v4 ve OAuth token uç noktası için küçük istemci. fetch dışarıdan verilir (test).
-// Sayfalama: list → nextPageToken; dailyRollUp → aynı gövde + pageToken (ghealth cmd/data.go).
+// Sayfalama: list → nextPageToken; dailyRollUp ve rollUp → aynı gövde + pageToken (ghealth cmd/data.go).
 // 429 ve 5xx iki kez yeniden denenir (1 sn, 2 sn); 401'de çağıran token'ı yeniler.
 
 import type {
@@ -7,6 +7,8 @@ import type {
   DailyRollupDataPoint,
   DataPoint,
   ListDataPointsResponse,
+  RollUpDataPointsResponse,
+  RollupDataPoint,
   Settings,
   TokenResponse,
 } from './api-types.ts';
@@ -191,6 +193,35 @@ export class GoogleHealthClient {
       if (pageToken) body.pageToken = pageToken;
       const res = await this.request<DailyRollUpDataPointsResponse>(
         `/users/me/dataTypes/${dataType}/dataPoints:dailyRollUp`,
+        { method: 'POST', body: JSON.stringify(body) },
+      );
+      points.push(...(res.rollupDataPoints ?? []));
+      pageToken = res.nextPageToken || undefined;
+      if (!pageToken) return points;
+    }
+    throw new GoogleApiError(500, 'too_many_pages', `${dataType}: sayfa sınırı aşıldı`);
+  }
+
+  // [startIso, endIso) fiziksel zaman (RFC 3339), windowSeconds'lık pencereler; tek istekte API sınırını
+  // (total-calories 14 gün) aşmamalı. pageSize verilmez: varsayılan 1440 pencere, 14 günlük saatlik 336.
+  async rollUp(
+    dataType: string,
+    startIso: string,
+    endIso: string,
+    windowSeconds: number,
+    dataSourceFamily?: string,
+  ): Promise<RollupDataPoint[]> {
+    const points: RollupDataPoint[] = [];
+    let pageToken: string | undefined;
+    for (let page = 0; page < MAX_PAGES; page++) {
+      const body: Record<string, unknown> = {
+        range: { startTime: startIso, endTime: endIso },
+        windowSize: `${windowSeconds}s`,
+      };
+      if (dataSourceFamily) body.dataSourceFamily = dataSourceFamily;
+      if (pageToken) body.pageToken = pageToken;
+      const res = await this.request<RollUpDataPointsResponse>(
+        `/users/me/dataTypes/${dataType}/dataPoints:rollUp`,
         { method: 'POST', body: JSON.stringify(body) },
       );
       points.push(...(res.rollupDataPoints ?? []));

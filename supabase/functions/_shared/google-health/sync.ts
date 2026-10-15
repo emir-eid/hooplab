@@ -2,15 +2,17 @@
 // Ağ (GoogleHealthClient) ve veritabanı (SyncStore) dışarıdan verilir; burada yalnız karar ve dönüşüm var.
 
 import { GoogleApiError, type GoogleHealthClient, WEARABLES_FAMILY } from './client.ts';
-import { addDays, chunkRange } from './dates.ts';
+import { addDays, chunkRange, zonedMidnightUtc } from './dates.ts';
 import {
   type DailyListType,
   type DailyRollupType,
   type DailyRow,
   type ExerciseRow,
+  type HourlyEnergyRow,
   parseDailyListPoint,
   parseDailyRollupPoint,
   parseExercise,
+  parseHourlyEnergy,
   parseSleep,
   type SleepRow,
 } from './parse.ts';
@@ -19,11 +21,16 @@ import {
 export const BACKFILL_DAYS = 90;
 // Her senkronda son günler yeniden çekilir: cihaz geç eşitler, uyku sonradan işlenir.
 export const LOOKBACK_DAYS = 7;
+// Saatlik yakılan enerji (karar 0044): bugün ve önceki 7 gün (Bugün'deki grafik geriye 7 gün gider).
+// Tek istek: API sınırı 14 gün, saatlik 8 gün 192 pencere (varsayılan sayfa 1440).
+export const HOURLY_ENERGY_DAYS = 8;
+export const HOURLY_ENERGY_TYPE = 'total-calories-hourly';
 
 export interface SyncStore {
   upsertDaily(rows: DailyRow[]): Promise<void>;
   upsertSleep(rows: SleepRow[]): Promise<void>;
   upsertExercise(rows: ExerciseRow[]): Promise<void>;
+  upsertHourlyEnergy(rows: HourlyEnergyRow[]): Promise<void>;
 }
 
 export interface SyncWindow {
@@ -33,7 +40,7 @@ export interface SyncWindow {
 
 export interface SyncResult {
   window: SyncWindow;
-  counts: { daily: number; sleep: number; exercise: number };
+  counts: { daily: number; sleep: number; exercise: number; hourly: number };
   errors: Array<{ type: string; code: string }>;
 }
 
@@ -66,6 +73,7 @@ const DAILY_ROLLUP_TYPES: Array<{ type: DailyRollupType; maxDays: number }> = [
 export const SYNCED_TYPES = [
   ...DAILY_LIST_TYPES,
   ...DAILY_ROLLUP_TYPES.map((t) => t.type),
+  HOURLY_ENERGY_TYPE,
   'sleep',
   'exercise',
 ] as const;
@@ -88,8 +96,9 @@ export async function syncWindow(
   client: GoogleHealthClient,
   store: SyncStore,
   window: SyncWindow,
+  timeZone: string | null = null,
 ): Promise<SyncResult> {
-  const result: SyncResult = { window, counts: { daily: 0, sleep: 0, exercise: 0 }, errors: [] };
+  const result: SyncResult = { window, counts: { daily: 0, sleep: 0, exercise: 0, hourly: 0 }, errors: [] };
 
   const run = async (type: string, task: () => Promise<void>) => {
     try {
@@ -128,6 +137,26 @@ export async function syncWindow(
       result.counts.daily += rows.length;
     });
   }
+
+  await run(HOURLY_ENERGY_TYPE, async () => {
+    // Yalnız pencerenin son HOURLY_ENERGY_DAYS günü; ilk senkronun 90 günü saatlik çekilmez.
+    const today = addDays(window.to, -1);
+    const earliest = addDays(today, -(HOURLY_ENERGY_DAYS - 1));
+    const from = window.from > earliest ? window.from : earliest;
+    const points = await client.rollUp(
+      'total-calories',
+      zonedMidnightUtc(from, timeZone),
+      zonedMidnightUtc(window.to, timeZone),
+      3600,
+      WEARABLES_FAMILY,
+    );
+    const rows = lastByKey(
+      points.map((p) => parseHourlyEnergy(p, timeZone)).filter((r): r is HourlyEnergyRow => r !== null),
+      (r) => r.hour_start,
+    );
+    if (rows.length > 0) await store.upsertHourlyEnergy(rows);
+    result.counts.hourly = rows.length;
+  });
 
   await run('sleep', async () => {
     // Uyku yalnız bitiş zamanıyla süzülebilir; kaynak ailesi verilemez (discovery belgesi).

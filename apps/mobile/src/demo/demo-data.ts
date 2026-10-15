@@ -6,7 +6,7 @@ import { addIsoDays, defaultContentTags, type ContentTag, type DayType, type Wel
 import type { DayState } from '@hooplab/theme';
 
 import type { TrainingSession } from '@/data/daily-log';
-import type { EnergyDayRow } from '@/data/energy-view';
+import { hoursPerDay, type EnergyDayRow, type EnergyHourRow } from '../data/energy-view.ts';
 import type { ExerciseSession } from '@/data/exercise-tagging';
 import type { SyncStatusRow } from '@/data/google-health-status';
 import type { FluidRow, MealRow } from '@/data/nutrition-view';
@@ -36,6 +36,8 @@ export interface DemoDb {
   exercises: ExerciseSession[];
   /** Sentetik günlük toplam kalori (karar 0043); bugünkü, `now`a kadar geçen kısım. */
   energy: EnergyDayRow[];
+  /** Saatlik yakılan enerji (karar 0044): günlük toplamın sentetik bir gün profiline dağıtılmışı. */
+  energyHours: EnergyHourRow[];
   /** Sentetik sabah kiloları (kg). */
   weights: { local_date: string; weight_kg: number }[];
   /** Gün tipi düzeltmeleri; başta boş. */
@@ -341,19 +343,28 @@ export function createDemoDb(scenario: DemoScenario, today: string, now: Date): 
     );
   }
 
-  // Günlük toplam kalori: günün sırasından türetilir (rastgele üreteç ilerlemesin). Bugünkü değer günün
-  // geçen kısmı kadar: gerçek senkronda da bugün şu ana kadardır. Son senkron 40 dakika önce.
+  // Günlük toplam kalori: günün sırasından türetilir (rastgele üreteç ilerlemesin). Saatlik değerler günün toplamını
+  // sentetik bir profile dağıtır (gece düşük, gündüz yüksek, seans günü akşam tepe). Bugün yalnız son senkrona kadarki
+  // saatler var ve günün değeri onların toplamı: gerçek senkronda da bugün şu ana kadardır. Son senkron 40 dakika önce.
   const syncedAt = new Date(now.getTime() - 40 * 60_000);
-  const dayFraction = (syncedAt.getHours() * 60 + syncedAt.getMinutes()) / (24 * 60);
+  const lastHour = syncedAt.getHours();
   const energy: EnergyDayRow[] = [];
+  const energyHours: EnergyHourRow[] = [];
   for (let i = historyDays - 1; i >= 0; i--) {
     const date = addIsoDays(today, -i);
-    const full = 3150 + 45 * (((i * 5) % 7) - 3) + 12 * ((i * 3) % 11) + (sessions.some((x) => x.localDate === date) ? 420 : 0);
-    energy.push({
-      local_date: date,
-      calories_kcal: i === 0 ? Math.round(full * dayFraction) : full,
-      updated_at: syncedAt.toISOString(),
+    const trained = sessions.some((x) => x.localDate === date);
+    const full = 3150 + 45 * (((i * 5) % 7) - 3) + 12 * ((i * 3) % 11) + (trained ? 420 : 0);
+    const weights = Array.from({ length: hoursPerDay }, (_, h) => demoHourWeight(h, trained, i));
+    const sum = weights.reduce((a, b) => a + b, 0);
+    let dayTotal = 0;
+    weights.forEach((w, h) => {
+      if (i === 0 && h > lastHour) return;
+      // Süren saat yarım: senkron saatin ortasında.
+      const kcal = Math.round(((full * w) / sum) * (i === 0 && h === lastHour ? 0.5 : 1) * 10) / 10;
+      dayTotal += kcal;
+      energyHours.push({ local_date: date, local_hour: h, kcal });
     });
+    energy.push({ local_date: date, calories_kcal: Math.round(dayTotal), updated_at: syncedAt.toISOString() });
   }
 
   const connectedAt = new Date(now.getTime() - 2 * 86_400_000).toISOString();
@@ -365,6 +376,7 @@ export function createDemoDb(scenario: DemoScenario, today: string, now: Date): 
     sessions,
     exercises,
     energy,
+    energyHours,
     weights,
     dayTypes: {},
     matchDays: [],
@@ -379,4 +391,14 @@ export function createDemoDb(scenario: DemoScenario, today: string, now: Date): 
       last_error: null,
     },
   };
+}
+
+/** Sentetik saat ağırlığı: uyku saatleri düşük, gündüz orta, seans günü 17-19 arası tepe; günden güne küçük oynama. */
+function demoHourWeight(hour: number, trained: boolean, dayIndex: number): number {
+  const jitter = 1 + 0.08 * (((hour * 7 + dayIndex * 3) % 5) - 2) / 2;
+  if (hour < 7) return 0.62 * jitter;
+  if (hour === 7) return 0.9 * jitter;
+  if (trained && hour >= 17 && hour <= 19) return (hour === 18 ? 3.1 : 2.2) * jitter;
+  if (hour >= 23) return 0.7 * jitter;
+  return (hour >= 12 && hour <= 14 ? 1.25 : 1.05) * jitter;
 }
