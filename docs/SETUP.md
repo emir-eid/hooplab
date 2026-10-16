@@ -77,9 +77,7 @@ Araç testleri, tip denetimi (tema paketi ve uygulama), paket ve uygulama testle
    - Başlat: `Start-Process npm.cmd -ArgumentList 'run','mobile' -WorkingDirectory 'E:\HoopLab\code' -WindowStyle Hidden -RedirectStandardOutput "$env:TEMP\hooplab-metro.log" -RedirectStandardError "$env:TEMP\hooplab-metro.err.log"`; günlükte `Waiting on http://localhost:8081` görülünce hazır. QR basılmaz; Expo Go projeyi son açılanlardan açar.
    - Durdur: `taskkill /T /F /PID <8081'i dinleyen süreç>` (`Get-NetTCPConnection -LocalPort 8081 -State Listen`).
 5. Bağlanmazsa: Windows Güvenlik Duvarı Node.js'e özel ağda izin vermeli (ilk çalıştırmada sorar).
-6. **Evden uzakta (farklı ağ, mobil veri): tünel.** Bir kez `npm i -g @expo/ngrok@4.1.3`. Başlatma (PowerShell): `$env:NODE_PATH = "$env:APPDATA
-pm
-ode_modules"; Start-Process npx.cmd -ArgumentList 'expo','start','--tunnel' -WorkingDirectory 'E:\HoopLab\codepps\mobile' -WindowStyle Hidden -RedirectStandardOutput "$env:TEMP\hooplab-metro.log" -RedirectStandardError "$env:TEMP\hooplab-metro.err.log"`. Günlükte `Tunnel ready` görülünce adres `http://127.0.0.1:4040/api/tunnels` içindeki `public_url`; telefonda `exp://<alan adı>` bağlantısına dokunulur. Bilgisayar evde açık kalmalı. Neden `npm run mobile -- --tunnel` değil ve neden `NODE_PATH`: LESSONS "Expo / React Native".
+6. **Evden uzakta (farklı ağ, mobil veri): tünel.** Bir kez `npm i -g @expo/ngrok@4.1.3`. Başlatma (PowerShell): `$env:NODE_PATH = "$env:APPDATA\npm\node_modules"; Start-Process npx.cmd -ArgumentList 'expo','start','--tunnel' -WorkingDirectory 'E:\HoopLab\code\apps\mobile' -WindowStyle Hidden -RedirectStandardOutput "$env:TEMP\hooplab-metro.log" -RedirectStandardError "$env:TEMP\hooplab-metro.err.log"`. Günlükte `Tunnel ready` görülünce adres `http://127.0.0.1:4040/api/tunnels` içindeki `public_url`; telefonda `exp://<alan adı>` bağlantısına dokunulur. Bilgisayar evde açık kalmalı. Neden `npm run mobile -- --tunnel` değil ve neden `NODE_PATH`: LESSONS "Expo / React Native".
 
 Ayrıntı: [apps/mobile/README.md](../apps/mobile/README.md).
 
