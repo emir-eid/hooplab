@@ -1,6 +1,6 @@
 # 0047. Seyahat ve jet lag: `trips` (gidiş, dönüş, saat farkı), yolculuk günü notları, kaba kuralla uyum tahmini
 
-- **Durum:** Kabul edildi. Motor, uygulama ve fonksiyon testleri geçti; pgTAP yerelde geçti (politika gevşetilince kırıldı). Bulutta: migration, coach-daily v17, coach-ask v9. Web önizlemesinde (yerel Supabase, sentetik kullanıcı) form, takvim, seyahat kartı ve açıklama sayfası doğrulandı.
+- **Durum:** Kabul edildi. Motor, uygulama ve fonksiyon testleri geçti; pgTAP yerelde geçti (politika gevşetilince kırıldı). Bulutta: migration, coach-daily v17, coach-ask v9. Web önizlemesinde (yerel Supabase, sentetik kullanıcı) form, takvim, seyahat kartı ve açıklama sayfası doğrulandı; iPhone'da kart sorunsuz (kullanıcı, 2026-10-16).
 - **Tarih:** 2026-10-15
 - **İlgili:** [0046](0046-mac-takvimi-ve-mac-cevresi.md) (maç takvimi), [0021](0021-toparlanma-kisisel-bant.md) (günün durumu), [0038](0038-takviye-ve-doping.md) (takviye ve doping), [0032](0032-ai-koc-tasarimi.md) (koç)
 
