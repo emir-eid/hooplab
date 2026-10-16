@@ -18,6 +18,7 @@ import { buildRecoveryView, recoveryFrom, type RecoveryView } from '@/data/recov
 import type { MealInput } from '@/data/nutrition';
 import { buildNutritionView, distinctRecent, recentMealDays, toMeals, toStoredItems, weightFrom, type NutritionView } from '@/data/nutrition-view';
 import { buildRegionLoadView, regionFrom, type RegionLoadView } from '@/data/region-load-view';
+import { bumpDataRevision } from '@/data/revision';
 import { buildTrainingLoadView, loadChartDays, type TrainingLoadView } from '@/data/training-load-view';
 import { buildWeeklyReportView, firstWeekOf, type WeeklyReport } from '@/data/weekly-report-view';
 import { askDemoOnlySamples } from '@/copy/coach-ask';
@@ -58,6 +59,7 @@ export class DemoStore {
   }
 
   async saveCheckin(localDate: string, checkin: Checkin): Promise<Result<null>> {
+    bumpDataRevision();
     this.db.checkins = [...this.db.checkins.filter((c) => c.local_date !== localDate), { local_date: localDate, answers: checkin.answers }];
     this.db.pain = [
       ...this.db.pain.filter((p) => p.local_date !== localDate),
@@ -67,6 +69,7 @@ export class DemoStore {
   }
 
   async insertSession(session: NewTrainingSession): Promise<Result<null>> {
+    bumpDataRevision();
     const exerciseId = session.exercise?.id ?? null;
     if (exerciseId && this.db.sessions.some((s) => s.exerciseSessionId === exerciseId)) {
       return { ok: false, message: 'Bu saat kaydı başka bir seansa bağlanmış. Listeyi yenileyip yeniden dene.' };
@@ -125,11 +128,13 @@ export class DemoStore {
   }
 
   async linkSession(sessionId: string, exercise: Pick<ExerciseSession, 'id' | 'startTime'>): Promise<Result<null>> {
+    bumpDataRevision();
     this.db.sessions = this.db.sessions.map((s) => (s.id === sessionId ? { ...s, exerciseSessionId: exercise.id } : s));
     return ok(null);
   }
 
   async dismissExercise(id: string): Promise<Result<null>> {
+    bumpDataRevision();
     this.db.exercises = this.db.exercises.map((e) => (e.id === id ? { ...e, dismissed: true } : e));
     return ok(null);
   }
@@ -242,6 +247,7 @@ export class DemoStore {
   }
 
   async saveMeal(meal: MealInput): Promise<Result<null>> {
+    bumpDataRevision();
     const old = meal.id ? this.db.meals.find((m) => m.id === meal.id) : undefined;
     const row = {
       id: old?.id ?? `demo-meal-new-${this.nextId++}`,
@@ -255,6 +261,7 @@ export class DemoStore {
   }
 
   async addFluid(localDate: string, ml: number): Promise<Result<null>> {
+    bumpDataRevision();
     this.db.fluids = [
       ...this.db.fluids,
       { id: `demo-fluid-new-${this.nextId++}`, local_date: localDate, volume_ml: ml, created_at: new Date().toISOString() },
@@ -263,27 +270,32 @@ export class DemoStore {
   }
 
   async deleteFluid(id: string): Promise<Result<null>> {
+    bumpDataRevision();
     this.db.fluids = this.db.fluids.filter((f) => f.id !== id);
     return ok(null);
   }
 
   async deleteMeal(id: string): Promise<Result<null>> {
+    bumpDataRevision();
     this.db.meals = this.db.meals.filter((m) => m.id !== id);
     return ok(null);
   }
 
   async saveWeight(localDate: string, kg: number): Promise<Result<null>> {
+    bumpDataRevision();
     this.db.weights = [...this.db.weights.filter((w) => w.local_date !== localDate), { local_date: localDate, weight_kg: kg }];
     return ok(null);
   }
 
   async saveDayType(localDate: string, dayType: DayType | null): Promise<Result<null>> {
+    bumpDataRevision();
     const { [localDate]: _removed, ...rest } = this.db.dayTypes;
     this.db.dayTypes = dayType === null ? rest : { ...rest, [localDate]: dayType };
     return ok(null);
   }
 
   async saveMatchDay(localDate: string, matchDay: boolean): Promise<Result<null>> {
+    bumpDataRevision();
     if (!matchDay) return this.deleteMatch(localDate);
     if (this.db.matches.some((m) => m.date === localDate)) return ok(null);
     return this.saveMatch({ date: localDate, startTime: null, venue: null });
@@ -294,11 +306,13 @@ export class DemoStore {
   }
 
   async saveMatch(match: Match): Promise<Result<null>> {
+    bumpDataRevision();
     this.db.matches = [...this.db.matches.filter((m) => m.date !== match.date), { ...match }];
     return ok(null);
   }
 
   async deleteMatch(localDate: string): Promise<Result<null>> {
+    bumpDataRevision();
     this.db.matches = this.db.matches.filter((m) => m.date !== localDate);
     return ok(null);
   }
@@ -308,12 +322,14 @@ export class DemoStore {
   }
 
   async saveTrip(trip: Trip): Promise<Result<null>> {
+    bumpDataRevision();
     const id = trip.id ?? `demo-trip-${this.nextId++}`;
     this.db.trips = [...this.db.trips.filter((t) => t.id !== id), { ...trip, id }];
     return ok(null);
   }
 
   async deleteTrip(id: string): Promise<Result<null>> {
+    bumpDataRevision();
     this.db.trips = this.db.trips.filter((t) => t.id !== id);
     return ok(null);
   }

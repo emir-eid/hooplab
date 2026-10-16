@@ -14,6 +14,7 @@ import { PageHeader } from '@/components/page-header';
 import { Screen } from '@/components/screen';
 import { Text } from '@/components/text';
 import { weekRangeText, weeklyTitle } from '@/copy/weekly-report';
+import { createFocusGate } from '@/data/revision';
 import { fetchTrainingLoad } from '@/data/training-load';
 import type { TrainingLoadView } from '@/data/training-load-view';
 import type { DemoScenario } from '@/demo/demo-data';
@@ -32,11 +33,17 @@ function TrendScreen({ demo }: { demo: DemoScenario | null }) {
   const [load, setLoad] = useState<TrainingLoadView | null>(null);
   const [error, setError] = useState<string | null>(null);
 
-  // Etiketleme formu kapanınca yük yeniden hesaplanır.
+  // Etiketleme formu kapanınca yük yeniden hesaplanır; veri değişmediyse sekme dönüşünde çekilmez (data/revision.ts).
+  const [gate] = useState(createFocusGate);
   useFocusEffect(
     useCallback(() => {
       let cancelled = false;
-      fetchTrainingLoad(toLocalDate(new Date())).then((r) => {
+      let settled = false;
+      const today = toLocalDate(new Date());
+      if (!gate.shouldFetch(today)) return;
+      gate.started(today);
+      fetchTrainingLoad(today).then((r) => {
+        settled = true;
         if (cancelled) return;
         if (r.ok) {
           setLoad(r.value);
@@ -47,8 +54,9 @@ function TrendScreen({ demo }: { demo: DemoScenario | null }) {
       });
       return () => {
         cancelled = true;
+        if (!settled) gate.invalidate();
       };
-    }, []),
+    }, [gate]),
   );
 
   return (

@@ -3,6 +3,7 @@
 
 import { useSyncExternalStore } from 'react';
 
+import { bumpDataRevision } from '@/data/revision';
 import type { DemoScenario } from '@/demo/demo-data';
 import { DemoStore } from '@/demo/demo-store';
 import { toLocalDate } from '@/utils/local-date';
@@ -14,6 +15,7 @@ let current: DemoStore | null = null;
 const listeners = new Set<() => void>();
 
 function emit() {
+  bumpDataRevision();
   for (const l of listeners) l();
 }
 

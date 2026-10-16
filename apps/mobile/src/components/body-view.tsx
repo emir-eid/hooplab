@@ -1,5 +1,7 @@
 // Döndürülebilir 3D manken (karar 0018). Yatay sürükleme döndürür, bırakınca süzülerek durur;
 // dikey hareket sayfaya kalır. Dokunulan bölge seçilir. Sahne yalnız bir şey değişince çizilir.
+// three.js (paketin ~%20'si) sahne kurulurken yüklenir: sekmeler açılışta birlikte yüklendiği için
+// düz import uygulamanın her açılışında çalışırdı (performans turu, 2026-10-16).
 
 import type { BodySpot } from '@hooplab/engine';
 import { spacing, type Hex } from '@hooplab/theme';
@@ -10,7 +12,7 @@ import { Gesture, GestureDetector } from 'react-native-gesture-handler';
 import { useReducedMotion } from 'react-native-reanimated';
 
 import type { BodyColors } from '@/body/body-colors';
-import { BodyScene } from '@/body/body-scene';
+import type { BodyScene } from '@/body/body-scene';
 import { useGestureScrollRef } from '@/components/gesture-scroll';
 import { Text } from '@/components/text';
 
@@ -91,14 +93,18 @@ export function BodyView({ colors, paint, selected, onSelect, focus, height, acc
     if (!m.frame) m.frame = requestAnimationFrame(tick.current);
   });
 
-  const onContextCreate = (gl: ExpoWebGLRenderingContext) => {
+  const mounted = useRef(true);
+
+  const onContextCreate = async (gl: ExpoWebGLRenderingContext) => {
     let s: BodyScene;
     try {
+      const { BodyScene } = await import('@/body/body-scene');
+      if (!mounted.current) return;
       s = new BodyScene(gl);
     } catch (error) {
       // 3D açılamazsa uygulama çökmez; liste ve kartlar çalışmaya devam eder.
       console.warn('Vücut modeli açılamadı:', error);
-      setFailed(true);
+      if (mounted.current) setFailed(true);
       return;
     }
     scene.current = s;
@@ -134,7 +140,9 @@ export function BodyView({ colors, paint, selected, onSelect, focus, height, acc
 
   useEffect(() => {
     const m = motion.current;
+    mounted.current = true;
     return () => {
+      mounted.current = false;
       if (m.frame) cancelAnimationFrame(m.frame);
       scene.current?.dispose();
       scene.current = null;
@@ -193,7 +201,7 @@ export function BodyView({ colors, paint, selected, onSelect, focus, height, acc
             </Text>
           </View>
         ) : (
-          <GLView style={StyleSheet.absoluteFill} onContextCreate={onContextCreate} msaaSamples={4} />
+          <GLView style={StyleSheet.absoluteFill} onContextCreate={(gl) => void onContextCreate(gl)} msaaSamples={4} />
         )}
       </View>
     </GestureDetector>

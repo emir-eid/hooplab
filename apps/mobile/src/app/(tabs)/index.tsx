@@ -65,6 +65,7 @@ import { exerciseSummary, type ExerciseSession } from '@/data/exercise-tagging';
 import { deleteMeal, fetchNutrition, saveDayType, saveMatchDay } from '@/data/nutrition';
 import type { NutritionView } from '@/data/nutrition-view';
 import { fetchRecovery } from '@/data/recovery';
+import { createFocusGate } from '@/data/revision';
 import { fetchRegionLoad } from '@/data/region-load';
 import type { RecoveryView } from '@/data/recovery-view';
 import { fetchTrainingLoad } from '@/data/training-load';
@@ -110,11 +111,15 @@ function TodayScreen({ demo }: { demo: DemoScenario | null }) {
     if (coachSnapshot) rememberCoachSnapshot(coachSnapshot);
   }, [coachSnapshot]);
 
-  // Form kapanınca ekran yeniden odaklanır ve günün kaydı tazelenir.
+  // Form kapanınca ekran yeniden odaklanır ve günün kaydı tazelenir; yalnız sekme değiştiyse ve veri
+  // değişmediyse yeniden çekilmez (data/revision.ts).
+  const [gate] = useState(createFocusGate);
   useFocusEffect(
     useCallback(() => {
       let cancelled = false;
       const today = toLocalDate(new Date());
+      if (!gate.shouldFetch(today)) return;
+      gate.started(today);
       const yesterday = toLocalDate(addDays(new Date(), -1));
       const checkinP = fetchCheckin(today);
       const sessionsP = fetchSessions(today);
@@ -122,7 +127,8 @@ function TodayScreen({ demo }: { demo: DemoScenario | null }) {
       const nutritionP = fetchNutrition(today);
       const readingP = fetchCheckinReading(today);
       const loadP = fetchTrainingLoad(today);
-      Promise.all([checkinP, sessionsP, fetchPendingExercises(yesterday, today), fetchSessions(yesterday)]).then(
+      const logP = Promise.all([checkinP, sessionsP, fetchPendingExercises(yesterday, today), fetchSessions(yesterday)]);
+      logP.then(
         ([checkin, sessions, pending, yesterdaySessions]) => {
           if (cancelled) return;
           if (checkin.ok && sessions.ok && pending.ok) {
@@ -156,11 +162,13 @@ function TodayScreen({ demo }: { demo: DemoScenario | null }) {
         if (!cancelled) setCheckinReading(r.ok ? r.value : null);
       });
       // Yakılan enerji ikincil: alınamazsa ya da veri yoksa kart görünmez.
-      fetchEnergy(today).then((r) => {
+      const energyP = fetchEnergy(today);
+      energyP.then((r) => {
         if (!cancelled) setEnergy(r.ok && !r.value.empty ? r.value : null);
       });
       // Sıradaki maç (bugünden sonra) takvim satırında; ikincil.
-      fetchMatches(addIsoDays(today, 1), addIsoDays(today, matchDaysAhead)).then((r) => {
+      const matchesP = fetchMatches(addIsoDays(today, 1), addIsoDays(today, matchDaysAhead));
+      matchesP.then((r) => {
         if (!cancelled) setNextMatch(r.ok ? (r.value[0] ?? null) : null);
       });
       // Seyahat okuması ikincil (karar 0047); koçun anlık değerlerine de gider.
@@ -174,7 +182,12 @@ function TodayScreen({ demo }: { demo: DemoScenario | null }) {
         if (!cancelled) setLoad(r.ok ? r.value : null);
       });
       // Koçun anlık değerleri: hepsi gelince bir kez. Alınamayan bölüm gönderilmez (özet eksik değerle yazılır).
-      Promise.all([checkinP, sessionsP, recoveryP, nutritionP, readingP, loadP, fetchRegionLoad(today, new Date()), tripsP]).then(
+      const all = Promise.all([checkinP, sessionsP, recoveryP, nutritionP, readingP, loadP, fetchRegionLoad(today, new Date()), tripsP]);
+      let settled = false;
+      void Promise.allSettled([all, logP, energyP, matchesP]).then(() => {
+        settled = true;
+      });
+      all.then(
         ([checkin, sessions, recoveryR, nutritionR, reading, loadR, regions, tripsR]) => {
           if (cancelled || !checkin.ok) return;
           setCoachInputs({
@@ -192,8 +205,10 @@ function TodayScreen({ demo }: { demo: DemoScenario | null }) {
       );
       return () => {
         cancelled = true;
+        // Sonuçlar gelmeden odak gittiyse sonuçlar atılır; sonraki odak yeniden çeker.
+        if (!settled) gate.invalidate();
       };
-    }, []),
+    }, [gate]),
   );
 
   const total = log?.checkin ? wellnessTotal(log.checkin.answers) : null;

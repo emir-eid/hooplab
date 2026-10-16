@@ -6,6 +6,7 @@ import { createClient, type SupabaseClient } from '@supabase/supabase-js';
 import * as SecureStore from 'expo-secure-store';
 import { AppState, Platform } from 'react-native';
 
+import { bumpDataRevision, isDataWrite } from '@/data/revision';
 import { createChunkedStorage } from '@/lib/chunked-storage';
 import { parseSupabaseConfig } from '@/lib/supabase-config';
 
@@ -26,6 +27,15 @@ const sessionStorage =
         removeItem: (key) => SecureStore.deleteItemAsync(key),
       });
 
+// Veri yazan istek bitince veri sürümü artar; sekmeler odakta yalnız o zaman yeniden çeker (data/revision.ts).
+const trackingFetch: typeof fetch = (input, init) => {
+  const url = typeof input === 'string' ? input : input instanceof URL ? input.href : input.url;
+  const method = init?.method ?? (typeof input === 'object' && 'method' in input ? input.method : 'GET');
+  const result = fetch(input, init);
+  if (isDataWrite(method, url)) void result.finally(bumpDataRevision).catch(() => undefined);
+  return result;
+};
+
 export const supabase: SupabaseClient | null = supabaseConfig.ok
   ? createClient(supabaseConfig.url, supabaseConfig.publishableKey, {
       auth: {
@@ -34,8 +44,18 @@ export const supabase: SupabaseClient | null = supabaseConfig.ok
         persistSession: true,
         detectSessionInUrl: false,
       },
+      global: { fetch: trackingFetch },
     })
   : null;
+
+// Başka bir hesaba geçiş ya da çıkış: ekranlardaki veri artık geçersiz. Olay adına bakılmaz; kayıtlı oturum
+// geri yüklenirken de SIGNED_IN gelir (web, 2026-10-16), yalnız kullanıcı değişince sürüm artar.
+let sessionUserId: string | null | undefined;
+supabase?.auth.onAuthStateChange((_event, session) => {
+  const id = session?.user.id ?? null;
+  if (sessionUserId !== undefined && id !== sessionUserId) bumpDataRevision();
+  sessionUserId = id;
+});
 
 // Native'de kütüphane yenileme sayacını açılışta kendisi başlatır ama uygulamanın önde olup olmadığını
 // bilemez; arka plana geçince durdurulur, öne gelince yeniden başlatılır.

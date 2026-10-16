@@ -118,11 +118,12 @@ test('parçası eksik veya manifesti bozuk değer null döner', async () => {
   const chunkKey = [...data.keys()].find((k) => k.startsWith('k.'));
   assert.ok(chunkKey);
   data.delete(chunkKey);
-  assert.equal(await storage.getItem('k'), null);
+  // Depo dışarıdan bozuldu: yeni açılış (yeni örnek) depodan okur.
+  assert.equal(await createChunkedStorage(store).getItem('k'), null);
 
   for (const broken of ['{bozuk', 'null', '{"v":2,"g":"a","n":1}', '{"v":1,"g":"c","n":1}', '{"v":1,"g":"a","n":0}']) {
     data.set('k', broken);
-    assert.equal(await storage.getItem('k'), null, broken);
+    assert.equal(await createChunkedStorage(store).getItem('k'), null, broken);
   }
 });
 
@@ -135,4 +136,53 @@ test('aynı anahtardaki eşzamanlı işlemler sırayla uygulanır', async () => 
   await Promise.all([...writes, removal, last]);
   assert.equal(await storage.getItem('k'), 'son'.repeat(50));
   assert.equal(data.size, 3); // manifest + 2 parça; ara yazmalardan artık kalmadı
+});
+
+/** Okuma sayan depo: önbelleğin Keychain çağrısını gerçekten azalttığını görmek için. */
+function countingStore() {
+  const { store } = memoryStore();
+  let reads = 0;
+  const counted: KeyValueStore = {
+    ...store,
+    async getItem(key) {
+      reads++;
+      return store.getItem(key);
+    },
+  };
+  return { store: counted, reads: () => reads };
+}
+
+test('eşzamanlı okumalar depoya bir kez gider (supabase-js her istekte oturumu okur)', async () => {
+  const counted = countingStore();
+  const value = syntheticSession();
+  const storage = createChunkedStorage(counted.store);
+  await storage.setItem('k', value);
+  const readsAfterWrite = counted.reads();
+
+  const results = await Promise.all(Array.from({ length: 27 }, () => storage.getItem('k')));
+  assert.ok(results.every((r) => r === value));
+  assert.equal(counted.reads(), readsAfterWrite, 'yazılan değer bellekten okunur');
+
+  // Yeni açılış: ilk okuma depodan (manifest + parçalar), sonrakiler bellekten.
+  const reopened = createChunkedStorage(counted.store);
+  const before = counted.reads();
+  const again = await Promise.all(Array.from({ length: 27 }, () => reopened.getItem('k')));
+  assert.ok(again.every((r) => r === value));
+  const chunks = splitByUtf8Bytes(value, DEFAULT_MAX_CHUNK_BYTES).length;
+  assert.equal(counted.reads() - before, 1 + chunks);
+});
+
+test('silinen değer bellekte de silinir; yarıda kalan yazmadan sonra depodan okunur', async () => {
+  const { store } = memoryStore();
+  const storage = createChunkedStorage(store);
+  await storage.setItem('k', 'değer');
+  await storage.removeItem('k');
+  assert.equal(await storage.getItem('k'), null);
+
+  // 1. ve 2. yazma ilk değer (parça + manifest); 3. yazma yeni değerin ilk parçasında çöker.
+  const failing = memoryStore({ failOnWrite: 3 });
+  const s2 = createChunkedStorage(failing.store, { maxChunkBytes: 100 });
+  await s2.setItem('k', 'eski');
+  await assert.rejects(s2.setItem('k', 'y'.repeat(300)));
+  assert.equal(await s2.getItem('k'), 'eski');
 });

@@ -81,12 +81,17 @@ export interface ChunkedStorageOptions {
 /**
  * `store` üzerine parçalayan bir depolama kurar. Supabase `auth.storage` arayüzüyle uyumludur.
  * Aynı anahtardaki işlemler sırayla çalışır; bir yazma ile silme birbirinin arasına girmez.
+ * Okunan ve yazılan değer bellekte tutulur: supabase-js her istekten önce oturumu okur ve Bugün'ün açılışı
+ * ~27 istek demek; önbelleksiz her biri Keychain'e manifest + parça sayısı kadar sıralı çağrı yapardı
+ * (iPhone'da ölçüldü 2026-10-16: açılış başına 95-98 okuma → 0; süre farkı ağ gürültüsünün içinde). Depoya yalnız bu uygulama yazar; yazma yarıda kalırsa önbellek
+ * bırakılır, sonraki okuma depodan yapılır.
  */
 export function createChunkedStorage(
   store: KeyValueStore,
   { maxChunkBytes = DEFAULT_MAX_CHUNK_BYTES }: ChunkedStorageOptions = {},
 ): KeyValueStore {
   const queues = new Map<string, Promise<unknown>>();
+  const cache = new Map<string, string | null>();
 
   function serialize<T>(key: string, task: () => Promise<T>): Promise<T> {
     const previous = queues.get(key) ?? Promise.resolve();
@@ -108,37 +113,61 @@ export function createChunkedStorage(
   return {
     getItem: (key) =>
       serialize(key, async () => {
-        const manifest = parseManifest(await store.getItem(key));
-        if (!manifest) return null;
-        let value = '';
-        for (let i = 0; i < manifest.n; i++) {
-          const chunk = await store.getItem(chunkKey(key, manifest.g, i));
-          // Eksik parça: değer güvenilir değil. Yarım oturum yerine "oturum yok" döner.
-          if (chunk === null) return null;
-          value += chunk;
-        }
+        const cached = cache.get(key);
+        if (cached !== undefined) return cached;
+        const value = await readChunks(key);
+        cache.set(key, value);
         return value;
       }),
 
     setItem: (key, value) =>
-      serialize(key, async () => {
-        const previous = parseManifest(await store.getItem(key));
-        const g: Generation = previous?.g === 'a' ? 'b' : 'a';
-        const chunks = splitByUtf8Bytes(value, maxChunkBytes);
-        for (const [i, chunk] of chunks.entries()) {
-          await store.setItem(chunkKey(key, g, i), chunk);
-        }
-        const manifest: Manifest = { v: 1, g, n: chunks.length };
-        await store.setItem(key, JSON.stringify(manifest));
-        if (previous) await removeChunks(key, previous);
-      }),
+      serialize(key, () =>
+        uncachedOnError(key, async () => {
+          const previous = parseManifest(await store.getItem(key));
+          const g: Generation = previous?.g === 'a' ? 'b' : 'a';
+          const chunks = splitByUtf8Bytes(value, maxChunkBytes);
+          for (const [i, chunk] of chunks.entries()) {
+            await store.setItem(chunkKey(key, g, i), chunk);
+          }
+          const manifest: Manifest = { v: 1, g, n: chunks.length };
+          await store.setItem(key, JSON.stringify(manifest));
+          cache.set(key, value);
+          if (previous) await removeChunks(key, previous);
+        }),
+      ),
 
     removeItem: (key) =>
-      serialize(key, async () => {
-        const manifest = parseManifest(await store.getItem(key));
-        // Önce manifest: silme yarıda kalırsa geriye bozuk oturum değil sahipsiz parça kalır.
-        await store.removeItem(key);
-        if (manifest) await removeChunks(key, manifest);
-      }),
+      serialize(key, () =>
+        uncachedOnError(key, async () => {
+          const manifest = parseManifest(await store.getItem(key));
+          // Önce manifest: silme yarıda kalırsa geriye bozuk oturum değil sahipsiz parça kalır.
+          await store.removeItem(key);
+          cache.set(key, null);
+          if (manifest) await removeChunks(key, manifest);
+        }),
+      ),
   };
+
+  async function readChunks(key: string): Promise<string | null> {
+    const manifest = parseManifest(await store.getItem(key));
+    if (!manifest) return null;
+    let value = '';
+    for (let i = 0; i < manifest.n; i++) {
+      const chunk = await store.getItem(chunkKey(key, manifest.g, i));
+      // Eksik parça: değer güvenilir değil. Yarım oturum yerine "oturum yok" döner.
+      if (chunk === null) return null;
+      value += chunk;
+    }
+    return value;
+  }
+
+  /** İşlem yarıda kalırsa depodaki durum belirsizdir; önbellek bırakılır, sonraki okuma depodan yapılır. */
+  async function uncachedOnError(key: string, task: () => Promise<void>): Promise<void> {
+    try {
+      await task();
+    } catch (error) {
+      cache.delete(key);
+      throw error;
+    }
+  }
 }
