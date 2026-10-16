@@ -1,9 +1,9 @@
 # 2026-10-16 19:34 — Performans turu
 
 - **Faz:** 4 (Faz 1'in TestFlight maddesi Apple onayını bekliyor)
-- **Durum:** açık (/rep)
+- **Durum:** kapandı (/kapat, 2026-10-16 19:39)
 - **Model / efor:** Opus 5.5, orta
-- **Commit'ler:** bu bloğun `rep` commit'i
+- **Commit'ler:** `72b3f49` (Blok 1, `rep` commit'i), bu raporun kapanış commit'i
 
 ## Blok 1 — Performans turu (19:34)
 
