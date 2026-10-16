@@ -100,7 +100,7 @@ Bütün maddeler **tamam** olmalı. Bu komut hiçbir şeyi değiştirmez; bir ş
 npm run mobile
 ```
 
-1. Terminaldeki QR kodu iPhone kamerasıyla okut; uygulama Expo Go'da açılır. iPhone ile bilgisayar aynı Wi-Fi'da olmalı.
+1. Terminaldeki QR kodu iPhone kamerasıyla okut; uygulama Expo Go'da açılır. iPhone ile bilgisayar aynı Wi-Fi'da olmalı. Farklı bir ağdaysan (mobil veri): bir kez `npm i -g @expo/ngrok@4.1.3`, sonra `npm run mobile:tunnel`; terminalde çıkan `exp://…` bağlantısını telefonda aç.
 2. 5. adımda açtığın hesapla giriş yap.
 3. **Ben → Google Health → Google Health'e bağlan.** İzin ekranında "Google hasn't verified this app" uyarısı çıkar, çünkü uygulama senin projen. **Advanced → Go to …** seç ve istenen izinlerin hepsini onayla.
 

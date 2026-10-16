@@ -71,13 +71,14 @@ Araç testleri, tip denetimi (tema paketi ve uygulama), paket ve uygulama testle
 ## 8. Uygulamayı iPhone'da açmak
 
 1. iPhone'a App Store'dan **Expo Go**'yu kur.
-2. `E:\HoopLab\code` klasöründe `npm run mobile`. Terminalde QR kod çıkar. Windows PowerShell "running scripts is disabled" derse `npm.cmd run mobile` (çalıştırma ilkesini değiştirmeye gerek yok).
-3. iPhone kamerasıyla QR kodu okut; Expo Go'da açılır. iPhone ve bilgisayar aynı Wi-Fi'da olmalı.
-4. **Metro'yu Claude yönetir** (kullanıcı isteği, 2026-10-04): başlatma, yeniden başlatma, kapatma. Terminal paneli bu makinede komut alamadığı için (LESSONS "Windows") Claude şunu çalıştırır:
-   - Başlat: `Start-Process npm.cmd -ArgumentList 'run','mobile' -WorkingDirectory 'E:\HoopLab\code' -WindowStyle Hidden -RedirectStandardOutput "$env:TEMP\hooplab-metro.log" -RedirectStandardError "$env:TEMP\hooplab-metro.err.log"`; günlükte `Waiting on http://localhost:8081` görülünce hazır. QR basılmaz; Expo Go projeyi son açılanlardan açar.
-   - Durdur: `taskkill /T /F /PID <8081'i dinleyen süreç>` (`Get-NetTCPConnection -LocalPort 8081 -State Listen`).
-5. Bağlanmazsa: Windows Güvenlik Duvarı Node.js'e özel ağda izin vermeli (ilk çalıştırmada sorar).
-6. **Evden uzakta (farklı ağ, mobil veri): tünel.** Bir kez `npm i -g @expo/ngrok@4.1.3`. Başlatma (PowerShell): `$env:NODE_PATH = "$env:APPDATA\npm\node_modules"; Start-Process npx.cmd -ArgumentList 'expo','start','--tunnel' -WorkingDirectory 'E:\HoopLab\code\apps\mobile' -WindowStyle Hidden -RedirectStandardOutput "$env:TEMP\hooplab-metro.log" -RedirectStandardError "$env:TEMP\hooplab-metro.err.log"`. Günlükte `Tunnel ready` görülünce adres `http://127.0.0.1:4040/api/tunnels` içindeki `public_url`; telefonda `exp://<alan adı>` bağlantısına dokunulur. Bilgisayar evde açık kalmalı. Neden `npm run mobile -- --tunnel` değil ve neden `NODE_PATH`: LESSONS "Expo / React Native".
+2. **Varsayılan yol: tünel** (kullanıcı kararı, 2026-10-16). Telefon bilgisayarla aynı ağda olmak zorunda değil, mobil veri de olur; bilgisayar evde açık ve internete bağlı kalmalı. Bu makinede bir kez: `npm i -g @expo/ngrok@4.1.3` (Expo'nun resmi paketi; kurulu).
+3. **Metro'yu Claude yönetir** (kullanıcı isteği, 2026-10-04): başlatma, yeniden başlatma, kapatma. Terminal paneli bu makinede komut alamadığı için (LESSONS "Windows") Claude şunu çalıştırır:
+   - Başlat: `Start-Process npm.cmd -ArgumentList 'run','mobile:tunnel' -WorkingDirectory 'E:\HoopLab\code' -WindowStyle Hidden -RedirectStandardOutput "$env:TEMP\hooplab-metro.log" -RedirectStandardError "$env:TEMP\hooplab-metro.err.log"`. Önbellek temizliği gerekiyorsa `'run','mobile:tunnel','--','--clear'`. Günlükte `[tunnel] exp://…` satırı görülünce hazır ([tools/dev/mobile-tunnel.mjs](../tools/dev/mobile-tunnel.mjs)).
+   - Hazır demeden önce: tünel adresinden manifest okunur (`curl -H "expo-platform: ios" https://<alan adı>/` yanıtında `hostUri`).
+   - Durdur: `expo start` içeren `node.exe` süreçleri ve `ngrok` (`Get-CimInstance Win32_Process`, `taskkill /T /F`); 8081'i dinleyen süreç `Get-NetTCPConnection -LocalPort 8081 -State Listen`.
+4. Adres kalıcı: `exp://<rastgele>-<Expo kullanıcı adı>-8081.exp.direct` biçiminde (gerçek adres public repoya yazılmaz: bilen, Metro açıkken geliştirme paketini indirebilir; pakette yalnız herkese açık `EXPO_PUBLIC_` değerleri var, veriye giriş ve RLS korur), rastgele kısım `apps/mobile/.expo/settings.json`'da (gitignore'lu; silinirse adres değişir). Expo Go projeyi son açılanlardan açar; ilk seferde ya da adres değişince Claude bağlantıyı sohbete yazar, kullanıcı telefonda dokunur. QR gösterilmez.
+5. Tünel LAN'dan yavaştır: telefondaki hız hissi performans ölçüsü değildir (ölçüm geçici günlükle, [0048](decisions/0048-performans-turu.md)).
+6. Yedek yol, aynı Wi-Fi: `npm run mobile` (LAN; manifest `http://<LAN IP>:8081/`, bu makinede Wi-Fi bağdaştırıcısı "Ethernet 2", VMware / WSL adresleri değil). Bağlanmazsa Windows Güvenlik Duvarı Node.js'e özel ağda izin vermeli. `npm run mobile -- --tunnel` çalışmaz (bayrak düşer; LESSONS "Expo / React Native").
 
 Ayrıntı: [apps/mobile/README.md](../apps/mobile/README.md).
 

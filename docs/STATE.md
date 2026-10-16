@@ -38,7 +38,7 @@ Tek doğruluk kaynağı. `/rep` her iş sonunda, `/kapat` her oturum sonunda gü
 - Anthropic Console (kişisel hesap, çalışma alanı HoopLab): kredi ön ödemeli, otomatik yükleme kapalı; kredi bitince koç durur, yükleme kullanıcıda. Anahtar `hooplab-koc` 2027-10-09'da biter, öncesinde yenilenir ([COSTS](COSTS.md)).
 - Supabase CLI bu makinede HoopLab hesabıyla girişli; uzak işlemleri Claude yürütür ([SETUP](SETUP.md) §9; kurulum ve denetim `npm run setup` / `npm run setup:check`). Görsel doğrulama yerel Supabase'le (`npm run db:start`, `npm run web:local`, sentetik demo kullanıcısı); senkron yerelde sahte Google ile (SETUP §9).
 - Google Health: haftada bir uygulamadan Ben → Google Health → **Yeniden bağlan** (izin tam 7 günde düşer; son bağlantı 2026-10-12 11:55, **bir sonraki sınır 2026-10-19 11:55**). Web istemcisinin JSON'u `private/ghealth/web_client_secret.json`.
-- Metro'yu (Expo sunucusu) Claude başlatır / yeniden başlatır / kapatır ([SETUP](SETUP.md) §8); Expo Go projeyi son açılanlardan açar.
+- Metro'yu (Expo sunucusu) Claude başlatır / yeniden başlatır / kapatır; varsayılan **tünel** (`npm run mobile:tunnel`, 2026-10-16): telefon aynı ağda olmak zorunda değil, bilgisayar evde açık kalmalı ([SETUP](SETUP.md) §8). Expo Go projeyi son açılanlardan açar (adres kalıcı).
 - Apple Developer desteğindeki vakayı takip etmek: kimlik ve adres belgeleri 2026-10-09'da gönderildi; üyelik onayı gelince Claude'a haber vermek. EAS CLI bu makinede mevcut Expo hesabıyla girişli; komutlar `npm run eas -- <komut>` ([SETUP](SETUP.md) §10).
 - Expo MCP (plugin'le geldi) Expo hesabıyla yetkilendirilmedi; gerekirse ilk derlemede.
 - C maketi telefonda: https://claude.ai/artifact/GWScS6NjHsxUphrHSFLo7J (özel; 2026-10-04'te erişilebilir renklerle güncellendi, `design/maketler/c-hale.html` ile aynı).
@@ -71,7 +71,7 @@ Ayrıntı: [ROADMAP.md](ROADMAP.md).
 | Supabase CLI | 2.119.0 (kök devDependency, `npx supabase`); bulut projesine bağlı (`supabase/.temp`, gitignore'lu). Edge Functions: Deno yok; tip denetimi `supabase/functions/tsconfig.json`, yerel çalıştırma `supabase functions serve` (Docker) |
 | Docker Desktop | 29.2 (yerel Supabase ve pgTAP: `npm run db:start`, `npm run test:db`; yerel önizleme `npm run web:local`) |
 | Claude Code plugin'leri | `expo` 1.13.9, `supabase`, `postgres-best-practices` (proje kapsamı; kurulum [SETUP.md](SETUP.md) §5) |
-| Expo Go (iPhone) | kurulu; `npm.cmd run mobile` + QR (PowerShell'de `npm` betiği engelli, `npm.cmd` kullanılır) |
+| Expo Go (iPhone) | kurulu; varsayılan `npm.cmd run mobile:tunnel` (tünel, global `@expo/ngrok` 4.1.3), yedek `npm.cmd run mobile` (LAN); PowerShell'de `npm` betiği engelli, `npm.cmd` kullanılır |
 | Mac | yok (iOS derlemeleri EAS bulutunda) |
 
 ## Otomasyonlar
