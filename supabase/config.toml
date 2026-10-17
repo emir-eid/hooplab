@@ -429,3 +429,6 @@ verify_jwt = false
 
 [functions.coach-daily]
 verify_jwt = false
+
+[functions.coach-weekly]
+verify_jwt = false

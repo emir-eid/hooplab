@@ -18,7 +18,7 @@ import { usePalette } from '@/theme/appearance';
 export default function CoachBasisScreen() {
   const palette = usePalette();
   const insets = useSafeAreaInsets();
-  const { sentences, only } = coachBasis();
+  const { sentences, only, numbersLabel } = coachBasis();
   // Rozet numarası özetteki alıntılı cümlelerin sırası; sayfada aynı numara görünür.
   let n = 0;
   const numbered = sentences.map((s) => ({ s, mark: s.numbers.length + s.sources.length > 0 ? ++n : null }));
@@ -70,7 +70,7 @@ export default function CoachBasisScreen() {
                     <ListRow
                       key={`n-${id}`}
                       label={basisLabel(id)}
-                      detail="Günün sayıları"
+                      detail={numbersLabel}
                       {...(target ? { onPress: () => openTarget(target) } : {})}
                     />
                   );

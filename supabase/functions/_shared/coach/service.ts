@@ -5,6 +5,7 @@ import type { SupabaseClient } from 'npm:@supabase/supabase-js@2.117.2';
 
 import type { AskStore, NewAskRow } from './ask.ts';
 import type { CoachStore, NewSummaryRow, SummaryRow } from './daily.ts';
+import type { NewWeeklyRow, WeeklyRow, WeeklyStore } from './weekly.ts';
 
 export interface CoachEnv {
   apiKey: string;
@@ -57,6 +58,25 @@ export function supabaseAskStore(db: SupabaseClient): AskStore {
     async insert(row: NewAskRow) {
       const { error } = await db.from('coach_messages').insert(row);
       if (error) throw dbError('coach_messages yazılamadı', error);
+    },
+  };
+}
+
+export function supabaseWeeklyStore(db: SupabaseClient): WeeklyStore {
+  return {
+    async listWeek(userId, weekStart) {
+      const { data, error } = await db
+        .from('coach_weekly_summaries')
+        .select('status, created_at, audit, error')
+        .eq('user_id', userId)
+        .eq('week_start', weekStart)
+        .order('created_at', { ascending: false });
+      if (error) throw dbError('coach_weekly_summaries okunamadı', error);
+      return (data ?? []) as WeeklyRow[];
+    },
+    async insert(row: NewWeeklyRow) {
+      const { error } = await db.from('coach_weekly_summaries').insert(row);
+      if (error) throw dbError('coach_weekly_summaries yazılamadı', error);
     },
   };
 }

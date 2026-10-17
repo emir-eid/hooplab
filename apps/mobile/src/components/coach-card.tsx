@@ -51,14 +51,15 @@ import { usePalette } from '@/theme/appearance';
 
 // --- Dayanaklar sayfasının verisi ---
 // Adres parametresine konmaz (web'de adres satırında sağlık verisi görünmesin); bellekte, son açılan özet.
-let shownBasis: { sentences: AuditSentence[]; only: number | null } = { sentences: [], only: null };
+let shownBasis: { sentences: AuditSentence[]; only: number | null; numbersLabel: string } = { sentences: [], only: null, numbersLabel: 'Günün sayıları' };
 
 export function coachBasis() {
   return shownBasis;
 }
 
-export function openBasis(sentences: AuditSentence[], only: number | null) {
-  shownBasis = { sentences, only };
+/** `numbersLabel`: sayıların geldiği belge (günlük özette "Günün sayıları", haftalık yorumda "Haftanın sayıları"). */
+export function openBasis(sentences: AuditSentence[], only: number | null, numbersLabel = 'Günün sayıları') {
+  shownBasis = { sentences, only, numbersLabel };
   router.push('/coach-basis');
 }
 
@@ -159,7 +160,7 @@ export function CoachCard({ snapshot, checkinDone }: { snapshot: CoachSnapshot; 
   );
 }
 
-function Header() {
+export function Header() {
   const palette = usePalette();
   return (
     <View style={styles.header}>
@@ -175,7 +176,7 @@ function Header() {
   );
 }
 
-function Waiting({ text }: { text: string }) {
+export function Waiting({ text }: { text: string }) {
   const palette = usePalette();
   return (
     <View style={styles.waiting} accessibilityLiveRegion="polite">
@@ -187,7 +188,7 @@ function Waiting({ text }: { text: string }) {
   );
 }
 
-function Message({ title, body }: { title?: string; body: string }) {
+export function Message({ title, body }: { title?: string; body: string }) {
   return (
     <View style={styles.message}>
       {title ? <Text variant="callout">{title}</Text> : null}
@@ -283,11 +284,11 @@ function RoutingNotes({ notes }: { notes: readonly (keyof typeof routingNoteText
   );
 }
 
-function Actions({ children }: { children: ReactNode }) {
+export function Actions({ children }: { children: ReactNode }) {
   return <View style={styles.actions}>{children}</View>;
 }
 
-function Action({ label, onPress }: { label: string; onPress: () => void }) {
+export function Action({ label, onPress }: { label: string; onPress: () => void }) {
   return (
     <Pressable onPress={onPress} hitSlop={12} accessibilityRole="button" style={({ pressed }) => pressed && styles.pressed}>
       <Text variant="callout" tone="inkSecondary">

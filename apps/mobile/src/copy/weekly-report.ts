@@ -27,6 +27,11 @@ export function weekRangeText(start: string, end: string): string {
 export const weeklyTitle = 'Haftalık rapor';
 export const weekDayCount = loadWeek.days;
 
+/** PDF paylaşımı (karar 0051). */
+export const shareRowLabel = 'PDF olarak paylaş';
+export const shareFooter =
+  'PDF telefonda hazırlanır ve yalnız paylaşım menüsünde seçtiğin yere gider. Adın ya da hesabın yazmaz. Gönderdiğin dosya artık alıcıdadır.';
+
 export function phaseText(v: WeeklyReportView): string {
   return v.phase === 'complete' ? 'Biten hafta' : `Sürüyor · ${v.dates.length}. gün`;
 }

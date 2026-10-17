@@ -92,6 +92,7 @@ function RootNavigator() {
           <Stack.Screen name="matches" />
           <Stack.Screen name="recovery-method" />
           <Stack.Screen name="weekly" />
+          <Stack.Screen name="weekly-share" options={{ presentation: 'modal' }} />
           <Stack.Screen
             name="explain/[id]"
             options={{

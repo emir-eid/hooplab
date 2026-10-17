@@ -120,7 +120,7 @@ Bulut tarafını kurulum sihirbazı kurar (yukarıda). Kurduğu değerler:
 
 - Supabase secrets: `GOOGLE_HEALTH_CLIENT_ID`, `GOOGLE_HEALTH_CLIENT_SECRET`, `GHEALTH_CRON_SECRET`
 - Vault: `project_url`, `ghealth_cron_secret`
-- Fonksiyonlar: `ghealth-connect`, `ghealth-callback`, `ghealth-sync`, `coach-daily` (koçun günlük özeti), `coach-ask` (koçta soru-cevap); ikisi de `ANTHROPIC_API_KEY` ister
+- Fonksiyonlar: `ghealth-connect`, `ghealth-callback`, `ghealth-sync`, `coach-daily` (koçun günlük özeti), `coach-ask` (koçta soru-cevap), `coach-weekly` (haftalık yorum, [0052](decisions/0052-haftalik-koc-yorumu.md)); üçü de `ANTHROPIC_API_KEY` ister
 
 Fonksiyon kodu değiştiğinde yeniden dağıtım: `npm run setup -- --redeploy --yes`. Web istemcisinin kurulumu: [rehber](guides/google-health-baglantisi.md) §4.
 

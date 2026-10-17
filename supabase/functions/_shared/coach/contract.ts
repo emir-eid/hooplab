@@ -97,3 +97,20 @@ export type AskResponse =
 
 /** Saklanan (geçmişte gösterilen) yanıt türleri. */
 export type StoredAskResponse = Exclude<AskResponse, { status: 'invalid' } | { status: 'limit' }>;
+
+// --- Haftalık yorum (karar 0052) ---
+
+/** Bir hafta için en fazla deneme (ilk yazım dahil). Maliyet ayarı, bilimsel eşik değil. */
+export const weeklyAttemptLimit = 2;
+
+/**
+ * coach-weekly yanıtı. Yalnız biten hafta; `none`: yalnız bakma isteğinde hafta için hiç deneme yok, model çağrılmadı.
+ * Reddedilen ve başarısız denemede model metni yoktur.
+ */
+export type WeeklyResponse =
+  | { status: 'accepted'; cached: boolean; sentences: AuditSentence[]; omitted: number }
+  | { status: 'rejected'; cached: boolean }
+  | { status: 'failed'; cached: boolean; error: string }
+  | { status: 'none' }
+  | { status: 'invalid'; errors: string[] }
+  | { status: 'limit' };

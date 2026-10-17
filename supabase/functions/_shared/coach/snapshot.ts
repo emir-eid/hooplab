@@ -349,9 +349,10 @@ export function snapshotRuleIds(snapshot: CoachSnapshot, metrics: readonly Metri
 
 export type SnapshotResult = { ok: true; snapshot: CoachSnapshot } | { ok: false; errors: string[] };
 
-type Obj = Record<string, unknown>;
+export type Obj = Record<string, unknown>;
 
-class Checker {
+/** Biçim denetleyicisi; haftalık anlık değerler (weekly.ts) de kullanır. */
+export class Checker {
   readonly errors: string[] = [];
 
   fail(path: string, message: string): void {

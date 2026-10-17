@@ -8,6 +8,8 @@ import { routingNotes } from '../../../../supabase/functions/_shared/coach/contr
 import type { CoachReply } from '@/data/coach';
 import type { AskEntry, AskReply } from '@/data/coach-ask';
 import type { CoachSnapshot } from '@/data/coach-snapshot';
+import type { WeeklyCoachReply } from '@/data/coach-weekly';
+import type { WeeklySnapshot } from '@/data/coach-weekly-snapshot';
 import type { Checkin, ExerciseToTag, NewTrainingSession, Result, TrainingSession } from '@/data/daily-log';
 import { buildEnergyView, energyFrom, energyHoursFrom, type EnergyView } from '@/data/energy-view';
 import { linkCandidates, pendingExercises, type ExerciseSession } from '@/data/exercise-tagging';
@@ -24,6 +26,7 @@ import { buildWeeklyReportView, firstWeekOf, type WeeklyReport } from '@/data/we
 import { askDemoOnlySamples } from '@/copy/coach-ask';
 import { demoAnswer } from '@/demo/demo-ask';
 import { demoCoachSummary } from '@/demo/demo-coach';
+import { demoWeeklyComment } from '@/demo/demo-coach-weekly';
 import { createDemoDb, type DemoDb, type DemoScenario } from '@/demo/demo-data';
 
 export const demoUnavailable = 'Demoda Google Health bağlantısı yok; veriler sentetik.';
@@ -340,6 +343,18 @@ export class DemoStore {
       response: { status: 'accepted', cached: true, sentences: demoCoachSummary(this.scenario, snapshot), omitted: 0, matchDay: snapshot.matchDay, notes: routingNotes(snapshot) },
       demo: true,
     });
+  }
+
+  /** Demoda yazılan haftalık yorumlar (hafta başı); sayfa yenilenince silinir. */
+  private weeklyWritten = new Set<string>();
+
+  /**
+   * Haftalık koç yorumu (karar 0052): gerçek akış gibi önce yok, "yaz" denince sentetik yorum; API çağrılmaz.
+   */
+  async fetchCoachWeekly(snapshot: WeeklySnapshot, mode: 'peek' | 'generate' | 'regenerate'): Promise<Result<WeeklyCoachReply>> {
+    if (mode === 'peek' && !this.weeklyWritten.has(snapshot.weekStart)) return ok({ response: { status: 'none' }, demo: true });
+    this.weeklyWritten.add(snapshot.weekStart);
+    return ok({ response: { status: 'accepted', cached: mode === 'peek', sentences: demoWeeklyComment(snapshot), omitted: 0 }, demo: true });
   }
 
   /** Koçta soru-cevap: örnek sorulara önceden yazılmış sentetik yanıt (karar 0037); API çağrılmaz. */

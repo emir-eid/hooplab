@@ -3,7 +3,7 @@
 // Bugün'deki notlarla aynı cümleler kullanılır. Alıntılar dokununca ilgili ölçümün açıklama sayfasına gider.
 
 import type { AuditSentence } from '../../../../supabase/functions/_shared/coach/audit.ts';
-import { dailyAttemptLimit, type RoutingNote } from '../../../../supabase/functions/_shared/coach/contract.ts';
+import { dailyAttemptLimit, weeklyAttemptLimit, type RoutingNote } from '../../../../supabase/functions/_shared/coach/contract.ts';
 import { metricKeys, type MetricKey } from '../../../../supabase/functions/_shared/coach/snapshot.ts';
 import { explainers, type ExplainerId } from './explainers.ts';
 import { illnessSignsFooter, illnessSignsTitle } from './illness-signs.ts';
@@ -203,3 +203,19 @@ export function summaryLayout(sentences: readonly AuditSentence[]): SummaryLayou
       .filter((s) => s.lines.length > 0),
   };
 }
+
+// --- Haftalık yorum (karar 0052) ---
+
+export const weeklyCoachLabel = 'Koçun haftalık yorumu';
+export const weeklyCoachChecking = 'Bu haftanın yorumuna bakılıyor…';
+export const weeklyCoachWriting = 'Koç haftanın yorumunu yazıyor. Yarım dakika kadar sürebilir.';
+export const weeklyCoachIntro = `Koç biten haftanın sayılarını kanıt tabanındaki kaynaklarla yorumlar. Hafta başına en fazla ${weeklyAttemptLimit} kez yazılır.`;
+export const weeklyCoachWriteAction = 'Koç yorumu yaz';
+export const weeklyCoachCurrent = 'Koç yorumu hafta bitince yazılabilir.';
+export const weeklyCoachRejectedTitle = 'Bu haftanın yorumu gösterilmiyor';
+export const weeklyCoachRejectedBody = 'Yorum kaynak ve sayı denetiminden geçmedi. Sayıların açıklamaları raporun "i" düğmelerinde.';
+export const weeklyCoachFailedTitle = 'Koç bu hafta için yorum yazamadı';
+export const weeklyCoachLimitBody = `Bu hafta için ${weeklyAttemptLimit} yazma hakkı doldu.`;
+export const weeklyCoachInvalidBody = 'Haftanın değerleri biçim denetiminden geçmedi, koça gönderilmedi.';
+export const weeklyCoachDemoNote = 'Demo: önceden yazılmış sentetik yorum; yapay zeka çağrılmadı.';
+export const weeklyNumbersLabel = 'Haftanın sayıları';

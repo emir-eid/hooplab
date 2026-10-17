@@ -80,7 +80,7 @@ function ruleValue(kb: Kb, ruleId: string, key: string): KbRuleValue {
   return v;
 }
 
-function ruleNumber(kb: Kb, ruleId: string, key: string): number {
+export function ruleNumber(kb: Kb, ruleId: string, key: string): number {
   const v = ruleValue(kb, ruleId, key);
   if (typeof v !== 'number') throw new MissingRuleValueError(ruleId, key);
   return v;
@@ -122,7 +122,7 @@ export function formatLoad(value: number): string {
 }
 
 /** 0,23 → "+%23" (copy/training-load.ts formatChange). */
-function formatChange(change: number): string {
+export function formatChange(change: number): string {
   const pct = Math.round(change * 100);
   return pct === 0 ? '%0' : `${pct > 0 ? '+' : '−'}%${Math.abs(pct)}`;
 }
@@ -137,7 +137,7 @@ const capitalize = (s: string) => s.charAt(0).toLocaleUpperCase('tr') + s.slice(
  * 6.4 saat → "6,4 saat (6 sa 24 dk)": model iki yazımdan birini kullanabilsin. Aşağı kesilir (uygulamadaki gibi):
  * 6,996 saat "7,0 saat" yazıp "7 saatin altında: kısa" denmesin.
  */
-function hours(h: number): string {
+export function hours(h: number): string {
   const total = Math.floor(h * 60 + 1e-9);
   return `${formatDecimal(Math.floor(h * 10 + 1e-9) / 10)} saat (${Math.floor(total / 60)} sa ${total % 60} dk)`;
 }
@@ -176,7 +176,7 @@ const signalTexts: Record<RecoverySignal, string> = {
   rhr_high: 'uyku nabzı bandın üstünde',
   sleep_short: 'uyku kısa',
 };
-const positionTexts = { below: 'altında', within: 'içinde', above: 'üstünde' } as const;
+export const positionTexts = { below: 'altında', within: 'içinde', above: 'üstünde' } as const;
 
 // --- Bloklar ---
 
@@ -489,14 +489,16 @@ export function sourceDocument(source: KbSource): DocumentParam {
   };
 }
 
-/** "Günün sayıları" belgesi: her blok ayrı içerik bloğu (alıntı blok indisiyle döner). */
-export function numbersDocument(blocks: readonly NumbersBlock[]): DocumentParam {
+const numbersContext =
+  "Sporcunun bugünkü değerleri; HoopLab'in hesap motoru hesapladı. Her blok ayrı bir ölçümdür. 'Tahmin' yazan değerler doğrulanmış ölçüm değildir.";
+
+/** "Günün sayıları" belgesi: her blok ayrı içerik bloğu (alıntı blok indisiyle döner). Haftalık yorum başlığı değiştirir. */
+export function numbersDocument(blocks: readonly NumbersBlock[], title: string = numbersTitle, context: string = numbersContext): DocumentParam {
   return {
     type: 'document',
     source: { type: 'content', content: blocks.map((b) => ({ type: 'text', text: b.text })) },
-    title: numbersTitle,
-    context:
-      "Sporcunun bugünkü değerleri; HoopLab'in hesap motoru hesapladı. Her blok ayrı bir ölçümdür. 'Tahmin' yazan değerler doğrulanmış ölçüm değildir.",
+    title,
+    context,
     citations: { enabled: true },
   };
 }

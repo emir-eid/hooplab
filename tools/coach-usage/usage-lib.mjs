@@ -79,7 +79,10 @@ select 'summary' as kind, local_date::text as local_date, status, null::text as 
 from public.coach_summaries
 union all
 select 'question', local_date::text, status, category, model, fallback, usage, classifier_usage, error, ${AUDIT_COLUMNS}
-from public.coach_messages`;
+from public.coach_messages
+union all
+select 'weekly', created_at::date::text, status, null, model, fallback, usage, null, error, ${AUDIT_COLUMNS}
+from public.coach_weekly_summaries`;
 
 /** Console'daki ön ödemeli kredi (COSTS). Yükleme yapılınca güncellenir ya da `--kredi` ile verilir. */
 export const CREDIT_USD = 10;
@@ -183,6 +186,14 @@ export function monthReport(rows, month, { today, firstDate }) {
 
   const summaries = inMonth.filter((r) => r.kind === 'summary');
   const questions = inMonth.filter((r) => r.kind === 'question');
+  // Haftalık yorum (karar 0052): yazıldığı (UTC) güne sayılır.
+  const weeklies = inMonth.filter((r) => r.kind === 'weekly');
+  const weeklyTotals = emptyTotals();
+  for (const r of weeklies) {
+    if (!r.usage) continue;
+    weeklyTotals.calls += 1;
+    addTokens(weeklyTotals, costOfUsage(r.usage, REQUESTED_MODELS.coach));
+  }
 
   const summaryTotals = emptyTotals();
   for (const r of summaries) {
@@ -208,9 +219,9 @@ export function monthReport(rows, month, { today, firstDate }) {
     }
   }
 
-  const total = summaryTotals.usd + answerTotals.usd + classifierTotals.usd;
+  const total = summaryTotals.usd + answerTotals.usd + classifierTotals.usd + weeklyTotals.usd;
   const per30 = coveredDays > 0 ? (total / coveredDays) * 30 : null;
-  const unknownModels = [...new Set([...summaryTotals.unknownModels, ...answerTotals.unknownModels, ...classifierTotals.unknownModels])];
+  const unknownModels = [...new Set([...summaryTotals.unknownModels, ...answerTotals.unknownModels, ...classifierTotals.unknownModels, ...weeklyTotals.unknownModels])];
 
   return {
     month,
@@ -219,7 +230,7 @@ export function monthReport(rows, month, { today, firstDate }) {
     coveredDays,
     usd: total,
     per30,
-    unpriced: summaryTotals.unpriced + answerTotals.unpriced + classifierTotals.unpriced,
+    unpriced: summaryTotals.unpriced + answerTotals.unpriced + classifierTotals.unpriced + weeklyTotals.unpriced,
     unknownModels,
     summaries: {
       rows: summaries.length,
@@ -232,6 +243,13 @@ export function monthReport(rows, month, { today, firstDate }) {
       // Kısmi kabul yalnız kabul edilen özette anlamlı: reddedilen özet hiç gösterilmez.
       acceptedSentences: sentenceStats(summaries.filter((r) => r.status === 'accepted')),
       problems: countBy(summaries.flatMap((r) => (Array.isArray(r.problems) ? r.problems : []))),
+    },
+    weekly: {
+      rows: weeklies.length,
+      status: countBy(weeklies.map((r) => r.status)),
+      errors: countBy(weeklies.filter((r) => r.error).map((r) => r.error)),
+      totals: weeklyTotals,
+      problems: countBy(weeklies.flatMap((r) => (Array.isArray(r.problems) ? r.problems : []))),
     },
     questions: {
       rows: questions.length,
@@ -335,6 +353,7 @@ export function formatReport(report, { allMonths = [], credit, flags = [] } = {}
   lines.push('| | Çağrı | Girdi | Önbellek yazma | Önbellek okuma | Çıktı (düşünme) | Maliyet |', '|---|---|---|---|---|---|---|');
   const row = (name, t) => `| ${name} | ${t.calls} | ${tok(t.input)} | ${tok(t.cacheWrite)} | ${tok(t.cacheRead)} | ${tok(t.output)} (${tok(t.thinking)}) | ${usd(t.usd)} |`;
   lines.push(row('Günlük özet (Sonnet)', s.totals));
+  lines.push(row('Haftalık yorum (Sonnet)', report.weekly.totals));
   lines.push(row('Soru yanıtı (Sonnet)', q.answer));
   lines.push(row('Soru sınıflandırma (Haiku)', q.classifier));
   lines.push(`| **Toplam** | | | | | | **${usd(report.usd)}** |`, '');
@@ -355,6 +374,7 @@ export function formatReport(report, { allMonths = [], credit, flags = [] } = {}
   lines.push(
     `- Kabul edilen özetlerde atılan cümle (kısmi kabul, 0034): ${s.acceptedSentences.dropped} / ${s.acceptedSentences.sentences} (${pct(s.acceptedSentences.dropped, s.acceptedSentences.sentences)}). Sorun kodları (bütün denemeler): ${list(s.problems)}.`,
   );
+  lines.push(`- Haftalık yorum: ${report.weekly.rows} deneme (${list(report.weekly.status)}); hata: ${list(report.weekly.errors)}; sorun kodları: ${list(report.weekly.problems)}.`);
   lines.push(`- Soru-cevap: ${q.rows} soru (${list(q.status)}); sınıf: ${list(q.category)}; yedek model ${q.fallback}; hata: ${list(q.errors)}.`);
   lines.push(
     `- Yanıtlanan sorularda atılan cümle: ${q.answeredSentences.dropped} / ${q.answeredSentences.sentences} (${pct(q.answeredSentences.dropped, q.answeredSentences.sentences)}). Sorun kodları (bütün sorular): ${list(q.problems)}.`,

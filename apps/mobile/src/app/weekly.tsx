@@ -5,13 +5,14 @@
 import { addIsoDays, weekLength, weekStartOf, shortSleep, type DayLevel, type MetricReading } from '@hooplab/engine';
 import { layout, loadGroups, radius, spacing } from '@hooplab/theme';
 import { router, useLocalSearchParams } from 'expo-router';
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { Pressable, StyleSheet, View } from 'react-native';
 
 import { Card } from '@/components/card';
 import { DemoBar } from '@/components/demo-bar';
 import { Icon } from '@/components/icon';
 import { ExplainButton, openExplainer } from '@/components/info-button';
+import { WeeklyCoachCard, WeeklyCoachPending } from '@/components/weekly-coach-card';
 import { GroupFooter, GroupLabel, ListGroup, ListRow } from '@/components/list';
 import { PageHeader } from '@/components/page-header';
 import { Tile } from '@/components/recovery-section';
@@ -42,6 +43,7 @@ import {
   nutritionFooter,
   painFooter,
   phaseText,
+  shareRowLabel,
   positionsText,
   previousWeekText,
   sessionsText,
@@ -51,6 +53,7 @@ import {
   weightChangeText,
   weightFooter,
 } from '@/copy/weekly-report';
+import { buildWeeklyCoachSnapshot } from '@/data/coach-weekly-snapshot';
 import { fetchWeeklyReport } from '@/data/weekly-report';
 import type { WeeklyReport, WeeklyReportView } from '@/data/weekly-report-view';
 import { useDemoScenario } from '@/demo/demo-mode';
@@ -157,6 +160,10 @@ function Report({ view }: { view: WeeklyReportView }) {
         </Text>
         <ExplainButton id="weeklyReport" />
       </View>
+      <ListGroup>
+        <ListRow label={shareRowLabel} onPress={() => router.push({ pathname: '/weekly-share', params: { week: view.weekStart } })} />
+      </ListGroup>
+      <CoachBlock view={view} />
       <LoadBlock view={view} />
       <RecoveryBlock view={view} />
       <NightsBlock view={view} />
@@ -167,6 +174,14 @@ function Report({ view }: { view: WeeklyReportView }) {
       <EnergyBlock view={view} />
     </>
   );
+}
+
+// --- Koç yorumu (karar 0052) ---
+
+function CoachBlock({ view }: { view: WeeklyReportView }) {
+  // Görünüm değişmedikçe aynı nesne: kart her çizimde yeniden bakmasın.
+  const snapshot = useMemo(() => buildWeeklyCoachSnapshot(view), [view]);
+  return <View style={styles.coach}>{snapshot ? <WeeklyCoachCard snapshot={snapshot} /> : <WeeklyCoachPending />}</View>;
 }
 
 /** Pazartesi-pazar başlıkları; süren haftada gelmemiş günler soluk. */
@@ -685,4 +700,5 @@ const styles = StyleSheet.create({
   painRow: { marginTop: spacing[3] },
   painHead: { flexDirection: 'row', justifyContent: 'space-between' },
   painCell: { height: 28, borderRadius: 6, marginHorizontal: 2 },
+  coach: { marginTop: layout.cardGap },
 });
