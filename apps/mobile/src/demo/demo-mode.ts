@@ -6,12 +6,20 @@ import { useSyncExternalStore } from 'react';
 import { bumpDataRevision } from '@/data/revision';
 import type { DemoScenario } from '@/demo/demo-data';
 import { DemoStore } from '@/demo/demo-store';
+import { demoOnlyBuild } from '@/lib/demo-only';
 import { toLocalDate } from '@/utils/local-date';
 
 /** Açılışta gösterilen senaryo: en çok şeyi (gerekçe, çipler, öneri) gösteren gün. */
 export const defaultDemoScenario: DemoScenario = 'yellow';
 
-let current: DemoStore | null = null;
+// Yalnız demo derlemesinde (0050) uygulama demoyla açılır.
+let current: DemoStore | null = demoOnlyBuild ? newStore(defaultDemoScenario) : null;
+
+function newStore(scenario: DemoScenario) {
+  const now = new Date();
+  return new DemoStore(scenario, toLocalDate(now), now);
+}
+
 const listeners = new Set<() => void>();
 
 function emit() {
@@ -25,8 +33,7 @@ export function demoStore(): DemoStore | null {
 }
 
 export function startDemo(scenario: DemoScenario = defaultDemoScenario) {
-  const now = new Date();
-  current = new DemoStore(scenario, toLocalDate(now), now);
+  current = newStore(scenario);
   emit();
 }
 

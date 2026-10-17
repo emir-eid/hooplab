@@ -53,13 +53,13 @@ Günlük özetin sunucu tarafını tamamlamak: Claude çağrısı, denetim, kay�
 - LESSONS: dolu bir günde kural grafiğiyle seçim tabanın neredeyse tamamını seçiyor (sentetik tam gün 78/78 kaynak, istek ~109 KB; yalnız toparlanma 8 kaynak, ~15 KB): 0032'deki günlük özet tahmini yalnız seyrek günler için geçerli ([ölçüldü]). Edge Runtime SDK'yı ve paketi yüklüyor; paylaşılan modüller SDK'yı yalnız `import type` ile alır ([ölçüldü]).
 
 ## Ek — Apple
-- Apple Developer desteği yanıt verdi; kullanıcı istenen kimlik ve adres belgelerini 2026-10-09'da e-postayla gönderdi, onay bekleniyor (STATE, COSTS, ROADMAP). Belgelerin içeriği hiçbir dosyaya yazılmadı.
+- Apple Developer kaydında ilerleme oldu, onay bekleniyor (süreç `private/ops.md`).
 
 ## Açık kalanlar
 - Uygulamada anlık değerleri kuran modül, Bugün'de koç kartı, yönlendirme notlarının metni, demo özetleri.
 - İlk gerçek çağrı ve `usage` ölçümü; dolu günde maliyet tahmini 0032'nin üstünde çıkabilir, ölçüme göre seçim daraltılabilir (kullanıcı kararı).
 - Denetçinin bilinen boşlukları (yazıyla sayı, listede olmayan emir kipi, sayının yönü); gerçek yanıtlarla ayarlanacak.
-- Token takibi (10 Ekim 01:17 ve 11 Ekim 17:18'den sonra); Apple onayı.
+- Token takibi (10 ve 11 Ekim'den sonra); Apple onayı.
 
 ## Sıradaki adım
 - Faz 3: uygulama tarafı (anlık değerler, Bugün'de koç kartı, demo özetleri) ve ilk gerçek çağrı ile `usage` ölçümü.

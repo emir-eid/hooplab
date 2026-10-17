@@ -1,6 +1,7 @@
 // Giriş ekranı. Tek kullanıcı: kayıt yok, hesap Supabase panosunda bir kez açılır ve yeni kayıtlar
 // kapatılır. Bağlantı değerleri eksikse form yerine nedeni ve kurulum sihirbazı gösterilir (0023).
 // Demo (karar 0022) bağlantı değerleri olmadan da açılır: repo'yu klonlayan biri sunucusuz gezebilir.
+// Yalnız demo derlemesinde (0050, portfolyo sayfası) giriş formu ve kurulum notu yerine kısa bir tanıtım.
 
 import { layout, spacing } from '@hooplab/theme';
 import { useRef, useState } from 'react';
@@ -15,6 +16,7 @@ import { PrimaryButton } from '@/components/primary-button';
 import { Text } from '@/components/text';
 import { TextFieldRow } from '@/components/text-field';
 import { startDemo } from '@/demo/demo-mode';
+import { demoOnlyBuild } from '@/lib/demo-only';
 import { supabaseConfig } from '@/lib/supabase';
 import { usePalette } from '@/theme/appearance';
 
@@ -56,9 +58,14 @@ export default function SignInScreen() {
       <ScrollView
         keyboardShouldPersistTaps="handled"
         contentContainerStyle={{ paddingTop: insets.top + spacing[10], paddingBottom: insets.bottom + spacing[6] }}>
-        <PageHeader overline="HoopLab" title="Giriş yap" />
+        <PageHeader overline="HoopLab" title={demoOnlyBuild ? 'Demo' : 'Giriş yap'} />
 
-        {supabaseConfig.ok ? (
+        {demoOnlyBuild ? (
+          <Text variant="bodyCompact" tone="inkSecondary" style={styles.lead}>
+            Bu, HoopLab'in tarayıcıda çalışan demosu. Gerçek uygulama sporcunun iPhone'unda, kendi verisiyle
+            çalışıyor; burada bütün değerler sentetik.
+          </Text>
+        ) : supabaseConfig.ok ? (
           <>
             <Text variant="bodyCompact" tone="inkSecondary" style={styles.lead}>
               Supabase projende açtığın hesapla giriş yap. Oturum bu iPhone'da şifreli saklanır.

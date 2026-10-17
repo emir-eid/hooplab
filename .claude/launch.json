@@ -2,6 +2,12 @@
   "version": "0.0.1",
   "configurations": [
     {
+      "name": "portfolyo",
+      "runtimeExecutable": "node",
+      "runtimeArgs": ["tools/site/build-site.mjs", "--serve"],
+      "port": 4310
+    },
+    {
       "name": "maketler",
       "runtimeExecutable": "python",
       "runtimeArgs": [

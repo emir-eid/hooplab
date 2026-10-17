@@ -93,7 +93,7 @@ STATE'teki sıradaki iş (Faz 4: bildirimler). Kullanıcı Google yeniden bağla
 - LESSONS "Expo / React Native": yerel bildirim Expo Go'da çalışır, push derleme ister; eklenti `aps-environment` ekler; paket sonrası Metro `--clear`.
 
 ## Açık kalanlar
-- Google Health bağlantısının sınırı 2026-10-19 11:55 (uygulamadan yeniden bağlan; bildirim 18 Ekim 11:55'te hatırlatacak).
+- Google Health bağlantısının sınırı 2026-10-19 (uygulamadan yeniden bağlan; bildirim bir gün önce hatırlatacak).
 - Bildirimlerin gerçek zamanlamada (sabah check-in, izin hatırlatması) geldiği henüz görülmedi; yalnız deneme bildirimi görüldü.
 
 ## Sıradaki adım

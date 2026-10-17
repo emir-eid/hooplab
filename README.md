@@ -1,10 +1,12 @@
 # HoopLab
 
-> **In English.** HoopLab is a personal iPhone app (Expo + Supabase) that a professional basketball player is building for personal use. It reads wearable data from the Google Health API and the athlete's own daily inputs. Each value is compared with the athlete's **own baseline**, not with general-population norms. Numbers come from a deterministic, tested engine. Every threshold links to a verified scientific source (DOI/PMID). An AI model will only *explain* numbers the engine has already computed; it never calculates them. The repo also keeps the whole development record: decision records, session reports, lessons learned and a privacy guard that scans every commit and the full git history. The documentation is in Turkish. The app has an offline **demo mode** with a synthetic athlete, so no account is needed to look around. To run it with your own Supabase and Google Cloud accounts, `npm run setup` installs and checks the server side ([guide, Turkish](docs/guides/kurulum.md)).
+> **In English.** HoopLab is a personal iPhone app (Expo + Supabase) that a professional basketball player is building for personal use. It reads wearable data from the Google Health API and the athlete's own daily inputs. Each value is compared with the athlete's **own baseline**, not with general-population norms. Numbers come from a deterministic, tested engine. Every threshold links to a verified scientific source (DOI/PMID). An AI model will only *explain* numbers the engine has already computed; it never calculates them. The repo also keeps the whole development record: decision records, session reports, lessons learned and a privacy guard that scans every commit and the full git history. The documentation is in Turkish. The app has an offline **demo mode** with a synthetic athlete: **[try it in the browser](https://emir-eid.github.io/hooplab/)**, no account or install needed. To run it with your own Supabase and Google Cloud accounts, `npm run setup` installs and checks the server side ([guide, Turkish](docs/guides/kurulum.md)).
 
 Profesyonel bir basketbolcunun kendi antrenmanı için geliştirdiği iPhone uygulaması. Fitbit Air / Google Health verisini ve sporcunun kendi girdilerini birleştirir. Değerleri sedanter popülasyon normlarına göre değil, **sporcunun kendi baseline'ına** göre değerlendirir.
 
-> Durum: **Faz 1 (temel uygulama) sürüyor.** Canlı durum: [docs/STATE.md](docs/STATE.md) · Ürün tanımı: [docs/PRODUCT.md](docs/PRODUCT.md) · Yol haritası: [docs/ROADMAP.md](docs/ROADMAP.md)
+> **Canlı demo ve tanıtım:** [emir-eid.github.io/hooplab](https://emir-eid.github.io/hooplab/tr/) (sentetik sporcu, tarayıcıda çalışır)
+>
+> Durum: **Faz 4 (son rötuşlar) sürüyor; Faz 2 (hesap motoru) ve Faz 3 (AI koç) tamamlandı.** Faz 1'den yalnız TestFlight kaldı. Canlı durum: [docs/STATE.md](docs/STATE.md) · Ürün tanımı: [docs/PRODUCT.md](docs/PRODUCT.md) · Yol haritası: [docs/ROADMAP.md](docs/ROADMAP.md)
 
 <p align="center">
   <picture><source media="(prefers-color-scheme: dark)" srcset="docs/gorseller/bugun-hazir-dark.webp"><img src="docs/gorseller/bugun-hazir-light.webp" alt="Bugün ekranı: günün durumu Hazır" width="200"></picture>
@@ -20,14 +22,13 @@ Giyilebilir cihazların yorumları ortalama bir kullanıcıya göre ayarlı. Pro
 
 ## Şu an ne yapıyor
 
-- **Google Health senkronu:** Saatlik çalışır. Gece HRV'si, dinlenik nabız, SpO2, solunum hızı, cilt sıcaklığı, adım ve kalori, uyku ve egzersiz oturumları günlük özet olarak alınır. Gün içi ham nabız hiç saklanmaz.
-- **Toparlanma:** HRV, dinlenik nabız ve uyku, son 7 günün önceki 4 haftaya göre kişisel bandıyla (± 0,5 SD) karşılaştırılır. Sonuç günün durumu olarak gösterilir: *Hazır*, *Kontrollü*, *Toparlan* veya veri yetmiyorsa *Bant oluşuyor*. Hesabın nasıl yapıldığı uygulamada ayrı bir ekranda anlatılır.
-- **Sabah check-in:** Beş madde 1-5 ölçeğiyle girilir: uyku kalitesi, yorgunluk, kas ağrısı, stres, ruh hali. Yanına sol / sağ ağrı haritası (0-10) eklenir. Hedef süre 30 saniye.
-- **Seans kaydı ve etiketleme:** Saatin kaydettiği oturum seans kaydına bağlanır. Tür (maç, takım antrenmanı, şut, kuvvet...) ve RPE sporcudan gelir. Seans yükü RPE × dakika olarak hesaplanır.
-- **Vücut görünümü:** Döndürülebilir 3D mankende ağrı haritası 1 gün, 3 gün veya 1 hafta için gösterilir.
-- **Demo modu:** Sentetik bir sporcuyla bütün ekranlar gezilebilir. Sunucuya bağlanmaz.
-
-Sıradakiler: antrenman yükü (akut / kronik), kas ve tendon yorgunluğu tahmini, beslenme ve hidrasyon hedefleri (Faz 2), kaynak gösteren AI koç (Faz 3).
+- **Google Health senkronu:** Saatlik çalışır. Gece HRV'si, uyku nabzı, SpO2, solunum hızı, cilt sıcaklığı, adım ve kalori, uyku ve egzersiz oturumları günlük özet olarak alınır. Gün içi ham nabız hiç saklanmaz.
+- **Toparlanma:** HRV, uyku nabzı ve uyku, son 7 günün önceki 4 haftaya göre kişisel bandıyla (± 0,5 SD) karşılaştırılır. Sonuç günün durumu olarak gösterilir: *Hazır*, *Kontrollü*, *Toparlan* ya da veri yetmiyorsa *Bant oluşuyor*. Gece nabzı, SpO2 ve cilt sıcaklığı alışılmışın dışına çıkarsa tanı koymayan bir not çıkar.
+- **Sabah check-in ve ağrı haritası:** Beş madde 1-5 ölçeğiyle, sol / sağ ağrı haritası 0-10; kişisel ortalamayla kıyaslanır. 3D mankende 1 gün, 3 gün ya da 1 hafta.
+- **Antrenman ve bölge yükü:** Seans yükü RPE × dakika; alıştığına göre oran, monotonluk ve gerilim; kas ve tendon bölgelerinin son 48-72 saatteki yükü (tahmin). Haftalık rapor.
+- **Beslenme ve sıvı:** Gün tipine göre karbonhidrat ve protein hedefleri (g/kg), öğün ve su kaydı, ter testi; maç çevresi ve seyahat / jet lag notları.
+- **AI koç:** Sabah özeti ve soru-cevap. Model yalnız motorun hesapladığı sayıları ve kanıt tabanını görür; sunucudaki denetçi alıntısı ya da sayısı tutmayan cümleyi atar. Tıbbi sorularda yorum yerine yönlendirme, takviyede doping uyarısı.
+- **Demo modu:** Sentetik bir sporcuyla bütün ekranlar gezilebilir; sunucuya bağlanmaz. [Tarayıcıda dene](https://emir-eid.github.io/hooplab/demo/).
 
 ## İlkeler
 
@@ -64,7 +65,7 @@ Bu repo kod ve süreç içerir; **kişisel veri içermez.** Sağlık verisi yaln
 
 ## Hızlı deneme
 
-Node.js 22+ ve iPhone'da Expo Go gerekir.
+Node.js 22+ ve iPhone'da Expo Go gerekir. Yalnız bakmak için kurulum gerekmez: [tarayıcıdaki demo](https://emir-eid.github.io/hooplab/demo/).
 
 ```bash
 npm install
@@ -80,14 +81,15 @@ npm run check           # tip denetimi, testler, gizlilik taraması, kaynak doğ
 
 ## Yığın ve yapı
 
-Expo SDK 57 (React Native, TypeScript strict, Expo Router) · Supabase (Postgres + RLS, Auth, Edge Functions, pg_cron; Frankfurt) · Google Health API v4 · Claude API (yalnız sunucu tarafında, Faz 3) · three.js (3D manken)
+Expo SDK 57 (React Native, TypeScript strict, Expo Router) · Supabase (Postgres + RLS, Auth, Edge Functions, pg_cron; Frankfurt) · Google Health API v4 · Claude API (yalnız sunucu tarafında) · three.js (3D manken)
 
 ```
 apps/mobile/       Expo uygulaması
-packages/engine/   hesap motoru: ölçekler, seans yükü, toparlanma bandı (saf TS, testli)
+packages/engine/   hesap motoru: toparlanma bandı, yük, bölge yükü, beslenme, maç ve seyahat (saf TS, testli)
 packages/theme/    tasarım token'ları (renk, tipografi, hareket)
-supabase/          migration'lar, RLS testleri, Edge Functions (Google Health bağlantısı ve senkron)
+supabase/          migration'lar, RLS testleri, Edge Functions (Google Health senkronu, AI koç)
 research/          kanıt tabanı: doğrulanmış kaynaklar, kurallar, literatür takibi
+site/              portfolyo sayfası (İngilizce + Türkçe) ve web demosunun derlemesi (GitHub Pages)
 docs/              geliştirme arşivi: durum, kararlar, oturum raporları, dersler
 design/            tasarım yönü maketleri (sentetik veri)
 tools/             gizlilik bekçisi, kaynak doğrulayıcı, yedek ve Claude Code hook'ları

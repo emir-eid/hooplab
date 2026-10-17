@@ -1,6 +1,6 @@
 // Google Health API v4 yanıtlarının kullandığımız kısmı. Alan adları resmi discovery belgesinden
 // (https://health.googleapis.com/$discovery/rest?version=v4, revizyon 20261001) doğrulandı.
-// int64 alanlar JSON'da dize olarak gelir (ör. "beatsPerMinute": "52"); double alanlar sayıdır.
+// int64 alanlar JSON'da dize olarak gelir (ör. "beatsPerMinute": "100"); double alanlar sayıdır.
 
 export type Int64 = string | number;
 

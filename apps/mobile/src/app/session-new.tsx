@@ -354,7 +354,7 @@ export default function SessionNewScreen() {
                   value={sweatText.pre}
                   onChangeText={(pre) => setSweatText((t) => ({ ...t, pre }))}
                   keyboardType="decimal-pad"
-                  placeholder="kg, ör. 92,4"
+                  placeholder="kg, ör. 78,6"
                 />
                 <TextFieldRow
                   label="Sonra"

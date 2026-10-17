@@ -79,10 +79,8 @@ STATE'teki 2. iş, Faz 1'in son açık maddesi: Apple Developer Programı, EAS B
   - Apple: yıllık 99 USD, kayıtta yerel para birimiyle gösterilir.
   - Expo ücretsiz planı: ayda 15 iOS derlemesi, derleme başına 45 dk, EAS Update 1.000 aylık aktif kullanıcıya kadar.
   - TestFlight: iç testte Apple incelemesi yok, derleme 90 gün geçerli.
-- **Apple Developer kaydı:** kullanıcı uygulamadan kaydolmaya çalıştı, kimlik doğrulaması reddedildi.
-  - Resmi şartlar ve Apple forumundaki benzer vakalar araştırıldı. Bir Türkiye vakasında ödeme çekilmiş ama üyelik açılmamış; destek kaydı iptal edip iade edince yeniden kayıt çalışmış.
-  - Kullanıcı Apple Developer desteğinde vaka açtı (Membership and Account → Program Enrolment). Yanıt bekleniyor.
-- **EAS projesi:** `@rotavi/hooplab`, mevcut kişisel Expo hesabında açıldı.
+- **Apple Developer kaydı:** başlatıldı, sonuçlanmadı (süreç `private/ops.md`).
+- **EAS projesi:** mevcut kişisel Expo hesabında açıldı (hesap adı `private/ops.md`).
 - **Yapılandırmayı resmi komutlar üretti:** `eas init`, `eas build:configure`, `npx expo install expo-updates` (~57.0.24), `eas update:configure`.
 - **Kimlik ortamdan okunuyor:**
   - [app.config.ts](../../apps/mobile/app.config.ts) ve [build-identity.ts](../../apps/mobile/src/lib/build-identity.ts) (3 test) şu değerleri `apps/mobile/.env.local`'dan alır: paket kimliği (`io.github.emireid.hooplab`), EAS proje kimliği, sahip, güncelleme adresi.
@@ -122,7 +120,7 @@ STATE'teki 2. iş, Faz 1'in son açık maddesi: Apple Developer Programı, EAS B
   - `eas init` ve `update:configure` kimliği `app.json`'a yazar.
 
 ## Açık kalanlar
-- Apple Developer kaydı: kimlik doğrulaması reddedildi, Apple desteğinde vaka açık. Yanıt gelince: üyelik, App Store Connect API anahtarı (`.p8`, `private/`), ilk derleme, kullanıcı onayıyla TestFlight gönderimi, iPhone'da kontrol.
+- Apple Developer kaydı sürüyor. Onay gelince: üyelik, App Store Connect API anahtarı (`.p8`, `private/`), ilk derleme, kullanıcı onayıyla TestFlight gönderimi, iPhone'da kontrol.
 - Kurulum sihirbazı sıfırdan yeni bir bulut projesinde hiç koşmadı (Blok 1). Sihirbaz EAS'ı denetlemiyor; ilk derlemeden sonra eklenebilir.
 - Takip (2026-10-08 / 10 civarı): kişisel bant ve OAuth yenileme token'ının 7. gün düşüşü (STATE sıradaki işler 1).
 

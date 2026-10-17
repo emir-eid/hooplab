@@ -61,7 +61,7 @@ export default function WeightScreen() {
               value={text}
               onChangeText={setText}
               keyboardType="decimal-pad"
-              placeholder="ör. 92,4"
+              placeholder="ör. 78,6"
               autoFocus
             />
           </View>

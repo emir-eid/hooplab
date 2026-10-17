@@ -9,14 +9,14 @@ Faz 1'in bitiş kriteri: uygulama iPhone'da TestFlight'tan kurulu ve her gün ku
 - Expo hesabı EAS işinde kararlaştırılacaktı (COSTS).
 - 0009 gereği proje kimlikleri ve adresler repoya sabit yazılmaz.
 - `.env.local` gitignore'lu olduğu için EAS bulutuna gitmez.
-- Apple Developer Programı kaydı sürüyor: kimlik doğrulaması reddedildi, Apple'da destek vakası açık. Derleme bu yüzden bekliyor.
+- Apple Developer Programı kaydı sürüyor. Derleme bu yüzden bekliyor.
 
 ## Seçenekler ve kullanıcı kararları
 1. **Expo hesabı:**
    - (a) HoopLab'e ayrı yeni hesap; erişim token'ıyla çalışılır, öbür projenin girişi bozulmaz.
    - (b) Bu bilgisayarın girişli olduğu mevcut hesap.
 
-   Kullanıcı (b)'yi seçti. Proje kişisel hesapta (`rotavi`) açıldı, öbür projenin organizasyonuna (`rotaviapp`) değil.
+   Kullanıcı (b)'yi seçti. Proje kişisel hesapta açıldı, öbür projenin organizasyonunda değil (hesap adları `private/ops.md`).
 2. **Paket kimliği:**
    - (a) `io.github.emireid.hooplab`, GitHub kullanıcı adına bağlı.
    - (b) `app.hooplab.ios`.

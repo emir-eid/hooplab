@@ -69,7 +69,7 @@ Kullanıcı isteği (STATE sıradaki iş 1): Bugün'de günlük toplam yakılan 
 - `active-energy-burned` / `basal-energy-burned` tiplerinin Fitbit Air'le gelip gelmediği ölçülmedi.
 - Koç cümleleri hala "bant" diyor; ekranda "aralık".
 - Kaydırınca içerik iOS durum çubuğunun altından geçiyor (önceki oturumlardan).
-- Google Health izni 2026-10-19 11:55'te düşer.
+- Google Health izni 2026-10-19'da düşer.
 - Apple Developer üyeliği onayı.
 
 ## Sıradaki adım

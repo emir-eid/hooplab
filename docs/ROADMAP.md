@@ -43,7 +43,7 @@ Her faz, bitiş kriteri karşılanınca `/kapat` ile kapanır: faz özeti `docs/
 - [x] Vücut görünümü: döndürülebilir 3D manken, ağrı haritası, 1 gün / 3 gün / 1 hafta (2026-10-04, [0018](decisions/0018-vucut-gorunumu.md); iPhone'da doğrulandı). Filtrenin bölge yükü raporu Faz 2'de
 - [x] Toparlanma ekranı (HRV / dinlenik nabız / uyku, kişisel banda göre) (2026-10-05, [0021](decisions/0021-toparlanma-kisisel-bant.md); Bugün'de durum, hale, HRV grafiği; web önizlemesinde ve iPhone'da doğrulandı)
 - [x] Demo modu (sentetik "demo sporcu") (2026-10-05, [0022](decisions/0022-demo-modu.md); uygulama içi, çevrimdışı; Hazır / Kontrollü / Toparlan seçici)
-- [ ] Apple Developer Programı, EAS Build, TestFlight. EAS hazır (2026-10-05, [0024](decisions/0024-eas-derleme-ve-guncelleme.md)): proje, `eas.json`, `expo-updates` (fingerprint), kimlik ortamdan, EAS ortam değişkenleri; yerelde doğrulandı. Bekleyen: Apple üyeliği (kimlik doğrulaması reddedildi, destek vakası açık; Apple destek vakası yanıt verdi; istenen kimlik ve adres belgeleri 2026-10-09'da e-postayla gönderildi, onay bekleniyor), API anahtarı, ilk derleme ve TestFlight
+- [ ] Apple Developer Programı, EAS Build, TestFlight. EAS hazır (2026-10-05, [0024](decisions/0024-eas-derleme-ve-guncelleme.md)): proje, `eas.json`, `expo-updates` (fingerprint), kimlik ortamdan, EAS ortam değişkenleri; yerelde doğrulandı. Bekleyen: Apple üyeliği (onay bekleniyor), API anahtarı, ilk derleme ve TestFlight
 - [x] Public'e geçiş öncesi denetim: `npm run guard:history` temiz (denylist dosyası ve secret ile), README hikayesi, LICENSE (MIT) (2026-10-05, [denetim raporu](audits/2026-10-05-public-oncesi.md)). Secret scanning + push protection private kişisel repoda açılamıyor (422), "Repo public" maddesine taşındı
 - [x] Repo public (2026-10-05 01:57): son geçmiş ve log taraması temiz; görünürlük değişti; secret scanning + push protection açık (ilk taramada uyarı 0); Wiki ve Projects kapatıldı ([denetim raporu](audits/2026-10-05-public-oncesi.md))
 
@@ -63,7 +63,7 @@ Her faz, bitiş kriteri karşılanınca `/kapat` ile kapanır: faz özeti `docs/
 ## Faz 3: AI koç ✓ ([özet](phases/faz-3.md))
 
 - [x] Tasarım ve model kararı (2026-10-08, [0032](decisions/0032-ai-koc-tasarimi.md)): Claude Sonnet 5.5; pgvector yerine kural grafiğiyle seçim ve önbellekli tam taban; citations ile kaynak zorunluluğu, sayıları kod denetler; güvenlik yönlendirmesi kodda
-- [x] Anthropic Console: HoopLab çalışma alanı, ön ödemeli 10 $ (otomatik yükleme kapalı), anahtar `hooplab-koc` (bitiş 2027-10-09), `ANTHROPIC_API_KEY` Supabase secrets'ta (2026-10-09)
+- [x] Anthropic Console: HoopLab çalışma alanı, ön ödemeli kredi (otomatik yükleme kapalı), süreli anahtar (ayrıntı `private/ops.md`), `ANTHROPIC_API_KEY` Supabase secrets'ta (2026-10-09)
 - [x] Kurulum sihirbazı `ANTHROPIC_API_KEY`'i tanır (`setup:check` ve gizli girişle yazma) (2026-10-09; bulutta 13/13)
 - [x] Kanıt tabanı paketi (`research/` → Edge Function, testle eşit) ve kural grafiğiyle kaynak seçimi (2026-10-09): `npm run research:kb` → `supabase/functions/_shared/coach/kb-data.ts` (78 kaynak, 33 kural, ~150 KB); `selectForRules` / `fullKb` (`_shared/coach/kb.ts`), testli. Ölçüm → kural kimliği eşlemesi anlık değerlerle (günlük özet maddesi)
 - [x] Günlük özet: anlık değerler + ilgili kaynaklar → Claude, alıntı denetçisi, `coach_summaries`; Bugün'de koç kartı; demo için sentetik özetler (2026-10-09)
@@ -88,4 +88,4 @@ Her faz, bitiş kriteri karşılanınca `/kapat` ile kapanır: faz özeti `docs/
 - [x] Maç günü ve seyahat protokolleri (2026-10-15): maç takvimi, MD-1 / MD / MD+1 notları, maç çevresi gün tipi 6-8 g/kg, maç sabahı hatırlatması ([0046](decisions/0046-mac-takvimi-ve-mac-cevresi.md)); seyahat yorgunluğu ve jet lag uyum tahmini ([0047](decisions/0047-seyahat-ve-jet-lag.md))
 - [x] Performans turu (2026-10-16, [0048](decisions/0048-performans-turu.md)): 3D geç yükleme, oturum önbelleği, odakta koşullu yenileme; Vercel skill'i yerine `react-native-best-practices`
 - [x] Uçtan uca test (2026-10-17, [0049](decisions/0049-uctan-uca-test-web-webkit.md)): web çıktısı + Playwright (WebKit, iPhone boyutu), demo modu, CI'da; iOS simülatöründe otomatik test yok (EAS Simulator erişimi yok, EAS Maestro ücretli)
-- [ ] Portfolyo sayfası
+- [x] Portfolyo sayfası (2026-10-17, [0050](decisions/0050-portfolyo-sayfasi.md)): İngilizce + Türkçe tanıtım ve canlı web demosu, GitHub Pages

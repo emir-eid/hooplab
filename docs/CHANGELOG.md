@@ -5,6 +5,7 @@ Uygulamaya veya altyapıya görünür değişiklikler. Biçim: [Keep a Changelog
 ## [Yayınlanmamış]
 
 ### Eklendi
+- Portfolyo sayfası (karar 0050): İngilizce ve Türkçe tanıtım sayfası (`site/`) ve uygulamanın yalnız demo web derlemesi (`EXPO_PUBLIC_HOOPLAB_DEMO_ONLY`, `HOOPLAB_WEB_BASE_URL`; doğrudan demoyla açılır, sunucusuz); `npm run site` (`tools/site/build-site.mjs`, sayılar ve kaynak izi örneği repodan, `--serve` ile yerel önizleme); GitHub Pages iş akışı `.github/workflows/pages.yml`. README güncellendi (durum, özellikler, demo bağlantısı).
 - Uçtan uca testler (karar 0049): `npm run e2e` (`e2e/`, Playwright 1.63.0): uygulamanın web çıktısı Supabase değerleri boş derlenir ve sunulur (`e2e/serve.mjs`), WebKit iPhone boyutunda demo moduyla 5 akışı dener; her JS hatası testi kırar; GitHub Actions'ta `uctan-uca` işi.
 - iPhone için tünelli Metro (2026-10-16): `npm run mobile:tunnel` (`tools/dev/mobile-tunnel.mjs`); telefon bilgisayarla aynı ağda olmak zorunda değil, hazır olunca `exp://…` adresini basar (adres kalıcı); global `@expo/ngrok` 4.1.3 ister. Varsayılan geliştirme yolu bu (SETUP §8); LAN'lı `npm run mobile` yedek.
 - Performans turu (karar 0048): Vücut'un 3D sahnesi (three.js) açılışta değil sahne kurulunca yükleniyor; oturum depolamasında bellek önbelleği (Keychain okuması açılış başına ~95 → 0); Bugün ve Trend sekme dönüşünde yeniden çekmiyor, yalnız veri yazılınca, gün dönünce ya da 5 dakika sonra (`data/revision.ts`).

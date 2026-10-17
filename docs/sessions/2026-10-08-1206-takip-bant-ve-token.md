@@ -15,7 +15,7 @@ STATE'teki 1. iş: gerçek hesapta kişisel bant oluştu mu, Bugün'de renk ve h
 - **Senkron durumu** (`db query --linked`, yalnız durum sütunları): `connected`, son başarılı senkron bugün, `last_error` boş.
 - **Bant:** yalnız sayımla bakıldı, değer okunmadı. Derin uyku HRV'si ve dinlenik nabız için son 7 günde 7/7 değer, önceki 28 günde 12 değer var; motorun alt sınırı (`recoveryMinValues.baseline`) 12. Bant bugün alt sınırdan oluştu.
 - **Cihaz** (kullanıcı, Expo Go; Metro Claude'da): Bugün'de hale renkli, günün durumu gösteriliyor; Ben → Google Health "bağlı". Durum ve hissiyat karşılaştırması `../private/journal/` içinde, repoda değer yok.
-- **Token süreleri:** `ghealth` CLI çalıştı (çıktı atıldı, yalnız çıkış kodu; `credentials.json` yenilendi). İzin tarihleri: CLI 2026-10-03 01:17, uygulama `connected_at` 2026-10-04 17:18. 7 günlük sınırlar 10 Ekim 01:17 ve 11 Ekim 17:18; düşüş bugün ölçülemez. [LESSONS](../LESSONS.md) "Google Health / veri" maddesine tarihler eklendi.
+- **Token süreleri:** `ghealth` CLI çalıştı (çıktı atıldı, yalnız çıkış kodu; `credentials.json` yenilendi). İzin tarihleri `private/ops.md`'de; 7 günlük sınırlar 10 ve 11 Ekim, düşüş bugün ölçülemez. [LESSONS](../LESSONS.md) "Google Health / veri" maddesine tarihler eklendi.
 - **Ürün sorusu:** günün durumu maç gününü bilmiyor; maç günü "Toparlan" uygulanamaz. [PRODUCT §10](../PRODUCT.md)'a açık soru olarak eklendi (Faz 3 koç bağlamı, Faz 4 maç günü protokolü).
 - STATE: takip maddesi token tarihleriyle 2. sıraya, Faz 3 koç tasarımı 1. sıraya; 0021 riskine bandın oluştuğu not edildi.
 
@@ -38,7 +38,7 @@ STATE'teki Faz 3 başlangıcı: koçun mimarisi (hangi model, kanıtlar nasıl s
 - **Sağlayıcı kıyası** (kullanıcı isteği: Claude Sonnet 5.5 ve Gemini, Kimi, ChatGPT karşılıkları): resmi fiyat sayfaları ve veri politikaları 2026-10-08'de okundu (Anthropic, ai.google.dev, developers.openai.com, platform.kimi.ai; gizlilik sayfaları). Aynı senaryoyla aylık tahmin: Sonnet 5.5 ~3,4 $, Gemini 3.1 Pro ~3,5 $, GPT-5.6 terra ~3,5 $, Kimi K3 ~4,9 $, Opus 5.5 ~6,8 $. Kimi veri politikası (Singapur, eğitimde kullanılabilir, kapatma yok) nedeniyle elendi. Tablo karar kaydında.
 - **Karar:** [0032](../decisions/0032-ai-koc-tasarimi.md). Kullanıcı kararları: Claude Sonnet 5.5 (masraf artarsa yeniden tartışılır), özet uygulama açılınca, "Bugün maç var" işareti Faz 3'te.
 - **Belgeler:** [ROADMAP](../ROADMAP.md) Faz 3 uygulama adımlarına bölündü; [PRODUCT](../PRODUCT.md) koç satırı, takvim girdisi, §10 maç günü sorusu kapandı; [COSTS](../COSTS.md) fiyatlar, tahmin, hesap ve sır; [DATA-INVENTORY](../DATA-INVENTORY.md) gidenler / gitmeyenler, `coach_*` tabloları, Anthropic saklama (30 gün, eğitimde yok); karar dizini.
-- **Anthropic Console** (kullanıcı, adım adım): 10 $ ön ödemeli kredi, otomatik yükleme kapalı (ayrı aylık sınır gereksiz bulundu); çalışma alanı HoopLab; anahtar `hooplab-koc` (bağlı hesap kullanıcı, kapsam HoopLab, bitiş 2027-10-09; kimlik federasyonu Supabase'de yok). Anahtar kullanıcının PowerShell'inde gizli girişle `supabase secrets set --env-file` ile yazıldı; Claude yalnız adın listede olduğunu denetledi.
+- **Anthropic Console** (kullanıcı, adım adım): ön ödemeli kredi, otomatik yükleme kapalı (ayrı aylık sınır gereksiz bulundu); çalışma alanı HoopLab; süreli anahtar (bağlı hesap kullanıcı, kapsam HoopLab; adı ve bitişi `private/ops.md`; kimlik federasyonu Supabase'de yok). Anahtar kullanıcının PowerShell'inde gizli girişle `supabase secrets set --env-file` ile yazıldı; Claude yalnız adın listede olduğunu denetledi.
 
 ### Kararlar
 - [0032 AI koç](../decisions/0032-ai-koc-tasarimi.md) — Sonnet 5.5 (sınıflandırma Haiku 5.5), vektör araması yok (kural grafiğiyle seçim + önbellekli tam taban), citations ve sunucuda alıntı / sayı denetçisi, kırmızı bayrak ve takviye kodla yönlendirilir, anlık değerler uygulamadan gelir, demo API çağırmaz.
@@ -77,7 +77,7 @@ ROADMAP Faz 3'ün API gerektirmeyen ilk iki maddesi: kanıt tabanının Edge Fun
 - LESSONS "Git ve süreç": kaçış karakteri içeren kod Python dize düzenlemesiyle yazılmaz.
 
 ## Açık kalanlar
-- Token düşüşü: CLI 10 Ekim 01:17, uygulama 11 Ekim 17:18 sonrası ölçülecek (STATE 2. iş).
+- Token düşüşü: CLI 10 Ekim, uygulama 11 Ekim sonrası ölçülecek (STATE 2. iş).
 - Bandın hissiyatla uyumu tek günle değerlendirilmez; birkaç hafta gözlenir.
 - Apple Developer yanıtı bekleniyor.
 - Faz 3 uygulaması: günlük özet (girdi şeması ve ölçüm → kural eşlemesi, alıntı denetçisi, `coach_summaries`, Edge Function, Bugün kartı, demo), maç günü işareti, soru-cevap, güvenlik kuralları (ROADMAP Faz 3).

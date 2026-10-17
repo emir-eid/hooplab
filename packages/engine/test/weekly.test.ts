@@ -118,17 +118,17 @@ test('sayım ve ortalama', () => {
 
 test('haftalık kilo: ortalama ve önceki haftaya göre fark', () => {
   const weights = [
-    { date: '2026-10-06', value: 92 },
-    { date: '2026-10-08', value: 93 },
-    { date: '2026-10-13', value: 91.5 },
-    { date: '2026-10-15', value: 92.5 },
+    { date: '2026-10-06', value: 78 },
+    { date: '2026-10-08', value: 79 },
+    { date: '2026-10-13', value: 77.5 },
+    { date: '2026-10-15', value: 78.5 },
     { date: '2026-10-17', value: null },
-    { date: '2026-10-19', value: 99 }, // sonraki hafta
+    { date: '2026-10-19', value: 85 }, // sonraki hafta
   ];
   const w = readWeeklyWeight(weights, monday, '2026-10-20');
   assert.equal(w.n, 2);
-  assert.equal(w.mean, 92);
-  assert.equal(w.previousMean, 92.5);
+  assert.equal(w.mean, 78);
+  assert.equal(w.previousMean, 78.5);
   assert.equal(w.change, -0.5);
   // Süren haftada bugünden sonrası sayılmaz.
   assert.equal(readWeeklyWeight(weights, monday, '2026-10-13').n, 1);

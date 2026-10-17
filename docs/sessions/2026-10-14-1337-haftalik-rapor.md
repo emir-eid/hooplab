@@ -41,18 +41,17 @@ ROADMAP Faz 4'teki "Haftalık rapor" maddesi. Kullanıcı seçimi: takvim haftas
 - **Döngüsel içe aktarma riski:** `firstWeekOf` önce veri modülündeydi (demo deposu onu içe aktarıyordu). Saf görünüm modülüne taşındı.
 
 ### Öğrenilenler
-- **Kullanıcı sorusu: "Hiç Hazır görmedim, uygulama profesyonel sporcuya uygun mu?"** Kod değiştirilmeden gerçek veriyle incelendi. Ham satırlar ve sayılar repo dışında (`private/data`, `private/journal`).
+- **Kullanıcı sorusu: günün durumu hissiyatla örtüşüyor mu, uygulama profesyonel sporcuya uygun mu?** Kod değiştirilmeden gerçek veriyle incelendi. Bulgular ve sayılar repo dışında (`private/journal`).
   - Hesap kurala uygun.
-  - Bant oluştuğundan beri durumu "Kontrollü"ye çeken tek işaret dinlenik nabız. HRV bant içinde, uyku kısa değil.
-  - Google'ın günlük dinlenik nabzı yumuşatılmış ve cihaz takıldıktan sonra tırmanan bir seri gibi davranıyor. Bandın temeli o tırmanışı içeriyor ve bant dar.
-  - HRV ile aynı gece ölçülen NREM nabzı çok daha az değişmiş.
+  - Sorun ölçüde: Google'ın günlük dinlenik nabzı yumuşatılmış ve cihaz takıldıktan sonra tırmanabilen bir seri gibi davranıyor; bandın temeli bu tırmanışı içerince nabız işareti durumu orantısız etkiliyor.
+  - HRV ile aynı gece ölçülen NREM nabzı bu davranışı göstermiyor.
   - Nabzın tek başına durumu değiştirmesi 0021'de "doğrulanmamış seçim" olarak yazılıydı.
   - Sıradaki iş bu; LESSONS'a eklendi.
 
 ## Açık kalanlar
 - Günün durumunda nabız: kaynak taraması ve karar 0041 (ölçü seçimi ve nabzın rolü; 0039'un gece nabzı kuralı da). Kullanıcıyla konuşuldu, değişiklik yapılmadı.
 - Kaydırınca içerik iOS durum çubuğunun altından geçiyor (Bugün / Trend'de de varsa ayrı iş).
-- Google Health izni 2026-10-19 11:55'te düşer; kullanıcı öncesinde yeniden bağlar.
+- Google Health izni 2026-10-19'da düşer; kullanıcı öncesinde yeniden bağlar.
 - Apple Developer üyeliği onayı.
 
 ## Sıradaki adım

@@ -96,7 +96,7 @@ Demo sporcu API'yi çağırmaz. Her durum için (Hazır / Kontrollü / Toparlan,
 
 ### Maliyet koruması
 - Anthropic Console ön ödemeli: **10 $** kredi, otomatik yükleme kapalı (2026-10-09). Kredi bitince API durur; bu, ayrı bir aylık sınırdan daha kesin bir tavan. Kredi yeniden yüklenirse tavan yüklenen tutardır.
-- API anahtarı yalnız HoopLab çalışma alanında geçerli, Admin API'siz, bitişi 2027-10-09. Süresi dolan anahtar koçta anlaşılır bir hata olarak görünür.
+- API anahtarı yalnız HoopLab çalışma alanında geçerli, Admin API'siz, süreli (bitişi `private/ops.md`). Süresi dolan anahtar koçta anlaşılır bir hata olarak görünür.
 - Fonksiyonda günlük sınırlar: özet yeniden üretimi ve soru sayısı. Aşılınca sabit metin gösterilir.
 - Her çağrının token kullanımı (`usage`) saklanır. Aylık toplam bir betikle raporlanır ve COSTS'taki tahminle karşılaştırılır.
 

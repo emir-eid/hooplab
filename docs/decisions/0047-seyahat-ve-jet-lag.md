@@ -5,7 +5,7 @@
 - **İlgili:** [0046](0046-mac-takvimi-ve-mac-cevresi.md) (maç takvimi), [0021](0021-toparlanma-kisisel-bant.md) (günün durumu), [0038](0038-takviye-ve-doping.md) (takviye ve doping), [0032](0032-ai-koc-tasarimi.md) (koç)
 
 ## Bağlam
-ROADMAP Faz 4 "maç günü ve seyahat protokolleri"nin seyahat yarısı. Kullanıcının seyahatleri (2026-10-15): yurt içi (saat farkı yok) ve kıtalar arası (4 saat ve üstü). Kullanıcı kararı: "temel + uyum tahmini". Kişisel ışık penceresi (iç saatin en düşük noktasına göre ışığa çık / kaçın) yok: kaynaklar ışık penceresinde ayrışıyor (konsensüs 0-3 saat, derleme 3-6 saat) ve daha çok varsayım ister.
+ROADMAP Faz 4 "maç günü ve seyahat protokolleri"nin seyahat yarısı. Kapsam (2026-10-15): saat farkı olmayan ve 4 saat ve üstü farklı yolculuklar. Kullanıcı kararı: "temel + uyum tahmini". Kişisel ışık penceresi (iç saatin en düşük noktasına göre ışığa çık / kaçın) yok: kaynaklar ışık penceresinde ayrışıyor (konsensüs 0-3 saat, derleme 3-6 saat) ve daha çok varsayım ister.
 
 Kaynaklar (doğrulandı; kullanılan sayılar tam metinde birebir bulundu):
 - **janse-van-rensburg-2021** (uluslararası uzman konsensüsü, tam metin): jet lag 3 ve daha fazla saat dilimi hızlı geçişte; kaba kural batıda günde ~2 saat, doğuda günde ~1 saat uyum; doğuya 8 saatten fazla farkta geri alarak uyum; seyahat yorgunluğu tablosu (kafein yatmadan en az 6 saat önce, alkol yok, sıvı ve yemek planı, kısa uyku); varışta düşük-orta yoğunlukta antrenman, kafein yerel sabah; saat farkı olmayan uçuşta performans değil algısal ölçütler kötüleşiyor. Tablo 4 ve Şekil 4-5 yalnız görselde (ör. 1-3 günlük kısa ziyaret kuralı); metin aramasıyla doğrulanamadığı için kullanılmadı.

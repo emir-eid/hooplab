@@ -1,0 +1,139 @@
+<!doctype html>
+<html lang="{{lang}}">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{{t.title}}</title>
+  <meta name="description" content="{{t.description}}">
+  <meta name="color-scheme" content="light dark">
+  <meta property="og:title" content="{{t.title}}">
+  <meta property="og:description" content="{{t.description}}">
+  <meta property="og:type" content="website">
+  <link rel="icon" href="{{base}}/favicon.png">
+  <link rel="alternate" hreflang="en" href="{{base}}/">
+  <link rel="alternate" hreflang="tr" href="{{base}}/tr/">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,700;12..96,800&family=Figtree:wght@400;500;600&display=swap">
+  <link rel="stylesheet" href="{{base}}/site.css">
+</head>
+<body>
+  <a class="skip" href="#main">{{t.skip}}</a>
+
+  <header class="top wrap">
+    <a class="wordmark" href="{{home}}">HoopLab</a>
+    <nav class="top-links">
+      <a href="{{altHome}}" hreflang="{{altLang}}" lang="{{altLang}}" aria-label="{{t.langSwitchLabel}}">{{t.langSwitch}}</a>
+      <a href="{{repo}}">GitHub</a>
+    </nav>
+  </header>
+
+  <main id="main">
+    <section class="hero wrap">
+      <div class="hero-text">
+        <h1>{{t.heroTitle}}</h1>
+        <p class="lead">{{t.heroLead}}</p>
+        <div class="actions">
+          <a class="button primary" href="{{demo}}">{{t.openDemo}}</a>
+          <a class="button" href="{{repo}}">{{t.viewSource}}</a>
+        </div>
+        <p class="note">{{t.demoNote}}</p>
+      </div>
+
+      <div class="stage">
+        <div class="halo" aria-hidden="true"><span></span><span></span><span></span></div>
+        <div class="device-box">
+          <div class="device" id="device" data-src="{{demo}}" data-title="{{t.demoFrameTitle}}">
+            <a class="poster" href="{{demo}}">
+              <picture>
+                <source media="(prefers-color-scheme: dark)" srcset="{{base}}/img/bugun-hazir-dark.webp">
+                <img src="{{base}}/img/bugun-hazir-light.webp" alt="{{t.demoPoster}}" width="390" height="844">
+              </picture>
+            </a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="why wrap narrow">
+      <h2>{{t.whyTitle}}</h2>
+      <p>{{t.whyBody1}}</p>
+      <p>{{t.whyBody2}}</p>
+    </section>
+
+    <section class="flow wrap">
+      <h2>{{t.flowTitle}}</h2>
+      <ol class="steps">
+        <li><h3>{{t.flow1Title}}</h3><p>{{t.flow1Body}}</p></li>
+        <li><h3>{{t.flow2Title}}</h3><p>{{t.flow2Body}}</p></li>
+        <li><h3>{{t.flow3Title}}</h3><p>{{t.flow3Body}}</p></li>
+        <li><h3>{{t.flow4Title}}</h3><p>{{t.flow4Body}}</p></li>
+        <li><h3>{{t.flow5Title}}</h3><p>{{t.flow5Body}}</p></li>
+      </ol>
+    </section>
+
+    <section class="trace wrap">
+      <div class="trace-intro narrow">
+        <h2>{{t.traceTitle}}</h2>
+        <p>{{t.traceLead}}</p>
+      </div>
+      <div class="trace-grid">
+        <figure class="rule">
+          <figcaption><a href="{{repo}}/blob/main/{{t.traceFile}}">{{t.traceFile}}</a></figcaption>
+          <pre><code>{{trace.rule}}</code></pre>
+        </figure>
+        <div class="sources">
+          <h3>{{t.traceSourcesTitle}}</h3>
+          <ul>
+{{trace.sources}}
+          </ul>
+        </div>
+      </div>
+      <p class="totals narrow">{{t.traceTotals}}</p>
+    </section>
+
+    <section class="screens wrap">
+      <h2>{{t.screensTitle}}</h2>
+      <div class="shots">
+        <figure><picture><source media="(prefers-color-scheme: dark)" srcset="{{base}}/img/bugun-hazir-dark.webp"><img src="{{base}}/img/bugun-hazir-light.webp" alt="{{t.shot1}}" width="390" height="844" loading="lazy"></picture><figcaption>{{t.shot1Caption}}</figcaption></figure>
+        <figure><picture><source media="(prefers-color-scheme: dark)" srcset="{{base}}/img/bugun-toparlan-dark.webp"><img src="{{base}}/img/bugun-toparlan-light.webp" alt="{{t.shot2}}" width="390" height="844" loading="lazy"></picture><figcaption>{{t.shot2Caption}}</figcaption></figure>
+        <figure><picture><source media="(prefers-color-scheme: dark)" srcset="{{base}}/img/gece-verisi-dark.webp"><img src="{{base}}/img/gece-verisi-light.webp" alt="{{t.shot3}}" width="390" height="844" loading="lazy"></picture><figcaption>{{t.shot3Caption}}</figcaption></figure>
+        <figure><picture><source media="(prefers-color-scheme: dark)" srcset="{{base}}/img/vucut-dark.webp"><img src="{{base}}/img/vucut-light.webp" alt="{{t.shot4}}" width="390" height="844" loading="lazy"></picture><figcaption>{{t.shot4Caption}}</figcaption></figure>
+      </div>
+      <p class="note">{{t.screensCaption}}</p>
+    </section>
+
+    <section class="pair wrap">
+      <div>
+        <h2>{{t.privacyTitle}}</h2>
+        <p>{{t.privacyBody}}</p>
+      </div>
+      <div>
+        <h2>{{t.processTitle}}</h2>
+        <p>{{t.processBody}}</p>
+        <p class="note">{{t.stack}}</p>
+      </div>
+    </section>
+  </main>
+
+  <footer class="foot wrap">
+    <p>{{t.footerMedical}}</p>
+    <p>{{t.footerLicense}} <a href="{{repo}}">github.com/emir-eid/hooplab</a></p>
+    <p><a href="{{altHome}}" hreflang="{{altLang}}" lang="{{altLang}}">{{t.langSwitch}}</a></p>
+  </footer>
+
+  <script>
+    // Geniş ekranda canlı demo çerçevede açılır; dar ekranda ve JS'siz görsel kalır, dokununca demo tam ekran açılır.
+    (function () {
+      var device = document.getElementById('device');
+      if (!device || !window.matchMedia('(min-width: 720px)').matches) return;
+      var frame = document.createElement('iframe');
+      frame.src = device.getAttribute('data-src');
+      frame.title = device.getAttribute('data-title');
+      frame.width = '390';
+      frame.height = '844';
+      device.replaceChildren(frame);
+    })();
+  </script>
+</body>
+</html>

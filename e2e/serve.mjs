@@ -19,10 +19,19 @@ const args = process.argv.slice(2);
 const port = Number(args.includes('--port') ? args[args.indexOf('--port') + 1] : 4300);
 
 if (!args.includes('--no-build')) {
-  execFileSync('npx', ['expo', 'export', '--platform', 'web', '--output-dir', dist], {
+  // --clear: Metro önbelleği uygulama yapılandırmasını eski haliyle tutabiliyor (ölçüldü 2026-10-17).
+  execFileSync('npx', ['expo', 'export', '--platform', 'web', '--clear', '--output-dir', dist], {
     cwd: path.join(root, 'apps', 'mobile'),
     // Boş değer .env.local'ı da bastırır (tools/dev/web-local.mjs ile aynı yol).
-    env: { ...process.env, EXPO_PUBLIC_SUPABASE_URL: '', EXPO_PUBLIC_SUPABASE_PUBLISHABLE_KEY: '' },
+    // Derleme kimliği de boş: yoksa .env.local'daki EAS proje kimliği ve Expo hesap adı pakete gömülür.
+    env: {
+      ...process.env,
+      EXPO_PUBLIC_SUPABASE_URL: '',
+      EXPO_PUBLIC_SUPABASE_PUBLISHABLE_KEY: '',
+      HOOPLAB_IOS_BUNDLE_ID: '',
+      HOOPLAB_EAS_PROJECT_ID: '',
+      HOOPLAB_EAS_OWNER: '',
+    },
     stdio: 'inherit',
     shell: process.platform === 'win32',
   });

@@ -73,7 +73,7 @@ STATE'teki 1. iş (kullanıcı isteği): koçun maliyetini, kaliteden ve doğrul
 - Kısa cümle yönergesinin ve kısmi kabulün gerçek yanıttaki etkisi bir sonraki gerçek özette görülecek; atılan cümle oranı izlenir.
 - "Bugün maç var" işareti yok; anlık değerlerde `matchDay` hep false.
 - Özetteki kaynak tablosunu çıkarma seçeneği kodda kapalı; kaynaktan sayı alma retleri sürerse yeniden ölçülür.
-- Token takibi: CLI tarafı (10 Ekim 01:17 sonrası) artık bakılabilir, uygulama tarafı 11 Ekim 17:18'den sonra; Apple onayı.
+- Token takibi: CLI tarafı (10 Ekim sonrası) artık bakılabilir, uygulama tarafı 11 Ekim'den sonra; Apple onayı.
 
 ## Sıradaki adım
 - Beslenme halkalarından doğrudan gram girişi (STATE 1. iş).

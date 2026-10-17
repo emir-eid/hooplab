@@ -11,7 +11,7 @@
 STATE'teki ilk iş: Google'dan gelen egzersiz oturumlarını elle girilen seans kaydıyla eşleştirmek; maç / antrenman / şut etiketi kullanıcıdan (ROADMAP Faz 1).
 
 ### Yapılanlar
-- **Ölçüm:** buluttaki `exercise_sessions` tip başına sayıldı (değer okunmadı). Basketbol `SPORT` dışında `BASKETBALL` olarak da geliyor; kuvvet antrenmanı, yoga, crossfit, yürüyüş de var. Yoganın seans türlerinde karşılığı yoktu.
+- **Ölçüm:** buluttaki `exercise_sessions` tip başına sayıldı (değer okunmadı). Basketbol `SPORT` dışında `BASKETBALL` olarak da geliyor; Google başka egzersiz türleri de üretiyor (ör. `YOGA`). Mobilite / yoga türünün seans türlerinde karşılığı yoktu.
 - **Kullanıcı kararları:** yeni tür "Mobilite / yoga"; etiketleme aralığı bugün ve dün (seans formunun gün sınırı).
 - **Şema:** [migration](../../supabase/migrations/20261004170914_seans_etiketleme.sql). `training_sessions.exercise_session_id` (benzersiz) + bileşik dış anahtar `(exercise_session_id, user_id) → exercise_sessions (id, user_id)`, silmede yalnız bağlantı boşalır; `exercise_sessions.dismissed_at` ("Seans değil"), sahibine yalnız bu sütunda UPDATE; tür listesine `mobility`.
 - **pgTAP:** [seans_etiketleme.test.sql](../../supabase/tests/database/seans_etiketleme.test.sql), 17 yeni test, toplam 80/80. Yetkiler bilerek gevşetildi (basit dış anahtar + tablo düzeyinde UPDATE): 6 test kırıldı, `db reset` ile geri.

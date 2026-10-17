@@ -8,7 +8,7 @@
 ## Blok 1 — Günün durumunda nabız: NREM uyku nabzı, yalnız HRV ile birlikte (16:39)
 
 ### Amaç
-Önceki oturumda tespit edilen sorun: gerçek hesapta durum her gün yalnız `rhr_high` yüzünden "Kontrollü". Kaynak taraması, kişisel veride seçenek kıyası, karar ve uygulama.
+Önceki oturumda tespit edilen sorun: Google'ın dinlenik nabzı yüzünden `rhr_high` işareti günün durumunu orantısız etkiliyor. Kaynak taraması, kişisel veride seçenek kıyası, karar ve uygulama.
 
 ### Yapılanlar
 - **Plan:** oturum başında kullanıcının üç isteği STATE ve ROADMAP'e eklendi (`359b00e`): okunabilirlik turu (değer / ortalama ayrımı, sade dil açıklamaları), yakılan kalori. Sonradan okunabilirlik turuna bir istek daha eklendi: durumu belirleyen ölçümlerde "neyi hedefliyoruz" ve kişisel aralık sayıyla.
@@ -32,7 +32,7 @@
   - `metricRules.rhr`'ye `nabiz-olcu` eklendi.
   - Durum bloğu not işaretini "neden" değil "Not: …; tek başına durumu değiştirmez" diye yazıyor. "Toparlan"da nabız yine neden. Bunun için yeni test var.
   - Kanıt tabanı paketi yenilendi. Buluta `coach-daily` v12 ve `coach-ask` v4 dağıtıldı (ACTIVE, oturumsuz 401).
-- **Doğrulama:** `npm run check` yeşil (araçlar 87, motor 130, uygulama 143, fonksiyonlar 99). Web önizlemesinde 390×844 demo ile bakıldı: kart adı, "Toparlan" çipleri ve açıklama sayfası doğru, konsolda hata yok. Kullanıcı iPhone'da gerçek hesapla baktı: durum "Hazır", uyku nabzı kartı beğenildi.
+- **Doğrulama:** `npm run check` yeşil (araçlar 87, motor 130, uygulama 143, fonksiyonlar 99). Web önizlemesinde 390×844 demo ile bakıldı: kart adı, "Toparlan" çipleri ve açıklama sayfası doğru, konsolda hata yok. Kullanıcı iPhone'da gerçek hesapla baktı; uyku nabzı kartı beğenildi.
 
 ### Kararlar
 - [0041 Günün durumunda nabız](../decisions/0041-gunun-durumunda-nabiz.md): seçenek c, kullanıcı seçimi. 0021 ve 0039'a değişiklik notu düşüldü.
@@ -108,7 +108,7 @@ Kullanıcının üç isteği:
 - Koç cümleleri hala "bant" diyor; ekranda "aralık". Gerekirse koç yönergesinde ele alınır.
 - Vücut sekmesinde kart yok; bölge yükü ve ağrının kısa cümlesi yalnız açıklama sayfasında.
 - Kaydırınca içerik iOS durum çubuğunun altından geçiyor (önceki oturumdan).
-- Google Health izni 2026-10-19 11:55'te düşer; kullanıcı öncesinde yeniden bağlar.
+- Google Health izni 2026-10-19'da düşer; kullanıcı öncesinde yeniden bağlar.
 - Apple Developer üyeliği onayı.
 
 ## Sıradaki adım

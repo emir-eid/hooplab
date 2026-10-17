@@ -97,7 +97,7 @@ STATE'teki sıradaki iş: iOS uçtan uca test. Kullanıcı seçti.
 ## Açık kalanlar
 - iOS'ta otomatik test yok (EAS Simulator erişimi / ücretli Maestro); iOS'a özgü kontrol tünelle cihazda.
 - Performans: `training_sessions` okumalarının birleştirilmesi yapılmadı (0048); açılış süresi TestFlight derlemesinde ölçülür.
-- Google Health yeniden bağlanma: sınır 2026-10-19 11:55.
+- Google Health yeniden bağlanma: sınır 2026-10-19.
 
 ## Sıradaki adım
 - STATE'teki ilk iş: portfolyo sayfası.

@@ -253,7 +253,7 @@ export function createDemoDb(scenario: DemoScenario, today: string, now: Date): 
       exerciseSessionId: 'demo-ex-yesterday-practice',
       startedAt: at(yesterday, 10, 0),
       // Ter testi (karar 0029): kırmızıda kayıp %2'nin üstünde, diğerlerinde altında.
-      sweat: { preKg: 92.4, postKg: scenario === 'red' ? 90.2 : 91.1, fluidL: scenario === 'red' ? 0.6 : 1.2, urineL: null },
+      sweat: { preKg: 78.6, postKg: scenario === 'red' ? 76.4 : 77.3, fluidL: scenario === 'red' ? 0.6 : 1.2, urineL: null },
       // Kalori bağlı saat oturumundan okunur (demo deposu doldurur).
       kcal: null,
     },
@@ -266,7 +266,7 @@ export function createDemoDb(scenario: DemoScenario, today: string, now: Date): 
   const weights: DemoDb['weights'] = [];
   for (let i = 27; i >= 1; i--) {
     if (wr() < 0.25) continue;
-    weights.push({ local_date: addIsoDays(today, -i), weight_kg: Math.round((92.2 + 0.4 * noise(wr)) * 10) / 10 });
+    weights.push({ local_date: addIsoDays(today, -i), weight_kg: Math.round((78.4 + 0.4 * noise(wr)) * 10) / 10 });
   }
 
   // Öğünler: bugün kahvaltı ve ara öğün (alım hedefin altında görünsün), dün üç öğün (tekrar listesi dolsun).

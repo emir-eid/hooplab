@@ -61,5 +61,6 @@ Thumbs.db
 
 # Uçtan uca testler (e2e/): web çıktısı, sonuçlar, rapor
 /e2e/.dist/
+/site/.dist/
 /e2e/.results/
 /e2e/.report/

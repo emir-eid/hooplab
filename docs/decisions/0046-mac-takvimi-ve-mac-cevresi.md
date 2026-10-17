@@ -8,7 +8,7 @@
 ROADMAP Faz 4'te "maç günü ve seyahat protokolleri" maddesi var. 0036 yalnız o güne konan "Bugün maç var" işaretini getirmişti; maç saati, ertesi gün ve önceki gün bilinmiyordu, 0045'te maç sabahı hatırlatması bu yüzden ertelenmişti. Kullanıcı kararları (2026-10-15):
 - Takvim elle, hızlı bir formla girilir (tarih, saat, iç saha / deplasman).
 - Uygulama maçtan önceki gün (MD-1), maç günü maç saatine göre ve maç gecesi / ertesi gün (MD+1) not gösterir; maç sabahı hatırlatması gelir.
-- Seyahat: yurt içi (saat farkı yok) ve kıtalar arası (4+ saat). Seyahat ve jet lag ayrı iş olarak aynı oturumda ele alınacak (bu karar yalnız maç çevresi).
+- Seyahat: saat farkı olmayan ve 4 saat ve üstü farklı yolculuklar. Seyahat ve jet lag ayrı iş olarak aynı oturumda ele alınacak (bu karar yalnız maç çevresi).
 
 Kaynak taraması (13 yeni kaynak, hepsi PubMed / Crossref'te doğrulandı; kullanılan sayılar ham metinde ya da özette birebir bulundu):
 - **Beslenme:** UEFA uzman grubu bildirgesi (collins-2021, futbol; yazarların kabul edilmiş el yazması okundu): MD-1 en az 6-8 g/kg, maç günü ve MD+1 6-8 g/kg; maç öncesi öğün başlamadan 3-4 saat önce 1-3 g/kg; 2-4 saat önce 5-7 mL/kg sıvı; maç sonrası 4 saat saatte ~1 g/kg. Takım sporu derlemesi (williams-2015) ve basketbolda tek öğün RCT'si (gentle-2014). Basketbolda maç saatine göre zamanlamayı sınayan çalışma bulunamadı.

@@ -5,7 +5,7 @@
 - **İlgili:** [0021](0021-toparlanma-kisisel-bant.md) (günün durumu; bu karar onun nabız kısmını değiştirir), [0039](0039-gece-isaretleri.md) (gece nabzı notu; ölçüsü değişir), [0032](0032-ai-koc-tasarimi.md) (koçun anlık değerleri), LESSONS "Google Health / veri", [oturum raporu](../sessions/2026-10-14-1337-haftalik-rapor.md) (tespit)
 
 ## Bağlam
-Gerçek hesapta bant 2026-10-08'de oluştu. O günden beri günün durumu yalnız bir işaret yüzünden her gün "Kontrollü" çıktı: dinlenik nabzın bandın üstünde olması. HRV bandın içindeydi, uyku kısa değildi. Kullanıcı hiç "Hazır" görmedi ve hissiyatıyla tam örtüşmediğini söyledi. Kod kurala uygundu; sorun tasarımdaydı:
+Gerçek hesapta bant oluştuktan sonra günün durumunun dinlenik nabız işaretinden orantısız etkilendiği ve kullanıcının hissiyatıyla örtüşmediği görüldü (ayrıntı repo dışında, `private/journal`). Kod kurala uygundu; sorun tasarımdaydı:
 
 1. **Ölçü.** Google'ın günlük dinlenik nabzı (`daily-resting-heart-rate`) discovery belgesine göre "bütün gün nabız ölçümlerinden" hesaplanıyor; yöntemi ve yumuşatması belgelenmemiş. HoopLab verisinde yumuşatılmış bir seri gibi davranıyor: günden güne oynaması aynı gecenin NREM nabzının yaklaşık yarısı. Cihaz takıldıktan sonraki haftalarda da düzenli tırmanıyor. Bandın temeli bu tırmanışı içerdiği için bant dar ve düşük kalıyordu.
 2. **Rol.** 0021'de nabız tek başına durumu "Kontrollü"ye çekiyordu. Bu seçim orada "doğrulanmamış" diye yazılıydı: test edilmiş karar kuralı yalnız HRV'ye dayanıyor (vesterinen-2016).
@@ -25,7 +25,7 @@ Kişisel veride son 7 günün önce / sonra tablosu `private/journal`'da (değer
 - Şimdiki kuralla 6 gün "Kontrollü".
 - (a) 2 gün, (b) ve (c) 6 gün "Hazır".
 - HRV'nin gerçekten bandın altında, iki nabız ölçüsünün de bandın üstünde olduğu tek gün her seçenekte "Toparlan" kaldı.
-- Gece nabzı notu (0039) son 18 günde Google nabzıyla 1 kez çıktı, NREM ile hiç çıkmadı. O tek not tırmanışın ürünü olabilir.
+- Gece nabzı notu (0039) Google nabzıyla NREM'e göre daha sık çıkıyor; fark tırmanışın ürünü olabilir.
 
 **Kullanıcı (c)'yi seçti.**
 
