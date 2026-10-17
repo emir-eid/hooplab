@@ -77,7 +77,7 @@ Her faz, bitiş kriteri karşılanınca `/kapat` ile kapanır: faz özeti `docs/
 - [x] Maliyet ölçümü ve düşürme (2026-10-10): ölçüm betiği `tools/coach-eval/run.ts` (Batch API), kısmi kabul ([0034](decisions/0034-koc-kismi-kabul.md)), yalnız dikkat isteyen ölçümlerin kaynakları ([0035](decisions/0035-koc-kaynak-secimi-dikkat.md)); çağrı başına ~0,15 → ~0,11 $
 - [x] Aylık token kullanımı raporu (2026-10-13): `npm run coach:usage` (`tools/coach-usage`, testli), özet ve soru-cevap kayıtlarından resmi fiyatlarla ay toplamı, 30 günlük karşılık ve 0032 tahminiyle kıyas, kalite oranları, 0032 tetikleri; ilk rapor 5 günde ~1,01 $, 30 günlük karşılığı ~6,1 $ (tahminin 1,74 katı, COSTS)
 
-## Faz 4: Son rötuşlar
+## Faz 4: Son rötuşlar ✓ ([özet](phases/faz-4.md))
 
 - [x] Gece işaretleri: dinlenik nabız, SpO2, cilt sıcaklığında kaynaklı "doktora danış" notu (2026-10-13, [0039](decisions/0039-gece-isaretleri.md); 0038'de ertelenen fizyolojik kırmızı bayrak eşikleri)
 - [x] Günün durumunda nabız: NREM uyku nabzı, yalnız HRV ile birlikte (2026-10-14, [0041](decisions/0041-gunun-durumunda-nabiz.md))
