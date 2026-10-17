@@ -1,9 +1,9 @@
 # 2026-10-17 21:44 — Expo SDK 57 yama yükseltmesi
 
 - **Faz:** 4 tamamlandı (Faz 4 sonrası bakım; Faz 1'in TestFlight maddesi Apple onayını bekliyor)
-- **Durum:** açık (/rep)
+- **Durum:** kapandı (/kapat, 2026-10-18 02:14)
 - **Model / efor:** Opus 5.5, düşük
-- **Commit'ler:** `a4ef415`, blok 2'nin `rep` commit'i
+- **Commit'ler:** `a4ef415` … `9ec0a1a` ve kapanış commit'i
 
 ## Blok 1 — Expo SDK 57 yama yükseltmesi (21:44)
 
@@ -49,7 +49,7 @@ Blok 1'deki iPhone denemesinde su eklerken hissedilen gecikmeyi gidermek: ekran 
 
 ## Açık kalanlar
 - TestFlight: Apple üyelik onayı bekleniyor.
-- Su kaydında anında güncelleme: gerçek hesapla iPhone denemesi (hızlı art arda ekleme, silme, ekleyip hemen "Bitti").
+- (Tamam) Su kaydı iPhone'da gerçek hesapla denendi (kullanıcı, 2026-10-18): art arda ekleme, silme, ekleyip hemen "Bitti"; sorun yok.
 - Google Health yeniden bağlanma sınırı 2026-10-19.
 
 ## Sıradaki adım
