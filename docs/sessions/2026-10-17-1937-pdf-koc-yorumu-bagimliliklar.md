@@ -71,7 +71,7 @@ Karar 0040'ta ertelenen koç yorumu: biten haftanın kaynaklı yorumu, PDF'e de 
 - Kod değişikliği yok.
 
 ### Kararlar
-- yok (uyarılar açık kalıyor; GitHub'da gerekçeyle kapatma kullanıcıya soruldu, yanıt bekliyor).
+- Kullanıcı kararı (rep'ten sonra): uyarılar GitHub'da gerekçeyle kapatıldı (`gh api`): #1 uuid `not_used`, #2 decode-uri-component `tolerable_risk`, #3 node-forge ve #4 braces `no_bandwidth` (yama yok); açık uyarı 0.
 
 ### Sorunlar ve hatalar
 - npm 11.4.2 `overrides`'ı kilitte duran geçişli bağımlılığa uygulamadı; kilitten girdiyi silmek paketi tamamen düşürdü (`uuid` kurulmadı). Kilit HEAD'den geri alındı, `npm install` ile yeni paketler yeniden eklendi; `uuid` ve `xcode` çalışıyor.
@@ -80,7 +80,6 @@ Karar 0040'ta ertelenen koç yorumu: biten haftanın kaynaklı yorumu, PDF'e de 
 - LESSONS'a: npm `overrides` mevcut kilitte uygulanmıyor, kilit girdisini elle silmek paketi düşürüyor.
 
 ## Açık kalanlar
-- Dependabot uyarılarını gerekçeyle kapatma: kullanıcı kararı bekliyor.
 - Expo SDK 57 yama yükseltmesi (57.0.26 → 57.0.30 ve 4 paket): ayrı iş, iPhone denemesiyle.
 - Haftalık yorum: gerçek yanıtta cümle sayısı sınırı aştı (9); tekrar ederse sınır denetçiye taşınır.
 - Google Health yeniden bağlanma: izin 2026-10-19'da düşer.
