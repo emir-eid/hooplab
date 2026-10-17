@@ -3,7 +3,7 @@
 - **Faz:** 4 tamamlandı (Faz 4 sonrası bakım; Faz 1'in TestFlight maddesi Apple onayını bekliyor)
 - **Durum:** açık (/rep)
 - **Model / efor:** Opus 5.5, düşük
-- **Commit'ler:** bu bloğun `rep` commit'i
+- **Commit'ler:** `a4ef415`, blok 2'nin `rep` commit'i
 
 ## Blok 1 — Expo SDK 57 yama yükseltmesi (21:44)
 
@@ -28,10 +28,29 @@
 ### Öğrenilenler
 - yok.
 
+## Blok 2 — Su kaydında anında güncelleme (02:09)
+
+### Amaç
+Blok 1'deki iPhone denemesinde su eklerken hissedilen gecikmeyi gidermek: ekran yazmayı ve tüm günün yeniden çekilmesini beklemesin.
+
+### Yapılanlar
+- `apps/mobile/src/app/water.tsx`: iyimser güncelleme. Ekleme listeye ve toplama hemen yansır (geçici `yerel-` kimlikle), silme satırı hemen kaldırır; yazma başarısızsa ekran geri alınır ve hata görünür. Toplam artık listeden (`dayFluidL`) hesaplanıyor. Süren yazma varken gelen liste uygulanmıyor (art arda dokunuşta geçici içişler kaybolmasın), son yazma bitince liste bir kez tazeleniyor. Geçici içiş kaydırılarak silinemiyor. "Başka" alanı hemen boşalıyor, kayıt başarısızsa yazılan geri geliyor.
+- "Bitti": süren yazma varsa düğme yükleniyor gösterir ve yazma bitince kapanır; yazma başarısızsa ekran açık kalır.
+- Doğrulama: web önizlemesinde (iPhone boyutu, demo) art arda 250 + 250 + 500 (1,5 → 2,5 L), silme (→ 2,0 L), "Başka" 300 mL (→ 2,3 L, alan boşaldı), konsolda hata yok; `npm run check` yeşil, `npm run e2e` 7/7. Demo bellekte olduğu için gecikme farkı ve başarısızlıkta geri alma web'de görülemedi; gerçek hesapla iPhone denemesi yapılmadı.
+
+### Kararlar
+- yok (tek ekranda davranış iyileştirmesi; karar kaydı gerekmedi).
+
+### Sorunlar ve hatalar
+- İlk sürümde "Bitti" hemen kapanıyordu: veri sürümü yazma bitince arttığı için (`data/revision.ts`) Bugün kapanıştan sonra tazelemeyebilirdi. Kod incelemesinde fark edildi, "Bitti" süren yazmayı bekleyecek şekilde düzeltildi.
+
+### Öğrenilenler
+- LESSONS (Expo / React Native): iyimser güncellenen modal, süren yazma bitmeden kapanırsa alttaki sekme eski kalır.
+
 ## Açık kalanlar
 - TestFlight: Apple üyelik onayı bekleniyor.
-- Su kaydında anında güncelleme (STATE sıradaki iş 2).
+- Su kaydında anında güncelleme: gerçek hesapla iPhone denemesi (hızlı art arda ekleme, silme, ekleyip hemen "Bitti").
 - Google Health yeniden bağlanma sınırı 2026-10-19.
 
 ## Sıradaki adım
-- TestFlight (Apple onayı gelince); beklerken su kaydında anında güncelleme.
+- TestFlight (Apple onayı gelince).

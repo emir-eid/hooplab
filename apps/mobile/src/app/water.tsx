@@ -1,11 +1,12 @@
 // Su kaydı (karar 0031, rules/hidrasyon.json → sivi-alim-kaydi): hızlı ekleme 250 / 500 / 750 mL ya da elle mL;
 // bugünün içişleri kaydırarak silinir. Hedef yok; ter testi yapılan gün seans sonrası hedef yanında yazar.
 // İçişler kişisel veridir: yalnız Supabase'de ya da demoda bellekte.
+// Ekleme ve silme ekrana hemen yansır, kayıt arkada yazılır; yazma başarısızsa ekran geri alınır.
 
-import { fluidEntryLimits, fluidQuickAddMl, isValidFluidMl, sweatTest } from '@hooplab/engine';
+import { dayFluidL, fluidEntryLimits, fluidQuickAddMl, isValidFluidMl, sweatTest } from '@hooplab/engine';
 import { layout, radius, size, spacing, withAlpha } from '@hooplab/theme';
 import { router, useFocusEffect } from 'expo-router';
-import { useCallback, useState } from 'react';
+import { useCallback, useRef, useState } from 'react';
 import { Pressable, StyleSheet, View } from 'react-native';
 
 import { FormBlock, FormDock, FormHeader, useDockSpace } from '@/components/form';
@@ -23,6 +24,8 @@ import type { FluidEntry } from '@/data/nutrition-view';
 import { usePalette } from '@/theme/appearance';
 import { toLocalDate } from '@/utils/local-date';
 
+const localIdPrefix = 'yerel-';
+
 function clock(iso: string | null): string {
   if (!iso) return '';
   const d = new Date(iso);
@@ -34,18 +37,46 @@ export default function WaterScreen() {
   const dockSpace = useDockSpace();
   const [today] = useState(() => toLocalDate(new Date()));
   const [entries, setEntries] = useState<FluidEntry[]>([]);
-  const [liters, setLiters] = useState(0);
   const [sweatNote, setSweatNote] = useState<string | null>(null);
   const [custom, setCustom] = useState('');
   const [error, setError] = useState<string | null>(null);
+  // Süren yazma sayısı: biri sürerken gelen liste, henüz yazılmamış içişleri silmesin diye uygulanmaz.
+  const pending = useRef(0);
+  const nextLocalId = useRef(0);
+  const liters = dayFluidL(entries);
 
   const load = useCallback(async () => {
     const r = await fetchNutrition(today);
+    if (pending.current > 0) return;
     if (!r.ok) return setError(r.message);
     setEntries(r.value.fluids);
-    setLiters(r.value.fluidL);
     setError(null);
   }, [today]);
+
+  const [closing, setClosing] = useState(false);
+  const closeWhenSettled = useRef(false);
+
+  // Yazma bitince, sürmekte olan başka yazma yoksa liste sunucudan tazelenir (gerçek kimlikler gelir).
+  function settle() {
+    pending.current -= 1;
+    if (pending.current > 0) return;
+    if (closeWhenSettled.current) return router.back();
+    void load();
+  }
+
+  // Yazma başarısızsa ekran kapanmaz; hata görünür kalır.
+  function failed(message: string) {
+    closeWhenSettled.current = false;
+    setClosing(false);
+    setError(message);
+  }
+
+  // Bugün veriyi yazma bitince tazeler (data/revision.ts); süren yazma varsa ekran onu bekleyip kapanır.
+  function close() {
+    if (pending.current === 0) return router.back();
+    closeWhenSettled.current = true;
+    setClosing(true);
+  }
 
   useFocusEffect(
     useCallback(() => {
@@ -61,16 +92,30 @@ export default function WaterScreen() {
     }, [load, today]),
   );
 
-  async function add(ml: number) {
+  async function add(ml: number): Promise<boolean> {
+    const local: FluidEntry = { id: `${localIdPrefix}${nextLocalId.current++}`, ml, createdAt: new Date().toISOString() };
+    pending.current += 1;
+    setEntries((prev) => [local, ...prev]);
+    setError(null);
     const r = await addFluid(today, ml);
-    if (!r.ok) return setError(r.message);
-    await load();
+    if (!r.ok) {
+      setEntries((prev) => prev.filter((e) => e.id !== local.id));
+      failed(r.message);
+    }
+    settle();
+    return r.ok;
   }
 
-  async function remove(id: string) {
-    const r = await deleteFluid(id);
-    if (!r.ok) return setError(r.message);
-    await load();
+  async function remove(entry: FluidEntry) {
+    pending.current += 1;
+    setEntries((prev) => prev.filter((e) => e.id !== entry.id));
+    setError(null);
+    const r = await deleteFluid(entry.id);
+    if (!r.ok) {
+      setEntries((prev) => [entry, ...prev].sort((a, b) => ((a.createdAt ?? '') < (b.createdAt ?? '') ? 1 : -1)));
+      failed(r.message);
+    }
+    settle();
   }
 
   const customMl = custom.trim() === '' ? null : Number(custom.trim());
@@ -78,8 +123,9 @@ export default function WaterScreen() {
 
   async function addCustom() {
     if (!customValid || customMl === null) return;
-    await add(customMl);
+    const typed = custom;
     setCustom('');
+    if (!(await add(customMl))) setCustom(typed);
   }
 
   const water = palette.nutrient.water;
@@ -136,15 +182,20 @@ export default function WaterScreen() {
           <View style={[styles.list, { backgroundColor: palette.card, boxShadow: palette.shadow.card }]}>
             {entries.map((e, i) => (
               <View key={e.id} style={i > 0 ? { borderTopColor: palette.line, borderTopWidth: StyleSheet.hairlineWidth } : undefined}>
-                <SwipeDelete label={fluidEntryText(e.ml)} onDelete={() => void remove(e.id)}>
+                {e.id.startsWith(localIdPrefix) ? (
+                  // Henüz yazılmadı: gerçek kimliği gelene kadar silinemez.
                   <ListRow label={fluidEntryText(e.ml)} value={clock(e.createdAt)} />
-                </SwipeDelete>
+                ) : (
+                  <SwipeDelete label={fluidEntryText(e.ml)} onDelete={() => void remove(e)}>
+                    <ListRow label={fluidEntryText(e.ml)} value={clock(e.createdAt)} />
+                  </SwipeDelete>
+                )}
               </View>
             ))}
           </View>
         ) : null}
       </GestureScrollView>
-      <FormDock label="Bitti" onPress={() => router.back()} disabled={false} loading={false} error={error} />
+      <FormDock label="Bitti" onPress={close} disabled={closing} loading={closing} error={error} />
     </View>
   );
 }
