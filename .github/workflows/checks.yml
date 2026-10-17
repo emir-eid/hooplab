@@ -58,6 +58,27 @@ jobs:
       - name: Kaynak doğrulama (biçim, DOI/PMID, geri çekilme)
         run: node tools/research/validate-sources.mjs --online
 
+  # Veritabanı testleri (pgTAP): RLS, yetkiler, CHECK kısıtları. Yerel Supabase'i Docker'da açar,
+  # migration'ları sıfırdan uygular; bulut projesine bağlanmaz, sır kullanmaz. Yerelde: npm run test:db.
+  veritabani:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 24
+
+      - name: Bağımlılıklar (Supabase CLI kök devDependency)
+        run: npm ci
+
+      - name: Yerel Supabase (yerelle aynı servisler)
+        run: npm run db:start
+
+      - name: pgTAP testleri
+        run: npm run test:db
+
   # Uçtan uca testler: uygulamanın web çıktısı, WebKit (iPhone boyutu), demo modu; sunucu ve sır yok.
   # iOS'a özgü sorunları yakalamaz (klavye, native bileşen); onlar cihazda bakılır. Ayrıntı: e2e/playwright.config.ts.
   uctan-uca:
