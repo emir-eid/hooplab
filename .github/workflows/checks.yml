@@ -57,3 +57,34 @@ jobs:
 
       - name: Kaynak doğrulama (biçim, DOI/PMID, geri çekilme)
         run: node tools/research/validate-sources.mjs --online
+
+  # Uçtan uca testler: uygulamanın web çıktısı, WebKit (iPhone boyutu), demo modu; sunucu ve sır yok.
+  # iOS'a özgü sorunları yakalamaz (klavye, native bileşen); onlar cihazda bakılır. Ayrıntı: e2e/playwright.config.ts.
+  uctan-uca:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 24
+
+      - name: Bağımlılıklar
+        run: npm ci
+
+      - name: WebKit
+        run: npx playwright install --with-deps webkit
+
+      - name: Uçtan uca testler (web çıktısı, WebKit, demo)
+        run: npm run e2e
+
+      - name: Rapor (yalnız hata olursa)
+        if: failure()
+        uses: actions/upload-artifact@v7
+        with:
+          name: uctan-uca-raporu
+          path: |
+            e2e/.report/
+            e2e/.results/
+          retention-days: 7

@@ -68,6 +68,15 @@ npm run check
 
 Araç testleri, tip denetimi (tema paketi ve uygulama), paket ve uygulama testleri, gizlilik taraması (güncel ağaç ve tüm geçmiş) ve kaynak doğrulaması geçmeli. Çıktıda "kişisel denylist N ifade (dosya)" görünmeli.
 
+**Uçtan uca testler** (`e2e/`, Playwright): uygulamanın web çıktısı Supabase değerleri boş derlenir (`e2e/serve.mjs`), WebKit motoru iPhone boyutunda demo moduyla ana akışları dener (sekmeler, demo günü, su kaydı, sabah check-in); sayfada tek bir JS hatası testi kırar. Sunucu, sır ve gerçek veri yok.
+
+```bash
+npx playwright install webkit   # bir kez
+npm run e2e                     # derler (~35 sn) ve koşar; E2E_NO_BUILD=1 var olan e2e/.dist ile
+```
+
+GitHub Actions'ta `uctan-uca` işi her push'ta koşar; hata olursa rapor ve izler (`uctan-uca-raporu`) 7 gün saklanır. `npm run check`'e ve pre-push'a girmez (süre). iOS'a özgü sorunları (klavye, native bileşenler) yakalamaz; onlar cihazda bakılır (§8). Bu makinede `playwright install` Node'un indirmesi zaman aşımına uğrarsa: LESSONS "Windows".
+
 ## 8. Uygulamayı iPhone'da açmak
 
 1. iPhone'a App Store'dan **Expo Go**'yu kur.

@@ -87,5 +87,5 @@ Her faz, bitiş kriteri karşılanınca `/kapat` ile kapanır: faz özeti `docs/
 - [x] Haftalık rapor: takvim haftası, yalnız motorun sayıları, Trend'den açılır (2026-10-14, [0040](decisions/0040-haftalik-rapor.md)); koç yorumu ve PDF paylaşımı sonra
 - [x] Maç günü ve seyahat protokolleri (2026-10-15): maç takvimi, MD-1 / MD / MD+1 notları, maç çevresi gün tipi 6-8 g/kg, maç sabahı hatırlatması ([0046](decisions/0046-mac-takvimi-ve-mac-cevresi.md)); seyahat yorgunluğu ve jet lag uyum tahmini ([0047](decisions/0047-seyahat-ve-jet-lag.md))
 - [x] Performans turu (2026-10-16, [0048](decisions/0048-performans-turu.md)): 3D geç yükleme, oturum önbelleği, odakta koşullu yenileme; Vercel skill'i yerine `react-native-best-practices`
-- [ ] iOS uçtan uca test (EAS Workflows + Maestro veya EAS Simulator)
+- [x] Uçtan uca test (2026-10-17, [0049](decisions/0049-uctan-uca-test-web-webkit.md)): web çıktısı + Playwright (WebKit, iPhone boyutu), demo modu, CI'da; iOS simülatöründe otomatik test yok (EAS Simulator erişimi yok, EAS Maestro ücretli)
 - [ ] Portfolyo sayfası

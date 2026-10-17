@@ -1,9 +1,9 @@
 # 2026-10-16 19:34 — Performans turu
 
 - **Faz:** 4 (Faz 1'in TestFlight maddesi Apple onayını bekliyor)
-- **Durum:** kapandı (/kapat, 2026-10-16 19:39)
+- **Durum:** açık (/kapat'tan sonra devam edildi; Blok 2-3 /rep ile, 2026-10-17 10:39)
 - **Model / efor:** Opus 5.5, orta
-- **Commit'ler:** `72b3f49` (Blok 1, `rep` commit'i), bu raporun kapanış commit'i
+- **Commit'ler:** `72b3f49` (Blok 1), `1b2ad2b` (ilk kapanış), `041f827`, `78aefcd`, `9f98bdf`, `785cb60` (Blok 2), Blok 3'ün `rep` commit'i
 
 ## Blok 1 — Performans turu (19:34)
 
@@ -37,10 +37,68 @@ STATE'teki sıradaki iş: Faz 4'ün performans maddesi. Kullanıcı ana işi se�
 ### Öğrenilenler
 - LESSONS "Expo / React Native"e 2 madde: expo-router sekmeleri açılışta birlikte yükler (ağır bağımlılık dinamik `import()` ile); supabase-js her istekte oturumu depodan okur ve oturum geri yüklenirken `SIGNED_IN` olayı gelir.
 
+## Blok 2 — Evden uzakta Expo Go: tünel varsayılan (2026-10-16 akşam)
+
+### Amaç
+Kullanıcı evde değilken telefonda test etmek istedi; ardından "artık hep böyle yapalım" dedi.
+
+### Yapılanlar
+- `npm run mobile:tunnel` ([tools/dev/mobile-tunnel.mjs](../../tools/dev/mobile-tunnel.mjs)): `npx expo start --tunnel` doğrudan `apps/mobile`'da, global `@expo/ngrok` `NODE_PATH` ile; hazır olunca `[tunnel] exp://…` basar. Adres kalıcı (rastgele kısım gitignore'lu `.expo/settings.json`'da).
+- Bu makineye bir kez `npm i -g @expo/ngrok@4.1.3` (Expo'nun resmi paketi).
+- Belgeler: [SETUP §8](../SETUP.md) (tünel varsayılan, LAN yedek; gerçek adres public repoya yazılmaz), STATE, LESSONS, [apps/mobile/README.md](../../apps/mobile/README.md), [kurulum rehberi](../guides/kurulum.md), CHANGELOG (performans turu dahil; Blok 1'de atlanmıştı). Hafıza notu güncellendi.
+- Doğrulama: tünel adresinden manifest okundu; kullanıcı evden uzakta iPhone'da açtı.
+- Commit'ler: `041f827`, `78aefcd`, `9f98bdf` (belgedeki yol kaçışları), `785cb60`.
+
+### Kararlar
+- Tünel varsayılan geliştirme yolu (kullanıcı kararı); LAN'lı `npm run mobile` yedek. Ayrı karar kaydı yok; SETUP §8.
+
+### Sorunlar ve hatalar
+- `npm run mobile -- --tunnel` bayrağı iç içe `npm run -w` zincirinde düştü (günlükte yalnız `expo start`).
+- Expo CLI global `@expo/ngrok`'u bulamadı ve etkileşimsiz modda "Input is required" diye durdu.
+- Python ile yazılan belgede ters bölülü yollar kaçış dizisine dönüştü (`%APPDATA%` sonrası satır sonu); iki düzeltme commit'i. Bundan sonra belge düzenlemesi Edit aracıyla ya da dosyaya yazılmış betikle yapılır.
+
+### Öğrenilenler
+- LESSONS "Expo / React Native": tünelin iki engeli ve çözümü (Blok 2 commit'lerinde).
+
+## Blok 3 — Uçtan uca test: web, WebKit, demo (10:39)
+
+### Amaç
+STATE'teki sıradaki iş: iOS uçtan uca test. Kullanıcı seçti.
+
+### Yapılanlar
+- **Yol araştırması:**
+  - EAS Simulator: `simulator:availability` → hesapta açık değil.
+  - EAS Maestro: ücretsiz planda yok (fiyat sayfası).
+  - Kullanıcıya dört yol sunuldu; "Web E2E" seçildi ([0049](../decisions/0049-uctan-uca-test-web-webkit.md)).
+- **Altyapı:**
+  - [e2e/serve.mjs](../../e2e/serve.mjs): boş Supabase değerleriyle `expo export --platform web` ve rota çözen statik sunucu. Pakette bulut adresi olmadığı denetlendi.
+  - [e2e/playwright.config.ts](../../e2e/playwright.config.ts): WebKit, `iPhone 13`.
+  - `@playwright/test` 1.63.0 (sabit; son sürümler iki haftadan yeni), `npm run e2e`.
+  - `e2e/tsconfig.json` ve kök `typecheck`.
+  - `.gitignore` (`e2e/.dist`, `.results`, `.report`).
+- **Testler:** [e2e/tests/](../../e2e/tests/). Ortak demo düzeni her JS hatasında testi kırar; 5 akış (0049). Yerelde 5/5, derleme dahil ~50 sn.
+- **Mutasyon denemesi:** demo deposunda su eklemenin sürüm artırması kaldırıldı. Su testi kırıldı (beklenen 2,0 L, görülen 1,5 L), kod geri alındı.
+- **CI:** [checks.yml](../../.github/workflows/checks.yml)'a `uctan-uca` işi (`playwright install --with-deps webkit`, `npm run e2e`, hata olursa 7 gün rapor).
+- **Belgeler:** [SETUP §7](../SETUP.md), [apps/mobile/README.md](../../apps/mobile/README.md).
+- `npm run check` yeşil.
+
+### Kararlar
+- [0049 Uçtan uca test: web çıktısı, WebKit, demo modu](../decisions/0049-uctan-uca-test-web-webkit.md).
+
+### Sorunlar ve hatalar
+- **Tarayıcı indirmesi.** `playwright install webkit` Node'un indirmesinde her adreste zaman aşımına uğradı (curl aynı dosyayı 6 sn'de indiriyor; proxy yok; IPv4 önceliği işe yaramadı). Çözüm: dosyalar curl ile indirildi, yerel bir HTTP sunucusundan `PLAYWRIGHT_DOWNLOAD_HOST` ile verildi (yol kalıbı `builds/<tarayıcı>/<sürüm>/<dosya>`).
+- **Seçici eşleşmesi.** İlk koşuda 5 test kırmızıydı: "Bugün" başlığı "Beslenme · bugün"e de uydu (ad eşleşmesi büyük-küçük harf duyarsız alt dize). `exact: true` eklendi.
+- **Bayat çıktı.** İlk mutasyon denemesi yanlışlıkla geçti: açık kalmış `--no-build` sunucusunu Playwright yeniden kullandı, değişiklik derlenmedi. `reuseExistingServer: false`.
+- **Test adları.** Kesme işareti ("Bugün'e") tek tırnaklı dizgiyi bozdu, çift tırnağa çevrildi.
+
+### Öğrenilenler
+- LESSONS'a 2 madde. "Windows": Playwright tarayıcı indirmesi ve yerel ayna. "Önizleme ve maketler": Playwright ad eşleşmesi ve sunucunun yeniden kullanılması.
+
 ## Açık kalanlar
-- Performans: `training_sessions` okumalarının birleştirilmesi yapılmadı (0048; kazanç küçük).
-- Uygulamanın açılış süresi telefonda ölçülmedi. Anlamlı ölçüm üretim derlemesinde (TestFlight) yapılır.
+- `uctan-uca` CI işinin GitHub'daki ilk koşusu bu push'la görülecek.
+- iOS'ta otomatik test yok (EAS Simulator erişimi / ücretli Maestro); iOS'a özgü kontrol tünelle cihazda.
+- Performans: `training_sessions` okumalarının birleştirilmesi yapılmadı (0048); açılış süresi TestFlight derlemesinde ölçülür.
 - Google Health yeniden bağlanma: sınır 2026-10-19 11:55.
 
 ## Sıradaki adım
-- STATE'teki ilk iş: iOS uçtan uca test (EAS Simulator + Maestro) ya da portfolyo sayfası.
+- STATE'teki ilk iş: portfolyo sayfası.

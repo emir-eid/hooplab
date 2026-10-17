@@ -58,3 +58,8 @@ Thumbs.db
 .idea/
 .vscode/*
 !.vscode/extensions.json
+
+# Uçtan uca testler (e2e/): web çıktısı, sonuçlar, rapor
+/e2e/.dist/
+/e2e/.results/
+/e2e/.report/
