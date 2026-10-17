@@ -1,9 +1,9 @@
 # 2026-10-17 19:37 — Haftalık rapor PDF'i, haftalık koç yorumu, Dependabot
 
 - **Faz:** 4 tamamlandı (bu oturum Faz 4 sonrası iyileştirmeler; Faz 1'in TestFlight maddesi Apple onayını bekliyor)
-- **Durum:** açık (/rep)
+- **Durum:** kapandı (/kapat, 2026-10-17 20:54)
 - **Model / efor:** Opus 5.5, orta
-- **Commit'ler:** bu raporun rep commit'i (üç blok tek commit'te)
+- **Commit'ler:** `48aa557` (rep: üç blok), `66b939a` (Dependabot uyarıları kapatıldı), bu raporun kapanış commit'i
 
 Kullanıcı `/ac`'tan sonra önerilen üç işi sırayla istedi ("üçünü de sırayla yap"). Başlamadan üç karar soruldu (2026-10-17): PDF'te bölüm seçimi, koç yorumu istek üzerine, koç yorumu PDF'te isteğe bağlı bölüm. Üçü de önerilen seçenek.
 
