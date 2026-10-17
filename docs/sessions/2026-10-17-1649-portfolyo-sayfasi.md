@@ -1,9 +1,9 @@
 # 2026-10-17 16:49 — Portfolyo sayfası ve yayın öncesi gizlilik denetimi
 
 - **Faz:** 4 (bu blokla kapandı; Faz 1'in TestFlight maddesi Apple onayını bekliyor)
-- **Durum:** açık (/rep)
+- **Durum:** kapandı (/kapat, 2026-10-17 16:53)
 - **Model / efor:** Opus 5.5, orta
-- **Commit'ler:** `8b3c20e`, bu raporun `rep` commit'i
+- **Commit'ler:** `8b3c20e` (Blok 1), `6db72b3` (rep, `faz-4-tamam` etiketi), bu raporun kapanış commit'i
 
 ## Blok 1 — Portfolyo sayfası, gizlilik denetimi ve yayın (16:49)
 
@@ -68,6 +68,7 @@ Faz 4'ün son maddesi olan portfolyo sayfası. Kullanıcı kararları: tanıtım
 - TestFlight Apple onayını bekliyor; push bildirimleri ondan sonra.
 - Dependabot'ta 4 açık uyarı var (2 yüksek). Hepsi Expo'nun dolaylı bağımlılığı; Expo SDK yükseltmesinde bakılacak.
 - Google Health izni 2026-10-19'da düşüyor; kullanıcı öncesinde yeniden bağlanacak.
+- Kişisel gözlem (demo kilosu ve geçmişte kalan metinler) `private/journal`'a kaydedildi.
 
 ## Sıradaki adım
 - TestFlight (Apple onayı gelince). O zamana kadar alternatif: haftalık rapora koç yorumu ya da PDF paylaşımı (0040'ta ertelenmişti).
