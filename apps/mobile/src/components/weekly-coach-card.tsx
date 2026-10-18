@@ -18,6 +18,7 @@ import {
   coachFailureReason,
   coachFooter,
   coachOmittedNote,
+  weeklyCoachTrimmedNote,
   coachRegenerateAction,
   weeklyCoachChecking,
   weeklyCoachCurrent,
@@ -96,6 +97,7 @@ export function WeeklyCoachCard({ snapshot }: { snapshot: WeeklySnapshot }) {
           <Text variant="caption" tone="inkMuted" style={styles.footer}>
             {demo ? weeklyCoachDemoNote : coachFooter}
             {response.omitted > 0 ? ` ${coachOmittedNote(response.omitted)}` : ''}
+            {response.trimmed > 0 ? ` ${weeklyCoachTrimmedNote(response.trimmed)}` : ''}
           </Text>
           <Actions>
             <Action label={coachBasisAction} onPress={() => openBasis(response.sentences, null, weeklyNumbersLabel)} />

@@ -17,6 +17,7 @@ import {
   runWeekly,
   weeklyNumbersTitle,
   weeklyRuleIds,
+  weeklySalvageOptions,
   type NewWeeklyRow,
   type WeeklyRow,
   type WeeklySnapshot,
@@ -197,6 +198,28 @@ test('akış: önce bakma (model çağrılmaz), sonra yazma; kayıt, önbellek v
   // Kabul edilen yorum, sonraki başarısız denemeye rağmen gösterilir.
   const shown = await run({ peek: true });
   assert.equal(shown.body.status, 'accepted');
+});
+
+test('cümle sınırı: 7 cümleyi aşan yorum kırpılır; durum ve son (öneri) cümlesi kalır, denetim notundan ayrı sayılır', async () => {
+  const { fake, rows, run } = setup();
+  const [status, dot, load, , advice] = goodContent();
+  const loads = Array.from({ length: 6 }, () => [load, dot]).flat();
+  const bad = { type: 'text', text: 'Yükü artırmalısın. ' };
+  // 1 durum + 6 yük + 1 dayanaksız öneri + 1 kaynaklı öneri = 9 cümle; dayanaksız atılır, kalan 8'den biri kırpılır.
+  fake.reply({ kind: 'message', message: message([status, dot, ...loads.slice(0, 6), bad, ...loads.slice(6), advice, { type: 'text', text: '.' }]) });
+  const r = await run();
+  assert.equal(r.body.status, 'accepted');
+  if (r.body.status === 'accepted') {
+    assert.equal(r.body.sentences.length, weeklySalvageOptions.maxSentences);
+    assert.equal(r.body.omitted, 1);
+    assert.equal(r.body.trimmed, 1);
+    assert.deepEqual(r.body.sentences[0]!.numbers, ['status']);
+    assert.deepEqual(r.body.sentences.at(-1)!.sources, ['walsh-2021']);
+  }
+  assert.equal(rows[0]!.audit!.trimmed!.length, 1);
+  // Saklanan yorum aynı sayılarla döner.
+  const again = await run({ peek: true });
+  if (again.body.status === 'accepted') assert.deepEqual([again.body.omitted, again.body.trimmed], [1, 1]);
 });
 
 test('süren hafta ve geçersiz gövde modele gitmez', async () => {

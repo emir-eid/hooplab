@@ -108,7 +108,15 @@ export const weeklyAttemptLimit = 2;
  * Reddedilen ve başarısız denemede model metni yoktur.
  */
 export type WeeklyResponse =
-  | { status: 'accepted'; cached: boolean; sentences: AuditSentence[]; omitted: number }
+  | {
+      status: 'accepted';
+      cached: boolean;
+      sentences: AuditSentence[];
+      /** Denetimden geçmeyen (ya da alıntısız kopya) cümle sayısı. */
+      omitted: number;
+      /** Denetimden geçtiği halde 7 cümle sınırı yüzünden gösterilmeyen cümle sayısı. */
+      trimmed: number;
+    }
   | { status: 'rejected'; cached: boolean }
   | { status: 'failed'; cached: boolean; error: string }
   | { status: 'none' }

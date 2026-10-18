@@ -7,6 +7,7 @@ import {
   isAdviceOrInterpretation,
   numberCandidates,
   salvageAudit,
+  salvageOptions,
   type AuditProblemCode,
   type ResponseBlock,
   type ResponseCitation,
@@ -221,6 +222,18 @@ test('kısmi kabul: atılan cümleyle "tahmin" etiketini kaybeden tahmin cümles
   ]);
   assert.deepEqual(a.problems.map((p) => [p.code, p.sentence]), [['number_mismatch', 3]]);
   assert.deepEqual(shown, [0, 1, 2]);
+});
+
+test('cümle sınırı: fazlası aradan sondan atılır; durum ve son cümle kalır, sınırsızda hepsi kalır', () => {
+  const content = [...good, t(' Uyku 6,4 saat.', num('sleep')), t(' HRV 48 ms.', num('hrv'))];
+  const a = auditResponse(content, layout);
+  assert.equal(a.ok, true);
+  assert.deepEqual(salvageAudit(a, layout), [0, 1, 2, 3, 4]);
+  assert.deepEqual(salvageAudit(a, layout, { ...salvageOptions, maxSentences: 4 }), [0, 1, 2, 4]);
+  assert.deepEqual(salvageAudit(a, layout, { ...salvageOptions, maxSentences: 3 }), [0, 1, 4]);
+  // Durum cümlesi sonda bile olsa korunur.
+  const statusLast = auditResponse([t('HRV 48 ms.', num('hrv')), t(' Uyku 6,4 saat.', num('sleep')), t(' Uyku ortalaman 6,4 saat.', num('sleep')), t(' Günün durumu Kontrollü.', num('status'))], layout);
+  assert.deepEqual(salvageAudit(statusLast, layout, { ...salvageOptions, maxSentences: 3 }), [0, 1, 3]);
 });
 
 test('kısmi kabul yok: yanıt düzeyinde geçersiz alıntı', () => {

@@ -7,7 +7,7 @@
 
 import type Anthropic from 'npm:@anthropic-ai/sdk@0.128.0';
 
-import { auditResponse, salvageAudit, type AuditResult, type ResponseBlock, type ResponseCitation } from './audit.ts';
+import { auditResponse, salvageAudit, salvageOptions, type AuditResult, type SalvageOptions, type ResponseBlock, type ResponseCitation } from './audit.ts';
 import { weeklyAttemptLimit, type WeeklyResponse } from './contract.ts';
 import { coachEffort, coachMaxTokens, coachModel, errorCode, fallbackBeta, type MessagesApi } from './daily.ts';
 import {
@@ -220,6 +220,12 @@ Kurallar:
 
 export const weeklyUserInstruction = 'Biten haftanın yorumunu yaz.';
 
+/**
+ * Kısmi kabul günlükle aynı (durum cümlesi kalmalı, en az 3 cümle) ve yönergedeki 7 cümle sınırı denetçide de:
+ * fazlası durum ve son (öneri) cümlesi korunarak kırpılır (2026-10-18; ilk gerçek yorum 10 cümle geldi).
+ */
+export const weeklySalvageOptions: SalvageOptions = { ...salvageOptions, maxSentences: 7 };
+
 export function buildWeeklyRequest(s: WeeklySnapshot, kb: Kb): { params: Anthropic.Beta.Messages.MessageCreateParamsNonStreaming; layout: DocumentEntry[] } {
   const sources = selectForRules(kb, weeklyRuleIds(s)).sources;
   const { documents, layout } = weeklyDocuments(s, kb, sources);
@@ -273,9 +279,10 @@ export interface WeeklyResult {
 
 function present(row: WeeklyRow, cached: boolean): WeeklyResult {
   if (row.status === 'accepted' && row.audit) {
-    const { sentences, shown } = row.audit;
+    const { sentences, shown, trimmed = [] } = row.audit;
     const visible = shown ? shown.flatMap((i) => (sentences[i] ? [sentences[i]] : [])) : sentences;
-    return { httpStatus: 200, body: { status: 'accepted', cached, sentences: visible, omitted: sentences.length - visible.length } };
+    const cut = trimmed.length;
+    return { httpStatus: 200, body: { status: 'accepted', cached, sentences: visible, omitted: sentences.length - visible.length - cut, trimmed: cut } };
   }
   if (row.status === 'failed') return { httpStatus: cached ? 200 : 502, body: { status: 'failed', cached, error: row.error ?? 'unknown' } };
   return { httpStatus: 200, body: { status: 'rejected', cached } };
@@ -332,10 +339,13 @@ export async function runWeekly(input: WeeklyInput, deps: { store: WeeklyStore; 
     b.type === 'text' ? [{ type: 'text', text: b.text, citations: (b.citations ?? null) as readonly ResponseCitation[] | null }] : [],
   );
   const checked = auditResponse(content, layout);
-  // Kısmi kabul (karar 0034) günlük özetle aynı: durum cümlesi kalmalı, en az 3 cümle.
-  const shown = salvageAudit(checked, layout);
-  const trimmed = shown !== null && shown.length < checked.sentences.length;
-  const audit: AuditResult = trimmed ? { ...checked, shown } : checked;
+  // Kısmi kabul (karar 0034) ve cümle sınırı (weeklySalvageOptions). Sınırsız seçim de hesaplanır ki yalnız
+  // uzunluk yüzünden kırpılan cümleler denetimden düşenlerden ayrı sayılsın.
+  const shown = salvageAudit(checked, layout, weeklySalvageOptions);
+  const unlimited = salvageAudit(checked, layout, salvageOptions);
+  const cut = shown && unlimited ? unlimited.filter((i) => !shown.includes(i)) : [];
+  const partial = shown !== null && shown.length < checked.sentences.length;
+  const audit: AuditResult = partial ? { ...checked, shown, ...(cut.length ? { trimmed: cut } : {}) } : checked;
   const status = checked.ok || shown ? 'accepted' : 'rejected';
   await deps.store.insert({ ...base, status, content, audit, error: null, model: message.model, fallback, usage });
   return present({ status, created_at: now, audit, error: null }, false);

@@ -62,10 +62,15 @@ export interface AuditResult {
   sentences: AuditSentence[];
   problems: AuditProblem[];
   /**
-   * Kısmi kabul (karar 0034): denetimden geçmeyen cümleler atılınca gösterilen cümlelerin sırası. Yalnız `ok` false
-   * iken ve kalan özet koşulları sağlıyorsa dolu; atılan cümleler ve sorunları tanı için `sentences` / `problems`'ta kalır.
+   * Kısmi kabul (karar 0034): denetimden geçmeyen cümleler atılınca gösterilen cümlelerin sırası. Yalnız bir cümle
+   * atıldıysa (denetim ya da haftalıkta cümle sınırı) ve kalan özet koşulları sağlıyorsa dolu; atılan cümleler ve sorunları tanı için `sentences` / `problems`'ta kalır.
    */
   shown?: number[];
+  /**
+   * Cümle sınırı (`SalvageOptions.maxSentences`, haftalık yorum): denetimden geçtiği halde yalnız uzunluk yüzünden
+   * gösterilmeyen cümlelerin sırası. `shown`'da yoktur; kartta denetim notundan ayrı sayılır.
+   */
+  trimmed?: number[];
 }
 
 export const auditOptions = {
@@ -346,6 +351,11 @@ export interface SalvageOptions {
   minSentences: number;
   /** Günün durumu bloğu varsa ona alıntı yapan bir cümle kalmalı (günlük özet). */
   requireStatus: boolean;
+  /**
+   * Gösterilecek en çok cümle (yoksa sınır yok). Aşılırsa durum cümlesi ve son cümle (öneri) korunur, aradakiler
+   * sondan atılır. Yönergedeki sınırın denetçideki karşılığı; bilimsel eşik değil, okunabilirlik ayarı.
+   */
+  maxSentences?: number;
 }
 
 /** Günlük özetin ayarı. */
@@ -375,14 +385,31 @@ export function salvageAudit(result: AuditResult, layout: readonly DocumentEntry
     .filter(({ s, i }) => !bad.has(i) && !(!cited(s) && citedTexts.has(normalize(s.text))));
 
   // Kural 4'ü kalan sırayla yeniden uygula; bir cümle düşünce sonrakinin komşusu değişir, kararlı olana dek tekrar.
-  for (let changed = true; changed; ) {
-    changed = false;
-    kept = kept.filter(({ s }, k) => {
-      if (!s.numbers.some((id) => estimateIds.has(id))) return true;
-      const ok = [s.text, kept[k - 1]?.s.text ?? ''].some((t) => /tahmin/iu.test(t));
-      if (!ok) changed = true;
-      return ok;
-    });
+  const relabel = () => {
+    for (let changed = true; changed; ) {
+      changed = false;
+      kept = kept.filter(({ s }, k) => {
+        if (!s.numbers.some((id) => estimateIds.has(id))) return true;
+        const ok = [s.text, kept[k - 1]?.s.text ?? ''].some((t) => /tahmin/iu.test(t));
+        if (!ok) changed = true;
+        return ok;
+      });
+    }
+  };
+  relabel();
+
+  // Cümle sınırı: ilk durum cümlesi ve son cümle korunur, aradaki fazla cümleler sondan atılır. Atılan cümle
+  // "tahmin" komşusunu götürebilir; kural 4 yeniden uygulanır (sınırın altına inebilir, aşağıda yine denetlenir).
+  const max = options.maxSentences;
+  if (max !== undefined) {
+    while (kept.length > max) {
+      const status = kept.findIndex(({ s }) => s.numbers.includes('status'));
+      let drop = kept.length - 2;
+      if (drop === status) drop--;
+      if (drop < 0) break;
+      kept.splice(drop, 1);
+      relabel();
+    }
   }
 
   if (options.requireStatus && numbers.some((b) => b.id === 'status') && !kept.some(({ s }) => s.numbers.includes('status'))) return null;

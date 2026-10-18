@@ -40,6 +40,11 @@ export function coachOmittedNote(count: number): string {
   return `Kaynak denetiminden geçmeyen ${count} cümle gösterilmedi.`;
 }
 
+/** Haftalık yorum 7 cümleyi aşınca kırpılan, denetimden geçmiş cümleler (contract.ts WeeklyResponse.trimmed). */
+export function weeklyCoachTrimmedNote(count: number): string {
+  return `Yorum kısa kalsın diye ${count} cümle daha gösterilmedi.`;
+}
+
 /**
  * Başarısız denemenin kodu (contract.ts DailyResponse) → kullanıcıya söylenen neden. Kod kişisel veri içermez.
  * Anthropic'in hata türleri: platform.claude.com/docs/en/api/errors (400 kredi bitince de döner).

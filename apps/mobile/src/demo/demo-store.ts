@@ -354,7 +354,7 @@ export class DemoStore {
   async fetchCoachWeekly(snapshot: WeeklySnapshot, mode: 'peek' | 'generate' | 'regenerate'): Promise<Result<WeeklyCoachReply>> {
     if (mode === 'peek' && !this.weeklyWritten.has(snapshot.weekStart)) return ok({ response: { status: 'none' }, demo: true });
     this.weeklyWritten.add(snapshot.weekStart);
-    return ok({ response: { status: 'accepted', cached: mode === 'peek', sentences: demoWeeklyComment(snapshot), omitted: 0 }, demo: true });
+    return ok({ response: { status: 'accepted', cached: mode === 'peek', sentences: demoWeeklyComment(snapshot), omitted: 0, trimmed: 0 }, demo: true });
   }
 
   /** Koçta soru-cevap: örnek sorulara önceden yazılmış sentetik yanıt (karar 0037); API çağrılmaz. */
