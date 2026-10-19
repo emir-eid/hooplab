@@ -76,7 +76,7 @@ Ayrıntı: [ROADMAP.md](ROADMAP.md).
 | Expo SDK | 57 (`apps/mobile`; `npx expo install` ile paket ekle) |
 | Supabase CLI | 2.119.0 (kök devDependency, `npx supabase`); bulut projesine bağlı (`supabase/.temp`, gitignore'lu). Edge Functions: Deno yok; tip denetimi `supabase/functions/tsconfig.json`, yerel çalıştırma `supabase functions serve` (Docker) |
 | Playwright | 1.63.0 (kök devDependency, `npm run e2e`); WebKit bu makinede yerel aynayla kuruldu (LESSONS "Windows") |
-| Docker Desktop | 29.8 (laptop'ta kuruldu, 2026-10-19 yeniden başlatma bekliyor; ilk açılışta `npm run test:db` denenir) (yerel Supabase ve pgTAP: `npm run db:start`, `npm run test:db`; yerel önizleme `npm run web:local`) |
+| Docker Desktop | 29.8 (laptop'ta 2026-10-19 kuruldu, `npm run test:db` 205/205 yeşil; açılıştan sonra motorun hazır olması birkaç dakika sürebilir) (yerel Supabase ve pgTAP: `npm run db:start`, `npm run test:db`; yerel önizleme `npm run web:local`) |
 | Claude Code plugin'leri | `expo` 1.13.9, `supabase`, `postgres-best-practices` (proje kapsamı; kurulum [SETUP.md](SETUP.md) §5) |
 | Expo Go (iPhone) | kurulu; varsayılan `npm.cmd run mobile:tunnel` (tünel, global `@expo/ngrok` 4.1.3), yedek `npm.cmd run mobile` (LAN); PowerShell'de `npm` betiği engelli, `npm.cmd` kullanılır |
 | Mac | yok (iOS derlemeleri EAS bulutunda) |
