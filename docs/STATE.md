@@ -41,7 +41,7 @@ Tek doğruluk kaynağı. `/rep` her iş sonunda, `/kapat` her oturum sonunda gü
 
 **Kullanıcı işleri:**
 - Anthropic Console (kişisel hesap, çalışma alanı HoopLab): kredi ön ödemeli, otomatik yükleme kapalı; kredi bitince koç durur, yükleme kullanıcıda. Anahtar süreli, bitmeden yenilenir (adı ve bitişi `private/ops.md`; [COSTS](COSTS.md)).
-- Supabase CLI bu makinede HoopLab hesabıyla girişli; uzak işlemleri Claude yürütür ([SETUP](SETUP.md) §9; kurulum ve denetim `npm run setup` / `npm run setup:check`). Görsel doğrulama yerel Supabase'le (`npm run db:start`, `npm run web:local`, sentetik demo kullanıcısı); senkron yerelde sahte Google ile (SETUP §9).
+- Supabase CLI laptop'ta henüz girişli değil (2026-10-19; kullanıcı `npx.cmd supabase login`, sonra Claude projeyi bağlar ve `setup:check` koşar); uzak işlemleri Claude yürütür ([SETUP](SETUP.md) §9; kurulum ve denetim `npm run setup` / `npm run setup:check`). Görsel doğrulama yerel Supabase'le (`npm run db:start`, `npm run web:local`, sentetik demo kullanıcısı); senkron yerelde sahte Google ile (SETUP §9).
 - Google Health: 2026-10-19 12:25'te production'da yeniden bağlandı; 7 günlük sınırın kalktığı 2026-10-26'dan sonra ölçülecek (o güne kadar düşmüyorsa haftalık yeniden bağlanma kalkar). Web istemcisinin JSON'u `private/ghealth/web_client_secret.json`.
 - `hooplab.dev` alan adı (Vercel hesabında kayıt ve DNS): otomatik yenileme açık (kullanıcı teyidi, 2026-10-19); bitiş 2027-10-19, yenileme ödemesi kullanıcıda.
 - Metro'yu (Expo sunucusu) Claude başlatır / yeniden başlatır / kapatır; varsayılan **tünel** (`npm run mobile:tunnel`, 2026-10-16): telefon aynı ağda olmak zorunda değil, bilgisayar evde açık kalmalı ([SETUP](SETUP.md) §8). Expo Go projeyi son açılanlardan açar (adres kalıcı).
@@ -68,15 +68,15 @@ Ayrıntı: [ROADMAP.md](ROADMAP.md).
 | Araç | Durum |
 |---|---|
 | Windows 11, PowerShell + Git Bash | var |
-| Node.js | 24.14 (npm workspaces; `npm install` şart, [SETUP.md](SETUP.md)) |
+| Node.js | 24.22 (npm workspaces; `npm install` şart, [SETUP.md](SETUP.md)) |
 | TypeScript | 6.0.3 (Expo SDK 57 şablonuyla aynı) |
 | git | 2.52 (`core.hooksPath=.githooks` bu klonda ayarlı; yeni klonda `npm run hooks:install`) |
 | GitHub CLI | var, `emir-eid` hesabı |
-| Go | 1.27.0 (winget); `ghealth` kaynağı ve derlemesi `C:\gh\ghealth-src`, ayarları `../private/ghealth` |
+| Go | laptop'ta 1.21.3 (eski); `ghealth` kaynağı bu makinede yok, ayarları `../private/ghealth` (CLI'dan veri çekmek gerekirse kurulur) |
 | Expo SDK | 57 (`apps/mobile`; `npx expo install` ile paket ekle) |
-| Supabase CLI | 2.119.0 (kök devDependency, `npx supabase`); bulut projesine bağlı (`supabase/.temp`, gitignore'lu). Edge Functions: Deno yok; tip denetimi `supabase/functions/tsconfig.json`, yerel çalıştırma `supabase functions serve` (Docker) |
+| Supabase CLI | 2.119.0 (kök devDependency, `npx supabase`); laptop'ta bulut projesine henüz bağlı değil (`supabase/.temp`, gitignore'lu). Edge Functions: Deno yok; tip denetimi `supabase/functions/tsconfig.json`, yerel çalıştırma `supabase functions serve` (Docker) |
 | Playwright | 1.63.0 (kök devDependency, `npm run e2e`); WebKit bu makinede yerel aynayla kuruldu (LESSONS "Windows") |
-| Docker Desktop | 29.2 (yerel Supabase ve pgTAP: `npm run db:start`, `npm run test:db`; yerel önizleme `npm run web:local`) |
+| Docker Desktop | 29.8 (yerel Supabase ve pgTAP: `npm run db:start`, `npm run test:db`; yerel önizleme `npm run web:local`) |
 | Claude Code plugin'leri | `expo` 1.13.9, `supabase`, `postgres-best-practices` (proje kapsamı; kurulum [SETUP.md](SETUP.md) §5) |
 | Expo Go (iPhone) | kurulu; varsayılan `npm.cmd run mobile:tunnel` (tünel, global `@expo/ngrok` 4.1.3), yedek `npm.cmd run mobile` (LAN); PowerShell'de `npm` betiği engelli, `npm.cmd` kullanılır |
 | Mac | yok (iOS derlemeleri EAS bulutunda) |
@@ -93,4 +93,4 @@ Ayrıntı: [ROADMAP.md](ROADMAP.md).
 | PreCompact / SessionEnd hook (ikisi de doğrulandı) | compact öncesi, oturum sonu | `../private/transcripts/` (oturum başına tek dosya, her çağrıda en yeni hal) |
 | `private` yedeği (SessionEnd hook + `/kapat`) | oturum sonu | Drive: `HoopLab-yedek\private` (eklemeli kopya; hedef `../private/backup-target.txt`) |
 
-Zamanlanmış görevler masaüstü uygulaması açıkken çalışır; kapalıysa bir sonraki açılışta. **2026-10-19: ana makine laptop'a geçiyor** (yurtdışı): iki görev masaüstünde duraklatıldı, laptop'ta yeniden oluşturulacak; taşınacak dosyalar `private/tasima/` (SETUP §3, §6). 2026-10-19 haftalık denetimi çalıştı ama `docs/audits/`'e rapor düşmedi, laptop'ta bakılacak. Görev talimatları: `C:\Users\user\.claude\scheduled-tasks\<görev>\SKILL.md` (repo dışı).
+Zamanlanmış görevler masaüstü uygulaması açıkken çalışır; kapalıysa bir sonraki açılışta. **2026-10-19: ana makine laptop** (yurtdışı): iki görev laptop'ta yeniden oluşturuldu (aynı zamanlama), masaüstündekiler duraklatıldı; 2026-10-19 haftalık denetimi masaüstünde rapor bırakmadı, sonraki çalışma 2026-10-26. Görev talimatları: `C:Users<kullanıcı>.claudescheduled-tasks<görev>SKILL.md` (repo dışı).

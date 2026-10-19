@@ -56,6 +56,7 @@ Yedek yoksa klasörleri boş oluştur (`data`, `journal`, `transcripts`). `guard
    claude plugin install supabase@supabase-agent-skills -s project
    claude plugin install postgres-best-practices@supabase-agent-skills -s project
    ```
+   `plugin install` `.claude/settings.json` dosyasını aynı içerikle yeniden sıralar; değişiklik yalnız sıraysa `git checkout -- .claude/settings.json` ile geri alınır (2026-10-19, laptop).
 3. `/ac` yaz. "Dikkat" bölümünde hook veya plugin uyarısı olmamalı.
 
 ## 6. Zamanlanmış görevler
