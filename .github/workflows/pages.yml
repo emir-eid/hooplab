@@ -1,7 +1,8 @@
 name: Portfolyo sayfası
 
-# Tanıtım sayfası ve uygulamanın yalnız demo web derlemesi (karar 0050): https://emir-eid.github.io/hooplab/
-# Demo Supabase değerleri boş derlenir; sır kullanılmaz, sunucuya bağlanılmaz.
+# Tanıtım sayfası ve uygulamanın yalnız demo web derlemesi (karar 0050): https://hooplab.dev/ (alan adı, karar 0053)
+# Demo Supabase değerleri boş derlenir; sır kullanılmaz, sunucuya bağlanılmaz. Gizlilik politikası ve Google'ın
+# geri dönüş sayfası (/oauth/google/) da burada; geri dönüşün hedefi repo değişkeni GHEALTH_CALLBACK_URL'den.
 on:
   push:
     branches: [main]
@@ -40,6 +41,8 @@ jobs:
         run: npm ci
 
       - name: Sayfa ve demo
+        env:
+          GHEALTH_CALLBACK_URL: ${{ vars.GHEALTH_CALLBACK_URL }}
         run: node tools/site/build-site.mjs
 
       - uses: actions/configure-pages@v6

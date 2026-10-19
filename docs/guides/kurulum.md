@@ -48,6 +48,8 @@ Geri dönüş adresi (Authorized redirect URI) şu biçimdedir:
 https://<supabase-proje-kimligin>.supabase.co/functions/v1/ghealth-callback
 ```
 
+İsteğe bağlı: izin ekranında Supabase adresi yerine kendi alan adının görünmesi için Google'ın geri döndüğü küçük bir statik sayfa kullanılabilir ([0053](../decisions/0053-alan-adi-ve-google-yayin.md)): sayfayı yayınla (`GHEALTH_CALLBACK_URL` ile `npm run site`), adresini (`https://<alan-adin>/oauth/google/`) Google istemcisine ek geri dönüş adresi ve Supabase secrets'a `GHEALTH_REDIRECT_URI` olarak yaz.
+
 Proje kimliği Supabase panosunda Project Settings → General'da yazar. Emin değilsen 4. adımdan sonra sihirbaz adresi tam olarak yazar.
 
 İstemcinin JSON dosyasını indir ve repo dışında bir klasöre koy. Dosya istemci sırrını içerir: repoya, sohbete veya paylaşılan bir klasöre koyma.

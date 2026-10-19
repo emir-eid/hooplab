@@ -57,5 +57,8 @@
   "processBody": "The athlete builds HoopLab with <a href=\"https://claude.com/claude-code\">Claude Code</a>, and the whole record is in the repo: {{count.decisions}} decision records with the options weighed, {{count.sessions}} session reports, a lessons file, and a single state document every session starts from. Type checks, unit tests, end-to-end tests and the source check run on every push.",
   "stack": "Expo SDK 57 and React Native in strict TypeScript, Expo Router, Supabase (Postgres with row-level security, Edge Functions, pg_cron), Google Health API, Claude API on the server only, three.js for the 3D figure.",
   "footerLicense": "Code under the MIT license.",
-  "footerMedical": "HoopLab is not a medical device and gives no medical advice."
+  "footerMedical": "HoopLab is not a medical device and gives no medical advice.",
+  "privacyPageTitle": "Privacy policy · HoopLab",
+  "privacyLink": "Privacy policy",
+  "privacyBack": "Back to HoopLab"
 }

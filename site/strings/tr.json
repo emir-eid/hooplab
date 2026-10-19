@@ -57,5 +57,8 @@
   "processBody": "Sporcu HoopLab'i <a href=\"https://claude.com/claude-code\">Claude Code</a> ile geliştiriyor ve bütün kayıt repoda: seçenekleriyle {{count.decisions}} karar kaydı, {{count.sessions}} oturum raporu, bir dersler dosyası ve her oturumun başladığı tek bir durum belgesi. Tip denetimi, birim testleri, uçtan uca testler ve kaynak denetimi her push'ta çalışır.",
   "stack": "Expo SDK 57 ve React Native, strict TypeScript, Expo Router, Supabase (satır düzeyinde güvenlikli Postgres, Edge Functions, pg_cron), Google Health API, yalnız sunucuda Claude API, 3D manken için three.js.",
   "footerLicense": "Kod MIT lisanslı.",
-  "footerMedical": "HoopLab tıbbi bir cihaz değildir ve tıbbi tavsiye vermez."
+  "footerMedical": "HoopLab tıbbi bir cihaz değildir ve tıbbi tavsiye vermez.",
+  "privacyPageTitle": "Gizlilik politikası · HoopLab",
+  "privacyLink": "Gizlilik politikası",
+  "privacyBack": "HoopLab'e dön"
 }

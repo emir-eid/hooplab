@@ -1,10 +1,10 @@
 # HoopLab
 
-> **In English.** HoopLab is a personal iPhone app (Expo + Supabase) that a professional basketball player is building for personal use. It reads wearable data from the Google Health API and the athlete's own daily inputs. Each value is compared with the athlete's **own baseline**, not with general-population norms. Numbers come from a deterministic, tested engine. Every threshold links to a verified scientific source (DOI/PMID). An AI model will only *explain* numbers the engine has already computed; it never calculates them. The repo also keeps the whole development record: decision records, session reports, lessons learned and a privacy guard that scans every commit and the full git history. The documentation is in Turkish. The app has an offline **demo mode** with a synthetic athlete: **[try it in the browser](https://emir-eid.github.io/hooplab/)**, no account or install needed. To run it with your own Supabase and Google Cloud accounts, `npm run setup` installs and checks the server side ([guide, Turkish](docs/guides/kurulum.md)).
+> **In English.** HoopLab is a personal iPhone app (Expo + Supabase) that a professional basketball player is building for personal use. It reads wearable data from the Google Health API and the athlete's own daily inputs. Each value is compared with the athlete's **own baseline**, not with general-population norms. Numbers come from a deterministic, tested engine. Every threshold links to a verified scientific source (DOI/PMID). An AI model will only *explain* numbers the engine has already computed; it never calculates them. The repo also keeps the whole development record: decision records, session reports, lessons learned and a privacy guard that scans every commit and the full git history. The documentation is in Turkish. The app has an offline **demo mode** with a synthetic athlete: **[try it in the browser](https://hooplab.dev/)**, no account or install needed. To run it with your own Supabase and Google Cloud accounts, `npm run setup` installs and checks the server side ([guide, Turkish](docs/guides/kurulum.md)).
 
 Profesyonel bir basketbolcunun kendi antrenmanı için geliştirdiği iPhone uygulaması. Fitbit Air / Google Health verisini ve sporcunun kendi girdilerini birleştirir. Değerleri sedanter popülasyon normlarına göre değil, **sporcunun kendi baseline'ına** göre değerlendirir.
 
-> **Canlı demo ve tanıtım:** [emir-eid.github.io/hooplab](https://emir-eid.github.io/hooplab/tr/) (sentetik sporcu, tarayıcıda çalışır)
+> **Canlı demo ve tanıtım:** [hooplab.dev](https://hooplab.dev/tr/) (sentetik sporcu, tarayıcıda çalışır)
 >
 > Durum: **Faz 4 (son rötuşlar) sürüyor; Faz 2 (hesap motoru) ve Faz 3 (AI koç) tamamlandı.** Faz 1'den yalnız TestFlight kaldı. Canlı durum: [docs/STATE.md](docs/STATE.md) · Ürün tanımı: [docs/PRODUCT.md](docs/PRODUCT.md) · Yol haritası: [docs/ROADMAP.md](docs/ROADMAP.md)
 
@@ -28,7 +28,7 @@ Giyilebilir cihazların yorumları ortalama bir kullanıcıya göre ayarlı. Pro
 - **Antrenman ve bölge yükü:** Seans yükü RPE × dakika; alıştığına göre oran, monotonluk ve gerilim; kas ve tendon bölgelerinin son 48-72 saatteki yükü (tahmin). Haftalık rapor.
 - **Beslenme ve sıvı:** Gün tipine göre karbonhidrat ve protein hedefleri (g/kg), öğün ve su kaydı, ter testi; maç çevresi ve seyahat / jet lag notları.
 - **AI koç:** Sabah özeti ve soru-cevap. Model yalnız motorun hesapladığı sayıları ve kanıt tabanını görür; sunucudaki denetçi alıntısı ya da sayısı tutmayan cümleyi atar. Tıbbi sorularda yorum yerine yönlendirme, takviyede doping uyarısı.
-- **Demo modu:** Sentetik bir sporcuyla bütün ekranlar gezilebilir; sunucuya bağlanmaz. [Tarayıcıda dene](https://emir-eid.github.io/hooplab/demo/).
+- **Demo modu:** Sentetik bir sporcuyla bütün ekranlar gezilebilir; sunucuya bağlanmaz. [Tarayıcıda dene](https://hooplab.dev/demo/).
 
 ## İlkeler
 
@@ -65,7 +65,7 @@ Bu repo kod ve süreç içerir; **kişisel veri içermez.** Sağlık verisi yaln
 
 ## Hızlı deneme
 
-Node.js 22+ ve iPhone'da Expo Go gerekir. Yalnız bakmak için kurulum gerekmez: [tarayıcıdaki demo](https://emir-eid.github.io/hooplab/demo/).
+Node.js 22+ ve iPhone'da Expo Go gerekir. Yalnız bakmak için kurulum gerekmez: [tarayıcıdaki demo](https://hooplab.dev/demo/).
 
 ```bash
 npm install

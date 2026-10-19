@@ -6,10 +6,13 @@
 //
 // Kullanım: node tools/site/build-site.mjs              (demo dahil kur)
 //           node tools/site/build-site.mjs --skip-demo  (var olan site/.dist/demo ile, yalnız sayfa)
-//           node tools/site/build-site.mjs --serve      (kurduktan sonra http://127.0.0.1:4310/hooplab/ adresinde sun)
-// Alt yol: SITE_BASE ortam değişkeni (varsayılan /hooplab, GitHub Pages'te repo adı).
+//           node tools/site/build-site.mjs --serve      (kurduktan sonra http://127.0.0.1:4310/ adresinde sun)
+// Alt yol: SITE_BASE ortam değişkeni (varsayılan kök; 2026-10-19'dan beri sayfa kendi alan adında, karar 0053).
+// Google geri dönüşü: GHEALTH_CALLBACK_URL (Supabase'deki ghealth-callback adresi) verilirse /oauth/google/
+// sayfası Google'ın döndürdüğü sorguyu oraya iletir; adres repoda değil, GitHub değişkeninden gelir.
 
 import { execFileSync } from 'node:child_process';
+import { createHash } from 'node:crypto';
 import { copyFileSync, cpSync, existsSync, mkdirSync, readdirSync, readFileSync, rmSync, statSync, writeFileSync } from 'node:fs';
 import { createServer } from 'node:http';
 import path from 'node:path';
@@ -19,7 +22,14 @@ const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../..')
 const src = path.join(root, 'site');
 const dist = path.join(src, '.dist');
 const args = process.argv.slice(2);
-const base = (process.env.SITE_BASE ?? '/hooplab').replace(/\/+$/, '');
+const base = (process.env.SITE_BASE ?? '').replace(/\/+$/, '');
+const callback = process.env.GHEALTH_CALLBACK_URL ?? '';
+if (callback && !/^https:\/\/[a-z0-9-]+\.supabase\.co\/functions\/v1\/ghealth-callback$/.test(callback)) {
+  throw new Error('GHEALTH_CALLBACK_URL bir Supabase ghealth-callback adresi olmalı');
+}
+/** Gizlilik sayfasının "son güncelleme" tarihi; metin değişince elle güncellenir. */
+const PRIVACY_UPDATED = { en: 'October 19, 2026', tr: '19 Ekim 2026' };
+const privacyPath = { en: '/privacy/', tr: '/tr/gizlilik/' };
 if (!/^(\/[A-Za-z0-9_-]+)*$/.test(base)) throw new Error(`SITE_BASE geçersiz: ${base}`);
 
 /** Kaynak izi örneği: günün durumunu belirleyen kişisel bant (karar 0021). */
@@ -92,7 +102,7 @@ function sourceList(t) {
     .join('\n');
 }
 
-function render(lang) {
+function context(lang) {
   const t = JSON.parse(readFileSync(path.join(src, 'strings', `${lang}.json`), 'utf8'));
   const vars = {
     lang,
@@ -102,6 +112,7 @@ function render(lang) {
     altLang: lang === 'en' ? 'tr' : 'en',
     repo: 'https://github.com/emir-eid/hooplab',
     demo: `${base}/demo/`,
+    privacy: `${base}${privacyPath[lang]}`,
     ...Object.fromEntries(Object.entries(counts).map(([k, v]) => [`count.${k}`, v])),
     'trace.rule': ruleSnippet(),
     'trace.sources': sourceList(t),
@@ -110,10 +121,57 @@ function render(lang) {
   const fill = (s) => s.replace(/\{\{([a-zA-Z0-9_.]+)\}\}/g, (m, key) => (key in vars ? String(vars[key]) : m));
   // Metinler HTML içerebilir (kendi yazdığımız bağlantılar, <code>); önce içlerindeki değişkenler doldurulur.
   for (const [k, v] of Object.entries(t)) if (typeof v === 'string') vars[`t.${k}`] = fill(v);
-  const html = fill(readFileSync(path.join(src, 'index.html'), 'utf8'));
+  return { fill, vars };
+}
+
+function checked(html, label) {
   const left = html.match(/\{\{[^}]*\}\}/);
-  if (left) throw new Error(`Doldurulmamış yer tutucu (${lang}): ${left[0]}`);
+  if (left) throw new Error(`Doldurulmamış yer tutucu (${label}): ${left[0]}`);
   return html;
+}
+
+function render(lang) {
+  const { fill } = context(lang);
+  return checked(fill(readFileSync(path.join(src, 'index.html'), 'utf8')), lang);
+}
+
+/** Gizlilik politikası (Google OAuth izin ekranının istediği bağlantı). Metin site/privacy/<dil>.html. */
+function renderPrivacy(lang) {
+  const { fill, vars } = context(lang);
+  vars.updated = PRIVACY_UPDATED[lang];
+  vars.body = fill(readFileSync(path.join(src, 'privacy', `${lang}.html`), 'utf8'));
+  vars.altPage = `${base}${privacyPath[lang === 'en' ? 'tr' : 'en']}`;
+  return checked(fill(readFileSync(path.join(src, 'privacy.html'), 'utf8')), `gizlilik ${lang}`);
+}
+
+/**
+ * Google'ın izin ekranından döndüğü sayfa (karar 0053). Sorguyu (code, state ya da error) olduğu gibi Supabase'deki
+ * ghealth-callback fonksiyonuna iletir; token değişimi ve state denetimi orada kalır. Dış kaynak yüklemez, adres
+ * çubuğundaki kod başka siteye gitmesin diye yönlendiren yok (no-referrer); betik CSP özetiyle sınırlı.
+ */
+function renderOAuthForward() {
+  const script = callback
+    ? `location.replace(${JSON.stringify(callback)} + location.search);`
+    : `document.getElementById('m').textContent = 'Google bağlantısı bu derlemede yapılandırılmamış.';`;
+  const hash = createHash('sha256').update(script).digest('base64');
+  return `<!doctype html>
+<html lang="tr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="referrer" content="no-referrer">
+<meta name="robots" content="noindex">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'sha256-${hash}'; style-src 'unsafe-inline'">
+<title>HoopLab</title>
+<style>body{font:16px/1.5 system-ui,sans-serif;margin:0;padding:48px 16px;text-align:center;color:#444;background:#fff}@media (prefers-color-scheme:dark){body{color:#ccc;background:#111}}</style>
+</head>
+<body>
+<p id="m">HoopLab'e dönülüyor…</p>
+<noscript><p>Devam etmek için JavaScript gerekli.</p></noscript>
+<script>${script}</script>
+</body>
+</html>
+`;
 }
 
 // --- kurulum ---
@@ -152,13 +210,22 @@ for (const entry of readdirSync(dist)) if (entry !== 'demo') rmSync(path.join(di
 writeFileSync(path.join(dist, 'index.html'), render('en'));
 mkdirSync(path.join(dist, 'tr'));
 writeFileSync(path.join(dist, 'tr', 'index.html'), render('tr'));
+for (const lang of ['en', 'tr']) {
+  const dir = path.join(dist, ...privacyPath[lang].split('/').filter(Boolean));
+  mkdirSync(dir, { recursive: true });
+  writeFileSync(path.join(dir, 'index.html'), renderPrivacy(lang));
+}
+mkdirSync(path.join(dist, 'oauth', 'google'), { recursive: true });
+writeFileSync(path.join(dist, 'oauth', 'google', 'index.html'), renderOAuthForward());
 copyFileSync(path.join(src, 'site.css'), path.join(dist, 'site.css'));
 cpSync(path.join(root, 'docs', 'gorseller'), path.join(dist, 'img'), { recursive: true });
 copyFileSync(path.join(root, 'apps', 'mobile', 'assets', 'images', 'favicon.png'), path.join(dist, 'favicon.png'));
 // Pages'te Jekyll alt çizgiyle başlayan klasörleri (_expo, __node_modules) yayınlamaz.
 writeFileSync(path.join(dist, '.nojekyll'), '');
 // Demo tek sayfa: doğrudan açılan alt rota (ör. /demo/trend) Pages'in 404 sayfasına düşer, o da uygulamayı açar.
-copyFileSync(demoIndex, path.join(dist, '404.html'));
+// Eski adresler (github.io/hooplab/...) alan adına yönlenince /hooplab/... olarak gelir: yolun başı atılıp yeniden açılır.
+const legacy = `<script>if(location.pathname.indexOf('/hooplab/')===0)location.replace(location.pathname.slice(8)+location.search+location.hash)</script>`;
+writeFileSync(path.join(dist, '404.html'), readFileSync(demoIndex, 'utf8').replace('<head>', `<head>${legacy}`));
 console.log(`[site] ${path.relative(root, dist)} hazır (${Object.entries(counts).map(([k, v]) => `${k} ${v}`).join(', ')})`);
 
 // --- yerel sunucu (GitHub Pages'in davranışını taklit eder) ---
@@ -169,14 +236,14 @@ if (args.includes('--serve')) {
   const isFile = (p) => existsSync(p) && statSync(p).isFile();
   createServer((req, res) => {
     const url = new URL(req.url ?? '/', 'http://localhost');
-    if (!url.pathname.startsWith(`${base}/`)) {
+    if (base && !url.pathname.startsWith(`${base}/`)) {
       res.writeHead(302, { location: `${base}/` });
       return res.end();
     }
     const rel = decodeURIComponent(url.pathname.slice(base.length)).replace(/^\/+/, '');
     const p = path.join(dist, rel);
     const file = [p, `${p}.html`, path.join(p, 'index.html')].find((c) => c.startsWith(dist) && isFile(c));
-    res.writeHead(file ? 200 : 404, { 'content-type': types[path.extname(file ?? '.html')] ?? 'application/octet-stream' });
+    res.writeHead(file ? 200 : 404, { 'content-type': types[path.extname(file ?? '404.html')] ?? 'application/octet-stream' });
     res.end(readFileSync(file ?? path.join(dist, '404.html')));
   }).listen(port, '127.0.0.1', () => console.log(`[site] http://127.0.0.1:${port}${base}/`));
 }

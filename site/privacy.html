@@ -1,0 +1,37 @@
+<!doctype html>
+<html lang="{{lang}}">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{{t.privacyPageTitle}}</title>
+  <meta name="color-scheme" content="light dark">
+  <link rel="icon" href="{{base}}/favicon.png">
+  <link rel="alternate" hreflang="en" href="{{base}}/privacy/">
+  <link rel="alternate" hreflang="tr" href="{{base}}/tr/gizlilik/">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,700;12..96,800&family=Figtree:wght@400;500;600&display=swap">
+  <link rel="stylesheet" href="{{base}}/site.css">
+</head>
+<body>
+  <a class="skip" href="#main">{{t.skip}}</a>
+
+  <header class="top wrap">
+    <a class="wordmark" href="{{home}}">HoopLab</a>
+    <nav class="top-links">
+      <a href="{{altPage}}" hreflang="{{altLang}}" lang="{{altLang}}" aria-label="{{t.langSwitchLabel}}">{{t.langSwitch}}</a>
+      <a href="{{repo}}">GitHub</a>
+    </nav>
+  </header>
+
+  <main id="main" class="wrap legal">
+    <h1>{{t.privacyLink}}</h1>
+    {{body}}
+  </main>
+
+  <footer class="foot wrap">
+    <p>{{t.footerMedical}}</p>
+    <p><a href="{{home}}">{{t.privacyBack}}</a></p>
+  </footer>
+</body>
+</html>
