@@ -31,6 +31,8 @@ git config user.email "60217362+emir-eid@users.noreply.github.com"
 
 `E:\HoopLab\private` klasörünü Drive'daki yedekten kopyala (`<Drive>\HoopLab-yedek\private`). İçinde `guard-denylist.txt` ve `backup-target.txt` de gelir. Drive harfi veya yolu farklıysa `backup-target.txt` içindeki yolu düzelt.
 
+Ana makineden taşınırken git'in taşımadığı dosyalar `private/tasima/` klasöründe gelir (içindeki README nereye kopyalanacağını yazar): Claude hafızası (`C:\Users\<kullanıcı>\.claude\projects\E--HoopLab-code\memory\`; klasör adı proje yolundan türer, aynı yol `E:\HoopLab\code` kullanılırsa ad aynı kalır), `apps/mobile/.env.local` (kurulum sihirbazı EAS kimlik değerlerini yazmaz), `apps/mobile/.expo/settings.json` (tünel adresi aynı kalır) ve `.claude/settings.local.json`. Taşımadan önce ana makinede bu dosyalar oraya kopyalanır ve yedek alınır (`node tools/backup/backup-private.mjs`).
+
 Yedek yoksa klasörleri boş oluştur (`data`, `journal`, `transcripts`). `guard-denylist.txt` dosyasını yeniden yaz: kişisel bilgiler olmadan bekçi yalnız sır kalıplarını yakalar.
 
 ## 4. Claude Code yerel ayarı
@@ -58,7 +60,7 @@ Yedek yoksa klasörleri boş oluştur (`data`, `journal`, `transcripts`). `guard
 
 ## 6. Zamanlanmış görevler
 
-Haftalık denetim ve aylık literatür taraması **makineye özeldir** ve yalnız ana bilgisayarda kurulu olmalı; iki makinede kurulursa aynı rapor iki kez yazılır. Ana bilgisayar değişirse görev talimatları eski makinedeki `C:\Users\<kullanıcı>\.claude\scheduled-tasks\hooplab-*\SKILL.md` dosyalarından alınıp yeni makinede yeniden oluşturulur.
+Haftalık denetim ve aylık literatür taraması **makineye özeldir** ve yalnız ana bilgisayarda kurulu olmalı; iki makinede kurulursa aynı rapor iki kez yazılır. Görevler masaüstü uygulaması açıkken çalışır. Ana bilgisayar değişirse görev talimatları eski makinedeki `C:\Users\<kullanıcı>\.claude\scheduled-tasks\hooplab-*\SKILL.md` dosyalarından (taşımada `private/tasima/scheduled-tasks/`) alınıp yeni makinede aynı zamanlamayla yeniden oluşturulur (haftalık `0 10 * * 1`, aylık `0 10 1 * *`) ve eski makinedekiler duraklatılır.
 
 ## 7. Doğrulama
 

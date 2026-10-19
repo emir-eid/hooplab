@@ -93,4 +93,4 @@ Ayrıntı: [ROADMAP.md](ROADMAP.md).
 | PreCompact / SessionEnd hook (ikisi de doğrulandı) | compact öncesi, oturum sonu | `../private/transcripts/` (oturum başına tek dosya, her çağrıda en yeni hal) |
 | `private` yedeği (SessionEnd hook + `/kapat`) | oturum sonu | Drive: `HoopLab-yedek\private` (eklemeli kopya; hedef `../private/backup-target.txt`) |
 
-Zamanlanmış görevler masaüstü uygulaması açıkken çalışır; kapalıysa bir sonraki açılışta. Görev talimatları: `C:\Users\user\.claude\scheduled-tasks\<görev>\SKILL.md` (repo dışı).
+Zamanlanmış görevler masaüstü uygulaması açıkken çalışır; kapalıysa bir sonraki açılışta. **2026-10-19: ana makine laptop'a geçiyor** (yurtdışı): iki görev masaüstünde duraklatıldı, laptop'ta yeniden oluşturulacak; taşınacak dosyalar `private/tasima/` (SETUP §3, §6). 2026-10-19 haftalık denetimi çalıştı ama `docs/audits/`'e rapor düşmedi, laptop'ta bakılacak. Görev talimatları: `C:\Users\user\.claude\scheduled-tasks\<görev>\SKILL.md` (repo dışı).
