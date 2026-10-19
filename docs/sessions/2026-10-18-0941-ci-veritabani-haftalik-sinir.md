@@ -1,9 +1,9 @@
 # 2026-10-18 09:41 — CI'da veritabanı testleri, haftalık yorumda cümle sınırı
 
 - **Faz:** 4 tamamlandı (Faz 4 sonrası bakım; Faz 1'in TestFlight maddesi Apple onayını bekliyor)
-- **Durum:** açık (/rep)
+- **Durum:** kapandı (/kapat, 2026-10-19 13:07)
 - **Model / efor:** Opus 5.5, düşük
-- **Commit'ler:** `e2a7e76` … `34e3cbd` (Blok 1), `2f4ee3b` ve Blok 2'nin rep commit'i
+- **Commit'ler:** `e2a7e76` … `34e3cbd` (Blok 1), `2f4ee3b`, `851c462` (Blok 2) ve kapanış commit'i
 
 ## Blok 1 — pgTAP CI'da ve haftalık yorumda 7 cümle sınırı (09:41)
 
@@ -47,14 +47,13 @@ Testing modunda 7 günde düşen Google token'ı yüzünden haftalık yeniden ba
 ### Sorunlar ve hatalar
 - Konsolda "Publish app" kapalıydı (Branding eksik); gizlilik sayfasıyla çözüldü.
 - Tarayıcı paneli, çözülemeyen dış adrese yönlenen sekmeden sonra yerel adrese gezinemedi; 404 durumlu sayfaları da açmıyor (LESSONS'ta zaten var). Kontrol Playwright WebKit betiğiyle yapıldı.
-- Yayın durumunun "In production" olduğu kullanıcıdan henüz teyit edilmedi.
+- Yayın durumu sonradan kullanıcı tarafından konsolda "In production" olarak teyit edildi; alan adının otomatik yenilemesi açık.
 
 ### Öğrenilenler
 - LESSONS: Google "Publish app" önkoşulları ve logo tuzağı; izin ekranında geri dönüş alan adı; yeni "Alan adı ve barındırma" bölümü (Vercel varsayılan kayıtları, Pages yönlendirmesi).
 
 ## Açık kalanlar
 - Google token ölçümü: 2026-10-26 12:25'ten sonra senkron hala başarılı mı (7 günlük sınır kalktı mı).
-- Google'da yayın durumunun "In production" olduğunun teyidi (kullanıcı).
 - TestFlight: Apple Developer onayı bekleniyor.
 - Kırpma notu ilk gerçek kırpılmış yorumda ekranda bakılacak.
 
