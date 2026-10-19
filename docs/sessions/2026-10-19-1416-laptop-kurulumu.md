@@ -1,9 +1,9 @@
 # 2026-10-19 14:16 — Laptop kurulumu
 
 - **Faz:** 4 tamamlandı (Faz 4 sonrası bakım; Faz 1'in TestFlight maddesi Apple onayını bekliyor)
-- **Durum:** açık (/rep)
+- **Durum:** kapandı (/kapat, 2026-10-19 14:40)
 - **Model / efor:** Opus 5.5, düşük
-- **Commit'ler:** `dcd09ab`, `f4c438c`, `0614fac` ve bu rep commit'i (önceki oturumdan sonra gelen `1ec3550` taşıma hazırlığıdır)
+- **Commit'ler:** `dcd09ab`, `f4c438c`, `0614fac`, `928d6ba` (rep) ve kapanış commit'i (önceki oturumdan sonra gelen `1ec3550` taşıma hazırlığıdır)
 
 ## Blok 1 — Laptop'ı ana makine yapmak (14:16)
 
@@ -36,7 +36,7 @@ Ana makine masaüstünden laptop'a geçti (yurtdışı). [SETUP](../SETUP.md) ve
 - LESSONS "Windows": Playwright ders maddesi laptop'ta da ölçüldü; ffmpeg ve winldd yolları eklendi.
 
 ## Açık kalanlar
-- Laptop'ta denenmedi: Metro tüneliyle iPhone'dan açma (tünel adresi taşındı), oturum sonu Drive yedeği (ilk `/kapat`'ta).
+- Laptop'ta denenmedi: Metro tüneliyle iPhone'dan açma (tünel adresi taşındı). Drive yedeği `/kapat`'ta çalıştı (`npm run backup`, 210 dosya güncel).
 - `ghealth` CLI laptop'ta yok, Go 1.21 eski; uygulama gerektirmiyor, CLI'dan veri çekmek gerekirse kurulur.
 - 2026-10-19 haftalık denetimi masaüstünde rapor bırakmadı; sonraki çalışma 2026-10-26 laptop'ta.
 - Google token ölçümü 2026-10-26 12:25 sonrası; TestFlight Apple onayını bekliyor.
