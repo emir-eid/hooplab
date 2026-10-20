@@ -1,9 +1,9 @@
-# 2026-10-20 21:49 — Haftalık denetim laptop'tan elle
+# 2026-10-20 21:49 — Haftalık denetim laptop'tan, Metro tüneli, STATE kısaltma
 
 - **Faz:** 4 tamamlandı (Faz 4 sonrası bakım; Faz 1'in TestFlight maddesi Apple onayını bekliyor)
-- **Durum:** açık (/rep)
-- **Model / efor:** Opus 5.5, düşük
-- **Commit'ler:** bu bloğun rep commit'i
+- **Durum:** kapandı (/kapat, 2026-10-20 22:27)
+- **Model / efor:** Opus 5.5, düşük (Blok 1-2), orta (Blok 3)
+- **Commit'ler:** `2c6c5dd`, `b345efd`, `d459941` (rep) ve kapanış commit'i
 
 ## Blok 1 — Haftalık denetimi laptop'tan elle çalıştırmak (21:49)
 
