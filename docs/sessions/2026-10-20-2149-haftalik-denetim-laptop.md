@@ -43,9 +43,29 @@ Laptop kurulumunda denenmeyen tek adımı kapatmak: Metro'yu tünelle laptop'tan
 ### Öğrenilenler
 - yok.
 
+## Blok 3 — STATE özetini kısaltmak (22:24)
+
+### Amaç
+Denetimin notu: STATE 150 satırın altında ama ~45 KB; SessionStart hook'u özet bloğunu her oturuma ~34 KB olarak ekliyordu. Özellik geçmişi paragrafını arşive taşıyıp özeti kısaltmak.
+
+### Yapılanlar
+- Özet bloğunun ilk paragrafı (özellik geçmişi, ~21 bin karakter) olduğu gibi [docs/archive/STATE-2026-10-20.md](../archive/STATE-2026-10-20.md) dosyasına taşındı; bağlantılar yeni konuma göre düzeltildi ve hepsi denetlendi (kırık yok).
+- Yerine iki kısa paragraf: "Ne var" (fazlar, ekranlar, altyapı, karar ve faz özeti bağlantıları) ve "Son değişiklikler" (laptop, alan adı / OAuth ve ölçüm tarihi, 10-17/18 işleri).
+- Sonuç: STATE 44,7 KB → 24,4 KB; hook çıktısı ~34,5 KB → ~17,7 KB. Sıradaki işler, açık riskler ve kullanıcı işleri değişmedi.
+- `npm run check` yeşil.
+
+### Kararlar
+- yok (`/kapat` adım 8'deki arşiv kuralı uygulandı; açık riskler güncel olduğu için yerinde bırakıldı).
+
+### Sorunlar ve hatalar
+- yok.
+
+### Öğrenilenler
+- yok.
+
 ## Açık kalanlar
 - Apple Developer kaydı ve PWA yedek yolu için karar tarihi (kullanıcı kararı).
-- STATE özet bloğunun uzunluğu (denetim notu); kısaltma ayrı bir iş.
+- STATE "Açık riskler" hala uzun (~12 KB); maddeler güncel, ileride kapanan riskler arşive taşınır.
 
 ## Sıradaki adım
 - Google token ölçümü (2026-10-26 12:25'ten sonra).
