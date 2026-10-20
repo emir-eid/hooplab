@@ -25,9 +25,26 @@
 ### Öğrenilenler
 - yok (zamanlanmış görevin laptop'ta çalıştığı STATE "Otomasyonlar"a not edildi).
 
+## Blok 2 — Laptop'tan Metro tüneliyle iPhone (22:05)
+
+### Amaç
+Laptop kurulumunda denenmeyen tek adımı kapatmak: Metro'yu tünelle laptop'tan çalıştırıp iPhone'da Expo Go ile açmak.
+
+### Yapılanlar
+- `npm run mobile:tunnel` laptop'ta arka planda başlatıldı; tünel bağlandı, adres taşınan `.expo/settings.json` sayesinde masaüstündekiyle aynı.
+- Kullanıcı iPhone'da Expo Go'dan açtı: Bugün ve Vücut 3D yüklendi (log: iOS paketi ~35 sn, `body-scene` ayrı yüklendi). Logda hata yok; yalnız bilinen Expo Go uyarıları (`expo-notifications` Expo Go'da sınırlı, three.js `EXT_color_buffer_float`).
+
+### Kararlar
+- yok.
+
+### Sorunlar ve hatalar
+- yok.
+
+### Öğrenilenler
+- yok.
+
 ## Açık kalanlar
 - Apple Developer kaydı ve PWA yedek yolu için karar tarihi (kullanıcı kararı).
-- Laptop'ta denenmedi: Metro tüneliyle iPhone'dan açma.
 - STATE özet bloğunun uzunluğu (denetim notu); kısaltma ayrı bir iş.
 
 ## Sıradaki adım
