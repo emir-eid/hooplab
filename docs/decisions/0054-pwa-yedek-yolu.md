@@ -1,6 +1,6 @@
 # 0054. Apple kaydı uzarsa PWA yedek yolu
 
-- **Durum:** Önerildi (karar tarihi kullanıcıda; öneri 2026-11-03)
+- **Durum:** Kabul edildi (kullanıcı, 2026-10-20; karar tarihi 2026-11-03)
 - **Tarih:** 2026-10-20
 - **İlgili:** [0002](0002-platform-expo-react-native.md), [0024](0024-eas-derleme-ve-guncelleme.md), [0045](0045-yerel-bildirimler.md), [0050](0050-portfolyo-sayfasi.md), [0053](0053-alan-adi-ve-google-yayin.md), [denetim 2026-10-20](../audits/2026-10-20.md), [oturum raporu](../sessions/2026-10-20-2302-koc-olcumu-ve-pwa.md)
 
@@ -33,13 +33,13 @@ Bir PWA bilgisayar bağımlılığını kaldırır ama başka şeylerden vazgeç
 - **Cihazda denenecekler:** 3D Vücut (WebKit e2e ve demo çalışıyor, ana ekran kipinde denenmedi), haftalık PDF (`expo-print` web davranışı), paylaşma (`expo-sharing` web karşılığı).
 
 ## Karar
-Öneri: **2026-11-03'e kadar seçenek 1.** O güne kadar Apple'dan sonuç gelmezse **seçenek 2'ye geçilir**:
+**2026-11-03'e kadar seçenek 1.** O güne kadar Apple'dan sonuç gelmezse **seçenek 2'ye geçilir**:
 - Önce manifest, Google dönüş adresi ve ayrı web derlemesi.
 - Bildirim yolu (Web Push ya da bildirimsiz) o zaman ayrıca kararlaştırılır.
 
 Seçenek 3 önerilmez. Seçenek 2'de PWA yalnız yedek olur. Apple onayı gelirse TestFlight yine birinci yoldur, PWA bakımsız bırakılabilir.
 
-2026-11-03, kaydın başlamasından 4 hafta sonrasıdır. Bu bir öneridir; tarihi kullanıcı belirler.
+2026-11-03, kaydın başlamasından 4 hafta sonrasıdır; tarihi kullanıcı onayladı (2026-10-20).
 
 ## Sonuçlar
 - Kabul edilen: 2026-11-03'e kadar bilgisayar bağımlılığı ve sınırlı bildirimler sürer.
