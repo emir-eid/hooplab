@@ -29,7 +29,7 @@ STATE "Açık riskler"de "izlenir" diye bekleyen koç oranlarını ilk kez gerç
 ### Öğrenilenler
 - yok.
 
-## Blok 2 — PWA yedek yolu karar notu (23:20)
+## Blok 2 — PWA yedek yolu karar notu (23:07)
 
 ### Amaç
 Haftalık denetimin (2026-10-20) istediği karar tarihini koymak: Apple kaydı sonuçsuz kalırsa PWA'ya ne zaman ve hangi işlerle geçileceğini yazmak.
