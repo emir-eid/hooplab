@@ -2,7 +2,7 @@
 
 - **Faz:** 4 tamamlandı (Faz 4 sonrası bakım; Faz 1'in TestFlight maddesi Apple onayını bekliyor)
 - **Durum:** açık (/rep)
-- **Model / efor:** Opus 5.5, düşük
+- **Model / efor:** Opus 5.5, düşük (Blok 1-2)
 - **Commit'ler:** (rep commit'i)
 
 ## Blok 1 — Koçun gerçek yanıtlardaki kalite oranları (23:02)
@@ -29,10 +29,30 @@ STATE "Açık riskler"de "izlenir" diye bekleyen koç oranlarını ilk kez gerç
 ### Öğrenilenler
 - yok.
 
+## Blok 2 — PWA yedek yolu karar notu (23:20)
+
+### Amaç
+Haftalık denetimin (2026-10-20) istediği karar tarihini koymak: Apple kaydı sonuçsuz kalırsa PWA'ya ne zaman ve hangi işlerle geçileceğini yazmak.
+
+### Yapılanlar
+- [0054](../decisions/0054-pwa-yedek-yolu.md) yazıldı (Önerildi): seçenekler (beklemek / PWA'yı yedek hazırlamak / yalnız PWA), öneri 2026-11-03'e kadar Expo Go + tünel, sonra seçenek 2.
+- PWA iş listesi repoda doğrulandı: Google dönüş adresi izin listesi (`isAllowedReturnUrl`) yalnız uygulama şemalarını ve yerel adresleri kabul ediyor, barındırılan PWA için genişlemeli; yerel bildirimlerin (0045) web karşılığı yok (Web Push sunucu işi ister); uygulama `expo-haptics` kullanmıyor.
+- Teknik olgular kaynakla: Expo PWA rehberi (manifest `+html.tsx`, Workbox, önbellek uyarısı), iOS 16.4 ana ekran Web Push, WebKit'te Vibration API yok (W3C uygulama raporu 2024).
+- [decisions/README](../decisions/README.md) ve STATE (risk, kullanıcı işi, sıradaki iş 3) güncellendi.
+
+### Kararlar
+- [0054 PWA yedek yolu](../decisions/0054-pwa-yedek-yolu.md) — önerildi; karar tarihi kullanıcıda.
+
+### Sorunlar ve hatalar
+- yok.
+
+### Öğrenilenler
+- yok.
+
 ## Açık kalanlar
 - Durum cümlesindeki tek bir ihlal özetin tamamını düşürüyor (1 / 10 denemede görüldü). Sık görülürse yönergede durum cümlesinin yalnız durumu anlatması, önerinin ayrı cümlede olması istenebilir.
 - Haftalık yorumda 7 cümle kırpmasının oranı ilk yeni yorumla ölçülür.
-- Apple Developer kaydı ve PWA yedek yolu için karar tarihi.
+- Apple Developer kaydı; PWA karar tarihi (öneri 2026-11-03, 0054) kullanıcı onayında.
 
 ## Sıradaki adım
 - Google token ölçümü (2026-10-26 12:25'ten sonra).
