@@ -1,9 +1,9 @@
 # 2026-10-20 23:02 — Koç kalite ölçümü ve PWA yedek yolu
 
 - **Faz:** 4 tamamlandı (Faz 4 sonrası bakım; Faz 1'in TestFlight maddesi Apple onayını bekliyor)
-- **Durum:** açık (/rep)
+- **Durum:** kapandı (/kapat, 2026-10-20 23:47)
 - **Model / efor:** Opus 5.5, düşük (Blok 1-2)
-- **Commit'ler:** (rep commit'i)
+- **Commit'ler:** `ce09c36`, `fc052ee`, `a0f0115`, `fc5b20b` (rep) ve kapanış commit'i
 
 ## Blok 1 — Koçun gerçek yanıtlardaki kalite oranları (23:02)
 
@@ -53,6 +53,8 @@ Haftalık denetimin (2026-10-20) istediği karar tarihini koymak: Apple kaydı s
 - Durum cümlesindeki tek bir ihlal özetin tamamını düşürüyor (1 / 10 denemede görüldü). Sık görülürse yönergede durum cümlesinin yalnız durumu anlatması, önerinin ayrı cümlede olması istenebilir.
 - Haftalık yorumda 7 cümle kırpmasının oranı ilk yeni yorumla ölçülür.
 - Apple Developer kaydı; 2026-11-03'te sonuç yoksa PWA yedek yoluna geçilir (0054, kabul edildi).
+- 2026-10-17'den beri günlük özet yok (özet check-in'den sonra yazılır); koç oranları yeni check-in'lerle birikir.
+- Supabase CLI 2.121.0 çıktı (kurulu 2.119.0); acil değil, bakım işi.
 
 ## Sıradaki adım
 - Google token ölçümü (2026-10-26 12:25'ten sonra).
