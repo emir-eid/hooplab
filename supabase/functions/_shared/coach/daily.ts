@@ -8,7 +8,7 @@
 
 import type Anthropic from 'npm:@anthropic-ai/sdk@0.128.0';
 
-import { auditResponse, salvageAudit, type AuditResult, type ResponseBlock, type ResponseCitation } from './audit.ts';
+import { auditResponse, salvageAudit, salvageOptions, statusSentence, type AuditResult, type ResponseBlock, type ResponseCitation, type SalvageOptions } from './audit.ts';
 import { dailyAttemptLimit, routingNotes, type DailyResponse, type RoutingNote } from './contract.ts';
 import { dailyDocuments } from './documents.ts';
 import { selectForRules, withoutAppNumbers, type Kb } from './kb.ts';
@@ -36,10 +36,16 @@ Kurallar:
 - Belgede seyahat bloğu varsa: yolculuk günü seyahat yorgunluğu için, jet lag varsa uyum tahmini ve yerel saate geçiş için birer kaynaklı cümle yaz; uyum günü bir tahmindir, "tahmin" de. Melatonin önerme.
 - Türkçe yaz; "â" harfini kullanma (hala, zeka, kar). Sen diye hitap et.
 - Biçim: başlıksız, listesiz düz cümleler; toplam 5-7 cümle, her cümle en fazla 22 kelime ve tek bir fikir. Uygulama cümleleri konularına göre (toparlanma, yük ve vücut, beslenme) kendisi gruplar.
-- İlk cümle yalnız günün durumu ve nedeni. Sonra her konu için en fazla iki cümle: en önemli değer ve varsa bugün için bir öneri. Her şeyi anlatmaya çalışma; bandın içindeki, olağan değerleri atla.
+- İlk cümle yalnız günün durumu ve nedeni, şu kalıpla: "Günün durumu <durum>; nedeni: <neden>." Durumu ve nedeni günün sayıları belgesindeki durum bloğunda yazdığı gibi ver ve o bloğa alıntı yap. Bu cümleye öneri ya da yorum koyma; "çünkü", "nedeniyle", "yüzünden", "için" gibi bağlaç kullanma. Öneri varsa sonraki cümlede kaynaklı yaz. Sonra her konu için en fazla iki cümle: en önemli değer ve varsa bugün için bir öneri. Her şeyi anlatmaya çalışma; bandın içindeki, olağan değerleri atla.
 - Parantez içinde açıklama yazma, kaynak metnini cümlede tekrar etme, "yani" ile aynı şeyi yeniden söyleme. Belge adlarını ve kural kimliklerini yazma.`;
 
 export const userInstruction = 'Bugünün özetini yaz.';
+
+/**
+ * Kısmi kabul (karar 0034) ve durum yedeği (karar 0056): model durum cümlesi denetimden geçmezse özet reddedilmez,
+ * yerine motorun durum metni öne konur.
+ */
+export const dailySalvageOptions: SalvageOptions = { ...salvageOptions, statusFallback: true };
 
 /** Kaydedilen bir deneme (coach_summaries satırının kullandığımız kısmı). */
 export interface SummaryRow {
@@ -137,10 +143,14 @@ export function errorCode(error: unknown): string {
 
 function present(row: SummaryRow, cached: boolean, notes: RoutingNote[]): DailyResult {
   if (row.status === 'accepted' && row.audit) {
-    const { sentences, shown } = row.audit;
+    const { sentences, shown, engineStatus } = row.audit;
     const visible = shown ? shown.flatMap((i) => (sentences[i] ? [sentences[i]] : [])) : sentences;
     const matchDay = row.match_day === true;
-    return { httpStatus: 200, body: { status: 'accepted', cached, sentences: visible, omitted: sentences.length - visible.length, matchDay, notes } };
+    const omitted = sentences.length - visible.length;
+    if (engineStatus) {
+      return { httpStatus: 200, body: { status: 'accepted', cached, sentences: [engineStatus, ...visible], omitted, engineStatus: true, matchDay, notes } };
+    }
+    return { httpStatus: 200, body: { status: 'accepted', cached, sentences: visible, omitted, matchDay, notes } };
   }
   if (row.status === 'failed') {
     return { httpStatus: cached ? 200 : 502, body: { status: 'failed', cached, error: row.error ?? 'unknown', notes } };
@@ -204,9 +214,11 @@ export async function runDaily(input: DailyInput, deps: { store: CoachStore; mes
   const checked = auditResponse(content, layout);
   // Kısmi kabul (karar 0034): geçmeyen cümleler atılır; kalan özet koşulları sağlamıyorsa ret.
   // Tam geçen yanıtta da alıntısız kopyalar ayıklanır; `shown` yalnız bir cümle atıldıysa kaydedilir.
-  const shown = salvageAudit(checked, layout);
+  // Durum cümlesi kalmadıysa motorun durum metni öne konur (karar 0056).
+  const shown = salvageAudit(checked, layout, dailySalvageOptions);
   const trimmed = shown !== null && shown.length < checked.sentences.length;
-  const audit: AuditResult = trimmed ? { ...checked, shown } : checked;
+  const engineStatus = shown ? statusSentence(checked, shown, layout) : undefined;
+  const audit: AuditResult = { ...checked, ...(trimmed ? { shown } : {}), ...(engineStatus ? { engineStatus } : {}) };
   const status = checked.ok || shown ? 'accepted' : 'rejected';
   await deps.store.insert({ ...base, status, content, audit, error: null, model: message.model, fallback, usage });
   return present({ status, created_at: input.now.toISOString(), audit, error: null, match_day: snapshot.matchDay }, false, notes);

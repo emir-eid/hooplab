@@ -71,6 +71,8 @@ export interface AuditResult {
    * gösterilmeyen cümlelerin sırası. `shown`'da yoktur; kartta denetim notundan ayrı sayılır.
    */
   trimmed?: number[];
+  /** Model durum cümlesi kalmadığı için öne konan motor metni (günlük özet, karar 0056); `sentences`'ta yoktur. */
+  engineStatus?: AuditSentence;
 }
 
 export const auditOptions = {
@@ -189,6 +191,12 @@ const imperativeForms = new Set(
     return [v, ...negatives, ...[v, ...negatives].flatMap((base) => politeSuffixes.map((s) => base + s))];
   }),
 );
+/**
+ * "için" hem emirdir ("su için") hem edattır ("kısa olduğu için"). Önündeki sözcük ortaç (-dığı, -dıkları), mastar
+ * (-mak) ya da tamlayan (-nın, "bunun") ise edattır; emir sayılmaz (2026-10-21: "... olduğu için." biten durum cümlesi
+ * kaynaksız öneri sayılıyordu).
+ */
+const postpositionLead = /(?:[dt][ıiuü]ğ[ıiuü]|[dt][ıiuü]kl[ae]r[ıi]|m[ae]k|n[ıiuü]n)$/u;
 
 /** -meli / -malı (gereklilik) ve -ebilir / -abilir (olasılık) ekleri. */
 const modalSuffix = /\p{L}m[ae]l[ıi](?:s[ıi]n(?:[ıi]z)?|y[ıi]z|d[ıi]r)?(?!\p{L})/u;
@@ -200,6 +208,7 @@ export function isAdviceOrInterpretation(sentence: string): boolean {
   if (modalSuffix.test(s) || abilitySuffix.test(s)) return true;
   const words = s.match(/\p{L}+/gu) ?? [];
   const last = words.at(-1);
+  if (last === 'için' && postpositionLead.test(words.at(-2) ?? '')) return false;
   return last !== undefined && imperativeForms.has(last);
 }
 
@@ -356,9 +365,14 @@ export interface SalvageOptions {
    * sondan atılır. Yönergedeki sınırın denetçideki karşılığı; bilimsel eşik değil, okunabilirlik ayarı.
    */
   maxSentences?: number;
+  /**
+   * Durum cümlesi kalmazsa özet reddedilmez; çağıran motorun durum metnini (`statusSentence`) öne koyar (günlük özet,
+   * karar 0056). Yedek cümle `minSentences`'a sayılır.
+   */
+  statusFallback?: boolean;
 }
 
-/** Günlük özetin ayarı. */
+/** Günlük özetin ve haftalık yorumun ortak ayarı; günlük özet durum yedeğini açar (daily.ts dailySalvageOptions). */
 export const salvageOptions: SalvageOptions = { minSentences: 3, requireStatus: true };
 
 const normalize = (t: string) => trLower(t).replace(/\s+/g, ' ').trim();
@@ -369,7 +383,8 @@ const normalize = (t: string) => trLower(t).replace(/\s+/g, ' ').trim();
  *   - Yanıt düzeyindeki sorun (geçersiz alıntı, boş yanıt) varsa özetin tamamı reddedilir.
  *   - Sorunlu cümle atılır; alıntılı bir kopyası olan alıntısız cümle de (aynı cümleyi iki kez yazma) atılır.
  *   - Atılan cümle yüzünden "tahmin" sözünü kaybeden tahmin cümlesi de atılır (kural 4 kalan sırayla yeniden bakılır).
- *   - `requireStatus`: günün durumu bloğu varsa ona alıntı yapan bir cümle kalmalı; en az `minSentences` cümle kalmalı.
+ *   - `requireStatus`: günün durumu bloğu varsa ona alıntı yapan bir cümle kalmalı (`statusFallback` açıksa yerine
+ *     motorun metni konur); en az `minSentences` cümle kalmalı.
  */
 export function salvageAudit(result: AuditResult, layout: readonly DocumentEntry[], options: SalvageOptions = salvageOptions): number[] | null {
   if (result.problems.some((p) => p.sentence === null)) return null;
@@ -412,7 +427,19 @@ export function salvageAudit(result: AuditResult, layout: readonly DocumentEntry
     }
   }
 
-  if (options.requireStatus && numbers.some((b) => b.id === 'status') && !kept.some(({ s }) => s.numbers.includes('status'))) return null;
-  if (kept.length < options.minSentences) return null;
+  const statusMissing = options.requireStatus && numbers.some((b) => b.id === 'status') && !kept.some(({ s }) => s.numbers.includes('status'));
+  if (statusMissing && !options.statusFallback) return null;
+  if (kept.length + (statusMissing ? 1 : 0) < options.minSentences) return null;
   return kept.map(({ i }) => i);
+}
+
+/**
+ * Model durum cümlesi kalmadıysa yerine gösterilecek motor metni (karar 0056): günün sayıları belgesindeki durum
+ * bloğunun kendisi, ona alıntılı. Denetimden geçmiş cümle değil, motorun deterministik metni; yorum ve öneri içermez.
+ * Durum bloğu yoksa ya da gösterilen cümlelerden biri duruma dayanıyorsa undefined.
+ */
+export function statusSentence(result: AuditResult, shown: readonly number[], layout: readonly DocumentEntry[]): AuditSentence | undefined {
+  const block = layout.flatMap((e) => (e.kind === 'numbers' ? e.blocks : [])).find((b) => b.id === 'status');
+  if (!block || shown.some((i) => result.sentences[i]?.numbers.includes('status'))) return undefined;
+  return { text: block.text, numbers: ['status'], sources: [] };
 }

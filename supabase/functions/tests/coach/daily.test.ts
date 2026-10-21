@@ -58,7 +58,7 @@ const sources = selectForRules(kb, snapshotRuleIds(snapshot, attentionMetrics(sn
 // Fonksiyonun kuracağı günün sayıları blokları; sahte yanıtın alıntıları bunlara göre yazılır.
 const blocks = (dailyDocuments(snapshot, kb, sources).layout[0] as Extract<DocumentEntry, { kind: 'numbers' }>).blocks;
 
-function goodContent() {
+function goodContent(statusText = 'Günün durumu Kontrollü') {
   const hrv = blocks.findIndex((b) => b.id === 'hrv');
   const sleep = blocks.findIndex((b) => b.id === 'sleep');
   const status = blocks.findIndex((b) => b.id === 'status');
@@ -66,7 +66,7 @@ function goodContent() {
   const src = { type: 'char_location', document_index: 1, document_title: sources[0]!.id, start_char_index: 0, end_char_index: 20, cited_text: '…', file_id: null };
   return [
     { type: 'thinking', thinking: '', signature: 'sig' },
-    { type: 'text', text: 'Günün durumu Kontrollü', citations: [cite(status)] },
+    { type: 'text', text: statusText, citations: [cite(status)] },
     { type: 'text', text: '. ' },
     { type: 'text', text: 'HRV ortalaman 48 ms ile bandının altında', citations: [cite(hrv)] },
     { type: 'text', text: ' ve uyku ortalaman 6,4 saat', citations: [cite(sleep)] },
@@ -297,4 +297,31 @@ test('kısmi kabul: geçmeyen cümle atılır, kayıtta tanı için kalır; uygu
   assert.equal(rows[0]!.audit!.sentences.length, 5);
   const again = await run();
   assert.deepEqual(again.body, { ...first.body, cached: true });
+});
+
+test('durum yedeği: durum cümlesi geçmezse özet reddedilmez, motorun durum metni öne konur (karar 0056)', async () => {
+  const { fake, rows, run } = setup();
+  // Durum cümlesi kaynaksız yorum: "çünkü" bağlacı yorum sayılır, kaynak alıntısı yok.
+  const content = goodContent('Günün durumu Kontrollü çünkü toparlanman eksik');
+  const status = blocks.findIndex((b) => b.id === 'status');
+  fake.reply({ kind: 'message', message: message(content) });
+  const first = await run();
+  assert.ok(first.body.status === 'accepted');
+  assert.equal(first.body.engineStatus, true);
+  assert.equal(first.body.omitted, 1);
+  assert.deepEqual(first.body.sentences[0], { text: blocks[status]!.text, numbers: ['status'], sources: [] });
+  assert.deepEqual(first.body.sentences.slice(1).map((s) => s.text), ['HRV ortalaman 48 ms ile bandının altında ve uyku ortalaman 6,4 saat.', 'Bugün yüklenmeyi hafifletmen önerilir.']);
+  // Motor metni kayıtta ayrı tutulur; modelin cümleleri ve sorunları tanı için kalır.
+  assert.deepEqual(rows[0]!.audit!.engineStatus, first.body.sentences[0]);
+  assert.equal(rows[0]!.audit!.sentences.length, 3);
+  const again = await run();
+  assert.deepEqual(again.body, { ...first.body, cached: true });
+});
+
+test('durum yedeği yok: model durum cümlesi geçtiyse motor metni eklenmez', async () => {
+  const { fake, run } = setup();
+  fake.reply({ kind: 'message', message: message(goodContent()) });
+  const result = await run();
+  assert.ok(result.body.status === 'accepted');
+  assert.equal(result.body.engineStatus, undefined);
 });

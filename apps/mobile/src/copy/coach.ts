@@ -40,6 +40,9 @@ export function coachOmittedNote(count: number): string {
   return `Kaynak denetiminden geçmeyen ${count} cümle gösterilmedi.`;
 }
 
+/** Durum yedeği (karar 0056): ilk cümle koçun değil, uygulamanın hesapladığı durum metni. */
+export const coachEngineStatusNote = 'İlk cümle uygulamanın kendi durum metni.';
+
 /** Haftalık yorum 7 cümleyi aşınca kırpılan, denetimden geçmiş cümleler (contract.ts WeeklyResponse.trimmed). */
 export function weeklyCoachTrimmedNote(count: number): string {
   return `Yorum kısa kalsın diye ${count} cümle daha gösterilmedi.`;

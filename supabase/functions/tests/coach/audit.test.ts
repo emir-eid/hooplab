@@ -8,6 +8,7 @@ import {
   numberCandidates,
   salvageAudit,
   salvageOptions,
+  statusSentence,
   type AuditProblemCode,
   type ResponseBlock,
   type ResponseCitation,
@@ -63,10 +64,11 @@ test('öneri / yorum: kökler, -meli, -abilir, cümle sonu emir kipi', () => {
     'Antrenmandan sonra karbonhidrat ye.',
     'Isınmayı atlama.',
     'Bugün sprintleri sınırlayın.',
+    'Antrenmandan sonra su için.',
   ]) {
     assert.ok(isAdviceOrInterpretation(s), s);
   }
-  for (const s of ['Günün durumu Kontrollü.', 'HRV ortalaman bandın altında.', 'Bugün maç günü.', 'Dinlenik nabzın bandın içinde.']) {
+  for (const s of ['Günün durumu Kontrollü.', 'HRV ortalaman bandın altında.', 'Bugün maç günü.', 'Dinlenik nabzın bandın içinde.', 'Günün durumu Kontrollü; uyku kısa olduğu için.', 'HRV bandın altında kaldıkları için.', 'Bu toparlanmak için.']) {
     assert.ok(!isAdviceOrInterpretation(s), s);
   }
 });
@@ -210,6 +212,24 @@ test('kısmi kabul: alıntısız kopya atılır, alıntılı asıl kalır', () =
 test('kısmi kabul yok: durum cümlesi geçmezse ya da üç cümleden az kalırsa', () => {
   assert.equal(salvage([t('Günün durumu Kontrollü, HRV 49 ms.', num('status')), ...good.slice(1), t(' Ek bir 5 sayı.', num('sleep'))]).shown, null);
   assert.equal(salvage([...good.slice(0, 2), t(' Bugün yüklenmeyi hafiflet.')]).shown, null);
+});
+
+test('durum yedeği (karar 0056): açıksa durum cümlesi kalmadığında ret yok, yedek cümle en az sayıya girer', () => {
+  const statusBad = t('Günün durumu Kontrollü çünkü toparlanman eksik.', num('status'));
+  const a = auditResponse([statusBad, ...good.slice(1), t(' HRV 48 ms.', num('hrv'))], layout);
+  assert.deepEqual(a.problems.map((p) => [p.code, p.sentence]), [['advice_without_source', 0]]);
+  assert.equal(salvageAudit(a, layout), null);
+  const options = { ...salvageOptions, statusFallback: true };
+  assert.deepEqual(salvageAudit(a, layout, options), [1, 2, 3]);
+  const status = numbers.blocks.find((b) => b.id === 'status')!;
+  assert.deepEqual(statusSentence(a, [1, 2, 3], layout), { text: status.text, numbers: ['status'], sources: [] });
+  // Model cümlesi duruma dayanıyorsa yedek yok.
+  assert.equal(statusSentence(a, [0, 1], layout), undefined);
+  // Yedekle birlikte en az üç cümle: iki model cümlesi + yedek yeter, bir tane yetmez.
+  const short = auditResponse([statusBad, ...good.slice(1)], layout);
+  assert.deepEqual(salvageAudit(short, layout, options), [1, 2]);
+  const shorter = auditResponse([statusBad, good[1]!], layout);
+  assert.equal(salvageAudit(shorter, layout, options), null);
 });
 
 test('kısmi kabul: atılan cümleyle "tahmin" etiketini kaybeden tahmin cümlesi de atılır', () => {

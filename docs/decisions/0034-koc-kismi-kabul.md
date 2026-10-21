@@ -2,7 +2,7 @@
 
 - **Durum:** Kabul edildi
 - **Tarih:** 2026-10-09
-- **İlgili:** [0032](0032-ai-koc-tasarimi.md) ("denetimden geçmezse model yanıtı gösterilmez" maddesini ayrıntılandırır), [0033](0033-koc-ozeti-check-in-sonrasi.md)
+- **İlgili:** [0032](0032-ai-koc-tasarimi.md) ("denetimden geçmezse model yanıtı gösterilmez" maddesini ayrıntılandırır), [0033](0033-koc-ozeti-check-in-sonrasi.md); durum cümlesi kuralı [0056](0056-durum-cumlesi-yedegi.md) ile değişti (günlük özette motor metni yedeği)
 
 ## Bağlam
 Maliyet ölçümünde (2026-10-09; 4 gün × 3 kaynak ayarı × 2 deneme, Batch API) özetlerin yaklaşık dörtte biri denetimden geçmedi: üç yapılandırmada da 8 yanıttan 2-3'ü. Retlerin hepsi gerçek kural ihlaliydi, denetçi hatası değil:

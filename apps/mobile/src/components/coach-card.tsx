@@ -23,6 +23,7 @@ import {
   coachCardLabel,
   coachChecking,
   coachDemoNote,
+  coachEngineStatusNote,
   coachFailedTitle,
   coachFailureReason,
   coachFooter,
@@ -138,6 +139,7 @@ export function CoachCard({ snapshot, checkinDone }: { snapshot: CoachSnapshot; 
             <Text variant="caption" tone="inkMuted" style={styles.footer}>
               {demo ? coachDemoNote : coachFooter}
               {response.omitted > 0 ? ` ${coachOmittedNote(response.omitted)}` : ''}
+              {response.engineStatus ? ` ${coachEngineStatusNote}` : ''}
             </Text>
             {response.matchDay !== snapshot.matchDay ? (
               <Text variant="caption" tone="inkSecondary" style={styles.footer}>
