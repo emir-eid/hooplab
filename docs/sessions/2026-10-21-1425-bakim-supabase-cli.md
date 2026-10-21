@@ -1,9 +1,9 @@
-# 2026-10-21 14:25 — Bakım: Supabase CLI
+# 2026-10-21 14:25 — Bakım: Supabase CLI, açık riskler, PWA hazırlığı, uygulama simgesi
 
 - **Faz:** 4 tamamlandı (Faz 4 sonrası bakım; Faz 1'in TestFlight maddesi Apple onayını bekliyor)
-- **Durum:** açık (/rep)
+- **Durum:** kapandı (/kapat, 2026-10-21 22:47)
 - **Model / efor:** Opus 5.5, düşük (Blok 1-2), orta (Blok 3-4)
-- **Commit'ler:** rep commit'i
+- **Commit'ler:** `625657b`, `98e0ebe`, `2c6dc6c`, `9d753e9` (rep) ve kapanış commit'i
 
 ## Blok 1 — Supabase CLI 2.119.0 → 2.121.0 (14:25)
 
