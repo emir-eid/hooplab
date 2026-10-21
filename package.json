@@ -46,7 +46,7 @@
     "@playwright/test": "1.63.0",
     "@supabase/server": "1.9.0",
     "@types/node": "~24.19.1",
-    "supabase": "2.119.0",
+    "supabase": "2.121.0",
     "typescript": "~6.0.3"
   }
 }
