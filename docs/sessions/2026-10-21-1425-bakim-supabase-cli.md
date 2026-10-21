@@ -2,7 +2,7 @@
 
 - **Faz:** 4 tamamlandı (Faz 4 sonrası bakım; Faz 1'in TestFlight maddesi Apple onayını bekliyor)
 - **Durum:** açık (/rep)
-- **Model / efor:** Opus 5.5, düşük (Blok 1-2)
+- **Model / efor:** Opus 5.5, düşük (Blok 1-2), orta (Blok 3)
 - **Commit'ler:** rep commit'i
 
 ## Blok 1 — Supabase CLI 2.119.0 → 2.121.0 (14:25)
@@ -44,8 +44,32 @@
 ### Öğrenilenler
 - yok.
 
+## Blok 3 — PWA kod hazırlığı: manifest ve Google dönüş adresi (15:02)
+
+### Amaç
+Apple kaydından bağımsız ilerlemek. [0054](../decisions/0054-pwa-yedek-yolu.md) seçenek 2'nin kod tarafını karar tarihinden önce hazırlamak: manifest ve Google dönüş adresi izin listesi. Yayın yok (kullanıcı talimatı).
+
+### Yapılanlar
+- `apps/mobile/src/app/+html.tsx`: Expo'nun varsayılan kök şablonu (`node_modules`'taki `@expo/router-server` `html.js`'ten) ve şunlar: `lang="tr"`, `viewport-fit=cover`, manifest bağlantısı, `apple-touch-icon`, iOS ana ekran meta etiketleri, açık / koyu `theme-color`. Adresler `process.env.EXPO_BASE_URL` ile (babel-preset-expo gömüyor). Demo derlemesinde (`demoOnlyBuild`) manifest yok.
+- `apps/mobile/public/manifest.webmanifest` (göreli `start_url` / `scope`, `standalone`, Hale arka plan rengi) ve `public/icons/icon-{180,192,512}.png`. Simgeler uygulama simgesinden jimp-compact ile küçültüldü, saydamlık kaldırıldı. Service worker yok.
+- Google dönüş adresi: `isAllowedReturnUrl(value, webReturnUrl?)`, `readEnv`'de `GHEALTH_WEB_RETURN_URL`, `ghealth-connect` ayarı geçiriyor. Tek `https` adres, köken ve yol birebir; sorgu, parça, kullanıcı bilgisi, başka port ya da alt alan reddedilir. Ayar `https` değilse ya da bozuksa hiçbir web adresi açılmaz. 16 maddelik yeni test (`dates-oauth.test.ts`). Değişken ayarlı değil, fonksiyon dağıtılmadı.
+- Doğrulama: tip denetimi; `test:functions` 119/119. Üç web derlemesi: normalde manifest, simge ve `lang="tr"` var; demoda manifest yok; `/app` alt yolunda şablon hiç kullanılmıyor, aşağıya bakın. Web önizlemesi 390×844: manifest ve simge 200, giriş ekranı ve demo Bugün normal, konsolda uygulama hatası yok. `npm run e2e` 7/7 (WebKit, iPhone boyutu).
+- 0054'e "Erken hazırlık" bölümü, STATE sıradaki iş 3, CHANGELOG, LESSONS.
+
+### Kararlar
+- Yok (0054'ün uygulaması; dönüş adresi koda gömülmedi, ortam değişkeni oldu ki kurulum sihirbazıyla kendi alanını kullanan da aynı kodu kullanabilsin).
+
+### Sorunlar ve hatalar
+- Alt yolda derlenen tek sayfalık çıktı (`output: single`) `+html.tsx`'i kullanmıyor. Manifest o derlemeye girmiyor. PWA'nın kök adreste static çıktıyla mı (ör. alt alan), yoksa `public/index.html` şablonuyla mı yayınlanacağı yayın adımına kaldı (0054).
+- Git Bash `HOOPLAB_WEB_BASE_URL=/demo` değerini Windows yoluna çevirdi; `MSYS_NO_PATHCONV=1` ile çözüldü.
+- Uygulama simgesi hala Expo şablonunun simgesi (native ile aynı); ayrı bir iş.
+
+### Öğrenilenler
+- LESSONS "Expo / React Native": `+html.tsx` yalnız static çıktıda kullanılıyor, `EXPO_BASE_URL` gömülüyor, `public/` her çıktıya kopyalanıyor, Git Bash yol çevirisi.
+
 ## Açık kalanlar
 - Apple Developer kaydı: ek belge 2026-10-21'de gönderildi, yanıt bekleniyor; 2026-11-03'te sonuç yoksa PWA yedek yolu (0054).
+- PWA yayın adımı (0054 "Erken hazırlık" → Kalan): barındırma ve adres seçimi, `GHEALTH_WEB_RETURN_URL`, dağıtım, ana ekran kipinde cihaz denemesi; uygulama simgesi.
 - Durum cümlesindeki tek ihlalin özeti düşürmesi (önceki oturumdan; yeni check-in'lerle izlenir).
 
 ## Sıradaki adım

@@ -49,6 +49,13 @@ Seçenek 3 önerilmez. Seçenek 2'de PWA yalnız yedek olur. Apple onayı gelirs
   - Apple kaydı reddedilirse karar tarihi beklenmeden seçenek 2'ye geçilir.
   - Expo Go'nun SDK desteği değişip tünel yolu bozulursa da karar tarihi beklenmez.
 
+## Erken hazırlık (2026-10-21)
+Kullanıcı, Apple'dan bağımsız işlere odaklanmak için kod tarafındaki hazırlığı karar tarihinden önce başlattı. Karar değişmedi: yayın ve barındırma yok, 2026-11-03'e kadar seçenek 1 sürer.
+- **Manifest:** `apps/mobile/src/app/+html.tsx` (Expo'nun varsayılan şablonu, `lang="tr"`, `viewport-fit=cover`) manifesti, ana ekran simgesini ve iOS ana ekran meta etiketlerini ekler. `apps/mobile/public/manifest.webmanifest` göreli `start_url` / `scope` ile yazıldı, simgeler `public/icons/` (180, 192, 512; uygulama simgesinden). Service worker yok. Portfolyonun demo derlemesi manifesti almaz (`demoOnlyBuild`).
+- **Ölçülen sınır:** alt yolda derlenen tek sayfalık çıktı (`output: single`, `HOOPLAB_WEB_BASE_URL`) `+html.tsx`'i kullanmıyor, manifest o derlemeye girmiyor (LESSONS). PWA derlemesi ya kök adreste static çıktıyla yapılır (ör. ayrı alt alan; portfolyodan ayrı köken, oturum depolaması da ayrılır) ya da tek sayfa için `public/index.html` şablonu yazılır. Seçim yayın adımında yapılır.
+- **Google dönüş adresi:** `isAllowedReturnUrl` ikinci parametre olarak ortamdaki `GHEALTH_WEB_RETURN_URL`'i alır. Bu tek bir `https` adresidir; köken ve yol birebir eşleşmeli, sorgu ve parça kabul edilmez. Ayar `https` değilse ya da bozuksa hiçbir web adresi açılmaz. Değişken bugün hiçbir yerde ayarlı değil, davranış değişmedi. Bekçi: `supabase/functions/tests/google-health/dates-oauth.test.ts`.
+- **Kalan (yayın adımında):** barındırma ve adres seçimi (kullanıcı onayı), `GHEALTH_WEB_RETURN_URL` Supabase secret'ı ve kurulum sihirbazı, Supabase Auth yönlendirme adresleri, `ghealth-connect` dağıtımı, bildirim yolu kararı, uygulama simgesi (bugün Expo şablonunun simgesi; native ile aynı). Cihazda: ana ekran kipinde Google bağlantısı (web'de izin ekranı açılır pencerede açılıyor; ana ekran kipinde davranışı denenmedi), 3D Vücut, PDF ve paylaşma.
+
 ## Kaynaklar (yalnız teknik olgular)
 - Expo, Progressive web apps rehberi: https://docs.expo.dev/guides/progressive-web-apps/
 - iOS 16.4 ana ekran web uygulamalarında Web Push: https://9to5mac.com/2023/02/16/iphone-web-app-new-features-ios-16-4/ , https://pushpad.xyz/blog/does-safari-on-ios-support-web-push-notifications/

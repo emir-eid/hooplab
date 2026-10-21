@@ -22,7 +22,7 @@ export default {
       } catch {
         return Response.json({ error: 'invalid_body' }, { status: 400 });
       }
-      if (!isAllowedReturnUrl(body.returnUrl)) {
+      if (!isAllowedReturnUrl(body.returnUrl, env.webReturnUrl)) {
         return Response.json({ error: 'invalid_return_url' }, { status: 400 });
       }
       const state = randomToken();

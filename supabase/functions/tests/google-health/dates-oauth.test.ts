@@ -109,6 +109,28 @@ test('dönüş adresi yalnız uygulama şeması veya yerel önizleme olabilir', 
   assert.equal(isAllowedReturnUrl(42), false);
 });
 
+test('PWA dönüş adresi yalnız ayardaki tek https adresiyle birebir eşleşirse kabul edilir', () => {
+  const web = 'https://app.ornek.test/me/google-health';
+  assert.equal(isAllowedReturnUrl(web), false);
+  assert.ok(isAllowedReturnUrl(web, web));
+  assert.equal(isAllowedReturnUrl('https://app.ornek.test/me/google-health?x=1', web), false);
+  assert.equal(isAllowedReturnUrl('https://app.ornek.test/me/google-health#x', web), false);
+  assert.equal(isAllowedReturnUrl('https://app.ornek.test/me/google-health/x', web), false);
+  assert.equal(isAllowedReturnUrl('https://app.ornek.test/', web), false);
+  assert.equal(isAllowedReturnUrl('https://kotu.ornek.test/me/google-health', web), false);
+  assert.equal(isAllowedReturnUrl('https://app.ornek.test.kotu.example/me/google-health', web), false);
+  assert.equal(isAllowedReturnUrl('https://app.ornek.test:8443/me/google-health', web), false);
+  assert.equal(isAllowedReturnUrl('http://app.ornek.test/me/google-health', web), false);
+  assert.equal(isAllowedReturnUrl('https://k:s@app.ornek.test/me/google-health', web), false);
+  // Ayardaki adres https değilse ya da bozuksa hiçbir web adresi açılmaz.
+  assert.equal(isAllowedReturnUrl('http://app.ornek.test/me/google-health', 'http://app.ornek.test/me/google-health'), false);
+  assert.equal(isAllowedReturnUrl(web, 'bozuk adres'), false);
+  assert.equal(isAllowedReturnUrl(web, `${web}?x=1`), false);
+  // Yerel önizleme ve uygulama şemaları ayardan etkilenmez.
+  assert.ok(isAllowedReturnUrl('hooplab://me/google-health', web));
+  assert.ok(isAllowedReturnUrl('http://localhost:8081/me/google-health', web));
+});
+
 test('sonuç uygulama adresine sorgu olarak eklenir', () => {
   const url = withOutcome('exp://192.168.1.20:8081/--/me/google-health', 'error', 'missing_scopes');
   assert.equal(url, 'exp://192.168.1.20:8081/--/me/google-health?ghealth=error&code=missing_scopes');

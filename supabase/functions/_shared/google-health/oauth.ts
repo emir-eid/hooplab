@@ -69,12 +69,13 @@ export function missingScopes(granted: string | undefined): string[] {
   return GOOGLE_HEALTH_SCOPES.filter((s) => !set.has(s));
 }
 
-// Uygulamaya dönüş adresi: yalnız uygulamanın kendi şemaları (hooplab, Expo Go'nun exp/exps) ve
-// yerel web önizlemesi. Başka bir siteye yönlendirme yapılmaz (açık yönlendirme yok).
+// Uygulamaya dönüş adresi: yalnız uygulamanın kendi şemaları (hooplab, Expo Go'nun exp/exps), yerel
+// web önizlemesi ve ayarlıysa barındırılan PWA'nın tek, sabit https adresi (karar 0054; ortamda
+// GHEALTH_WEB_RETURN_URL). Başka bir siteye yönlendirme yapılmaz (açık yönlendirme yok).
 const APP_SCHEMES = new Set(['hooplab:', 'exp:', 'exps:']);
 const LOCAL_HOSTS = new Set(['localhost', '127.0.0.1', '[::1]']);
 
-export function isAllowedReturnUrl(value: unknown): value is string {
+export function isAllowedReturnUrl(value: unknown, webReturnUrl?: string): value is string {
   if (typeof value !== 'string' || value.length === 0 || value.length > 500) return false;
   let url: URL;
   try {
@@ -84,7 +85,21 @@ export function isAllowedReturnUrl(value: unknown): value is string {
   }
   if (url.username || url.password) return false;
   if (APP_SCHEMES.has(url.protocol)) return true;
+  if (webReturnUrl && isWebReturnUrl(url, webReturnUrl)) return true;
   return (url.protocol === 'http:' || url.protocol === 'https:') && LOCAL_HOSTS.has(url.hostname);
+}
+
+// PWA adresi birebir eşleşir: köken ve yol aynı, sorgu ve parça yok. Ayardaki adres https değilse
+// ya da bozuksa hiçbir adres kabul edilmez.
+function isWebReturnUrl(url: URL, webReturnUrl: string): boolean {
+  let allowed: URL;
+  try {
+    allowed = new URL(webReturnUrl);
+  } catch {
+    return false;
+  }
+  if (allowed.protocol !== 'https:' || allowed.username || allowed.password || allowed.search || allowed.hash) return false;
+  return url.protocol === 'https:' && url.origin === allowed.origin && url.pathname === allowed.pathname && !url.search && !url.hash;
 }
 
 export type ConnectOutcome = 'connected' | 'denied' | 'error';

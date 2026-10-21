@@ -14,6 +14,8 @@ export interface GoogleHealthEnv extends OAuthClientConfig {
   authUrl?: string;
   apiBase?: string;
   cronSecret?: string;
+  /** Barındırılan PWA'nın Google dönüş adresi (karar 0054); yoksa web'den yalnız yerel önizleme. */
+  webReturnUrl?: string;
 }
 
 // Zorunlu sırlar eksikse null: fonksiyon 503 döner, yarım yapılandırmayla çalışmaz.
@@ -31,6 +33,7 @@ export function readEnv(get: (key: string) => string | undefined): GoogleHealthE
     revokeUrl: get('GHEALTH_REVOKE_URL'),
     apiBase: get('GHEALTH_API_BASE'),
     cronSecret: get('GHEALTH_CRON_SECRET'),
+    webReturnUrl: get('GHEALTH_WEB_RETURN_URL'),
   };
   for (const [key, value] of Object.entries(optional)) {
     if (value) (env as unknown as Record<string, string>)[key] = value;
