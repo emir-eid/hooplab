@@ -2,7 +2,7 @@
 
 - **Faz:** 4 tamamlandı (Faz 4 sonrası bakım; Faz 1'in TestFlight maddesi Apple onayını bekliyor)
 - **Durum:** açık (/rep)
-- **Model / efor:** Opus 5.5, düşük (Blok 1)
+- **Model / efor:** Opus 5.5, düşük (Blok 1-2)
 - **Commit'ler:** rep commit'i
 
 ## Blok 1 — Supabase CLI 2.119.0 → 2.121.0 (14:25)
@@ -25,10 +25,28 @@
 ### Öğrenilenler
 - LESSONS "Supabase": 2.121'de ajan altındaki JSON çıktıları (`start`, hata nesnesi, `functions serve`) ve `test:db` için önce `db:start`.
 
+## Blok 2 — STATE açık riskler kısaltıldı (14:43)
+
+### Amaç
+"Açık riskler" bölümü ~12 KB'tı ve SessionStart hook'u bunu her oturuma ekliyordu. Hareket etmeyen maddeleri arşive taşıyıp bölümü izlenen risklere indirmek.
+
+### Yapılanlar
+- 27 maddeden 20'si, yani ölçümle kapanmayan bilimsel ve tasarım sınırları, olduğu gibi [archive/STATE-2026-10-21.md](../archive/STATE-2026-10-21.md) dosyasına taşındı. Bağlantılar klasöre göre düzeltildi, hepsi denetlendi (kırık yok).
+- STATE'te kalan 7 madde izlenen ya da tarihe bağlı risklerdir: AI koç oranları, Google OAuth, Google kişisel proje erişimi, Supabase duraklatma, yerel bildirim gelişi, haftalık yorum kırpması ve Expo / TestFlight / PWA. Bunlara arşivin konularını sayan tek bir "Kalıcı sınırlar" satırı eklendi.
+- Sonuç: STATE 25,1 KB → 16,9 KB. Arşivin başında, bir madde yeniden hareketlenirse STATE'e geri alınacağı yazıyor.
+
+### Kararlar
+- yok.
+
+### Sorunlar ve hatalar
+- yok.
+
+### Öğrenilenler
+- yok.
+
 ## Açık kalanlar
 - Apple Developer kaydı: ek belge 2026-10-21'de gönderildi, yanıt bekleniyor; 2026-11-03'te sonuç yoksa PWA yedek yolu (0054).
 - Durum cümlesindeki tek ihlalin özeti düşürmesi (önceki oturumdan; yeni check-in'lerle izlenir).
-- STATE "Açık riskler" ~12 KB; durağan maddeler arşive taşınabilir.
 
 ## Sıradaki adım
 - Google token ölçümü (2026-10-26 12:25'ten sonra).
