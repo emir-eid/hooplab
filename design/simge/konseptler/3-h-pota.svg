@@ -1,0 +1,29 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <defs>
+    <radialGradient id="a1" cx="0.5" cy="0.5" r="0.5">
+      <stop offset="0" stop-color="#6EDDB0" stop-opacity="1"/>
+      <stop offset="0.4" stop-color="#6EDDB0" stop-opacity="0.58"/>
+      <stop offset="0.8" stop-color="#6EDDB0" stop-opacity="0.1"/>
+      <stop offset="1" stop-color="#6EDDB0" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="a2" cx="0.5" cy="0.5" r="0.5">
+      <stop offset="0" stop-color="#FFC24D" stop-opacity="0.9"/>
+      <stop offset="0.5" stop-color="#FFC24D" stop-opacity="0.35"/>
+      <stop offset="1" stop-color="#FFC24D" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+  <rect id="bg" width="512" height="512" fill="#EFEDE8"/>
+  <g id="aura">
+    <circle cx="340" cy="150" r="250" fill="url(#a1)"/>
+    <circle cx="140" cy="420" r="200" fill="url(#a2)"/>
+  </g>
+  <g id="mark" fill="#15171A">
+    <rect x="138" y="120" width="56" height="272" rx="28"/>
+    <rect x="318" y="120" width="56" height="272" rx="28"/>
+    <rect x="166" y="228" width="180" height="48"/>
+  </g>
+  <g id="net" fill="none" stroke="#15171A" stroke-width="14" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M200 276 L230 352 H282 L312 276"/>
+    <path d="M200 276 L282 352 M312 276 L230 352"/>
+  </g>
+</svg>

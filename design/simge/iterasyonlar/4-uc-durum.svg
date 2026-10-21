@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <defs>
+    <radialGradient id="glow" cx="0.5" cy="0.5" r="0.5">
+      <stop offset="0.45" stop-color="#FFA21F" stop-opacity="0"/>
+      <stop offset="0.62" stop-color="#FFA21F" stop-opacity="0.2"/>
+      <stop offset="1" stop-color="#FF6A2B" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+  <rect id="bg" width="512" height="512" fill="#0E0F11"/>
+  <circle id="aura" cx="256" cy="256" r="230" fill="url(#glow)"/>
+  <g id="ring" fill="none" stroke-width="44" stroke-linecap="round">
+    <!-- Üç durum: alt-soldan saat yönünde yeşil, sarı, kırmızı; aralarda boşluk. -->
+    <path d="M157 355 A140 140 0 0 1 145 171" stroke="#3CCB92"/>
+    <path d="M194 130 A140 140 0 0 1 318 130" stroke="#FFAE33"/>
+    <path d="M367 171 A140 140 0 0 1 355 355" stroke="#FF6B52"/>
+  </g>
+  <circle id="dot" cx="256" cy="256" r="34" fill="#F1F0EC"/>
+</svg>

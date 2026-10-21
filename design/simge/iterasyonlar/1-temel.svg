@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <defs>
+    <radialGradient id="glow" cx="0.5" cy="0.5" r="0.5">
+      <stop offset="0.45" stop-color="#FFA21F" stop-opacity="0"/>
+      <stop offset="0.62" stop-color="#FFA21F" stop-opacity="0.22"/>
+      <stop offset="0.8" stop-color="#FF6A2B" stop-opacity="0.08"/>
+      <stop offset="1" stop-color="#FF6A2B" stop-opacity="0"/>
+    </radialGradient>
+    <linearGradient id="arcG" gradientUnits="userSpaceOnUse" x1="116" y1="256" x2="396" y2="256">
+      <stop offset="0" stop-color="#2EE6A0"/>
+      <stop offset="0.55" stop-color="#FFAE33"/>
+      <stop offset="1" stop-color="#FF6B52"/>
+    </linearGradient>
+  </defs>
+  <rect id="bg" width="512" height="512" fill="#0E0F11"/>
+  <circle id="aura" cx="256" cy="256" r="230" fill="url(#glow)"/>
+  <g id="ring" fill="none" stroke-linecap="round">
+    <circle cx="256" cy="256" r="140" stroke="#2A2B30" stroke-width="44"/>
+    <path d="M157 355 A140 140 0 1 1 355 355" stroke="url(#arcG)" stroke-width="44"/>
+  </g>
+  <circle id="dot" cx="256" cy="256" r="34" fill="#F1F0EC"/>
+</svg>

@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <defs>
+    <linearGradient id="arcG" gradientUnits="userSpaceOnUse" x1="116" y1="256" x2="396" y2="256">
+      <stop offset="0" stop-color="#2EE6A0"/>
+      <stop offset="0.55" stop-color="#FFAE33"/>
+      <stop offset="1" stop-color="#FF6B52"/>
+    </linearGradient>
+    <filter id="blur" x="-30%" y="-30%" width="160%" height="160%">
+      <feGaussianBlur stdDeviation="26"/>
+    </filter>
+  </defs>
+  <rect id="bg" width="512" height="512" fill="#0E0F11"/>
+  <g id="aura" filter="url(#blur)" opacity="0.75">
+    <path d="M157 355 A140 140 0 1 1 355 355" fill="none" stroke="url(#arcG)" stroke-width="70" stroke-linecap="round"/>
+  </g>
+  <g id="ring" fill="none" stroke-linecap="round">
+    <path d="M157 355 A140 140 0 1 1 355 355" stroke="url(#arcG)" stroke-width="36"/>
+  </g>
+  <!-- Ölçer topuzu: yayın üstünde, sarı bölgede (bugünün yeri). -->
+  <circle id="knob" cx="355" cy="157" r="30" fill="#F1F0EC" stroke="#0E0F11" stroke-width="10"/>
+</svg>

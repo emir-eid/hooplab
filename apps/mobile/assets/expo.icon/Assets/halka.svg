@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1024" height="1024" viewBox="0 0 512 512">
+  <!-- iOS Icon Composer katmanı ve Android ön planı: yalnız halka ve nokta, zeminsiz (zemin icon.json'da). -->
+  <defs>
+    <linearGradient id="arcG" gradientUnits="userSpaceOnUse" x1="116" y1="256" x2="396" y2="256">
+      <stop offset="0" stop-color="#2EE6A0"/>
+      <stop offset="0.55" stop-color="#FFAE33"/>
+      <stop offset="1" stop-color="#FF6B52"/>
+    </linearGradient>
+  </defs>
+  <g id="ring" fill="none" stroke-linecap="round">
+    <circle cx="256" cy="256" r="140" stroke="#2A2B30" stroke-width="44"/>
+    <path d="M157 355 A140 140 0 1 1 355 355" stroke="url(#arcG)" stroke-width="44"/>
+  </g>
+  <circle id="dot" cx="256" cy="256" r="34" fill="#F1F0EC"/>
+</svg>

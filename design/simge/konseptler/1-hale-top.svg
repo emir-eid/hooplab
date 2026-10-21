@@ -1,0 +1,34 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <defs>
+    <radialGradient id="a1" cx="0.5" cy="0.5" r="0.5">
+      <stop offset="0" stop-color="#FFC24D" stop-opacity="1"/>
+      <stop offset="0.4" stop-color="#FFC24D" stop-opacity="0.58"/>
+      <stop offset="0.8" stop-color="#FFC24D" stop-opacity="0.1"/>
+      <stop offset="1" stop-color="#FFC24D" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="a2" cx="0.5" cy="0.5" r="0.5">
+      <stop offset="0" stop-color="#FF9F6B" stop-opacity="1"/>
+      <stop offset="0.4" stop-color="#FF9F6B" stop-opacity="0.58"/>
+      <stop offset="0.8" stop-color="#FF9F6B" stop-opacity="0.1"/>
+      <stop offset="1" stop-color="#FF9F6B" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="a3" cx="0.5" cy="0.5" r="0.5">
+      <stop offset="0" stop-color="#FFE3A3" stop-opacity="1"/>
+      <stop offset="0.5" stop-color="#FFE3A3" stop-opacity="0.5"/>
+      <stop offset="1" stop-color="#FFE3A3" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+  <rect id="bg" width="512" height="512" fill="#EFEDE8"/>
+  <g id="aura">
+    <circle cx="300" cy="200" r="260" fill="url(#a1)"/>
+    <circle cx="170" cy="330" r="220" fill="url(#a2)"/>
+    <circle cx="330" cy="360" r="180" fill="url(#a3)"/>
+  </g>
+  <g id="ball" fill="none" stroke="#15171A" stroke-width="20" stroke-linecap="round">
+    <circle cx="256" cy="256" r="124"/>
+    <path d="M256 132 V380"/>
+    <path d="M132 256 H380"/>
+    <path d="M168 168 C206 206 206 306 168 344"/>
+    <path d="M344 168 C306 206 306 306 344 344"/>
+  </g>
+</svg>

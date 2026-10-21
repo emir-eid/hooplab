@@ -10,7 +10,7 @@ Tek doğruluk kaynağı. `/rep` her iş sonunda, `/kapat` her oturum sonunda gü
 
 **Sıradaki işler (sıralı):**
 1. **Google token ölçümü** (2026-10-26 12:25'ten sonra): `health_sync_status`'ta `last_success_at` o andan sonra ve `last_error` boşsa 7 günlük sınır kalkmış; LESSONS, 0019, 0053 ve kullanıcı işleri güncellenir. Düşerse Testing'e dönülür.
-2. **TestFlight** (Faz 1, Apple onayı gelince): ilk EAS derlemesi ve TestFlight; ardından push bildirimleri.
+2. **TestFlight** (Faz 1, Apple onayı gelince): ilk EAS derlemesi ve TestFlight (simge hazır, iOS `.icon` görünümü ilk derlemede bakılır, [0055](decisions/0055-uygulama-simgesi.md)); ardından push bildirimleri.
 3. **PWA yedek yolu** (2026-11-03'te Apple sonucu yoksa, [0054](decisions/0054-pwa-yedek-yolu.md)): kod hazırlığı yapıldı (manifest, `GHEALTH_WEB_RETURN_URL` izin listesi; 2026-10-21); kalan barındırma ve adres seçimi, secret, dağıtım, ana ekran kipinde Google bağlantısının cihazda denenmesi.
 
 **Açık riskler:**

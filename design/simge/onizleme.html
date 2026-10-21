@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>HoopLab simge önizlemesi</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: -apple-system, "Segoe UI", sans-serif; background: #E2DFD8; color: #15171A; padding: 24px; }
+  h1 { font-size: 20px; margin-bottom: 4px; }
+  p.not { font-size: 13px; color: #4A4E56; margin-bottom: 20px; }
+  .kart { background: #fff; border-radius: 16px; padding: 20px; margin-bottom: 20px; display: grid; grid-template-columns: 240px 1fr; gap: 24px; align-items: center; }
+  .kart h2 { font-size: 15px; margin-bottom: 6px; }
+  .kart p { font-size: 13px; color: #4A4E56; }
+  .buyuk { width: 240px; height: 240px; border-radius: 22.4%; overflow: hidden; box-shadow: 0 8px 24px -12px rgba(0,0,0,.4); }
+  .buyuk img { width: 100%; height: 100%; display: block; }
+  .ekranlar { display: flex; gap: 12px; margin-top: 14px; flex-wrap: wrap; }
+  .ekran { border-radius: 14px; padding: 14px 18px; display: flex; gap: 18px; align-items: end; }
+  .ekran.acik { background: linear-gradient(160deg, #C9D6E8, #EED9C4); }
+  .ekran.koyu { background: linear-gradient(160deg, #1B2233, #2B1A24); }
+  .ekran .s { display: flex; flex-direction: column; align-items: center; gap: 4px; font-size: 11px; }
+  .ekran.koyu .s { color: #fff; }
+  .s .i60 { width: 60px; height: 60px; border-radius: 13.4px; overflow: hidden; }
+  .s .i40 { width: 40px; height: 40px; border-radius: 9px; overflow: hidden; }
+  .s img { width: 100%; height: 100%; display: block; }
+  .kucuk { display: flex; gap: 10px; align-items: end; }
+  .kucuk img { display: block; border-radius: 3px; }
+</style>
+</head>
+<body>
+  <h1>HoopLab simgesi: Durum halkası varyasyonları</h1>
+  <p class="not">Hale tasarım dilinden. Köşeler iOS gibi yuvarlatıldı. Ana ekranda 60 px (iPhone), Spotlight / ayarlarda 40 px, sekmede 32 ve 16 px.</p>
+  <div id="kartlar"></div>
+<script>
+// Tur 1: üç yön (konseptler/). Tur 2: seçilen "Durum halkası"nın varyasyonları (iterasyonlar/).
+const konseptler = [
+  ['iterasyonlar/1-temel.svg', 'A · Temel', 'Tur 1\'deki hali: koyu zemin, yeşilden kırmızıya yay, ortada açık nokta.'],
+  ['iterasyonlar/2-acik-zemin.svg', 'B · Açık zemin', 'Uygulamanın açık temasıyla aynı zemin; açık temanın durum renkleri, koyu nokta.'],
+  ['iterasyonlar/3-halka-ve-top.svg', 'C · Halka ve top', 'Ortadaki nokta yerine küçük bir basketbol topu: ölçer ile basketbol birlikte.'],
+  ['iterasyonlar/4-uc-durum.svg', 'D · Üç durum', 'Yay üç ayrı parça: Hazır, Kontrollü, Toparlan. Renk geçişi yok, daha grafik.'],
+  ['iterasyonlar/5-isikli-yay.svg', 'E · Işıklı yay', 'Yay kendi rengiyle parlıyor (hale); merkez boş, sarı bölgede ölçer topuzu.'],
+];
+document.getElementById('kartlar').innerHTML = konseptler.map(([src, ad, acik]) => `
+  <div class="kart">
+    <div class="buyuk"><img src="${src}" alt="${ad}"></div>
+    <div>
+      <h2>${ad}</h2><p>${acik}</p>
+      <div class="ekranlar">
+        ${['acik', 'koyu'].map((t) => `<div class="ekran ${t}">
+          <div class="s"><div class="i60"><img src="${src}" alt=""></div>HoopLab</div>
+          <div class="s"><div class="i40"><img src="${src}" alt=""></div>40</div>
+        </div>`).join('')}
+        <div class="kucuk"><img src="${src}" width="32" height="32" alt=""><img src="${src}" width="16" height="16" alt=""></div>
+      </div>
+    </div>
+  </div>`).join('');
+</script>
+</body>
+</html>
