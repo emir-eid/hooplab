@@ -13,6 +13,12 @@ import { basisLabels, explainers, isExplainerId, medicalNote, type Explainer } f
 import { sources } from '@/copy/sources';
 import { usePalette } from '@/theme/appearance';
 
+// Static web çıktısında (PWA, karar 0054) her açıklama kendi sayfasıyla derlenir: barındırma tarafında
+// dinamik rota yönlendirmesi gerekmez. Tek sayfa çıktısı (demo) ve native bunu kullanmaz.
+export function generateStaticParams(): { id: string }[] {
+  return Object.keys(explainers).map((id) => ({ id }));
+}
+
 export default function ExplainScreen() {
   const palette = usePalette();
   const insets = useSafeAreaInsets();

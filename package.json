@@ -31,6 +31,7 @@
     "web:local": "node tools/dev/web-local.mjs",
     "screenshots": "node tools/dev/demo-screenshots.mjs",
     "site": "node tools/site/build-site.mjs",
+    "pwa:build": "node tools/pwa/build-pwa.mjs",
     "db:start": "supabase start -x studio,imgproxy,realtime,storage-api,edge-runtime,logflare,vector,supavisor,mailpit,postgres-meta",
     "db:stop": "supabase stop",
     "db:reset": "supabase db reset",
