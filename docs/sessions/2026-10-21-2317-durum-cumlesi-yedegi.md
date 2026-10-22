@@ -1,9 +1,9 @@
 # 2026-10-21 23:17 — Koç: durum cümlesi yedeği
 
 - **Faz:** 4 tamamlandı (Faz 4 sonrası bakım; Faz 1'in TestFlight maddesi Apple onayını bekliyor)
-- **Durum:** açık (/rep)
+- **Durum:** kapandı (/kapat, 2026-10-22 13:29)
 - **Model / efor:** Opus 5.5, düşük
-- **Commit'ler:** Blok 1 rep commit'i
+- **Commit'ler:** `9688e59` (rep) ve kapanış commit'i
 
 ## Blok 1 — Durum cümlesi düşünce özetin tamamen kaybolması (23:17)
 
