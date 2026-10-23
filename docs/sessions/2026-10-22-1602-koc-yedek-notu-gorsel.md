@@ -1,9 +1,9 @@
 # 2026-10-22 16:02 — Koç kartı: yedek durum notunun görsel kontrolü
 
 - **Faz:** 4 tamamlandı (Faz 4 sonrası bakım; Faz 1'in TestFlight maddesi Apple onayını bekliyor)
-- **Durum:** açık (/rep)
+- **Durum:** kapandı (/kapat, 2026-10-23 14:11)
 - **Model / efor:** Opus 5.5, düşük (Blok 1), orta (Blok 2)
-- **Commit'ler:** rep commit'i
+- **Commit'ler:** `347a6ed`, `f414f36` (rep) ve kapanış commit'i
 
 ## Blok 1 — Yedek durum notu web önizlemesinde (16:02)
 
