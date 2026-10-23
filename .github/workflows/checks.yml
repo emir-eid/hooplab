@@ -83,7 +83,7 @@ jobs:
   # iOS'a özgü sorunları yakalamaz (klavye, native bileşen); onlar cihazda bakılır. Ayrıntı: e2e/playwright.config.ts.
   uctan-uca:
     runs-on: ubuntu-24.04
-    timeout-minutes: 15
+    timeout-minutes: 20 # WebKit kurulumunun iki denemesi (2 × 6 dk) + kurulum ve testler
     steps:
       - uses: actions/checkout@v7
 
@@ -94,8 +94,15 @@ jobs:
       - name: Bağımlılıklar
         run: npm ci
 
+      # apt aynası zaman zaman çok yavaşlıyor (2026-10-22: 15 dk'da bitmedi, iş iptal oldu; normali <1 dk).
+      # Deneme başına 6 dk sınır, bir yeniden deneme; inen paketler apt önbelleğinde kalır, ikinci deneme oradan sürer.
       - name: WebKit
-        run: npx playwright install --with-deps webkit
+        run: |
+          for deneme in 1 2; do
+            timeout 6m npx playwright install --with-deps webkit && exit 0
+            echo "::warning::WebKit kurulumu ${deneme}. denemede bitmedi"
+          done
+          exit 1
 
       - name: Uçtan uca testler (web çıktısı, WebKit, demo)
         run: npm run e2e
