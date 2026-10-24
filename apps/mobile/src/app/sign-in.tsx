@@ -4,7 +4,7 @@
 // Yalnız demo derlemesinde (0050, portfolyo sayfası) giriş formu ve kurulum notu yerine kısa bir tanıtım.
 
 import { layout, spacing } from '@hooplab/theme';
-import { useRef, useState } from 'react';
+import { useRef, useState, type ComponentRef } from 'react';
 import { KeyboardAvoidingView, Platform, ScrollView, StyleSheet, type TextInput } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
@@ -35,7 +35,7 @@ export default function SignInScreen() {
   const [password, setPassword] = useState('');
   const [error, setError] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
-  const passwordRef = useRef<TextInput>(null);
+  const passwordRef = useRef<ComponentRef<typeof TextInput>>(null);
 
   const canSubmit = email.trim().length > 0 && password.length > 0;
 

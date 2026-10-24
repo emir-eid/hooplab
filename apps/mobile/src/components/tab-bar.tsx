@@ -39,7 +39,7 @@ export function useTabBarSpace(): number {
 /** Çubuğun arkasındaki geçiş yüksekliği (maket .tabwrap: 110 pt, alt boşluk 30 iken). */
 const FADE_ABOVE_BAR = 18;
 
-export function TabBar({ state, descriptors, navigation }: BottomTabBarProps) {
+export function TabBar({ state, descriptors, emitter, navigateToTab }: BottomTabBarProps) {
   const palette = usePalette();
   const bottom = useTabBarBottom();
   const fadeHeight = bottom + size.tabBar + FADE_ABOVE_BAR;
@@ -71,13 +71,13 @@ export function TabBar({ state, descriptors, navigation }: BottomTabBarProps) {
           const color = focused ? palette.ink : palette.inkSecondary;
 
           const onPress = () => {
-            const event = navigation.emit({
+            const event = emitter.emit({
               type: 'tabPress',
               target: route.key,
               canPreventDefault: true,
             });
             if (!focused && !event.defaultPrevented) {
-              navigation.navigate(route.name, route.params);
+              navigateToTab(route.key);
             }
           };
 

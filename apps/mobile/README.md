@@ -1,6 +1,6 @@
 # @hooplab/mobile
 
-HoopLab'in iPhone uygulaması: Expo SDK 57, Expo Router, TypeScript strict. Kararlar: [0002](../../docs/decisions/0002-platform-expo-react-native.md), [0014](../../docs/decisions/0014-uygulama-iskeleti.md). Tasarım token'ları: [@hooplab/theme](../../packages/theme/README.md).
+HoopLab'in iPhone uygulaması: Expo SDK 58, Expo Router, TypeScript strict. Kararlar: [0002](../../docs/decisions/0002-platform-expo-react-native.md), [0014](../../docs/decisions/0014-uygulama-iskeleti.md). Tasarım token'ları: [@hooplab/theme](../../packages/theme/README.md).
 
 ## Çalıştırma
 

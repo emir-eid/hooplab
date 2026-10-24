@@ -4,7 +4,9 @@
 //
 // Neden ayrı betik (LESSONS "Expo / React Native"):
 // - `npm run mobile -- --tunnel` bayrağı iç içe `npm run -w` zincirinde düşer.
-// - Expo CLI (57) global `@expo/ngrok`'u Windows'ta bulamaz; global klasör NODE_PATH ile verilir.
+// - Expo CLI (58) varsayılan olarak Expo hesabı tüneli açar; adresi her başlatmada değişir. ngrok
+//   (`--tunnel ngrok`, CLI'da "legacy") adresi kalıcı tutar, Expo Go projeyi son açılanlardan açar.
+// - Expo CLI global `@expo/ngrok`'u Windows'ta bulamaz; global klasör NODE_PATH ile verilir.
 // Adres kalıcıdır (rastgele kısım apps/mobile/.expo/settings.json'da, gitignore'lu); hazır olunca
 // `[tunnel] exp://…` satırı basılır.
 //
@@ -30,7 +32,7 @@ const env = {
   NODE_PATH: [globalRoot, process.env.NODE_PATH].filter(Boolean).join(path.delimiter),
 };
 const extra = process.argv.slice(2);
-const child = spawn('npx', ['expo', 'start', '--tunnel', ...extra], {
+const child = spawn('npx', ['expo', 'start', '--tunnel', 'ngrok', ...extra], {
   cwd: path.join(root, 'apps', 'mobile'),
   env,
   shell,

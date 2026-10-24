@@ -2,7 +2,7 @@
 // ListGroup içine ListRow gibi konur. Kayıt formlarında da kullanılacak.
 
 import { size, spacing, type } from '@hooplab/theme';
-import type { Ref } from 'react';
+import type { ComponentRef, Ref } from 'react';
 import { StyleSheet, TextInput, View, type TextInputProps } from 'react-native';
 
 import { Text } from '@/components/text';
@@ -12,7 +12,8 @@ interface TextFieldRowProps extends Omit<TextInputProps, 'style' | 'placeholderT
   label: string;
   /** Etiket sütunu (pt); uzun etiketli formda bütün satırlara aynı değer verilir ki alanlar hizalı kalsın. */
   labelWidth?: number;
-  ref?: Ref<TextInput>;
+  // RN 0.88'in katı tiplerinde TextInput sınıf değil; ref tipi örnekten alınır.
+  ref?: Ref<ComponentRef<typeof TextInput>>;
 }
 
 /** "Karbonhidrat" gibi uzun etiketler varsayılan sütuna (72 pt) sığmaz. */

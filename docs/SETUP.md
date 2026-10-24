@@ -83,7 +83,7 @@ GitHub Actions'ta `uctan-uca` işi her push'ta koşar; hata olursa rapor ve izle
 ## 8. Uygulamayı iPhone'da açmak
 
 1. iPhone'a App Store'dan **Expo Go**'yu kur.
-2. **Varsayılan yol: tünel** (kullanıcı kararı, 2026-10-16). Telefon bilgisayarla aynı ağda olmak zorunda değil, mobil veri de olur; bilgisayar evde açık ve internete bağlı kalmalı. Bu makinede bir kez: `npm i -g @expo/ngrok@4.1.3` (Expo'nun resmi paketi; kurulu).
+2. **Varsayılan yol: tünel** (kullanıcı kararı, 2026-10-16). Telefon bilgisayarla aynı ağda olmak zorunda değil, mobil veri de olur; bilgisayar evde açık ve internete bağlı kalmalı. Bu makinede bir kez: `npm i -g @expo/ngrok@4.1.3` (Expo'nun resmi paketi; kurulu). Expo CLI 58'in varsayılan tüneli (Expo hesabı, `*.on.expo.app`) adresini her başlatmada değiştirdiği için betik `--tunnel ngrok` kullanır (2026-10-24, LESSONS "Expo / React Native").
 3. **Metro'yu Claude yönetir** (kullanıcı isteği, 2026-10-04): başlatma, yeniden başlatma, kapatma. Terminal paneli bu makinede komut alamadığı için (LESSONS "Windows") Claude şunu çalıştırır:
    - Başlat: `Start-Process npm.cmd -ArgumentList 'run','mobile:tunnel' -WorkingDirectory 'E:\HoopLab\code' -WindowStyle Hidden -RedirectStandardOutput "$env:TEMP\hooplab-metro.log" -RedirectStandardError "$env:TEMP\hooplab-metro.err.log"`. Önbellek temizliği gerekiyorsa `'run','mobile:tunnel','--','--clear'`. Günlükte `[tunnel] exp://…` satırı görülünce hazır ([tools/dev/mobile-tunnel.mjs](../tools/dev/mobile-tunnel.mjs)).
    - Hazır demeden önce: tünel adresinden manifest okunur (`curl -H "expo-platform: ios" https://<alan adı>/` yanıtında `hostUri`).
