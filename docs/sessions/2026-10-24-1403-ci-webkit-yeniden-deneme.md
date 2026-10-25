@@ -3,7 +3,7 @@
 - **Faz:** 4 tamamlandı (Faz 4 sonrası bakım; Faz 1'in TestFlight maddesi Apple onayını bekliyor)
 - **Durum:** açık (/rep)
 - **Model / efor:** Opus 5.5, düşük
-- **Commit'ler:** `9d981f2`, `3df6d0a` (rep) ve Blok 2 rep commit'i
+- **Commit'ler:** `9d981f2`, `3df6d0a`, `fe86e6b` (rep) ve Blok 3 rep commit'i
 
 ## Blok 1 — Kontroller iptalinin sebebi ve WebKit adımının sağlamlaştırılması (14:03)
 
@@ -49,11 +49,30 @@ Kullanıcı: Expo Go, HoopLab'i açarken üç denemede de çöküyor. Sebebi bul
 ### Öğrenilenler
 - LESSONS "Expo / React Native": App Store'daki Expo Go yeni SDK'ya geçince eski SDK'lı proje uyarısız çöker; tanı ngrok istek kaydındaki istemci sürümü. Expo CLI 58 tüneli ve kalıcı adres için `--tunnel ngrok`. Gesture Handler 3'te eski ve hook API'si arasında ilişki yok. SDK yükseltmesinden sonra `npm ls react-native` ile tek kopya denetimi.
 
+## Blok 3 — Koç oranları (15:02, 2026-10-25)
+
+### Amaç
+2026-10-17'den beri check-in olmadığı için ölçülemeyen koç oranları: kullanıcı 2026-10-24'te check-in girdi.
+
+### Yapılanlar
+- Bağlı proje `projects list` ile doğrulandı (hooplab). `db query --linked` ile yalnız tarih, durum, cümle / gösterilen sayısı, `engineStatus` varlığı ve sorun kodları sorgulandı; özet, soru ve anlık değer metni okunmadı.
+- 2026-10-18'den beri: 1 check-in (2026-10-24), 1 günlük özet (2026-10-24): kabul, 7 cümle, hepsi gösterildi, sorun yok, motor yedeği (0056) devreye girmedi. Haftalık yorum 0, soru 0.
+- 2026-10-12'den beri günlük özet: 7 kabul (atılan cümle 2 / 53), 1 red (2026-10-15, 0056 öncesi); motor yedeği 0. 0056'dan sonraki tek özette model durum cümlesi denetimden geçti.
+
+### Kararlar
+- yok
+
+### Sorunlar ve hatalar
+- Sınır: 0056 sonrası tek özet; `engineStatus` oranı ve haftalık yorumda 7 cümle kırpması için örnek yok.
+
+### Öğrenilenler
+- yok
+
 ## Açık kalanlar
 - Sürüklemeli beş bileşeni (ScaleSlider, BodyView, HRV / yük / saatlik enerji grafikleri) Gesture Handler 3 hook API'sine taşımak; o zaman `LegacyScrollView` kalkar. Cihazda sürükleme davranışına bakılır.
 - npm güvenlik uyarıları (9) incelenir; Dependabot ile birlikte.
 - WebKit yeniden deneme yolunun ilk gerçek tetiklenişi izlenir (haftalık denetim CI sonucunu okur).
-- Kullanıcı: check-in (koç oranları ölçümü için).
+- Koç: `engineStatus` oranı ve haftalık yorum kırpması yeni kayıtlarla izlenir (2026-10-25'te birer örnek yok).
 
 ## Sıradaki adım
 - Google token ölçümü (2026-10-26 12:25'ten sonra).
