@@ -28,8 +28,28 @@ Expo SDK 58 yükseltmesinden kalan iş: beş sürüklemeli bileşen eski Gesture
 ### Öğrenilenler
 - LESSONS "Expo / React Native": Gesture Handler 3 maddesi hook API'si yöntemiyle güncellendi (kaydırma hareketini alma, eşlemeler, ayarı memo'da tutma).
 
+## Blok 2 — npm güvenlik uyarıları ve Dependabot (22:36)
+
+### Amaç
+SDK 58 yükseltmesinden sonra görülen npm uyarılarını (o gün 9: 3 orta, 6 yüksek) ve açık Dependabot uyarısını incelemek; güvenli düzeltme varsa uygulamak, yoksa gerekçelendirmek.
+
+### Yapılanlar
+- `npm audit`: 6 yüksek, orta yok. Hepsi iki pakete iner; öbür dördü (`expo`, `expo-updates`, `@expo/cli`, `@expo/code-signing-certificates`) zincir halkası. npm'in önerdiği "düzeltme" `expo` 44'e inmek (geçersiz).
+- **zod 3.25.76** (GHSA-mrhx-c7xc-m3w5, sınırsız dizi doğrulamasında bellek tükenmesi; düzeltme yalnız 4.6.6): `@expo/cli` `^3.25.76`'ya bağlı ve yalnız yerel geliştirme araçlarının ayar şemalarında kullanıyor; Anthropic SDK'da isteğe bağlı peer, Edge Functions zod import etmiyor. 4'e zorlamak CLI'ı bozar, 3.x için yama yok.
+- **node-forge 1.4.0** (GHSA-86w9-cpqp-85rv, RSA PKCS#1 v1.5 imza doğrulaması; yama yok): `@expo/cli` (yerel HTTPS) ve `expo-updates` kod imzalama yardımcısı; kod imzalama kullanılmıyor.
+- İkisi de bugünkü e2e web çıktısında (`e2e/.dist`) ve `dist-pwa`'da yok (aranarak).
+- Dependabot #5 (zod) kullanıcı onayıyla GitHub'da `tolerable_risk` gerekçesiyle kapatıldı; #3 (node-forge) 2026-10-17'den beri kapalı (`no_bandwidth`). Kod değişikliği yok.
+
+### Kararlar
+- yok (kullanıcı onayıyla uyarı kapatma; 2026-10-17'deki yaklaşımla aynı)
+
+### Sorunlar ve hatalar
+- yok
+
+### Öğrenilenler
+- yok (bilinen durum: Expo'nun derleme / geliştirme bağımlılıkları yamasız kalabiliyor; sonraki SDK yükseltmesinde yeniden bakılır)
+
 ## Açık kalanlar
-- npm güvenlik uyarıları (9) incelenir; Dependabot ile birlikte.
 - WebKit yeniden deneme yolunun ilk gerçek tetiklenişi izlenir (haftalık denetim CI sonucunu okur).
 - Koç: `engineStatus` oranı ve haftalık yorum kırpması yeni kayıtlarla izlenir.
 
