@@ -19,4 +19,5 @@ Seçenek 3 (kullanıcının önerisi). Oturum başına tek rapor dosyası tutulu
 - Bağlam doluluğu kesin ölçülemiyor; karar işaretlere dayanıyor.
 - Oturum `/kapat`'sız biterse rapor "açık" kalır; `/ac` bunu uyarı olarak gösterir.
 - Her iş ayrı bir `[F<faz>] rep:` commit'i olur; geçmiş daha ayrıntılı ama daha kalabalık.
+- **2026-10-25 eki:** `/rep` artık Claude tarafından da çağrılabilir (skill'den `disable-model-invocation` kalktı), ama yalnız kullanıcı o iş için açıkça onay verince; onay işe özgü. Gerekçe: kullanıcı onayladığı halde komutu ayrıca yazmak zorunda kalıyordu. `/ac` ve `/kapat` kullanıcıda kalır.
 - **Yeniden değerlendirme tetikleyicisi:** raporlar çok uzar ve `/ac` okuması ağırlaşırsa ya da açık kalan raporlar sık görülürse.

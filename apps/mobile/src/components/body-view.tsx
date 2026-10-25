@@ -8,12 +8,19 @@ import { spacing, type Hex } from '@hooplab/theme';
 import { GLView, type ExpoWebGLRenderingContext } from 'expo-gl';
 import { useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
 import { StyleSheet, View } from 'react-native';
-import { Gesture, GestureDetector } from 'react-native-gesture-handler';
+import {
+  GestureDetector,
+  useCompetingGestures,
+  usePanGesture,
+  useTapGesture,
+  type PanGestureConfig,
+  type TapGestureConfig,
+} from 'react-native-gesture-handler';
 import { useReducedMotion } from 'react-native-reanimated';
 
 import type { BodyColors } from '@/body/body-colors';
 import type { BodyScene } from '@/body/body-scene';
-import { useGestureScrollRef } from '@/components/gesture-scroll';
+import { useGestureScrollBlock } from '@/components/gesture-scroll';
 import { Text } from '@/components/text';
 
 interface BodyViewProps {
@@ -37,7 +44,7 @@ const MIN_SPEED = 0.00002;
 const FOCUS_MS = 520;
 
 export function BodyView({ colors, paint, selected, onSelect, focus, height, accessibilityLabel }: BodyViewProps) {
-  const scrollRef = useGestureScrollRef();
+  const scrollGesture = useGestureScrollBlock();
   const reduceMotion = useReducedMotion();
   const scene = useRef<BodyScene | null>(null);
   const [failed, setFailed] = useState(false);
@@ -149,40 +156,43 @@ export function BodyView({ colors, paint, selected, onSelect, focus, height, acc
     };
   }, []);
 
-  const gesture = useMemo(() => {
-    const pan = Gesture.Pan()
-      .runOnJS(true)
-      .activeOffsetX([-6, 6])
-      .failOffsetY([-10, 10])
-      .onStart(() => {
+  const config = useMemo(() => {
+    const pan: PanGestureConfig = {
+      runOnJS: true,
+      activeOffsetX: [-6, 6],
+      failOffsetY: [-10, 10],
+      block: scrollGesture,
+      onActivate: () => {
         const m = motion.current;
         m.speed = 0;
         m.focusStart = -1;
         m.dragStart = m.yaw;
-      })
-      .onUpdate((e) => {
+      },
+      onUpdate: (e) => {
         const m = motion.current;
         m.yaw = m.dragStart + e.translationX * RADIANS_PER_POINT;
         invalidate.current();
-      })
-      .onEnd((e, success) => {
-        if (!success || latest.current.reduceMotion) return;
+      },
+      onDeactivate: (e) => {
+        if (e.canceled || latest.current.reduceMotion) return;
         // velocityX: nokta / sn → radyan / ms
         motion.current.speed = (e.velocityX * RADIANS_PER_POINT) / 1000;
         invalidate.current();
-      });
-    if (scrollRef) pan.blocksExternalGesture(scrollRef);
-    const tap = Gesture.Tap()
-      .runOnJS(true)
-      .maxDistance(8)
-      .onEnd((e, success) => {
+      },
+    };
+    const tap: TapGestureConfig = {
+      runOnJS: true,
+      maxDistance: 8,
+      onDeactivate: (e) => {
         const s = scene.current;
-        if (!success || !s) return;
+        if (e.canceled || !s) return;
         const { width, height: h } = size.current;
         latest.current.onSelect(s.pick(e.x / width, e.y / h));
-      });
-    return Gesture.Race(pan, tap);
-  }, [scrollRef]);
+      },
+    };
+    return { pan, tap };
+  }, [scrollGesture]);
+  const gesture = useCompetingGestures(usePanGesture(config.pan), useTapGesture(config.tap));
 
   return (
     <GestureDetector gesture={gesture} touchAction="pan-y">

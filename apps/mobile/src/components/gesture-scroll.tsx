@@ -1,24 +1,24 @@
-// Gesture Handler'ın ScrollView'u, ref'ini bağlamla verir. İçindeki sürüklemeli kontroller (ScaleSlider,
-// BodyView) bu ref'le kaydırmayı kendi hareketleri bitene veya başarısız olana dek bekletir (LESSONS).
-// Gesture Handler 3'te ScrollView hook API'siyle yeniden yazıldı ve eski API'deki hareketlerle (Gesture.Pan)
-// ilişki kurulamıyor; kontroller hook API'sine geçene dek eski uygulama (LegacyScrollView) kullanılır.
+// Gesture Handler'ın ScrollView'u, kendi native hareketini bağlamla verir. İçindeki sürüklemeli kontroller
+// (ScaleSlider, BodyView, grafikler) bu hareketi `block` ile kendi hareketleri bitene veya başarısız olana dek
+// bekletir (LESSONS). Gesture Handler 3'ün ScrollView'u hook API'siyle yazılmış; kontroller de hook API'sinde.
 
-import { createContext, useContext, useRef, type ReactNode, type RefObject } from 'react';
+import { createContext, useContext, useState, type ReactNode } from 'react';
 import type { ScrollViewProps } from 'react-native';
-import { LegacyScrollView } from 'react-native-gesture-handler';
+import { ScrollView, type NativeGesture } from 'react-native-gesture-handler';
 
-const GestureScrollContext = createContext<RefObject<LegacyScrollView | null> | null>(null);
+const GestureScrollContext = createContext<NativeGesture | null>(null);
 
 export function GestureScrollView(props: ScrollViewProps & { children: ReactNode }) {
-  const ref = useRef<LegacyScrollView>(null);
+  // ScrollView bunu yalnız hareketin kimliği değişince çağırır; setState kararlı olduğundan döngü olmaz.
+  const [scrollGesture, setScrollGesture] = useState<NativeGesture | null>(null);
   return (
-    <GestureScrollContext.Provider value={ref}>
-      <LegacyScrollView ref={ref} {...props} />
+    <GestureScrollContext.Provider value={scrollGesture}>
+      <ScrollView {...props} onGestureUpdate_CAN_CAUSE_INFINITE_RERENDER={setScrollGesture} />
     </GestureScrollContext.Provider>
   );
 }
 
-/** Çevreleyen GestureScrollView'un ref'i; yoksa null. */
-export function useGestureScrollRef(): RefObject<LegacyScrollView | null> | null {
-  return useContext(GestureScrollContext);
+/** Çevreleyen GestureScrollView'un kaydırma hareketi; yoksa (veya henüz kurulmadıysa) undefined. */
+export function useGestureScrollBlock(): NativeGesture | undefined {
+  return useContext(GestureScrollContext) ?? undefined;
 }

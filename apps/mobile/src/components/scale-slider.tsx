@@ -5,10 +5,17 @@
 import { radius, size, spacing } from '@hooplab/theme';
 import { useId, useLayoutEffect, useMemo, useRef, useState } from 'react';
 import { StyleSheet, View, type LayoutChangeEvent } from 'react-native';
-import { Gesture, GestureDetector } from 'react-native-gesture-handler';
+import {
+  GestureDetector,
+  useCompetingGestures,
+  usePanGesture,
+  useTapGesture,
+  type PanGestureConfig,
+  type TapGestureConfig,
+} from 'react-native-gesture-handler';
 import Svg, { Defs, LinearGradient, Rect, Stop } from 'react-native-svg';
 
-import { useGestureScrollRef } from '@/components/gesture-scroll';
+import { useGestureScrollBlock } from '@/components/gesture-scroll';
 import { Text } from '@/components/text';
 import { usePalette } from '@/theme/appearance';
 
@@ -32,7 +39,7 @@ const FAIL_OFFSET_Y = 8;
 
 export function ScaleSlider({ value, onChange, min, max, label, valueText, low, high }: ScaleSliderProps) {
   const palette = usePalette();
-  const scrollRef = useGestureScrollRef();
+  const scrollGesture = useGestureScrollBlock();
   const [width, setWidth] = useState(0);
   const gradientId = `slider-fill-${useId().replace(/[^a-zA-Z0-9_-]/g, '')}`;
   const ratio = ((value ?? min) - min) / (max - min);
@@ -46,7 +53,7 @@ export function ScaleSlider({ value, onChange, min, max, label, valueText, low, 
     latest.current = { width, value, onChange, min, max };
   });
 
-  const gesture = useMemo(() => {
+  const config = useMemo(() => {
     const pick = (x: number) => {
       const { width: w, value: current, onChange: emit, min: lo, max: hi } = latest.current;
       if (w <= 0) return;
@@ -58,25 +65,29 @@ export function ScaleSlider({ value, onChange, min, max, label, valueText, low, 
       }
     };
     // Geri çağrılar JS iş parçacığında: değer React durumunda, adım başına bir güncelleme yeter.
-    const pan = Gesture.Pan()
-      .runOnJS(true)
-      .activeOffsetX([-ACTIVE_OFFSET_X, ACTIVE_OFFSET_X])
-      .failOffsetY([-FAIL_OFFSET_Y, FAIL_OFFSET_Y])
-      .onStart((e) => pick(e.x))
-      .onUpdate((e) => pick(e.x))
+    const pan: PanGestureConfig = {
+      runOnJS: true,
+      activeOffsetX: [-ACTIVE_OFFSET_X, ACTIVE_OFFSET_X],
+      failOffsetY: [-FAIL_OFFSET_Y, FAIL_OFFSET_Y],
+      block: scrollGesture,
+      onActivate: (e) => pick(e.x),
+      onUpdate: (e) => pick(e.x),
       // Parmak kalktığı yerdeki değer kaçmasın (son hareket olayı bırakmayla birlikte gelebilir).
-      .onEnd((e, success) => {
-        if (success) pick(e.x);
-      });
-    if (scrollRef) pan.blocksExternalGesture(scrollRef);
-    const tap = Gesture.Tap()
-      .runOnJS(true)
-      .maxDistance(ACTIVE_OFFSET_X)
-      .onEnd((e, success) => {
-        if (success) pick(e.x);
-      });
-    return Gesture.Race(pan, tap);
-  }, [scrollRef]);
+      onDeactivate: (e) => {
+        if (!e.canceled) pick(e.x);
+      },
+    };
+    const tap: TapGestureConfig = {
+      runOnJS: true,
+      maxDistance: ACTIVE_OFFSET_X,
+      onDeactivate: (e) => {
+        if (!e.canceled) pick(e.x);
+      },
+    };
+    return { pan, tap };
+  }, [scrollGesture]);
+  // Ayarlar memo'da: her çizimde yeni nesne hareketi yeniden yapılandırırdı; yalnız kaydırma hareketi değişince yenilenir.
+  const gesture = useCompetingGestures(usePanGesture(config.pan), useTapGesture(config.tap));
 
   return (
     <View>

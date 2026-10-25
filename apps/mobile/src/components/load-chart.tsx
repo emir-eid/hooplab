@@ -6,11 +6,18 @@
 
 import { useMemo, useRef, useState } from 'react';
 import { View, type LayoutChangeEvent } from 'react-native';
-import { Gesture, GestureDetector } from 'react-native-gesture-handler';
+import {
+  GestureDetector,
+  useCompetingGestures,
+  usePanGesture,
+  useTapGesture,
+  type PanGestureConfig,
+  type TapGestureConfig,
+} from 'react-native-gesture-handler';
 import { loadGroups } from '@hooplab/theme';
 import Svg, { Line, Path, Rect } from 'react-native-svg';
 
-import { useGestureScrollRef } from '@/components/gesture-scroll';
+import { useGestureScrollBlock } from '@/components/gesture-scroll';
 import { chartIndexAt } from '@/data/recovery-view';
 import type { LoadChartDay } from '@/data/training-load-view';
 import { usePalette } from '@/theme/appearance';
@@ -44,7 +51,7 @@ function barPath(x: number, w: number, top: number, bottom: number, rounded: boo
 
 export function LoadChart({ days, reference, accessibilityLabel, selected, onSelect }: LoadChartProps) {
   const palette = usePalette();
-  const scrollRef = useGestureScrollRef();
+  const scrollGesture = useGestureScrollBlock();
   const [width, setWidth] = useState(0);
   const onLayout = (e: LayoutChangeEvent) => setWidth(Math.round(e.nativeEvent.layout.width));
 
@@ -52,7 +59,7 @@ export function LoadChart({ days, reference, accessibilityLabel, selected, onSel
   const latest = useRef({ width, slot, count: days.length, selected, onSelect });
   latest.current = { width, slot, count: days.length, selected, onSelect };
 
-  const gesture = useMemo(() => {
+  const config = useMemo(() => {
     const indexAt = (x: number) => {
       const { width: w, slot: s, count } = latest.current;
       return chartIndexAt(x, w, count, s / 2);
@@ -61,24 +68,27 @@ export function LoadChart({ days, reference, accessibilityLabel, selected, onSel
       const i = indexAt(x);
       if (i !== latest.current.selected) latest.current.onSelect(i);
     };
-    const pan = Gesture.Pan()
-      .runOnJS(true)
-      .activeOffsetX([-ACTIVE_OFFSET_X, ACTIVE_OFFSET_X])
-      .failOffsetY([-FAIL_OFFSET_Y, FAIL_OFFSET_Y])
-      .onStart((e) => pick(e.x))
-      .onUpdate((e) => pick(e.x))
-      .onEnd(() => latest.current.onSelect(null));
-    if (scrollRef) pan.blocksExternalGesture(scrollRef);
-    const tap = Gesture.Tap()
-      .runOnJS(true)
-      .maxDistance(ACTIVE_OFFSET_X)
-      .onEnd((e, success) => {
-        if (!success) return;
+    const pan: PanGestureConfig = {
+      runOnJS: true,
+      activeOffsetX: [-ACTIVE_OFFSET_X, ACTIVE_OFFSET_X],
+      failOffsetY: [-FAIL_OFFSET_Y, FAIL_OFFSET_Y],
+      block: scrollGesture,
+      onActivate: (e) => pick(e.x),
+      onUpdate: (e) => pick(e.x),
+      onDeactivate: () => latest.current.onSelect(null),
+    };
+    const tap: TapGestureConfig = {
+      runOnJS: true,
+      maxDistance: ACTIVE_OFFSET_X,
+      onDeactivate: (e) => {
+        if (e.canceled) return;
         const i = indexAt(e.x);
         latest.current.onSelect(i === latest.current.selected ? null : i);
-      });
-    return Gesture.Race(pan, tap);
-  }, [scrollRef]);
+      },
+    };
+    return { pan, tap };
+  }, [scrollGesture]);
+  const gesture = useCompetingGestures(usePanGesture(config.pan), useTapGesture(config.tap));
 
   let body = null;
   if (width > 0 && days.length > 0) {

@@ -5,7 +5,14 @@
 import { fontFamily } from "@hooplab/theme";
 import { useMemo, useRef, useState } from "react";
 import { View, type LayoutChangeEvent } from "react-native";
-import { Gesture, GestureDetector } from "react-native-gesture-handler";
+import {
+  GestureDetector,
+  useCompetingGestures,
+  usePanGesture,
+  useTapGesture,
+  type PanGestureConfig,
+  type TapGestureConfig,
+} from "react-native-gesture-handler";
 import Svg, {
   Circle,
   Defs,
@@ -17,7 +24,7 @@ import Svg, {
   Text as SvgText,
 } from "react-native-svg";
 
-import { useGestureScrollRef } from "@/components/gesture-scroll";
+import { useGestureScrollBlock } from "@/components/gesture-scroll";
 import { chartIndexAt, type ChartDay } from "@/data/recovery-view";
 import { usePalette } from "@/theme/appearance";
 
@@ -47,7 +54,7 @@ export function HrvChart({
   onSelect,
 }: HrvChartProps) {
   const palette = usePalette();
-  const scrollRef = useGestureScrollRef();
+  const scrollGesture = useGestureScrollBlock();
   const [width, setWidth] = useState(0);
   const onLayout = (e: LayoutChangeEvent) =>
     setWidth(Math.round(e.nativeEvent.layout.width));
@@ -56,7 +63,7 @@ export function HrvChart({
   const latest = useRef({ width, count: days.length, selected, onSelect });
   latest.current = { width, count: days.length, selected, onSelect };
 
-  const gesture = useMemo(() => {
+  const config = useMemo(() => {
     const pick = (x: number) => {
       const {
         width: w,
@@ -68,21 +75,22 @@ export function HrvChart({
       if (i !== current) select(i);
     };
     // Geri çağrılar JS iş parçacığında: seçim React durumunda, gün başına bir güncelleme.
-    // Parmak kalkınca bugüne dönülür. onEnd yalnız etkinleşmiş sürüklemede gelir; dokunmanın seçimi silinmez.
-    const pan = Gesture.Pan()
-      .runOnJS(true)
-      .activeOffsetX([-ACTIVE_OFFSET_X, ACTIVE_OFFSET_X])
-      .failOffsetY([-FAIL_OFFSET_Y, FAIL_OFFSET_Y])
-      .onStart((e) => pick(e.x))
-      .onUpdate((e) => pick(e.x))
-      .onEnd(() => latest.current.onSelect(null));
-    if (scrollRef) pan.blocksExternalGesture(scrollRef);
+    // Parmak kalkınca bugüne dönülür. onDeactivate yalnız etkinleşmiş sürüklemede gelir; dokunmanın seçimi silinmez.
+    const pan: PanGestureConfig = {
+      runOnJS: true,
+      activeOffsetX: [-ACTIVE_OFFSET_X, ACTIVE_OFFSET_X],
+      failOffsetY: [-FAIL_OFFSET_Y, FAIL_OFFSET_Y],
+      block: scrollGesture,
+      onActivate: (e) => pick(e.x),
+      onUpdate: (e) => pick(e.x),
+      onDeactivate: () => latest.current.onSelect(null),
+    };
     // Dokunma seçer; aynı güne yeniden dokunma seçimi kaldırır.
-    const tap = Gesture.Tap()
-      .runOnJS(true)
-      .maxDistance(ACTIVE_OFFSET_X)
-      .onEnd((e, success) => {
-        if (!success) return;
+    const tap: TapGestureConfig = {
+      runOnJS: true,
+      maxDistance: ACTIVE_OFFSET_X,
+      onDeactivate: (e) => {
+        if (e.canceled) return;
         const {
           width: w,
           count,
@@ -91,9 +99,14 @@ export function HrvChart({
         } = latest.current;
         const i = chartIndexAt(e.x, w, count, padX);
         select(i === current ? null : i);
-      });
-    return Gesture.Race(pan, tap);
-  }, [scrollRef]);
+      },
+    };
+    return { pan, tap };
+  }, [scrollGesture]);
+  const gesture = useCompetingGestures(
+    usePanGesture(config.pan),
+    useTapGesture(config.tap),
+  );
 
   const values = days
     .flatMap((d) => [d.value, d.rolling])

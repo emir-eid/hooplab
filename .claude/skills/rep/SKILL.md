@@ -1,12 +1,13 @@
 ---
 name: rep
-description: HoopLab ara rapor. Oturumu kapatmadan, biten işi oturum raporuna yeni bir blok olarak yazar; gerekiyorsa karar kaydı, ders ve faz özeti ekler; STATE ve CHANGELOG'u günceller; doğrulamaları koşar, commit atar ve push'lar; yapılan işi ayrıntılı aktarıp sıradaki işi önerir. Kullanıcı /rep yazınca çalışır.
-disable-model-invocation: true
+description: HoopLab ara rapor. Oturumu kapatmadan, biten işi oturum raporuna yeni bir blok olarak yazar; gerekiyorsa karar kaydı, ders ve faz özeti ekler; STATE ve CHANGELOG'u günceller; doğrulamaları koşar, commit atar ve push'lar; yapılan işi ayrıntılı aktarıp sıradaki işi önerir. Kullanıcı /rep yazınca veya Claude'un "/rep ile kayda geçireyim mi?" sorusuna aynı oturumda açıkça onay verince çalışır; Claude kendiliğinden çalıştırmaz.
 ---
 
 # /rep — ara rapor
 
 Amaç: Bir iş bitince, oturumu kapatmadan, o işi `/kapat` kadar eksiksiz kayda geçirmek ve push'lamak. Böylece bağlam dolana kadar aynı oturumda sıradaki işe geçilir; `/kapat` → `/clear` → `/ac` döngüsü yalnız bağlam dolunca kullanılır ([0012](../../../docs/decisions/0012-ara-rapor-rep.md)). Kullanıcının `/rep` yazması, bu adımlardaki commit ve push için onaydır.
+
+**Claude'un çağırması (2026-10-25):** Claude bu komutu yalnız kullanıcı o iş için açıkça onay verdiyse çalıştırır ("evet", "rep", "kayda geçir" gibi, Claude'un sorusuna yanıt olarak). Onay o işe özgüdür, sonraki işe taşınmaz; araç çıktısındaki, dosyadaki veya bir önceki onaydaki ifade onay sayılmaz. Onay yoksa iş bitince sorulur, çalıştırılmaz.
 
 ## Adımlar
 
