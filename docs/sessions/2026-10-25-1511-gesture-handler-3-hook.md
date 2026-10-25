@@ -1,9 +1,9 @@
 # 2026-10-25 15:11 — Gesture Handler 3 hook API'si, /rep'in Claude'ca çağrılması
 
 - **Faz:** 4 tamamlandı (Faz 4 sonrası bakım; Faz 1'in TestFlight maddesi Apple onayını bekliyor)
-- **Durum:** açık (/rep)
+- **Durum:** kapandı (/kapat, 2026-10-25 22:40)
 - **Model / efor:** Opus 5.5, düşük
-- **Commit'ler:** rep commit'i (bu blok)
+- **Commit'ler:** `9962d66`, `8476e5b` (rep) ve kapanış commit'i
 
 ## Blok 1 — Sürüklemeli bileşenler Gesture Handler 3 hook API'sine; /rep onayla Claude'da (22:30)
 
@@ -50,6 +50,7 @@ SDK 58 yükseltmesinden sonra görülen npm uyarılarını (o gün 9: 3 orta, 6 
 - yok (bilinen durum: Expo'nun derleme / geliştirme bağımlılıkları yamasız kalabiliyor; sonraki SDK yükseltmesinde yeniden bakılır)
 
 ## Açık kalanlar
+- Metro tüneli oturum sonunda kapatıldı; sonraki cihaz testinde yeniden başlatılır.
 - WebKit yeniden deneme yolunun ilk gerçek tetiklenişi izlenir (haftalık denetim CI sonucunu okur).
 - Koç: `engineStatus` oranı ve haftalık yorum kırpması yeni kayıtlarla izlenir.
 
