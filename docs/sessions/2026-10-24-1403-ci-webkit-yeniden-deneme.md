@@ -1,9 +1,9 @@
-# 2026-10-24 14:03 — CI: WebKit kurulumunda zaman sınırı ve yeniden deneme
+# 2026-10-24 14:03 — CI yeniden denemesi, Expo SDK 58 yükseltmesi, koç oranları
 
 - **Faz:** 4 tamamlandı (Faz 4 sonrası bakım; Faz 1'in TestFlight maddesi Apple onayını bekliyor)
-- **Durum:** açık (/rep)
+- **Durum:** kapandı (/kapat, 2026-10-25 15:07)
 - **Model / efor:** Opus 5.5, düşük
-- **Commit'ler:** `9d981f2`, `3df6d0a`, `fe86e6b` (rep) ve Blok 3 rep commit'i
+- **Commit'ler:** `9d981f2`, `3df6d0a`, `fe86e6b`, `a182e74` (rep) ve kapanış commit'i
 
 ## Blok 1 — Kontroller iptalinin sebebi ve WebKit adımının sağlamlaştırılması (14:03)
 
