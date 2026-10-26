@@ -101,8 +101,8 @@ jobs:
       # apt aynası zaman zaman çok yavaşlıyor (2026-10-22: 15 dk'da bitmedi, iş iptal oldu; normali <1 dk).
       # Deneme başına 6 dk sınır, bir yeniden deneme; inen paketler apt önbelleğinde kalır, ikinci deneme oradan sürer.
       # timeout yalnız npx'i durdurur, sudo altındaki apt-get dpkg kilidini tutarak sürer (2026-10-26: ikinci deneme
-      # "Could not get lock" ile anında düştü). Bu yüzden denemeler arasında apt-get durdurulur, yarım kurulum
-      # toparlanır ve apt kilidi en çok 2 dk bekler.
+      # "Could not get lock" ile anında düştü). Bu yüzden denemeler arasında apt-get durdurulur, dpkg'nin bitmesi
+      # beklenir (en çok 2 dk), yarım kurulum toparlanır; apt kilidi de en çok 2 dk bekler.
       - name: WebKit
         env:
           ILK_SURE: ${{ inputs.ilk_deneme_suresi }}
@@ -115,6 +115,8 @@ jobs:
             echo "::warning::WebKit kurulumu ${deneme}. denemede bitmedi"
             pgrep -a apt-get || echo "kalan apt-get yok"
             sudo pkill -x apt-get || true
+            # apt-get durunca altındaki dpkg elindeki paketleri kurarak sürer; bitmeden toparlama kilide çarpar.
+            for i in $(seq 60); do pgrep -x 'dpkg|apt-get' > /dev/null || break; sleep 2; done
             sudo dpkg --configure -a || true
           done
           exit 1
