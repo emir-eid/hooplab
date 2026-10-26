@@ -15,9 +15,6 @@ const allowed: Record<string, Record<string, string>> = {
   'app/(tabs)/body.tsx': {
     "{ 1: '1 gün', 3: '3 gün', 7: '1 hafta' }": 'ağrı görünümünün zaman filtresi (karar 0018), eşik değil',
   },
-  'app/(tabs)/me/google-health.tsx': {
-    'izni 7 günde bir yeniler': "Google'ın Testing modu izin süresi (karar 0019), bilimsel eşik değil",
-  },
   'data/google-health-status.ts': {
     'Son 90 günün verisi': 'ilk senkronun geriye dönük aralığı (karar 0019), eşik değil',
   },

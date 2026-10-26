@@ -3,7 +3,6 @@
 import assert from 'node:assert/strict';
 import { test } from 'node:test';
 
-import { TOKEN_LIFETIME_DAYS } from './google-health-status.ts';
 import {
   anyEnabled,
   checkinDaysAhead,
@@ -11,7 +10,6 @@ import {
   formatClock,
   parseNotificationPrefs,
   planNotifications,
-  reconnectLeadHours,
   stepCheckinTime,
   type NotificationPrefs,
 } from './notification-plan.ts';
@@ -52,23 +50,12 @@ test('check-in: seçilen saatte, ileriye 7 gün; saati geçmiş ya da yapılmı�
   assert.equal(monthEnd[1]!.id, 'hooplab-checkin-2026-11-01');
 });
 
-test('izin hatırlatması: bağlantıdan 7 gün sonra dolar; bir gün önce ve son saatlerde, geçmiş olan atlanır', () => {
-  const connected = new Date(2026, 9, 12, 11, 55);
-  const expiry = connected.getTime() + TOKEN_LIFETIME_DAYS * 86_400_000;
-  const sync = { state: 'connected' as const, connected_at: connected.toISOString() };
+test('bağlıyken izin hatırlatması yok (karar 0053: izin 7 günde dolmaz)', () => {
   const only = prefs({ checkin: { enabled: false, hour: 8, minute: 30 } });
-
-  const plan = planNotifications(only, { now: new Date(2026, 9, 15, 12, 0), checkinDoneToday: false, sync });
-  assert.deepEqual(plan.map((p) => p.at.getTime()), reconnectLeadHours.map((h) => expiry - h * 3_600_000));
-  assert.ok(plan.every((p) => p.route === '/me/google-health'));
-  assert.equal(plan[0]!.title, 'Google Health izni yarın doluyor');
-
-  const lastDay = planNotifications(only, { now: new Date(expiry - 10 * 3_600_000), checkinDoneToday: false, sync });
-  assert.equal(lastDay.length, 1);
-  assert.equal(lastDay[0]!.id, 'hooplab-reconnect-3h');
-
-  assert.deepEqual(planNotifications(only, { now: new Date(expiry + 1000), checkinDoneToday: false, sync }), []);
-  assert.deepEqual(planNotifications(only, { now: new Date(2026, 9, 15), checkinDoneToday: false, sync: { state: 'connected', connected_at: null } }), []);
+  const connected = new Date(2026, 9, 12, 11, 55);
+  for (const now of [new Date(2026, 9, 15, 12, 0), new Date(2026, 9, 19, 9, 0), new Date(2026, 9, 25, 9, 0)]) {
+    assert.deepEqual(planNotifications(only, { now, checkinDoneToday: false, sync: { state: 'connected', connected_at: connected.toISOString() } }), []);
+  }
   assert.deepEqual(planNotifications(only, { now: new Date(2026, 9, 15), checkinDoneToday: false, sync: { state: 'disconnected', connected_at: null } }), []);
 });
 

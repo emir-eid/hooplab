@@ -1,8 +1,6 @@
 // Google Health bağlantı durumunun ekrandaki karşılığı. Saf fonksiyonlar (testli); veri erişimi
-// google-health.ts'te. Token ömrü tahmindir: Google, Testing modundaki projelerde yenileme izni için
-// 7 gün diyor (LESSONS "Google Health / veri"); kalan gün bağlanma anından hesaplanır, ölçüm değildir.
-
-export const TOKEN_LIFETIME_DAYS = 7;
+// google-health.ts'te. OAuth uygulaması "In production"da (karar 0053): yenileme izni 7 günde düşmez
+// (2026-10-26 ölçüldü), bu yüzden kalan gün gösterilmez; izin geçersizse durum reconnect_required olur.
 
 export type SyncState = 'connected' | 'reconnect_required' | 'disconnected';
 
@@ -23,8 +21,6 @@ export interface ConnectionView {
   summary: string;
   lastSync: string | null;
   range: string | null;
-  /** Tahmini; 0 ise yakında yeniden bağlanmak gerekir. */
-  tokenDaysLeft: number | null;
   problem: string | null;
 }
 
@@ -53,17 +49,9 @@ function formatLocalDate(localDate: string): string {
   return `${Number(match[3])} ${shortMonths[Number(match[2]) - 1] ?? ''}`;
 }
 
-export function tokenDaysLeft(connectedAt: string | null, now: Date): number | null {
-  if (!connectedAt) return null;
-  const t = Date.parse(connectedAt);
-  if (Number.isNaN(t)) return null;
-  const elapsed = Math.floor((now.getTime() - t) / 86_400_000);
-  return Math.max(0, TOKEN_LIFETIME_DAYS - elapsed);
-}
-
 export function describeConnection(row: SyncStatusRow | null, now: Date): ConnectionView {
   if (!row) {
-    return { kind: 'none', summary: 'Bağlı değil', lastSync: null, range: null, tokenDaysLeft: null, problem: null };
+    return { kind: 'none', summary: 'Bağlı değil', lastSync: null, range: null, problem: null };
   }
   const lastSync = row.last_success_at ? formatSyncTime(row.last_success_at, now) : null;
   const range =
@@ -77,19 +65,17 @@ export function describeConnection(row: SyncStatusRow | null, now: Date): Connec
       summary: 'Yeniden bağlan',
       lastSync,
       range,
-      tokenDaysLeft: 0,
-      problem: 'Google izninin süresi doldu. Veri gelmeye devam etsin diye yeniden bağlan.',
+      problem: 'Google izni artık geçerli değil. Veri gelmeye devam etsin diye yeniden bağlan.',
     };
   }
   if (row.state === 'disconnected') {
-    return { kind: 'disconnected', summary: 'Bağlı değil', lastSync, range, tokenDaysLeft: null, problem: null };
+    return { kind: 'disconnected', summary: 'Bağlı değil', lastSync, range, problem: null };
   }
   return {
     kind: 'connected',
     summary: 'Bağlı',
     lastSync,
     range,
-    tokenDaysLeft: tokenDaysLeft(row.connected_at, now),
     problem: row.last_error
       ? 'Son denemede bazı veriler alınamadı. Saatlik senkron yeniden deneyecek.'
       : null,

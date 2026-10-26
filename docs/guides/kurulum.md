@@ -121,7 +121,7 @@ Ayrıntı ve gerekçe: [karar 0024](../decisions/0024-eas-derleme-ve-guncelleme.
 
 ## Haftalık
 
-Google, Testing modundaki kişisel projelerde izni 7 günde bir düşürür. Süre dolunca **Ben → Google Health**'te **Yeniden bağlan** görünür; bir dokunuş yeter.
+Google, Testing modundaki kişisel projelerde izni 7 günde bir düşürür. OAuth uygulaması "In production"a alınırsa bu sınır kalkar ([karar 0053](../decisions/0053-alan-adi-ve-google-yayin.md), 2026-10-26 ölçüldü). İzin düşerse **Ben → Google Health**'te **Yeniden bağlan** görünür; bir dokunuş yeter.
 
 ## Sorun giderme
 

@@ -3,7 +3,7 @@
 - **Faz:** 4 tamamlandı (Faz 4 sonrası bakım; Faz 1'in TestFlight maddesi Apple onayını bekliyor)
 - **Durum:** açık (/rep)
 - **Model / efor:** Opus 5.5, düşük
-- **Commit'ler:** `af2075e`, `3e14e41` ve rep commit'i
+- **Commit'ler:** `af2075e`, `3e14e41`, `70014ac` (rep) ve Blok 2 rep commit'i
 
 Oturum 2026-10-25 22:48'de açıldı (`/ac`), 2026-10-26'da sürdü.
 
@@ -30,9 +30,31 @@ Kullanıcıya GitHub'dan `Kontroller` hata e-postası geldi. Sebebi bulmak ve d�
 ### Öğrenilenler
 - LESSONS "Git ve süreç": `timeout` yalnız doğrudan başlattığı süreci durdurur; apt-get ve dpkg alt süreci, sıra (durdur → bekle → toparla) ve yeniden deneme yolunun zorla sınanması.
 
+## Blok 2 — Google token ölçümü; 7 günlük geri sayım ve hatırlatmalar kalktı (2026-10-27 00:40)
+
+### Amaç
+STATE'teki ilk iş: production'a alınan Google OAuth uygulamasında yenileme token'ının 7 günde düşüp düşmediğini ölçmek. Sonucun ortaya çıkardığı yanlış ekran metnini ve bildirimleri düzeltmek.
+
+### Yapılanlar
+- **Ölçüm** (2026-10-26 16:49, `db query --linked`, yalnız durum sütunları): bağlantı 2026-10-19 12:25; 7 gün dolduktan sonra 13:17, 14:17, 15:17, 16:17 senkronları başarılı, `last_error` boş, `connected`. Saatlik senkron her seferinde yenileme token'ını kullandığı için yeterli kanıt. Haftalık yeniden bağlanma kalktı.
+- **Belgeler:** [0053](../decisions/0053-alan-adi-ve-google-yayin.md) durum ve ölçüm; [0019](../decisions/0019-google-health-senkronu.md) eki; [0045](../decisions/0045-yerel-bildirimler.md) eki; [kurulum.md](../guides/kurulum.md) Testing / production farkı.
+- **Ekran** ([google-health.tsx](../../apps/mobile/src/app/(tabs)/me/google-health.tsx), [google-health-status.ts](../../apps/mobile/src/data/google-health-status.ts)): "İzin süresi (tahmini)" satırı, `tokenDaysLeft` ve `TOKEN_LIFETIME_DAYS` kalktı (bağlantıdan 7 gün sonra "Bugün dolabilir" diyordu); alt metin "Google izni geri alınır ya da geçersiz olursa burada yeniden bağlanırsın."; geçersiz izin uyarısı "Google izni artık geçerli değil".
+- **Bildirimler** ([notification-plan.ts](../../apps/mobile/src/data/notification-plan.ts), [notifications.tsx](../../apps/mobile/src/app/(tabs)/me/notifications.tsx)): 24 ve 3 saat önceki "izin doluyor" bildirimleri kaldırıldı; senkron durunca ertesi sabah 09:00 hatırlatması kaldı; ayar "Senkron durursa hatırlat".
+- **Testler:** geri sayım testleri yerine "7 gün sonra da sorun yok" ve "bağlıyken hatırlatma yok"; sayı denetimi izin listesinden eski metin çıktı.
+- **Doğrulama:** `typecheck` temiz, `test:apps` 200/200, `npm run check` yeşil; web 390×844 demo (kurulumsuz yapılandırma): Google Health ve Bildirimler ekranları doğru, konsolda hata yok. iPhone'da bakılmadı.
+
+### Kararlar
+- yok (0053'ün beklenen sonucu ölçüldü; 0019 ve 0045'e ek)
+
+### Sorunlar ve hatalar
+- `mobil-web` önizlemesi bayat Metro önbelleğiyle "Requiring unknown module" verdi (kod değil); kurulumsuz yapılandırmayla açıldı.
+
+### Öğrenilenler
+- LESSONS "Google Health / veri": production'daki External OAuth uygulamasında yenileme token'ı 7 günde düşmez (kalıcı garanti değil).
+
 ## Açık kalanlar
-- Google token ölçümü (2026-10-26 12:25 geçti, yapılabilir).
+- Google Health ve Bildirimler ekranlarına iPhone'da bakılmadı.
 - TestFlight Apple onayını bekliyor; PWA karar tarihi 2026-11-03.
 
 ## Sıradaki adım
-- Google token ölçümü: `health_sync_status`'ta `last_success_at` 12:25'ten sonra ve `last_error` boş mu.
+- TestFlight (Apple onayı gelince); gelmezse 2026-11-03'te PWA yedek yolu.

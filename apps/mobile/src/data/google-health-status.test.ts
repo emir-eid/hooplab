@@ -7,7 +7,6 @@ import {
   describeFunctionFailure,
   formatSyncTime,
   type SyncStatusRow,
-  tokenDaysLeft,
 } from './google-health-status.ts';
 
 const now = new Date(2026, 9, 4, 15, 0); // 4 Ekim 2026 15:00, cihaz saatiyle
@@ -27,12 +26,17 @@ test('hiç bağlanmamış kullanıcı', () => {
   assert.equal(view.summary, 'Bağlı değil');
 });
 
-test('bağlı: son senkron, aralık ve tahmini kalan gün', () => {
+test('bağlı: son senkron ve aralık', () => {
   const view = describeConnection(connected, now);
   assert.equal(view.kind, 'connected');
   assert.equal(view.lastSync, 'Bugün 14:17');
   assert.equal(view.range, '7 Tem – 4 Eki');
-  assert.equal(view.tokenDaysLeft, 5);
+  assert.equal(view.problem, null);
+});
+
+test('bağlantıdan 7 gün sonra da sorun gösterilmez (karar 0053: izin 7 günde dolmaz)', () => {
+  const view = describeConnection(connected, new Date(2026, 9, 20, 15, 0));
+  assert.equal(view.kind, 'connected');
   assert.equal(view.problem, null);
 });
 
@@ -41,17 +45,10 @@ test('kısmi hata kullanıcıya kod değil açıklama olarak gösterilir', () =>
   assert.ok(view.problem && !view.problem.includes('PERMISSION'));
 });
 
-test('süresi dolan izin yeniden bağlanma ister', () => {
+test('geçersiz izin yeniden bağlanma ister', () => {
   const view = describeConnection({ ...connected, state: 'reconnect_required', last_error: 'invalid_grant' }, now);
   assert.equal(view.kind, 'reconnect');
-  assert.equal(view.tokenDaysLeft, 0);
   assert.ok(view.problem);
-});
-
-test('kalan gün 7 günden geriye sayar, sıfırın altına inmez', () => {
-  assert.equal(tokenDaysLeft(now.toISOString(), now), 7);
-  assert.equal(tokenDaysLeft(new Date(2026, 8, 1).toISOString(), now), 0);
-  assert.equal(tokenDaysLeft(null, now), null);
 });
 
 test('senkron zamanı: bugün, dün, daha eski', () => {

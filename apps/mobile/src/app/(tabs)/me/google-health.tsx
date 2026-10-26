@@ -108,9 +108,6 @@ export default function GoogleHealthScreen() {
     ]);
   };
 
-  const tokenValue =
-    view.tokenDaysLeft === null ? undefined : view.tokenDaysLeft === 0 ? 'Bugün dolabilir' : `${view.tokenDaysLeft} gün`;
-
   return (
     <Screen>
       <PageHeader title="Google Health" backLabel="Ben" />
@@ -119,12 +116,11 @@ export default function GoogleHealthScreen() {
         label="Durum"
         footer={
           view.problem ??
-          'Fitbit verisi saatte bir kendiliğinden gelir. Google, kişisel projelerde izni 7 günde bir yeniler; süre dolunca buradan yeniden bağlanırsın.'
+          'Fitbit verisi saatte bir kendiliğinden gelir. Google izni geri alınır ya da geçersiz olursa burada yeniden bağlanırsın.'
         }>
         <ListRow label="Bağlantı" value={loaded ? view.summary : '…'} />
         {view.lastSync ? <ListRow label="Son senkron" value={view.lastSync} /> : null}
         {view.range ? <ListRow label="Veri aralığı" value={view.range} /> : null}
-        {connected && tokenValue ? <ListRow label="İzin süresi (tahmini)" value={tokenValue} /> : null}
       </ListGroup>
 
       {message ? <GroupFooter>{message}</GroupFooter> : null}

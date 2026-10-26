@@ -24,7 +24,7 @@ Fitbit Air verisi Google Health API v4'ten sunucu tarafında çekilmeli. Google 
 
 ## Sonuçlar
 - Kullanıcı Google Cloud'da bir kez Web uygulaması türünde OAuth istemcisi açar ve geri dönüş adresini (`<proje adresi>/functions/v1/ghealth-callback`) ekler ([rehber](../guides/google-health-baglantisi.md)). İstemci kimliği ve sırrı Supabase secrets'ta.
-- Testing modunda her 7 günde bir uygulamadan yeniden bağlanılır; süre dolunca durum `reconnect_required` olur ve token silinir. Ekrandaki kalan gün tahmindir.
+- Testing modunda her 7 günde bir uygulamadan yeniden bağlanılır; süre dolunca durum `reconnect_required` olur ve token silinir. Ekrandaki kalan gün tahmindir. **2026-10-26 eki:** OAuth uygulaması "In production"da ([0053](0053-alan-adi-ve-google-yayin.md)); token 7 günü aştı, senkron sürüyor (ölçüldü). Haftalık yeniden bağlanma yok; `reconnect_required` yolu iptal veya Google tarafı ret için kalır.
 - Yanıtlarda ve günlüklerde sağlık değeri yok: yalnız sonuç, sayım ve hata kodu.
 - Yerel deneme: `node tools/dev/fake-google-health.ts` + `supabase functions serve --env-file supabase/functions/.env` (sentetik, gitignore'lu; [SETUP](../SETUP.md) §9).
 - Edge Function kodu Deno'da; Deno bu makinede yok. Tip denetimi `supabase/functions/tsconfig.json` ile (`npm:` adresleri repodaki aynı sürüm paketlere eşlenir), saf modüller Node testleriyle.

@@ -18,7 +18,6 @@ import {
   stepCheckinTime,
   type NotificationPrefs,
 } from '@/data/notification-plan';
-import { TOKEN_LIFETIME_DAYS } from '@/data/google-health-status';
 import { useDemoScenario } from '@/demo/demo-mode';
 import {
   ensureNotificationPermission,
@@ -140,11 +139,11 @@ export default function NotificationsScreen() {
 
       <ListGroup
         label="Google Health"
-        footer={`Google izni ${TOKEN_LIFETIME_DAYS} günde bir yenilenmeli. Dolmadan bir gün önce ve son saatlerde, senkron durmuşsa ertesi sabah hatırlatır.`}
+        footer="Google izni geçersiz olur ve senkron durursa ertesi sabah hatırlatır."
       >
         <ListRow
-          label="İzin hatırlatması"
-          accessory={toggle('Google Health izin hatırlatması', prefs.reconnect.enabled, (v) =>
+          label="Senkron durursa hatırlat"
+          accessory={toggle('Google Health senkron hatırlatması', prefs.reconnect.enabled, (v) =>
             void update({ ...prefs, reconnect: { enabled: v } }, v),
           )}
         />

@@ -1,6 +1,6 @@
 # 0053. Alan adı (hooplab.dev), gizlilik politikası ve Google OAuth'un "In production"a alınması
 
-- **Durum:** Kabul edildi (yayın ve 7 günlük ölçüm sürüyor)
+- **Durum:** Kabul edildi (7 günlük sınırın kalktığı 2026-10-26'da ölçüldü)
 - **Tarih:** 2026-10-19
 - **İlgili:** [0019](0019-google-health-senkronu.md), [0050](0050-portfolyo-sayfasi.md), [0009](0009-herkes-kendi-hesabiyla.md)
 
@@ -23,6 +23,7 @@ Seçenek 1 (kullanıcı kararı, 2026-10-19); alan adı `hooplab.dev` (kullanıc
 
 ## Sonuçlar
 - Haftalık yeniden bağlanma kalkması bekleniyor; **ölçülecek**: production'da alınan token'la senkron, bağlantıdan 7 gün sonra da çalışmalı. Düşerse Testing'e dönmek tek tık ve kayıpsız.
+  - **Ölçüldü (2026-10-26):** bağlantı 2026-10-19 12:25 (yerel saat); 7 gün dolduktan sonra 13:17, 14:17, 15:17 ve 16:17 senkronları başarılı, `last_error` boş, durum `connected`. Haftalık yeniden bağlanma kalktı.
 - İzin ekranında "Google bu uygulamayı doğrulamadı" uyarısı çıkar (Gelişmiş → devam). Google ileride doğrulanmamış restricted uygulamalara sıkı davranırsa ilk belirti senkron hata kodu olur.
 - Yeni dış servis: Vercel (yalnız alan adı ve DNS; mevcut kişisel hesap, başka projelerle paylaşılır). Alan adı yıllık yenilenir (COSTS).
 - Yeniden değerlendirme: token yine 7 günde düşerse; Google uygulamayı engellerse; ikinci bir kullanıcı gerekirse (doğrulama ve CASA gerekir).

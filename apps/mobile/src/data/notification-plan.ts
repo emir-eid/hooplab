@@ -2,7 +2,7 @@
 // Maç sabahı hatırlatması (karar 0046): maç takvimindeki günlerde seçilen saatte; metinde yalnız maç saati.
 // Bildirimler telefonda zamanlanır, sunucu ve push yok. Metinlerde sağlık değeri yok: kilit ekranında görünürler.
 
-import { TOKEN_LIFETIME_DAYS, type SyncState } from './google-health-status.ts';
+import type { SyncState } from './google-health-status.ts';
 
 export interface NotificationPrefs {
   checkin: { enabled: boolean; hour: number; minute: number };
@@ -21,8 +21,6 @@ export const checkinTimeRange = { firstMinute: 5 * 60, lastMinute: 12 * 60, step
 
 /** Check-in bildirimi kaç gün ileriye zamanlanır; uygulama her açılışta planı yeniler. */
 export const checkinDaysAhead = 7;
-/** İzin dolmadan önce hatırlatmalar (saat): bir gün önce ve son saatler. */
-export const reconnectLeadHours = [24, 3] as const;
 /** Senkron durmuşsa hatırlatmanın saati (yerel). */
 export const reconnectMorningHour = 9;
 
@@ -119,24 +117,9 @@ export function planNotifications(prefs: NotificationPrefs, ctx: PlanContext): P
     }
   }
 
+  // İzin 7 günde dolmadığı için (karar 0053, 2026-10-26 ölçüldü) önceden hatırlatma yok; yalnız senkron durunca.
   if (prefs.reconnect.enabled && ctx.sync) {
-    const { state, connected_at } = ctx.sync;
-    const connected = connected_at ? Date.parse(connected_at) : NaN;
-    if (state === 'connected' && Number.isFinite(connected)) {
-      const expiry = connected + TOKEN_LIFETIME_DAYS * 86_400_000;
-      for (const lead of reconnectLeadHours) {
-        const at = new Date(expiry - lead * 3_600_000);
-        if (at <= now) continue;
-        plan.push({
-          id: `hooplab-reconnect-${lead}h`,
-          kind: 'reconnect',
-          at,
-          title: lead >= 24 ? 'Google Health izni yarın doluyor' : 'Google Health izni birkaç saat içinde doluyor',
-          body: 'Senkron durmasın: Ben → Google Health → Yeniden bağlan.',
-          route: '/me/google-health',
-        });
-      }
-    } else if (state === 'reconnect_required') {
+    if (ctx.sync.state === 'reconnect_required') {
       const morning = new Date(now.getFullYear(), now.getMonth(), now.getDate(), reconnectMorningHour, 0);
       const at = morning > now ? morning : new Date(morning.getTime() + 86_400_000);
       plan.push({

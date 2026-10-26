@@ -17,6 +17,7 @@ Kısıtlar (Expo SDK 57 belgesi, `expo-notifications` 57.0.23 tip dosyalarından
 - **Sabah check-in'i:** seçilen saatte (05:00-12:00, 15 dakikalık adım, varsayılan 08:30). Önümüzdeki 7 gün için tek tek zamanlanır, böylece check-in'i yapılmış gün atlanabilir. Uygulama 7 gün hiç açılmazsa hatırlatmalar durur.
 - **Google izni:**
   - İzin bağlanma anından 7 gün sonra dolar (Google'ın Testing kuralı, `TOKEN_LIFETIME_DAYS`). Dolmadan 24 ve 3 saat önce hatırlatma gelir.
+  - **2026-10-26 eki:** OAuth uygulaması "In production"da izin 7 günde dolmuyor (ölçüldü, [0053](0053-alan-adi-ve-google-yayin.md)). 24 ve 3 saat önceki hatırlatmalar ve `TOKEN_LIFETIME_DAYS` kaldırıldı; yalnız senkron durunca (`reconnect_required`) ertesi sabah 09:00 hatırlatması kaldı. Ayarın adı "Senkron durursa hatırlat".
   - Senkron durmuşsa (`reconnect_required`) bir sonraki 09:00'da tek hatırlatma gelir.
   - Bu sayılar gösterim ve kullanım tercihi; bilimsel eşik değil.
 - **Metin:** kilit ekranında görünür, bu yüzden sağlık değeri ya da sayı içermez (testle denetlenir). Dokununca check-in ya da Ben → Google Health açılır.
