@@ -8,6 +8,10 @@ on:
     # Her pazartesi 06:00 UTC (09:00 TSİ); yerel haftalık denetim 10:00'da bu sonucu okur.
     - cron: "0 6 * * 1"
   workflow_dispatch:
+    inputs:
+      ilk_deneme_suresi:
+        description: "İlk WebKit denemesinin süre sınırı (yeniden denemeyi sınamak için kısaltılır, ör. 20s)"
+        default: "6m"
 
 permissions:
   contents: read
@@ -96,11 +100,22 @@ jobs:
 
       # apt aynası zaman zaman çok yavaşlıyor (2026-10-22: 15 dk'da bitmedi, iş iptal oldu; normali <1 dk).
       # Deneme başına 6 dk sınır, bir yeniden deneme; inen paketler apt önbelleğinde kalır, ikinci deneme oradan sürer.
+      # timeout yalnız npx'i durdurur, sudo altındaki apt-get dpkg kilidini tutarak sürer (2026-10-26: ikinci deneme
+      # "Could not get lock" ile anında düştü). Bu yüzden denemeler arasında apt-get durdurulur, yarım kurulum
+      # toparlanır ve apt kilidi en çok 2 dk bekler.
       - name: WebKit
+        env:
+          ILK_SURE: ${{ inputs.ilk_deneme_suresi }}
         run: |
+          [[ "$ILK_SURE" =~ ^[0-9]+[sm]$ ]] || ILK_SURE=6m
+          echo 'DPkg::Lock::Timeout "120";' | sudo tee /etc/apt/apt.conf.d/90kilit-bekle > /dev/null
           for deneme in 1 2; do
-            timeout 6m npx playwright install --with-deps webkit && exit 0
+            sure=6m; [ "$deneme" = 1 ] && sure="$ILK_SURE"
+            timeout "$sure" npx playwright install --with-deps webkit && exit 0
             echo "::warning::WebKit kurulumu ${deneme}. denemede bitmedi"
+            pgrep -a apt-get || echo "kalan apt-get yok"
+            sudo pkill -x apt-get || true
+            sudo dpkg --configure -a || true
           done
           exit 1
 
