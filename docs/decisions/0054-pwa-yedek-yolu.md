@@ -72,12 +72,12 @@ Yayın yok; yayın günü yalnız onaylı adımlar kalsın diye önden bakıldı
 - **Giriş metni düzeltildi:** web'de oturum `localStorage`'da, şifresiz (`lib/supabase.ts`); giriş ekranı web'de "Oturum bu tarayıcıda saklanır; ortak bir cihazda işin bitince çıkış yap." der, iPhone'da eski metin.
 - **DNS:** `hooplab.dev` ad sunucuları Vercel'de; Vercel'in varsayılan joker kaydı (`*` ALIAS) yüzünden `app.hooplab.dev` zaten Vercel'e çözülüyor. Yayın günü DNS kaydı eklenmez, yalnız alan adı projeye bağlanır. `domains inspect`'in "not configured properly" uyarısı kök adresin GitHub Pages'e gitmesinden, beklenen.
 - **Vercel hesabı:** CLI girişli hesap, alan adının kayıtlı olduğu hesap; hesapta başka projeler de var (paylaşılan kişisel hesap). HoopLab için proje yok; yayın günü `vercel deploy` ilk çağrıda oluşturur.
-- **`ghealth-connect`:** buluttaki Google fonksiyonları 2026-10-15 dağıtımı; o günden sonra yalnız 2026-10-21'deki `GHEALTH_WEB_RETURN_URL` desteği (`2c6dc6c`) dağıtılmadı. Değişken ayarlı değilken davranış aynı (testli).
+- **`ghealth-connect`:** buluttaki Google fonksiyonları 2026-10-15 dağıtımı; o günden sonra yalnız 2026-10-21'deki `GHEALTH_WEB_RETURN_URL` desteği (`2c6dc6c`) dağıtılmadı. Değişken ayarlı değilken davranış aynı (testli). **2026-10-27 21:17 dağıtıldı:** `ghealth-connect`, `ghealth-callback`, `ghealth-sync` v10, sonraki saatlik senkron başarılı ([rapor](../sessions/2026-10-27-2117-ghealth-dagitimi.md)).
 - **Yayın günü sırası** (her uzak adım tek satır onayla):
   1. `npm run pwa:build`.
   2. `npx vercel deploy apps/mobile/dist-pwa --prod` (yeni proje; herkese açık URL), ardından `npx vercel domains add app.hooplab.dev <proje>`.
   3. `curl -sI https://app.hooplab.dev/` ve `/explain/hrv`, `/yok`: durum kodları, `X-Robots-Tag: noindex`, `X-Frame-Options: DENY`, `Cache-Control`.
-  4. `npx supabase secrets set GHEALTH_WEB_RETURN_URL=https://app.hooplab.dev/me/google-health`, `npx supabase functions deploy ghealth-connect` (ve aynı ortak kodu kullanan `ghealth-callback`, `ghealth-sync`).
+  4. `npx supabase secrets set GHEALTH_WEB_RETURN_URL=https://app.hooplab.dev/me/google-health` (fonksiyonlar 2026-10-27'de dağıtıldı).
   5. COSTS ve DATA-INVENTORY'ye Vercel barındırma (aynı commit).
   6. Cihazda: Safari → ana ekrana ekle, giriş, Google bağlantısı (ana ekran kipinde izin ekranı), 3D Vücut, PDF, paylaşma.
   7. Bildirim yolu kararı (Web Push ya da bildirimsiz) ayrı.
