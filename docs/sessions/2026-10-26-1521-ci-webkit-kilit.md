@@ -3,7 +3,7 @@
 - **Faz:** 4 tamamlandı (Faz 4 sonrası bakım; Faz 1'in TestFlight maddesi Apple onayını bekliyor)
 - **Durum:** açık (/rep)
 - **Model / efor:** Opus 5.5, düşük
-- **Commit'ler:** `af2075e`, `3e14e41`, `70014ac`, `d259b8a`, `d53b937` (rep) ve Blok 4 rep commit'i
+- **Commit'ler:** `af2075e`, `3e14e41`, `70014ac`, `d259b8a`, `d53b937`, `53d4597` (rep), `db7b685` ve Blok 5 rep commit'i
 
 Oturum 2026-10-25 22:48'de açıldı (`/ac`), 2026-10-26'da sürdü.
 
@@ -92,7 +92,28 @@ Beklenen işler dışa bağlıyken iki izleme maddesine bakmak: maç günü ve h
 ### Öğrenilenler
 - LESSONS "Supabase": duraklatma kuralının kaynağı ve sınırları.
 
+## Blok 5 — Haftalık CI çalışması pazar akşamına (2026-10-27 19:10)
+
+### Amaç
+Pazartesi 10:05 haftalık denetimin o haftanın zamanlanmış CI sonucunu görebilmesi.
+
+### Yapılanlar
+- `gh run list --event schedule`: 06:00 UTC cron'u dört haftada 11:42-14:02 UTC'de başladı (5,7-8 saat gecikme); denetim 07:05 UTC'de, hiçbirini görmedi (2026-10-26 denetimi "yeşil" dedi, çalışma sonradan kırmızı geldi).
+- [checks.yml](../../.github/workflows/checks.yml): cron `0 6 * * 1` → `37 18 * * 0` (pazar 21:37 TSİ, saat başı dışı; 8 saat gecikmede bile denetimden ~4,5 saat önce biter), `db7b685`.
+- Zamanlanmış görev `hooplab-haftalik-denetim` talimatı (repo dışı): son zamanlanmış çalışmayı ayrıca sorgular (`--workflow checks.yml --event schedule -L 1`); kırmızıysa log özü, 2 günden eskiyse veya sürüyorsa bulgu.
+- STATE otomasyon tablosu, CHANGELOG.
+
+### Kararlar
+- yok (CI ayarı)
+
+### Sorunlar ve hatalar
+- yok
+
+### Öğrenilenler
+- LESSONS "Git ve süreç": zamanlanmış çalışma gecikmesi ve okuyucuyla arasına pay.
+
 ## Açık kalanlar
+- İlk pazar çalışması 2026-11-01, denetimde görülmesi 2026-11-02.
 - Haftalık koç yorumunun 7 cümle sınırından sonraki ilk örneği (Trend → haftalık rapor → "Koç yorumu yaz").
 - Supabase'ten duraklatma uyarı e-postası gelirse haber verilir.
 - TestFlight Apple onayını bekliyor; PWA karar tarihi 2026-11-03.
