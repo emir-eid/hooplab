@@ -3,7 +3,7 @@
 - **Faz:** 4 tamamlandı (Faz 4 sonrası bakım; Faz 1'in TestFlight maddesi Apple onayını bekliyor)
 - **Durum:** açık (/rep)
 - **Model / efor:** Opus 5.5, düşük
-- **Commit'ler:** `af2075e`, `3e14e41`, `70014ac`, `d259b8a` (rep) ve Blok 3 rep commit'i
+- **Commit'ler:** `af2075e`, `3e14e41`, `70014ac`, `d259b8a`, `d53b937` (rep) ve Blok 4 rep commit'i
 
 Oturum 2026-10-25 22:48'de açıldı (`/ac`), 2026-10-26'da sürdü.
 
@@ -71,7 +71,30 @@ Blok 2'deki ekran değişikliğini cihazda doğrulamak.
 ### Öğrenilenler
 - yok
 
+## Blok 4 — Koç izleme oranları ve Supabase duraklatma kuralı (2026-10-27 17:40)
+
+### Amaç
+Beklenen işler dışa bağlıyken iki izleme maddesine bakmak: maç günü ve haftalık koç oranları; LESSONS'taki "doğrulanacak" Supabase duraklatma maddesi.
+
+### Yapılanlar
+- `db query --linked` ile yalnız tarih, durum, cümle / gösterilen / kırpılan sayısı, motor yedeği ve maç günü işareti sorgulandı; özet metinleri okunmadı.
+- **Maç günü:** tek işaretli gün 2026-10-12; iki gerçek özet, ikisi kabul, gösterilen 9 / 10 ve 7 / 7 (ikincisi cümle sınırı yönergesinden sonra). STATE'teki "henüz görülmedi" eskimişti, düzeltildi. 2026-10-13'ten beri maç günü işareti yok.
+- **Günlük özet** (2026-10-12'den beri): 7 kabul, 1 red (2026-10-15, 0056 öncesi), motor yedeği 0. Check-in 2026-10-18'den beri 1 (2026-10-24).
+- **Haftalık yorum:** tek kayıt (2026-10-05 haftası, 10 cümle, 7 sınırından önce); kırpma oranı hala ölçülemiyor.
+- **Supabase duraklatma:** [Project Pausing](https://supabase.com/docs/guides/platform/free-project-pausing) belgesi okundu: 7 günde yeterli kullanıcı veritabanı etkinliği yoksa duraklatma; eşik yok; pano ziyareti ve API istekleri sayılır; pg_cron anılmıyor; ~1 hafta önce uyarı e-postası; veri silinmez. LESSONS maddesi [doğrulanacak] → [kaynaklı]; STATE risk satırı güncellendi.
+
+### Kararlar
+- yok (bilerek 7 gün beklemeyle ölçüm yapılmaz; erken uyarı e-postası yeter)
+
+### Sorunlar ve hatalar
+- yok
+
+### Öğrenilenler
+- LESSONS "Supabase": duraklatma kuralının kaynağı ve sınırları.
+
 ## Açık kalanlar
+- Haftalık koç yorumunun 7 cümle sınırından sonraki ilk örneği (Trend → haftalık rapor → "Koç yorumu yaz").
+- Supabase'ten duraklatma uyarı e-postası gelirse haber verilir.
 - TestFlight Apple onayını bekliyor; PWA karar tarihi 2026-11-03.
 
 ## Sıradaki adım
