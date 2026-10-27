@@ -1,11 +1,11 @@
 # 2026-10-27 21:17 — Google fonksiyonlarının dağıtımı
 
 - **Faz:** 4 tamamlandı (Faz 4 sonrası bakım; Faz 1'in TestFlight maddesi Apple onayını bekliyor)
-- **Durum:** açık (/rep)
+- **Durum:** kapandı (/kapat, 2026-10-27 22:09)
 - **Model / efor:** Opus 5.5, düşük
-- **Commit'ler:** bu blokta kod commit'i yok; rep commit'i
+- **Commit'ler:** `a0ec393` (rep) ve kapanış commit'i
 
-Oturum 2026-10-27 20:37'de açıldı (`/ac`).
+Oturum 2026-10-27 20:37'de açıldı (`/ac`), 22:09'da kapandı (1 blok).
 
 ## Blok 1 — `ghealth-*` fonksiyonları `2c6dc6c` ile dağıtıldı (21:17)
 
