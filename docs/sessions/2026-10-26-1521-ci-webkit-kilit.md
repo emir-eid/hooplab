@@ -3,7 +3,7 @@
 - **Faz:** 4 tamamlandı (Faz 4 sonrası bakım; Faz 1'in TestFlight maddesi Apple onayını bekliyor)
 - **Durum:** açık (/rep)
 - **Model / efor:** Opus 5.5, düşük
-- **Commit'ler:** `af2075e`, `3e14e41`, `70014ac` (rep) ve Blok 2 rep commit'i
+- **Commit'ler:** `af2075e`, `3e14e41`, `70014ac`, `d259b8a` (rep) ve Blok 3 rep commit'i
 
 Oturum 2026-10-25 22:48'de açıldı (`/ac`), 2026-10-26'da sürdü.
 
@@ -52,8 +52,26 @@ STATE'teki ilk iş: production'a alınan Google OAuth uygulamasında yenileme to
 ### Öğrenilenler
 - LESSONS "Google Health / veri": production'daki External OAuth uygulamasında yenileme token'ı 7 günde düşmez (kalıcı garanti değil).
 
+## Blok 3 — Google Health ve Bildirimler ekranları iPhone'da (2026-10-27 17:33)
+
+### Amaç
+Blok 2'deki ekran değişikliğini cihazda doğrulamak.
+
+### Yapılanlar
+- Metro tünelle önbellek temizlenerek (`mobile:tunnel -- --clear`) açıldı; kullanıcının isteğiyle bir kez yeniden başlatıldı, adres aynı kaldı.
+- iPhone'da (Expo Go 58, tünel) kullanıcı ekran görüntüsüyle doğruladı: Google Health ekranında "İzin süresi" satırı yok, yeni alt metin yerinde, bağlantı "Bağlı", son senkron aynı günün saatlik senkronu; Bildirimler ekranında "Senkron durursa hatırlat" ve yeni açıklama; önceden açık olan anahtar açık kaldı.
+- Kod değişikliği yok.
+
+### Kararlar
+- yok
+
+### Sorunlar ve hatalar
+- yok (sağ üstteki dişli Expo Go'nun geliştirici düğmesi, uygulamanın değil)
+
+### Öğrenilenler
+- yok
+
 ## Açık kalanlar
-- Google Health ve Bildirimler ekranlarına iPhone'da bakılmadı.
 - TestFlight Apple onayını bekliyor; PWA karar tarihi 2026-11-03.
 
 ## Sıradaki adım
