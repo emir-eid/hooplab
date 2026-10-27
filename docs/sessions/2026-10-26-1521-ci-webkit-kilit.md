@@ -1,11 +1,11 @@
 # 2026-10-26 15:21 — Senkron yoklaması, CI WebKit yeniden denemesinin kilit kusuru
 
 - **Faz:** 4 tamamlandı (Faz 4 sonrası bakım; Faz 1'in TestFlight maddesi Apple onayını bekliyor)
-- **Durum:** açık (/rep)
+- **Durum:** kapandı (/kapat, 2026-10-27 20:31)
 - **Model / efor:** Opus 5.5, düşük
-- **Commit'ler:** `af2075e`, `3e14e41`, `70014ac`, `d259b8a`, `d53b937`, `53d4597` (rep), `db7b685`, `4760054` (rep) ve Blok 6 rep commit'i
+- **Commit'ler:** `af2075e`, `3e14e41`, `70014ac` (rep), `d259b8a` (rep), `d53b937` (rep), `53d4597` (rep), `db7b685`, `4760054` (rep), `bc5c201` (rep) ve kapanış commit'i
 
-Oturum 2026-10-25 22:48'de açıldı (`/ac`), 2026-10-26'da sürdü.
+Oturum 2026-10-25 22:48'de açıldı (`/ac`), 2026-10-27 20:31'de kapandı (6 blok: CI kilit kusuru, Google token ölçümü ve geri sayım, iPhone doğrulaması, koç oranları ve Supabase duraklatma, CI zamanlaması, PWA hazırlığı).
 
 ## Blok 1 — CI WebKit yeniden denemesi apt / dpkg kilidinde düşüyordu (15:21)
 
