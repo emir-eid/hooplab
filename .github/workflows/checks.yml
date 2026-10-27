@@ -5,8 +5,11 @@ on:
     branches: [main]
   pull_request:
   schedule:
-    # Her pazartesi 06:00 UTC (09:00 TSİ); yerel haftalık denetim 10:00'da bu sonucu okur.
-    - cron: "0 6 * * 1"
+    # Her pazar 18:37 UTC (21:37 TSİ); yerel haftalık denetim pazartesi 10:05'te bu sonucu okur.
+    # GitHub zamanlanmış çalışmaları geciktiriyor: pazartesi 06:00 UTC'deki çalışma 4 haftada 5,7-8 saat geç
+    # başladı (2026-10-05…26), denetim hiçbirini görmedi. Pazar akşamı ve saat başı dışı: 8 saat gecikse de
+    # denetimden ~12 saat önce biter.
+    - cron: "37 18 * * 0"
   workflow_dispatch:
     inputs:
       ilk_deneme_suresi:
