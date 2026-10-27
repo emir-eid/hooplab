@@ -3,7 +3,7 @@
 - **Faz:** 4 tamamlandı (Faz 4 sonrası bakım; Faz 1'in TestFlight maddesi Apple onayını bekliyor)
 - **Durum:** açık (/rep)
 - **Model / efor:** Opus 5.5, düşük
-- **Commit'ler:** `af2075e`, `3e14e41`, `70014ac`, `d259b8a`, `d53b937`, `53d4597` (rep), `db7b685` ve Blok 5 rep commit'i
+- **Commit'ler:** `af2075e`, `3e14e41`, `70014ac`, `d259b8a`, `d53b937`, `53d4597` (rep), `db7b685`, `4760054` (rep) ve Blok 6 rep commit'i
 
 Oturum 2026-10-25 22:48'de açıldı (`/ac`), 2026-10-26'da sürdü.
 
@@ -112,7 +112,29 @@ Pazartesi 10:05 haftalık denetimin o haftanın zamanlanmış CI sonucunu göreb
 ### Öğrenilenler
 - LESSONS "Git ve süreç": zamanlanmış çalışma gecikmesi ve okuyucuyla arasına pay.
 
+## Blok 6 — PWA yayın günü hazırlığı (2026-10-27 20:23)
+
+### Amaç
+2026-11-03'te PWA'ya geçilirse o gün yalnız onaylı adımlar kalsın; onay istemeyen denetimleri önden yapmak.
+
+### Yapılanlar
+- `npm run pwa:build` Expo SDK 58'le geçti (56 static rota; önceki deneme SDK 57'de). `cleanUrls` taklidi yapan yerel sunucuda (scratchpad, repo dışı) giriş / açıklama / Google sayfaları 200, bilinmeyen yol 404, manifest ve simgeler doğru türde; giriş ekranı 390×844, konsolda hata ve yatay taşma yok.
+- Giriş metni ([sign-in.tsx](../../apps/mobile/src/app/sign-in.tsx)): web'de oturum `localStorage`'da şifresiz olduğu için web'de "Oturum bu tarayıcıda saklanır; ortak bir cihazda işin bitince çıkış yap."; iPhone metni aynı. Yeni derlemede görüldü.
+- Salt okuma denetimleri: Vercel CLI girişli hesap alan adının hesabı, HoopLab projesi yok; `hooplab.dev` ad sunucuları Vercel'de, joker `*` ALIAS kaydı yüzünden `app.hooplab.dev` zaten Vercel'e çözülüyor (DNS kaydı gerekmez). Google fonksiyonları bulutta 2026-10-15 dağıtımı; yalnız `2c6dc6c` (`GHEALTH_WEB_RETURN_URL` desteği) dağıtılmadı; saatlik enerji verisi bugüne kadar geldiği için 10-15 sonrası senkron kodu bulutta.
+- [0054](../decisions/0054-pwa-yedek-yolu.md) "Hazırlık denetimi" bölümü: bulgular ve yayın günü sırası (komutlarla).
+- Doğrulama: `typecheck`, `npm run check` yeşil. Yayın ve uzak değişiklik yok.
+
+### Kararlar
+- yok (0054'e ek; Google fonksiyonlarının önden dağıtımı kullanıcı kararına bırakıldı)
+
+### Sorunlar ve hatalar
+- `supabase secrets list` çıktısı değerlerin özetlerini (hash) basıyor; sır değil ama sonraki çağrılarda yalnız adlar süzülür.
+
+### Öğrenilenler
+- yok
+
 ## Açık kalanlar
+- Google fonksiyonlarının (`ghealth-*`) `2c6dc6c` ile dağıtımı: yayın günü ya da kullanıcı isterse önce.
 - İlk pazar çalışması 2026-11-01, denetimde görülmesi 2026-11-02.
 - Haftalık koç yorumunun 7 cümle sınırından sonraki ilk örneği (Trend → haftalık rapor → "Koç yorumu yaz").
 - Supabase'ten duraklatma uyarı e-postası gelirse haber verilir.
