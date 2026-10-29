@@ -31,6 +31,9 @@ export const weekDayCount = loadWeek.days;
 export const shareRowLabel = 'PDF olarak paylaş';
 export const shareFooter =
   'PDF telefonda hazırlanır ve yalnız paylaşım menüsünde seçtiğin yere gider. Adın ya da hesabın yazmaz. Gönderdiğin dosya artık alıcıdadır.';
+/** Web'de (PWA) PDF tarayıcının yazdırma penceresinden kaydedilir (lib/share-pdf.web.ts). */
+export const shareFooterWeb =
+  'PDF bu tarayıcıda hazırlanır, sunucuya gitmez. Açılan yazdırma penceresinden PDF olarak kaydedersin. Adın ya da hesabın yazmaz.';
 
 export function phaseText(v: WeeklyReportView): string {
   return v.phase === 'complete' ? 'Biten hafta' : `Sürüyor · ${v.dates.length}. gün`;

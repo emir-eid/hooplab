@@ -82,6 +82,13 @@ Yayın yok; yayın günü yalnız onaylı adımlar kalsın diye önden bakıldı
   6. Cihazda: Safari → ana ekrana ekle, giriş, Google bağlantısı (ana ekran kipinde izin ekranı), 3D Vücut, PDF, paylaşma.
   7. Bildirim yolu kararı (Web Push ya da bildirimsiz) ayrı.
 
+## Prova (2026-10-29)
+Apple 2026-10-28'de bir belge daha istedi (gönderildi, sonuç yok); yayın günü sırası yayınsız ve uzak değişikliksiz yürütüldü.
+- **Derleme ve yerel sunucu:** `npm run pwa:build` geçti (6,1 MB; pakette sır yok, tek eşleşme kütüphanenin anahtar türü denetimi). Prova tekrarlanabilsin diye `cleanUrls` taklitli yerel sunucu: [serve-pwa.mjs](../../tools/pwa/serve-pwa.mjs) (önizleme adı `pwa-yerel`, yalnız 127.0.0.1). Adresler, manifest, simge, 404 ve 390×844 önceki denetimdeki gibi; demo modunda 3D Vücut çiziliyor.
+- **Uzak (salt okuma):** Vercel'de HoopLab projesi yok; `app.hooplab.dev` Vercel'e çözülüyor; `GHEALTH_WEB_RETURN_URL` ayarlı değil; `ghealth-*` v10.
+- **Google bağlantısı web'de aynı pencerede:** önceki yol izin ekranını `openAuthSessionAsync` açılır penceresinde, sunucu isteği bittikten sonra açıyordu. Safari kullanıcı dokunuşundan sonra geçen istekle açılan pencereyi engelleyebilir; ana ekran kipinde açılan pencere uygulamaya geri bağlanamayabilir (ölçülmedi, koddan). Web'de artık `window.location.assign` ile aynı pencerede gidilir; dönüş `/me/google-health?ghealth=…` sayfayı yeniden açar, ekran sonucu sorgudan okur. Yerelde sahte Google ile uçtan uca denendi (SETUP §9): aynı sekmede dönüldü, "Bağlandı", durum bağlı, senkron yapıldı. iPhone'da ana ekran kipinde yayın günü denenir.
+- **PDF web'de:** ayrı web yolu zaten var ([share-pdf.web.ts](../../apps/mobile/src/lib/share-pdf.web.ts): rapor gizli çerçevede, tarayıcının yazdırma penceresi). Provada sayfanın "kilitlenmesi" bu gerçek yazdırma penceresiydi, hata değil. Düzeltilen yalnız web'deki açıklama: "paylaşım menüsü" yerine yazdırma penceresinden PDF olarak kaydetme. Ana ekran kipinde yazdırma penceresinin açılması cihazda denenir.
+
 ## Kaynaklar (yalnız teknik olgular)
 - Expo, EAS Hosting özel alan adı (ücretsiz planda yok): https://docs.expo.dev/eas/hosting/custom-domain/
 - Vercel, `vercel.json` (`cleanUrls`, `headers`): https://vercel.com/docs/project-configuration/vercel-json

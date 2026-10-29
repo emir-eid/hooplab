@@ -1,5 +1,6 @@
 // Google Health bağlantısı: durum, bağlan / yeniden bağlan, şimdi senkronla, bağlantıyı kes.
-// İzin ekranı sistem tarayıcısında (ASWebAuthenticationSession) açılır; dönüşte uygulamaya gelinir.
+// İzin ekranı iPhone'da sistem tarayıcısında (ASWebAuthenticationSession), web'de aynı pencerede açılır;
+// dönüşte uygulamaya gelinir.
 
 import { spacing } from '@hooplab/theme';
 import * as Linking from 'expo-linking';
@@ -21,16 +22,13 @@ import {
   type SyncStatusRow,
 } from '@/data/google-health-status';
 
-// Web önizlemesinde izin penceresi bu sayfaya döner; açılış penceresine sonucu iletir (native'de etkisiz).
-WebBrowser.maybeCompleteAuthSession();
-
 const RETURN_PATH = 'me/google-health';
 
 export default function GoogleHealthScreen() {
   const [status, setStatus] = useState<SyncStatusRow | null>(null);
   const [loaded, setLoaded] = useState(false);
   const [busy, setBusy] = useState<'connect' | 'sync' | 'disconnect' | null>(null);
-  // Dönüş bağlantısı sayfayı yeniden açtıysa (web önizlemesi) sonuç adresin sorgusundan okunur.
+  // Web'de dönüş bu sayfayı yeniden açar; sonuç adresin sorgusundan okunur.
   const params = useLocalSearchParams<{ ghealth?: string; code?: string }>();
   const [message, setMessage] = useState<string | null>(() =>
     params.ghealth
@@ -63,6 +61,12 @@ export default function GoogleHealthScreen() {
     if (!start.ok) {
       setMessage(start.message);
       setBusy(null);
+      return;
+    }
+    // Web'de (PWA) izin ekranına aynı pencerede gidilir: istekten sonra açılan pencereyi Safari engelleyebilir,
+    // ana ekran kipinde açılan pencere uygulamaya geri bağlanamaz. Dönüş bu sayfayı sorguyla yeniden açar (karar 0054).
+    if (Platform.OS === 'web') {
+      window.location.assign(start.value);
       return;
     }
     const result = await WebBrowser.openAuthSessionAsync(start.value, returnUrl);

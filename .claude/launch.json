@@ -21,6 +21,15 @@
       "port": 4310
     },
     {
+      "name": "pwa-yerel",
+      "runtimeExecutable": "node",
+      "runtimeArgs": [
+        "tools/pwa/serve-pwa.mjs",
+        "4320"
+      ],
+      "port": 4320
+    },
+    {
       "name": "maketler",
       "runtimeExecutable": "python",
       "runtimeArgs": [

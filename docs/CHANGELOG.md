@@ -5,6 +5,7 @@ Uygulamaya veya altyapıya görünür değişiklikler. Biçim: [Keep a Changelog
 ## [Yayınlanmamış]
 
 ### Eklendi
+- PWA çıktısı için yerel sunucu (karar 0054, 2026-10-29): `node tools/pwa/serve-pwa.mjs` (önizleme adı `pwa-yerel`) Vercel'in `cleanUrls` davranışını taklit eder; yalnız 127.0.0.1, yayın değil.
 - PWA derlemesi (karar 0054, 2026-10-22; yayın yok): `npm run pwa:build` gerçek projeye bağlı static web çıktısını ve Vercel yapılandırmasını `apps/mobile/dist-pwa`'ya yazar; açıklama sayfaları `generateStaticParams` ile ayrı HTML; hedef adres `app.hooplab.dev`.
 - Alan adı `hooplab.dev` (karar 0053, 2026-10-19): portfolyo kökte (`SITE_BASE` varsayılanı boş), eski `github.io/hooplab/` bağlantıları yönlenir; gizlilik politikası `/privacy/` ve `/tr/gizlilik/` (Google Kullanıcı Verisi Politikası ve Sınırlı Kullanım beyanı); Google'ın geri döndüğü statik sayfa `/oauth/google/` (sorguyu `ghealth-callback`'e iletir, hedef repo değişkeni `GHEALTH_CALLBACK_URL`'den, CSP ve `no-referrer`); Supabase `GHEALTH_REDIRECT_URI` yeni sayfa; `.claude/launch.json` → `portfolyo-hazir`.
 - CI'da veritabanı testleri (2026-10-18): `Kontroller` iş akışına `veritabani` işi; yerel Supabase Docker'da açılır, migration'lar sıfırdan uygulanır, pgTAP testleri (`npm run test:db`) koşar; bulut ve sır yok.
@@ -69,6 +70,7 @@ Uygulamaya veya altyapıya görünür değişiklikler. Biçim: [Keep a Changelog
 - Öğün kaydı (karar 0030): + → Öğün ya da Bugün'den; 35 besinlik sabit liste (USDA FoodData Central, ev ölçüsü ve gramı, `research/foods/foods.json`, `tools/research/foods-fdc.mjs` ile doldurulur ve FDC API'siyle doğrulanır), porsiyon 0,5-3, paketli ürün için etiketten gram, son öğünleri tekrarlama. Bugün'de kayıtlı karbonhidrat ve protein hedef aralığına göre (tahmin, uyarı yok), öğün başına protein dozu.
 - Su kaydı (karar 0031): + → Su ya da Bugün'den; 250 / 500 / 750 mL ya da elle, hedefsiz; ter testi yapılan gün seans sonrası sıvı hedefi yanında.
 ### Değişti
+- Google Health bağlantısı web'de (karar 0054, 2026-10-29): izin ekranı açılır pencere yerine aynı pencerede açılır, dönüş sonucu adresten okunur (Safari'nin istek sonrası açılan pencereyi engellemesi ve ana ekran kipi riski); iPhone yolu aynı. Haftalık PDF ekranının web açıklaması yazdırma penceresine göre.
 - Giriş ekranı (2026-10-27): web'de (PWA) "Oturum bu tarayıcıda saklanır; ortak bir cihazda işin bitince çıkış yap."; iPhone'da "şifreli saklanır" metni aynı (web'de oturum localStorage'da, şifresiz).
 - CI (2026-10-27): haftalık zamanlanmış `Kontroller` çalışması pazartesi 09:00'dan pazar 21:37'ye (TSİ); GitHub gecikmesine rağmen pazartesi denetiminden önce biter.
 - Google Health izni (2026-10-26, karar 0053 ölçümü): OAuth uygulaması production'da izin 7 günde dolmuyor. Ben → Google Health'teki "İzin süresi (tahmini)" geri sayımı ve "7 günde bir yeniler" metni kalktı; izin doluyor bildirimleri (24 ve 3 saat önce) kaldırıldı, yalnız senkron durunca ertesi sabah hatırlatması kaldı ("Senkron durursa hatırlat"). Kurulum rehberinde Testing / production farkı.

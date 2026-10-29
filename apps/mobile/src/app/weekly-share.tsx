@@ -5,12 +5,12 @@
 import { weekStartOf } from '@hooplab/engine';
 import { useLocalSearchParams } from 'expo-router';
 import { useEffect, useState } from 'react';
-import { StyleSheet, Switch, View } from 'react-native';
+import { Platform, StyleSheet, Switch, View } from 'react-native';
 
 import { FormDock, FormHeader, useDockSpace } from '@/components/form';
 import { GestureScrollView } from '@/components/gesture-scroll';
 import { ListGroup, ListRow } from '@/components/list';
-import { shareFooter, shareRowLabel, weekRangeText } from '@/copy/weekly-report';
+import { shareFooter, shareFooterWeb, shareRowLabel, weekRangeText } from '@/copy/weekly-report';
 import type { AuditSentence } from '../../../../supabase/functions/_shared/coach/audit.ts';
 
 import { fetchCoachWeekly } from '@/data/coach-weekly';
@@ -86,7 +86,7 @@ export default function WeeklyShareScreen() {
     <View style={[styles.root, { backgroundColor: palette.bg }]}>
       <GestureScrollView contentContainerStyle={{ paddingBottom: dockSpace }}>
         <FormHeader title={shareRowLabel} subtitle={subtitle} />
-        <ListGroup label="Bölümler" footer={shareFooter}>
+        <ListGroup label="Bölümler" footer={Platform.OS === 'web' ? shareFooterWeb : shareFooter}>
           {offered.map((key) => (
             <ListRow
               key={key}
