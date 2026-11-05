@@ -9,8 +9,24 @@
 
 import { createHash, randomBytes } from 'node:crypto';
 
-export const FUNCTION_SLUGS = ['ghealth-connect', 'ghealth-callback', 'ghealth-sync', 'coach-daily', 'coach-ask', 'coach-weekly'];
+export const FUNCTION_SLUGS = [
+  'ghealth-connect',
+  'ghealth-callback',
+  'ghealth-sync',
+  'coach-daily',
+  'coach-ask',
+  'coach-weekly',
+  'push-dispatch',
+  'push-test',
+];
 export const CRON_JOB = 'google-health-senkron';
+/** PWA bildirimlerinin 15 dakikalık zamanlayıcısı (karar 0058, migration 20261105140528). */
+export const PUSH_CRON_JOB = 'pwa-bildirim-gonderimi';
+/** Web Push sırları (karar 0058). Özel anahtar yalnız sunucuda; açık anahtar uygulamada da var. */
+export const VAPID_SECRET_NAMES = ['VAPID_PUBLIC_KEY', 'VAPID_PRIVATE_KEY', 'VAPID_SUBJECT'];
+export const APP_VAPID_ENV = 'EXPO_PUBLIC_VAPID_PUBLIC_KEY';
+/** PWA'nın Google bağlantısından sonra döneceği tek https adresi (karar 0054); sır değil, ayar. */
+export const WEB_RETURN_SECRET_NAME = 'GHEALTH_WEB_RETURN_URL';
 export const GOOGLE_SECRET_NAMES = ['GOOGLE_HEALTH_CLIENT_ID', 'GOOGLE_HEALTH_CLIENT_SECRET'];
 export const CRON_SECRET_NAME = 'GHEALTH_CRON_SECRET';
 /** AI koçun Claude API anahtarı (karar 0032); değeri yalnız kullanıcı girer, sihirbaz üretemez. */
@@ -130,6 +146,25 @@ export const googleClientProblems = {
   'not-web': 'Dosyada Web istemcisi yok. Web application türünde bir istemci aç (rehber §4a).',
   'missing-fields': 'Dosyada client_id veya client_secret eksik.',
 };
+
+// --- Web Push ---
+
+/**
+ * `../private/push/vapid.json` yedeği ({ publicKey, privateKey }, web-push biçimi: base64url, 65 ve 32 bayt).
+ * Biçim bozuksa null; değerler hiçbir yere yazdırılmaz.
+ */
+export function parseVapidBackup(text) {
+  let json;
+  try {
+    json = JSON.parse(text);
+  } catch {
+    return null;
+  }
+  const { publicKey, privateKey } = json ?? {};
+  if (typeof publicKey !== 'string' || !/^[A-Za-z0-9_-]{87}$/.test(publicKey)) return null;
+  if (typeof privateKey !== 'string' || !/^[A-Za-z0-9_-]{43}$/.test(privateKey)) return null;
+  return { publicKey, privateKey };
+}
 
 // --- Supabase ---
 
@@ -311,6 +346,58 @@ export function evaluate(f) {
     }
   }
 
+  // Web Push anahtarları (karar 0058). Var olan bir çift asla kendiliğinden yeniden üretilmez: yeni çift
+  // telefondaki aboneliği geçersiz kılar. Sihirbaz yalnız hiç yokken üretir (bulutta önce yedekteki çift).
+  {
+    const label = 'Web Push anahtarları (PWA bildirimleri)';
+    if (secrets == null) {
+      add('web-push', label, 'blocked', `${where} okunamadı.`);
+    } else {
+      const missing = VAPID_SECRET_NAMES.filter((n) => !secrets.has(n));
+      const serverPublic = secrets.get('VAPID_PUBLIC_KEY');
+      const backupMatches = Boolean(f.vapidBackup && serverPublic && sha256Hex(f.vapidBackup.publicKey) === serverPublic);
+      if (missing.length === VAPID_SECRET_NAMES.length) {
+        const source = !local && f.vapidBackup ? 'yedekteki çift (../private/push/vapid.json)' : 'yeni bir çift üretilip';
+        add('web-push', label, 'fix', `${where} içinde VAPID anahtarı yok; ${source} yazılacak.`);
+      } else if (missing.length) {
+        add(
+          'web-push',
+          label,
+          'manual',
+          `${where} içinde eksik: ${missing.join(', ')}. Yeni çift üretmek mevcut bildirim aboneliğini bozar; eksik değeri ../private/push/vapid.json yedeğinden yaz.`,
+        );
+      } else if (!local && (!f.appEnv?.vapid || sha256Hex(f.appEnv.vapid) !== serverPublic)) {
+        const problem = f.appEnv?.vapid ? 'sunucudakiyle aynı değil' : 'yok';
+        if (backupMatches) {
+          add('web-push', label, 'fix', `apps/mobile/.env.local içinde ${APP_VAPID_ENV} ${problem}; yedekteki açık anahtar yazılacak.`);
+        } else {
+          add(
+            'web-push',
+            label,
+            'manual',
+            `apps/mobile/.env.local içinde ${APP_VAPID_ENV} ${problem} ve sunucudakine uyan yedek yok (../private/push/vapid.json). Sunucudaki çiftin açık anahtarını yaz ya da üç VAPID sırrını silip npm run setup ile yeniden üret (abonelik yenilenir).`,
+          );
+        }
+      } else {
+        add('web-push', label, 'ok', local ? undefined : 'Sunucu ve uygulama aynı açık anahtarda.');
+      }
+    }
+  }
+
+  // PWA'nın Google dönüş adresi (karar 0054). Yalnız bulutta: yerel önizleme localhost'a döner.
+  if (!local && f.webReturnUrl) {
+    const label = 'PWA için Google dönüş adresi';
+    if (secrets == null) {
+      add('web-return', label, 'blocked', 'Supabase secrets okunamadı.');
+    } else if (!secrets.has(WEB_RETURN_SECRET_NAME)) {
+      add('web-return', label, 'fix', `${WEB_RETURN_SECRET_NAME} yok; ${f.webReturnUrl} yazılacak (yoksa PWA'da Google bağlantısı uygulamaya dönemez).`);
+    } else if (secrets.get(WEB_RETURN_SECRET_NAME) !== sha256Hex(f.webReturnUrl)) {
+      add('web-return', label, 'fix', `${WEB_RETURN_SECRET_NAME} başka bir adres; ${f.webReturnUrl} ile değiştirilecek.`);
+    } else {
+      add('web-return', label, 'ok', f.webReturnUrl);
+    }
+  }
+
   // Zamanlayıcının paylaşılan sırrı: sunucudaki ve Vault'taki aynı olmalı.
   const vault = f.vaultDigests;
   if (secrets == null || vault == null || !schemaReady) {
@@ -340,6 +427,17 @@ export function evaluate(f) {
     add('cron-job', 'Saatlik senkron zamanlayıcısı', 'manual', `cron.job içinde ${CRON_JOB} kapalı (active = false).`);
   } else {
     add('cron-job', 'Saatlik senkron zamanlayıcısı', 'ok');
+  }
+
+  // Bildirim zamanlayıcısı da migration'la kurulur (karar 0058).
+  if (!schemaReady) {
+    add('push-cron', 'Bildirim zamanlayıcısı (15 dk)', 'blocked', 'Önce şema.');
+  } else if (f.pushCronActive == null) {
+    add('push-cron', 'Bildirim zamanlayıcısı (15 dk)', 'manual', `cron.job içinde ${PUSH_CRON_JOB} yok; migration 20261105140528'deki cron.schedule çağrısı yeniden çalıştırılmalı.`);
+  } else if (!f.pushCronActive) {
+    add('push-cron', 'Bildirim zamanlayıcısı (15 dk)', 'manual', `cron.job içinde ${PUSH_CRON_JOB} kapalı (active = false).`);
+  } else {
+    add('push-cron', 'Bildirim zamanlayıcısı (15 dk)', 'ok');
   }
 
   if (!local) {

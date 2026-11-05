@@ -19,15 +19,17 @@
 // service_role anahtarını açık verir (ölçüldü); bu çıktı hiçbir koşulda yazdırılmaz.
 
 import { spawnSync } from 'node:child_process';
-import { existsSync, mkdtempSync, readdirSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
+import { existsSync, mkdirSync, mkdtempSync, readdirSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
 import { createRequire } from 'node:module';
 import { tmpdir } from 'node:os';
 import path from 'node:path';
 import { createInterface } from 'node:readline/promises';
 import { fileURLToPath } from 'node:url';
 
+import { PWA_ORIGIN, pwaReturnUrl } from '../pwa/pwa-lib.mjs';
 import {
   ANTHROPIC_SECRET_NAME,
+  APP_VAPID_ENV,
   anthropicKeyProblem,
   callbackUrl,
   chooseGoogleJson,
@@ -42,7 +44,9 @@ import {
   parseCliJson,
   parseEnv,
   parseGoogleClient,
+  parseVapidBackup,
   projectUrlFromRef,
+  PUSH_CRON_JOB,
   publishableKeys,
   sha256Hex,
   summarize,
@@ -50,6 +54,7 @@ import {
   VAULT_DIGEST_SQL,
   VAULT_URL,
   vaultUpsertSql,
+  WEB_RETURN_SECRET_NAME,
 } from './setup-lib.mjs';
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..', '..');
@@ -58,6 +63,8 @@ const FUNCTIONS_ENV = path.join(ROOT, 'supabase', 'functions', '.env');
 const LINKED_REF = path.join(ROOT, 'supabase', '.temp', 'project-ref');
 const MIGRATIONS = path.join(ROOT, 'supabase', 'migrations');
 const DEFAULT_GOOGLE_JSON = path.resolve(ROOT, '..', 'private', 'ghealth', 'web_client_secret.json');
+// Web Push anahtar çiftinin yedeği (karar 0058); yalnız bulut hedefinde okunur ve yazılır.
+const VAPID_BACKUP = path.resolve(ROOT, '..', 'private', 'push', 'vapid.json');
 
 // --- Argümanlar ---
 
@@ -218,11 +225,13 @@ function databaseFacts(target) {
   const users = databaseQuery(target, 'select count(*)::int as users from auth.users');
   const vault = databaseQuery(target, VAULT_DIGEST_SQL);
   const cron = databaseQuery(target, "select active from cron.job where jobname = 'google-health-senkron'");
+  const pushCron = databaseQuery(target, `select active from cron.job where jobname = '${PUSH_CRON_JOB}'`);
   return {
     remoteMigrations: appliedMigrations(target),
     userCount: users ? Number(users[0]?.users ?? 0) : null,
     vaultDigests: vault ? new Map(vault.map((r) => [r.name, r.digest])) : null,
     cronActive: cron ? (cron.length ? Boolean(cron[0].active) : null) : null,
+    pushCronActive: pushCron ? (pushCron.length ? Boolean(pushCron[0].active) : null) : null,
   };
 }
 
@@ -275,7 +284,13 @@ async function remoteFacts(google) {
   return {
     ...base,
     expectedKeys,
-    appEnv: { url: appEnv.get('EXPO_PUBLIC_SUPABASE_URL'), key: appEnv.get('EXPO_PUBLIC_SUPABASE_PUBLISHABLE_KEY') },
+    appEnv: {
+      url: appEnv.get('EXPO_PUBLIC_SUPABASE_URL'),
+      key: appEnv.get('EXPO_PUBLIC_SUPABASE_PUBLISHABLE_KEY'),
+      vapid: appEnv.get(APP_VAPID_ENV),
+    },
+    vapidBackup: parseVapidBackup(readText(VAPID_BACKUP)),
+    webReturnUrl: pwaReturnUrl(),
     localMigrations: localMigrations(),
     ...databaseFacts(['--linked', '--project-ref', project.ref]),
     secretDigests: secrets ? new Map(secrets.map((s) => [s.name, s.value])) : null,
@@ -483,6 +498,12 @@ async function applyFixes(items, facts, google) {
     if (writeVault(facts, VAULT_URL, facts.vaultUrl)) console.log("Vault'a proje adresi yazıldı.");
   }
 
+  if (todo.has('web-push')) await setupWebPush(facts, where);
+
+  if (todo.has('web-return') && (await confirm(`${WEB_RETURN_SECRET_NAME} = ${facts.webReturnUrl} ${where} içine yazılsın mı?`))) {
+    if (writeSecrets(facts, { [WEB_RETURN_SECRET_NAME]: facts.webReturnUrl })) console.log(`${WEB_RETURN_SECRET_NAME} yazıldı.`);
+  }
+
   const deploy = todo.has('functions') || (opts.redeploy && facts.target === 'remote');
   if (deploy && (await confirm(`Edge Functions dağıtılsın mı (${FUNCTION_SLUGS.join(', ')})?`))) {
     // --use-api: paketleme sunucuda yapılır, Docker gerekmez.
@@ -490,6 +511,46 @@ async function applyFixes(items, facts, google) {
   }
 
   if (facts.target === 'local' && (todo.has('google-secrets') || todo.has('cron-secret'))) localEnvChanged = true;
+}
+
+/**
+ * VAPID çifti (karar 0058). Sunucuda hiç yoksa: bulutta önce yedekteki çift, yoksa yeni çift (yedeğe de
+ * yazılır); yerelde her zaman yeni, sentetik çift (gerçek yedek yerel dosyaya taşınmaz). Sunucuda varsa
+ * yalnız uygulamanın açık anahtarı yedekten yazılır. Değerler ekrana yazdırılmaz.
+ */
+async function setupWebPush(facts, where) {
+  const local = facts.target === 'local';
+  const serverHasKeys = facts.secretDigests?.has('VAPID_PUBLIC_KEY');
+  if (serverHasKeys) {
+    if (!facts.vapidBackup) return;
+    if (!(await confirm(`apps/mobile/.env.local içine ${APP_VAPID_ENV} yedekten yazılsın mı?`))) return;
+    writeFileSync(APP_ENV, mergeEnv(readText(APP_ENV), { [APP_VAPID_ENV]: facts.vapidBackup.publicKey }));
+    console.log(`${APP_VAPID_ENV} yazıldı (PWA'yı yeniden derle: npm run pwa:build).`);
+    return;
+  }
+  let pair = !local ? facts.vapidBackup : null;
+  const fresh = !pair;
+  if (!(await confirm(`${fresh ? 'Yeni bir VAPID çifti üretilip' : 'Yedekteki VAPID çifti'} ${where} içine yazılsın mı?`))) return;
+  if (fresh) {
+    const webpush = createRequire(import.meta.url)('web-push');
+    pair = webpush.generateVAPIDKeys();
+  }
+  if (!writeSecrets(facts, { VAPID_PUBLIC_KEY: pair.publicKey, VAPID_PRIVATE_KEY: pair.privateKey, VAPID_SUBJECT: PWA_ORIGIN })) return;
+  if (local) {
+    localEnvChanged = true;
+    console.log('VAPID çifti supabase/functions/.env içine yazıldı.');
+    return;
+  }
+  let backupFile = VAPID_BACKUP;
+  if (fresh) {
+    // Okunamayan eski bir yedeğin üstüne yazılmaz; yeni çift yanına ayrı adla konur.
+    if (existsSync(backupFile)) backupFile = backupFile.replace(/\.json$/, `-${Date.now()}.json`);
+    mkdirSync(path.dirname(backupFile), { recursive: true });
+    writeFileSync(backupFile, `${JSON.stringify(pair, null, 2)}
+`, { mode: 0o600 });
+  }
+  writeFileSync(APP_ENV, mergeEnv(readText(APP_ENV), { [APP_VAPID_ENV]: pair.publicKey }));
+  console.log(`VAPID çifti Supabase secrets'a, açık anahtar apps/mobile/.env.local'a yazıldı${fresh ? `, yedeği ${path.relative(ROOT, backupFile)}` : ''}. PWA'yı yeniden derle: npm run pwa:build.`);
 }
 
 // --- Ana akış ---

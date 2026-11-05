@@ -13,6 +13,7 @@ import {
   parseCliJson,
   parseEnv,
   parseGoogleClient,
+  parseVapidBackup,
   pendingMigrations,
   publishableKeys,
   sha256Hex,
@@ -24,6 +25,9 @@ import {
 const REF = 'abcdefghijklmnopqrst';
 const URL = `https://${REF}.supabase.co`;
 const KEY = 'sb_publishable_ornekAnahtar123';
+// Biçimi gerçek VAPID çiftine uyan sentetik değerler (87 ve 43 karakter base64url).
+const VAPID = { publicKey: `B${'a'.repeat(86)}`, privateKey: 'b'.repeat(43) };
+const RETURN = 'https://app.ornek.test/me/google-health';
 const CLIENT = { ok: true, clientId: 'ornek-istemci.apps.googleusercontent.com', clientSecret: 'ornek-sir', redirectUris: [callbackUrl(URL)] };
 
 /** Her şeyi kurulmuş bir bulut projesi; testler yalnız bozdukları olguyu değiştirir. */
@@ -36,7 +40,7 @@ function healthyRemote(overrides = {}) {
     projectUrl: URL,
     vaultUrl: URL,
     expectedKeys: [KEY],
-    appEnv: { url: URL, key: KEY },
+    appEnv: { url: URL, key: KEY, vapid: VAPID.publicKey },
     localMigrations: ['20261003214426', '20261004112747'],
     remoteMigrations: ['20261003214426', '20261004112747'],
     secretDigests: new Map([
@@ -44,12 +48,19 @@ function healthyRemote(overrides = {}) {
       ['GOOGLE_HEALTH_CLIENT_SECRET', sha256Hex(CLIENT.clientSecret)],
       ['GHEALTH_CRON_SECRET', sha256Hex(cron)],
       ['ANTHROPIC_API_KEY', sha256Hex('sk-ant-ornek')],
+      ['VAPID_PUBLIC_KEY', sha256Hex(VAPID.publicKey)],
+      ['VAPID_PRIVATE_KEY', sha256Hex(VAPID.privateKey)],
+      ['VAPID_SUBJECT', sha256Hex('https://app.ornek.test')],
+      ['GHEALTH_WEB_RETURN_URL', sha256Hex(RETURN)],
     ]),
     vaultDigests: new Map([
       ['project_url', sha256Hex(URL)],
       ['ghealth_cron_secret', sha256Hex(cron)],
     ]),
     cronActive: true,
+    pushCronActive: true,
+    vapidBackup: VAPID,
+    webReturnUrl: RETURN,
     functions: FUNCTION_SLUGS.map((slug) => ({ slug, status: 'ACTIVE' })),
     signupDisabled: true,
     userCount: 1,
@@ -188,7 +199,7 @@ test('yerel hedefte .env.local, fonksiyon dağıtımı ve geri dönüş adresi d
   local.vaultDigests.set('project_url', sha256Hex('http://supabase_kong_hooplab:8000'));
   const items = evaluate(local);
   assert.ok(summarize(items).done, JSON.stringify(items.filter((i) => i.status !== 'ok')));
-  for (const id of ['app-env', 'functions', 'google-redirect', 'cli', 'project', 'anthropic-key']) assert.equal(status(items, id), undefined, id);
+  for (const id of ['app-env', 'functions', 'google-redirect', 'cli', 'project', 'anthropic-key', 'web-return']) assert.equal(status(items, id), undefined, id);
   assert.equal(status(items, 'stack'), 'ok');
 });
 
@@ -266,4 +277,70 @@ test('yerel hedef gerçek Google JSON dosyasını kendiliğinden okumaz', () => 
   assert.equal(chooseGoogleJson({ ...base, local: true, explicit: '/sentetik.json' }), '/sentetik.json');
   assert.equal(chooseGoogleJson({ ...base, local: false }), '/private/web.json');
   assert.equal(chooseGoogleJson({ ...base, local: false, defaultExists: false }), null);
+});
+
+test('Web Push: anahtar hiç yoksa yazılır (bulutta yedekten), bir kısmı eksikse kullanıcıya bırakılır (karar 0058)', () => {
+  const none = healthyRemote();
+  for (const n of ['VAPID_PUBLIC_KEY', 'VAPID_PRIVATE_KEY', 'VAPID_SUBJECT']) none.secretDigests.delete(n);
+  let item = evaluate(none).find((i) => i.id === 'web-push');
+  assert.equal(item.status, 'fix');
+  assert.match(item.detail, /yedekteki çift/);
+  item = evaluate({ ...none, vapidBackup: null }).find((i) => i.id === 'web-push');
+  assert.match(item.detail, /yeni bir çift/);
+
+  const partial = healthyRemote();
+  partial.secretDigests.delete('VAPID_PRIVATE_KEY');
+  item = evaluate(partial).find((i) => i.id === 'web-push');
+  assert.equal(item.status, 'manual');
+  assert.match(item.detail, /VAPID_PRIVATE_KEY/);
+
+  assert.equal(status(evaluate(healthyRemote({ secretDigests: null })), 'web-push'), 'blocked');
+  assert.equal(status(evaluate(healthyRemote()), 'web-push'), 'ok');
+});
+
+test('Web Push: uygulamadaki açık anahtar yoksa veya sunucudakinden farklıysa yedek uyuyorsa yazılır, uymuyorsa kullanıcıya kalır', () => {
+  const noApp = healthyRemote({ appEnv: { url: URL, key: KEY } });
+  assert.equal(status(evaluate(noApp), 'web-push'), 'fix');
+  const other = healthyRemote({ appEnv: { url: URL, key: KEY, vapid: `B${'z'.repeat(86)}` } });
+  const item = evaluate(other).find((i) => i.id === 'web-push');
+  assert.equal(item.status, 'fix');
+  assert.match(item.detail, /aynı değil/);
+  assert.equal(status(evaluate({ ...other, vapidBackup: null }), 'web-push'), 'manual');
+  assert.equal(status(evaluate({ ...other, vapidBackup: { ...VAPID, publicKey: `B${'y'.repeat(86)}` } }), 'web-push'), 'manual');
+  for (const i of evaluate({ ...other, vapidBackup: null })) {
+    assert.doesNotMatch(i.detail ?? '', /aaaa|zzzz|bbbb/, 'detay anahtar değeri içermez');
+  }
+});
+
+test('Web Push: yerelde yalnız fonksiyonların .env dosyası denetlenir', () => {
+  const local = healthyRemote({ target: 'local', localRunning: true, vaultUrl: 'http://supabase_kong_hooplab:8000', appEnv: undefined, vapidBackup: null });
+  local.vaultDigests.set('project_url', sha256Hex('http://supabase_kong_hooplab:8000'));
+  assert.equal(status(evaluate(local), 'web-push'), 'ok');
+  for (const n of ['VAPID_PUBLIC_KEY', 'VAPID_PRIVATE_KEY', 'VAPID_SUBJECT']) local.secretDigests.delete(n);
+  const item = evaluate(local).find((i) => i.id === 'web-push');
+  assert.equal(item.status, 'fix');
+  assert.match(item.detail, /yeni bir çift/);
+});
+
+test('PWA dönüş adresi yoksa veya farklıysa yazılır (karar 0054)', () => {
+  const missing = healthyRemote();
+  missing.secretDigests.delete('GHEALTH_WEB_RETURN_URL');
+  assert.equal(status(evaluate(missing), 'web-return'), 'fix');
+  assert.equal(status(evaluate(healthyRemote({ webReturnUrl: 'https://baska.ornek.test/me/google-health' })), 'web-return'), 'fix');
+  const ok = evaluate(healthyRemote()).find((i) => i.id === 'web-return');
+  assert.equal(ok.status, 'ok');
+  assert.equal(ok.detail, RETURN);
+});
+
+test('bildirim zamanlayıcısı yoksa veya kapalıysa kullanıcıya bırakılır, şema eksikse bekler', () => {
+  assert.equal(status(evaluate(healthyRemote({ pushCronActive: null })), 'push-cron'), 'manual');
+  assert.equal(status(evaluate(healthyRemote({ pushCronActive: false })), 'push-cron'), 'manual');
+  assert.equal(status(evaluate(healthyRemote({ remoteMigrations: ['20261003214426'] })), 'push-cron'), 'blocked');
+});
+
+test('parseVapidBackup biçimi denetler', () => {
+  assert.deepEqual(parseVapidBackup(JSON.stringify(VAPID)), VAPID);
+  assert.equal(parseVapidBackup('{'), null);
+  assert.equal(parseVapidBackup(JSON.stringify({ publicKey: 'kisa', privateKey: VAPID.privateKey })), null);
+  assert.equal(parseVapidBackup(JSON.stringify({ publicKey: VAPID.publicKey })), null);
 });

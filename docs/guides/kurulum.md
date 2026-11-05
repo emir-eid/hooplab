@@ -76,7 +76,11 @@ Sonra eksikleri tek tek onayına sunarak kurar:
 5. AI koçun Anthropic API anahtarını gizli girişle ister (yazarken yıldız görünür; boş bırakırsan atlanır) ve Supabase secrets'a `ANTHROPIC_API_KEY` olarak yazar. Etkileşimli bir terminal gerekir.
 6. Saatlik senkronun paylaşılan sırrını üretir ve hem Supabase secrets'a hem Vault'a yazar.
 7. Vault'a proje adresini yazar.
-8. Edge Functions'ı dağıtır (Docker gerekmez).
+8. PWA bildirimleri için Web Push (VAPID) anahtar çiftini üretir: üç değer Supabase secrets'a, açık anahtar `apps/mobile/.env.local` dosyasına (`EXPO_PUBLIC_VAPID_PUBLIC_KEY`), çiftin yedeği repo dışına (`../private/push/vapid.json`) yazılır. Sunucuda zaten bir çift varsa yenisini üretmez (telefondaki bildirim aboneliği bozulur).
+9. PWA'nın Google dönüş adresini (`GHEALTH_WEB_RETURN_URL`) Supabase secrets'a yazar. Sır değil, ayardır; PWA'da Google bağlantısından sonra uygulamaya dönülebilmesi için gerekir.
+10. Edge Functions'ı dağıtır (Docker gerekmez).
+
+Denetim ayrıca saatlik senkronun ve 15 dakikalık bildirim zamanlayıcısının açık olduğuna bakar; ikisini de şema kurar.
 
 Sır değerleri ekrana basılmaz. Sihirbazı istediğin kadar yeniden çalıştırabilirsin; yalnız eksik olanı kurar.
 
