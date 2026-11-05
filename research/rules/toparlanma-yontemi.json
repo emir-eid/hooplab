@@ -1,0 +1,12 @@
+{
+  "module": "toparlanma-yontemi",
+  "rules": [
+    {
+      "id": "toparlanma-yontemi-kanit",
+      "description": "Koç toparlanma yöntemi sorularını (ör. soğuk su / buz banyosu) yalnız kaynağın söylediği kadarıyla yanıtlar: soğuk suyun en tutarlı etkisi kısa vadede hissedilen kas ağrısında; performans ve inflamasyon için tutarlı yarar gösterilmedi. Sıcaklık, süre ya da sıklık reçetesi verilmez. Kaynağı olmayan yöntemde koç 'kaynak yok' der.",
+      "applies_to": "koçta toparlanma yöntemi sorusu (soru-cevap, karar 0037); uygulamada sayı ya da eşik yok",
+      "sources": ["liang-2026"],
+      "notes": "Şemsiye derleme (liang-2026, 14 derleme): derlemeler aynı çalışmaları tekrar kullandığı için ağrı bulgusunun tutarlılığı abartılı görünüyor; derlemelerin yöntem kalitesi düşük ya da çok düşük. Çalışmalardaki sıcaklık ve süreler betimleyici, reçete değil. Literatür taraması 2026-11-01'den kullanıcı onayıyla (2026-11-05)."
+    }
+  ]
+}

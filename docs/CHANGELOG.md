@@ -5,6 +5,7 @@ Uygulamaya veya altyapıya görünür değişiklikler. Biçim: [Keep a Changelog
 ## [Yayınlanmamış]
 
 ### Eklendi
+- Literatür 2026-11-01 (kullanıcı kararlarıyla): kaynaklar aragon-2026 (ISSN kilo verme diyetleri), xie-2026 (takım sporlarında kafein ve beceri), zhang-2026b (kafein ve toparlanma, uyku), liang-2026 (soğuk su şemsiye derlemesi); yeni kural dosyası `rules/toparlanma-yontemi.json` (`toparlanma-yontemi-kanit`, sayısız); koç paketi 122 kaynak / 51 kural, koç fonksiyonları yeniden dağıtıldı. Eşik ve hedef değişmedi.
 - PWA bildirimleri (karar 0058): Web Push ile check-in, maç sabahı ve "senkron durdu" hatırlatmaları; `push_subscriptions`, `notification_prefs`, `push_log` tabloları (RLS, pgTAP); pg_cron `pwa-bildirim-gonderimi` (15 dakikada bir) → `push-dispatch`; `push-test`; `public/sw.js` (yalnız push); Ben → Bildirimler PWA'da izin, abonelik ve deneme; `pwa:build` VAPID açık anahtarı ister. Kök devDependency `web-push` 3.6.7, `@types/web-push` 3.6.4.
 - Etiketlenmemiş oturumlar listesi (2026-11-05): Trend'deki "Saatte N oturum etiketlenmedi" `/untagged` sayfasını açar; son 28 günün etiketlenmemiş saat oturumları gün gün, saat aralığı, saatin türü, süre (aktif süreyle), ortalama nabız, kalori, mesafe, adım; satır etiketleme formunu açar. Uygulama `exercise_sessions`'tan aktif süre, mesafe ve adımı da okur.
 - Ölçüm kartlarında renk işareti (karar 0057): Bugün'de uyku nabzı, uyku, solunum kişisel aralığa göre sakin (yeşil) / dikkat (sarı) / farklı (mavi); Trend'de yük oranı ≥ 1,5'te dikkat; eşiği olmayan kartlar renksiz. Temaya `notice` / `noticeInk`.

@@ -12,6 +12,7 @@ export const sources = {
   'altini-2021': { cite: 'Altini ve ark., 2021', kind: 'Kohort' },
   'amoutzopoulos-2020': { cite: 'Amoutzopoulos ve ark., 2020', kind: 'Sistematik derleme' },
   'andrade-2020': { cite: 'Andrade ve ark., 2020', kind: 'Sistematik derleme' },
+  'aragon-2026': { cite: 'Aragon ve ark., 2026', kind: 'Tutum bildirgesi' },
   'argent-2022': { cite: 'Argent ve ark., 2022', kind: 'Uzman konsensüsü' },
   'bache-mathiesen-2024': { cite: 'Bache-Mathiesen ve ark., 2024', kind: 'Kohort' },
   'bahr-2014': { cite: 'Bahr ve ark., 2014', kind: 'Kesitsel çalışma' },
@@ -71,6 +72,7 @@ export const sources = {
   'latshang-2013': { cite: 'Latshang ve ark., 2013', kind: 'Randomize kontrollü çalışma' },
   'leota-2022': { cite: 'Leota ve ark., 2022', kind: 'Kohort' },
   'lian-2005': { cite: 'Lian ve ark., 2005', kind: 'Kesitsel çalışma' },
+  'liang-2026': { cite: 'Liang ve ark., 2026', kind: 'Sistematik derleme' },
   'liu-2026': { cite: 'Liu ve ark., 2026', kind: 'Meta-analiz' },
   'lolli-2017': { cite: 'Lolli ve ark., 2017', kind: 'Uzman görüşü' },
   'magnusson-2010': { cite: 'Magnusson ve ark., 2010', kind: 'Derleme' },
@@ -124,7 +126,9 @@ export const sources = {
   'wheeler-1996': { cite: 'Wheeler ve ark., 1996', kind: 'Kesitsel çalışma' },
   'williams-2015': { cite: 'Williams ve ark., 2015', kind: 'Derleme' },
   'williams-2017': { cite: 'Williams ve ark., 2017', kind: 'Uzman görüşü' },
+  'xie-2026': { cite: 'Xie ve ark., 2026', kind: 'Meta-analiz' },
   'zhang-2026': { cite: 'Zhang ve ark., 2026', kind: 'Kohort' },
+  'zhang-2026b': { cite: 'Zhang ve ark., 2026', kind: 'Meta-analiz' },
 } as const satisfies Record<string, SourceCite>;
 
 export type SourceId = keyof typeof sources;

@@ -5,8 +5,8 @@
       "id": "takviye-kanit",
       "description": "Koç takviye sorularını yalnız kanıtı güçlü takviyelerin kaynaklarına dayanarak yanıtlar (PRODUCT modül 7, karar 0038). Performansa doğrudan katkısı için iyi kanıtı olanlar belirli senaryolarda kafein, kreatin monohidrat, nitrat, sodyum bikarbonat ve olasılıkla beta-alanin; doz ve zamanlama yalnız kaynakta yazdığı gibi aktarılır, uygulama kişiye doz hesaplamaz. Kaynağı olmayan takviyede koç 'kaynak yok' der.",
       "applies_to": "koçta takviye sorusu (soru sınıfı supplement)",
-      "sources": ["maughan-2018", "kreider-2017", "guest-2021", "liu-2026"],
-      "notes": "IOC uzlaşısı (maughan-2018) genel çerçeve; kreatin için ISSN tutum bildirgesi (kreider-2017), kafein için ISSN tutum bildirgesi (guest-2021) ve basketbolcularda meta-analiz (liu-2026). Nitrat, bikarbonat ve beta-alanin için ayrı kaynak eklenmedi; IOC uzlaşısının özeti yeterli ayrıntıyı taşımıyorsa koç 'kaynak yok' der."
+      "sources": ["maughan-2018", "kreider-2017", "guest-2021", "liu-2026", "xie-2026", "zhang-2026b"],
+      "notes": "IOC uzlaşısı (maughan-2018) genel çerçeve; kreatin için ISSN tutum bildirgesi (kreider-2017), kafein için ISSN tutum bildirgesi (guest-2021) ve basketbolcularda meta-analiz (liu-2026). Nitrat, bikarbonat ve beta-alanin için ayrı kaynak eklenmedi; IOC uzlaşısının özeti yeterli ayrıntıyı taşımıyorsa koç 'kaynak yok' der. Kafeinin sınırları: takım sporlarında yorgunken karar verme ve beceriye yararı gösterilmedi (xie-2026, kesinlik çok düşük); egzersiz sonrası uykuyu kötüleştirebilir, algılanan toparlanmayı değiştirmiyor (zhang-2026b). Koç bunları iddiayı sınırlamak için kullanır."
     },
     {
       "id": "takviye-doping-riski",

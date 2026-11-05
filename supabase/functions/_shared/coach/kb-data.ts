@@ -107,6 +107,32 @@ export const kbSources: readonly KbSource[] = [
     "summary": "## Ne söylüyor (kendi cümlelerimizle)\n\n- Çalışmaların çoğu, oranın görece yüksek olduğu dönemlerde sakatlık riskinin düşük veya orta orana göre daha yüksek olduğunu buluyor.\n- Yöntemler çok dağınık: çalışmaların hemen hepsi bağlı (coupled) hesap ve 1 haftaya 4 haftalık pencere kullanıyor, ama 14 farklı aralık sınıflaması var ve neredeyse hiçbiri aynı değil. Bu, önerilerin gücünü sınırlıyor.\n- Seans RPE ve toplam mesafe en sık kullanılan yük ölçüleri.\n\n## Uygulamada kullanılan sayılar\n\nDoğrudan eşik alınmadı. 7 / 28 günlük pencerenin yaygın olduğunun ve aralık sınırlarında uzlaşı olmadığının dayanağı.\n\n## Sınırlılıklar\n\n- Yalnız erkek sporcular; basketbol az temsil ediliyor.\n- Yalnız özet okundu."
   },
   {
+    "id": "aragon-2026",
+    "title": "International Society of Sports Nutrition position stand: diets for body weight reduction",
+    "authors": [
+      "Aragon AA",
+      "Campbell BI",
+      "Schoenfeld BJ",
+      "Stout JR",
+      "Kalman D",
+      "Arciero PJ",
+      "Arent SM",
+      "Kreider RB",
+      "Taylor LW",
+      "Bannock L",
+      "Wildman REC",
+      "Kerksick CM",
+      "Antonio J"
+    ],
+    "year": 2026,
+    "type": "position-stand",
+    "doi": "10.1080/15502783.2026.2740266",
+    "pmid": "42867412",
+    "journal": "Journal of the International Society of Sports Nutrition",
+    "population": "Sağlıklı, fiziksel olarak aktif yetişkinler ve sporcular; gerekince fazla kilolu / obez klinik çalışmalardan da yararlanılıyor (ISSN tutum bildirgesi)",
+    "summary": "## Ne söylüyor (kendi cümlelerimizle)\n\n- Kilo vermeye yönelik diyetler enerji açığının büyüklüğü, açığın sürekli ya da dönemli olması ve makro besin dağılımına göre ayrılıyor; seçim kişinin tercihine, toleransına ve hedefine göre yapılmalı.\n- Sürekli kalori açığında yağsız kütleyi korumanın iki vazgeçilmez aracı kuvvet antrenmanı ve yeterli protein; belirleyici olan günlük toplam protein, öğünlere dağılımı ikinci planda.\n- Genel nüfusta kilo verirken günde 1,2-1,6 g/kg protein yeterli görülüyor; kuvvet antrenmanıyla 1,6-2,2 g/kg kas yapımını en iyi destekleyebiliyor; zayıf ve kuvvet antrenmanlı kişilerde kalori açığı sürerken 1,9-3,2 g/kg yağsız kütleyi korumayı en üst düzeye çıkarabiliyor.\n- Aktif kişilerde ve sporcularda proteini günde en az üç proteinli öğüne yaymak, uzun süren açıkta yağsız kütleyi ve performansı korumaya yardım edebilir; öğün sıklığının kendisi kilo kaybını belirlemiyor.\n- Aralıklı oruç türleri sürekli kısıtlamadan farklı sonuç vermiyor; karbonhidrat-yağ oranı tercihe bırakılabilir. Ketojenik diyet yağ kaybettiriyor ama yağsız kütleyi daha çok düşürme eğiliminde. Çok düşük enerjili diyetler kısa vadede daha hızlı ama uzun vadede üstün değil ve yağsız kütle kaybı riskini artırıyor.\n\n## Uygulamada kullanılan sayılar\n\nDoğrudan sayı alınmadı; uygulamanın protein hedefi (1,2-2,0 g/kg, `protein-gunluk`) enerji dengesindeki sporcu içindir ve değişmedi. Bu kaynak koçun kalori açığı / kilo verme sorularındaki dayanağıdır (kural notu). Uygulamada kilo verme dönemi modu yok.\n\n## Sınırlılıklar\n\n- Önerilerin bir kısmı kuvvet sporu ve vücut kompozisyonu odaklı; basketbolda kilo verme dönemine özgü çalışma ayrıca belirtilmiyor.\n- Bildirge kafa kafaya dehidratasyonla kilo düşürmeyi, ilaçları (GLP-1) ve cerrahiyi kapsamıyor.\n- Yazarların bir kısmının sanayiyle bağı var; bildirgede beyan edilmiş.\n- Enerji açığı düşük enerji yeterliliği (REDs) riskini taşır; bu yön için mountjoy-2023.\n- Yalnız özet ve 15 bildirge maddesi okundu (PubMed özeti)."
+  },
+  {
     "id": "argent-2022",
     "title": "Recommendations for Determining the Validity of Consumer Wearables and Smartphones for the Estimation of Energy Expenditure: Expert Statement and Checklist of the INTERLIVE Network",
     "authors": [
@@ -1304,6 +1330,24 @@ export const kbSources: readonly KbSource[] = [
     "summary": "## Ne söylüyor (kendi cümlelerimizle)\n\n- Dokuz sporda patellar tendinopati (jumper's knee) yaygınlığı muayene ve anketle ölçüldü.\n- Yaygınlık sıçrama ve güç gerektiren sporlarda en yüksek: voleybolda yaklaşık yüzde 45, basketbolda yaklaşık yüzde 32; bisiklet ve oryantiringde vaka yok.\n- Sonuç, diz ekstansör mekanizmasına binen sıçrama yükünün patellar tendonla ilişkisini destekliyor.\n\n## Uygulamada kullanılan sayılar\n\n| Değer | Birim | Bağlam / koşul |\n|---|---|---|\n| Basketbolda patellar tendinopati yaygınlığı | ~%32 | elit erkek basketbolcular, kesitsel |\n\n## Sınırlılıklar\n\n- Kesitsel; yük ölçülmedi, ilişki spor türü üzerinden kuruluyor."
   },
   {
+    "id": "liang-2026",
+    "title": "Cold-Water Immersion for Post-exercise Recovery: An Overlap-Aware Umbrella Review",
+    "authors": [
+      "Liang W",
+      "Ma X",
+      "Sun G",
+      "Liu C",
+      "Yan X"
+    ],
+    "year": 2026,
+    "type": "systematic-review",
+    "doi": "10.1186/s40798-026-01132-8",
+    "pmid": "42909756",
+    "journal": "Sports Medicine - Open",
+    "population": "Egzersiz sonrası soğuk suya girme (soğuk su daldırma) üzerine 14 sistematik derleme / meta-analiz (şemsiye derleme); karışık spor ve antrenman düzeyleri",
+    "summary": "## Ne söylüyor (kendi cümlelerimizle)\n\n- Soğuk suyun en tutarlı etkisi egzersizden sonraki kısa sürede hissedilen kas ağrısını (gecikmiş kas ağrısı) azaltması; ama bu etkinin pratikteki önemi belirsiz.\n- Nesnel performans ölçümlerinde ve inflamasyon belirteçlerinde tutarlı bir yarar yok; sonuçlar zamana ve karşılaştırılan yönteme göre değişiyor.\n- Derlemeler büyük ölçüde aynı çalışmaları tekrar kullanıyor (yüksek örtüşme); bu yüzden \"tutarlı\" görünen ağrı bulgusu bağımsız tekrarlar sayılmamalı.\n- Çalışmalarda sık kullanılan sıcaklık ve süreler betimleyicidir; en iyi uygulama reçetesi olarak okunmamalı.\n\n## Uygulamada kullanılan sayılar\n\nDoğrudan sayı alınmadı; sıcaklık ya da süre önerilmez. Koçun toparlanma yöntemi sorularındaki dayanağı (`toparlanma-yontemi-kanit`).\n\n## Sınırlılıklar\n\n- Dahil edilen derlemelerin yöntem kalitesi düşük (2) ya da çok düşük (12; AMSTAR 2).\n- En büyük ağrı etkisi futbola özgü bir derlemeden ve tahmin aralığı sıfırı kesiyor.\n- Kuvvet antrenmanı uyumuna etkisi bu özette ayrıca ele alınmıyor.\n- Yalnız özet okundu (PubMed özeti; açık erişim)."
+  },
+  {
     "id": "liu-2026",
     "title": "Effects of caffeine intake on exercise performance in basketball players: a systematic review and meta-analysis",
     "authors": [
@@ -2354,6 +2398,21 @@ export const kbSources: readonly KbSource[] = [
     "summary": "## Ne söylüyor (kendi cümlelerimizle)\n\n- Akut ve kronik yükü basit kayan ortalama yerine üstel ağırlıklı kayan ortalamayla (EWMA) hesaplamayı öneriyor: yakın günler daha ağır sayılır, yükün birikmesi ve sönmesi daha gerçekçi modellenir.\n- Günlük güncelleme: bugünkü EWMA = bugünkü yük × λ + (1 − λ) × dünkü EWMA; λ = 2 / (N + 1), N gün cinsinden zaman sabiti.\n\n## Uygulamada kullanılan sayılar\n\n| Değer | Birim | Bağlam / koşul |\n|---|---|---|\n| λ = 2 / (N + 1) | - | EWMA ağırlığı |\n| N = 7 | gün | Akut yük |\n| N = 28 | gün | Kronik yük |\n\n## Sınırlılıklar\n\n- Bir mektup; ampirik karşılaştırma murray-2017'de.\n- Mektubun tam metni açık erişimde değil, okunmadı. Formül ve N değerleri bu mektuba atıf yapan açık erişimli ren-2024 (PMC11402767) tam metninden doğrulandı."
   },
   {
+    "id": "xie-2026",
+    "title": "Acute caffeine and carbohydrate strategies for fatigue-related sport-specific performance in team-sport athletes: a systematic review and multilevel meta-analysis",
+    "authors": [
+      "Xie S",
+      "Wen X"
+    ],
+    "year": 2026,
+    "type": "meta-analysis",
+    "doi": "10.1080/15502783.2026.2731524",
+    "pmid": "42908119",
+    "journal": "Journal of the International Society of Sports Nutrition",
+    "population": "Takım sporcuları; 23 nicel çalışma kümesi, toplam ~341 sporcu, 11 kümesi futbol (basketbol dahil diğer dallar 4 ya da daha az küme)",
+    "summary": "## Ne söylüyor (kendi cümlelerimizle)\n\n- Kafeinin bilinen fiziksel performans yararı, yorgunluk altında karar verme ve spora özgü beceriye (teknik, taktik, algı-motor görevler) taşınmıyor görünüyor: birleşik etki sıfıra yakın.\n- Egzersiz sırasında içilen karbonhidratın beceriye küçük bir yararı olabilir, ama tahmin belirsiz ve tek bir çalışma kümesine duyarlı.\n- Altı karşılaştırmanın hepsinde kanıtın kesinliği \"çok düşük\" (GRADE). Bulgular ağız çalkalama ya da jel biçimlerine genellenmemeli; iki stratejinin birlikte daha iyi olduğu da gösterilmedi.\n\n## Uygulamada kullanılan sayılar\n\nDoğrudan sayı alınmadı. Koçun kafein sorularında sınırlayıcı dayanağı: kafeinin şut isabeti, karar verme ya da yorgunken beceriyi artırdığı söylenmez (takım sporlarında kanıt yok).\n\n## Sınırlılıklar\n\n- Çalışmaların çoğu futbol; basketbola aktarım varsayım.\n- Kanıt kesinliği çok düşük; \"etki yok\" değil, \"etki gösterilmedi\" olarak okunur.\n- Kafeinin fiziksel performans yararı için guest-2021 ve basketbolda liu-2026.\n- Yalnız özet okundu (PubMed özeti; açık erişim PMC13715326)."
+  },
+  {
     "id": "zhang-2026",
     "title": "Effects of Player Characteristics and Periodization Strategies on External and Internal Loads, Wellness, and Recovery in Collegiate Male Basketball Players",
     "authors": [
@@ -2370,6 +2429,27 @@ export const kbSources: readonly KbSource[] = [
     "journal": "Journal of Strength and Conditioning Research",
     "population": "Üst düzey antrenmanlı kolej erkek basketbolcuları, n=18, aynı takım (Çin üniversite ligi)",
     "summary": "## Ne söylüyor (kendi cümlelerimizle)\n\n- Dış yük, iç yük (seans RPE), iyi oluş ve toparlanma sezon boyunca izlendi; en yüksek yükü maç günleri üretti.\n- İyi oluş her sabah saat 10:00'dan önce, basketbolculara uyarlanmış bir çevrim içi anketle toplandı.\n- Anketin beş maddesi var: yorgunluk, uyku kalitesi, kas ağrısı, stres ve ruh hali. Her madde 1-5 aralığında puanlanıyor; toplam iyi oluş puanı beş maddenin toplamı.\n\n## Uygulamada kullanılan sayılar\n\n| Değer | Birim | Bağlam / koşul |\n|---|---|---|\n| 5 madde: yorgunluk, uyku kalitesi, kas ağrısı, stres, ruh hali | madde | Sabah, antrenmandan önce |\n| 1-5 | puan / madde | Çalışmada 0,5 adımla; HoopLab tam sayı kullanır ([karar 0017](../../docs/decisions/0017-sabah-check-in-olcegi.md)) |\n| 5-25 | toplam puan | Beş maddenin toplamı |\n\n## Sınırlılıklar\n\n- Kolej düzeyi, tek takım, n=18; profesyonel ligle yük ve takvim farklı.\n- Ölçeğin yönü (yüksek puanın iyi mi kötü mü olduğu) bu kayıt için tam metinden ayrıca not edilmedi. HoopLab tüm maddelerde 5 = en iyi kullanır (karar 0017).\n- Açık erişimli tam metin okundu (PMC13098654)."
+  },
+  {
+    "id": "zhang-2026b",
+    "title": "Effects of caffeine supplementation on post-exercise recovery: a systematic review and three-level meta-analysis of perceptual, functional performance, physiological, and sleep outcomes",
+    "authors": [
+      "Zhang J",
+      "Li Y",
+      "Wei B",
+      "Li X",
+      "Xiao Z",
+      "Wu X",
+      "Ye X",
+      "Zhang S"
+    ],
+    "year": 2026,
+    "type": "meta-analysis",
+    "doi": "10.3389/fphys.2026.1960237",
+    "pmid": "42823978",
+    "journal": "Frontiers in Physiology",
+    "population": "Randomize kontrollü çalışmalar, 17 çalışma (16'sı nicel sentezde, 120 etki büyüklüğü); egzersiz sonrası toparlanma",
+    "summary": "## Ne söylüyor (kendi cümlelerimizle)\n\n- Kafein egzersiz sonrası toparlanma sırasında ölçülen işlevsel performansa küçük bir katkı yapabiliyor.\n- Algılanan toparlanmayı (ağrı, yorgunluk hissi) ve fizyolojik belirteçleri belirgin değiştirmiyor.\n- Uyku ile toparlanmayı kötüleştirebiliyor (dört bağımsız çalışma); kanıt kesinliği düşük.\n- Doz, zamanlama ve toparlanma süresinin etkiyi değiştirip değiştirmediği belirlenemedi.\n\n## Uygulamada kullanılan sayılar\n\nDoğrudan sayı alınmadı. Koçun kafein sorularında, özellikle akşam antrenmanı ya da maç sonrası kafeinde, uyku uyarısının dayanağı (uyku izlemesiyle birlikte, walsh-2021).\n\n## Sınırlılıklar\n\n- İşlevsel performans ve uyku bulgularının anlamlılığı duyarlılık analizlerinde değişiyor; tahmin aralıkları sıfırı kesiyor.\n- Uyku sonucu yalnız dört çalışmaya dayanıyor.\n- Basketbola özgü değil; egzersiz modelleri karışık.\n- Yalnız özet okundu (PubMed özeti)."
   }
 ];
 
@@ -3105,12 +3185,13 @@ export const kbRules: readonly KbRule[] = [
       "unit": "g/kg/gün"
     },
     "appliesTo": "her gün; kilo karbonhidrat hedefiyle aynı",
-    "notes": "Aralık ve öğün dozu basketbol derlemesinden (davis-2022: 1,2-2,0 g/kg/gün, 0,31 g/kg her 4-5 saatte; ortak bildirgeye, thomas-2016, dayanıyor). Bağımsız ISSN bildirgesi 1,4-2,0 veriyor (jager-2017). Meta-analizde 1,6 g/kg/gün üstü ek kas kazanımı getirmedi (morton-2018; güven aralığı geniş); açıklamada aralığın ortası olarak anılır, tavan değil. 0,31 yuvarlanarak 0,3.",
+    "notes": "Aralık ve öğün dozu basketbol derlemesinden (davis-2022: 1,2-2,0 g/kg/gün, 0,31 g/kg her 4-5 saatte; ortak bildirgeye, thomas-2016, dayanıyor). Bağımsız ISSN bildirgesi 1,4-2,0 veriyor (jager-2017). Meta-analizde 1,6 g/kg/gün üstü ek kas kazanımı getirmedi (morton-2018; güven aralığı geniş); açıklamada aralığın ortası olarak anılır, tavan değil. 0,31 yuvarlanarak 0,3. Hedef enerji dengesindeki sporcu içindir; kalori açığı / kilo verme sorularında koçun dayanağı ISSN bildirgesi (aragon-2026: açıkta yağsız kütleyi korumak için kuvvet antrenmanı ve yeterli protein, zayıf ve kuvvet antrenmanlı kişilerde 1,9-3,2 g/kg). Uygulamada kilo verme dönemi modu yok; hedef bu yüzden değişmedi ve REDs riski (enerji-yeterliligi) birlikte anılır.",
     "sources": [
       "davis-2022",
       "jager-2017",
       "morton-2018",
-      "thomas-2016"
+      "thomas-2016",
+      "aragon-2026"
     ]
   },
   {
@@ -3266,12 +3347,14 @@ export const kbRules: readonly KbRule[] = [
     "module": "takviye",
     "description": "Koç takviye sorularını yalnız kanıtı güçlü takviyelerin kaynaklarına dayanarak yanıtlar (PRODUCT modül 7, karar 0038). Performansa doğrudan katkısı için iyi kanıtı olanlar belirli senaryolarda kafein, kreatin monohidrat, nitrat, sodyum bikarbonat ve olasılıkla beta-alanin; doz ve zamanlama yalnız kaynakta yazdığı gibi aktarılır, uygulama kişiye doz hesaplamaz. Kaynağı olmayan takviyede koç 'kaynak yok' der.",
     "appliesTo": "koçta takviye sorusu (soru sınıfı supplement)",
-    "notes": "IOC uzlaşısı (maughan-2018) genel çerçeve; kreatin için ISSN tutum bildirgesi (kreider-2017), kafein için ISSN tutum bildirgesi (guest-2021) ve basketbolcularda meta-analiz (liu-2026). Nitrat, bikarbonat ve beta-alanin için ayrı kaynak eklenmedi; IOC uzlaşısının özeti yeterli ayrıntıyı taşımıyorsa koç 'kaynak yok' der.",
+    "notes": "IOC uzlaşısı (maughan-2018) genel çerçeve; kreatin için ISSN tutum bildirgesi (kreider-2017), kafein için ISSN tutum bildirgesi (guest-2021) ve basketbolcularda meta-analiz (liu-2026). Nitrat, bikarbonat ve beta-alanin için ayrı kaynak eklenmedi; IOC uzlaşısının özeti yeterli ayrıntıyı taşımıyorsa koç 'kaynak yok' der. Kafeinin sınırları: takım sporlarında yorgunken karar verme ve beceriye yararı gösterilmedi (xie-2026, kesinlik çok düşük); egzersiz sonrası uykuyu kötüleştirebilir, algılanan toparlanmayı değiştirmiyor (zhang-2026b). Koç bunları iddiayı sınırlamak için kullanır.",
     "sources": [
       "maughan-2018",
       "kreider-2017",
       "guest-2021",
-      "liu-2026"
+      "liu-2026",
+      "xie-2026",
+      "zhang-2026b"
     ]
   },
   {
@@ -3326,6 +3409,16 @@ export const kbRules: readonly KbRule[] = [
     "notes": "plews-2014 haftalık HRV ortalaması için en az 3 geçerli ölçüm öneriyor; başlangıç penceresi için haftada 3 × 4 hafta. Aynı alt sınır uyku nabzı ve uyku ortalamasına da uygulanır (doğrudan kaynak yok; tutarlılık için).",
     "sources": [
       "plews-2014"
+    ]
+  },
+  {
+    "id": "toparlanma-yontemi-kanit",
+    "module": "toparlanma-yontemi",
+    "description": "Koç toparlanma yöntemi sorularını (ör. soğuk su / buz banyosu) yalnız kaynağın söylediği kadarıyla yanıtlar: soğuk suyun en tutarlı etkisi kısa vadede hissedilen kas ağrısında; performans ve inflamasyon için tutarlı yarar gösterilmedi. Sıcaklık, süre ya da sıklık reçetesi verilmez. Kaynağı olmayan yöntemde koç 'kaynak yok' der.",
+    "appliesTo": "koçta toparlanma yöntemi sorusu (soru-cevap, karar 0037); uygulamada sayı ya da eşik yok",
+    "notes": "Şemsiye derleme (liang-2026, 14 derleme): derlemeler aynı çalışmaları tekrar kullandığı için ağrı bulgusunun tutarlılığı abartılı görünüyor; derlemelerin yöntem kalitesi düşük ya da çok düşük. Çalışmalardaki sıcaklık ve süreler betimleyici, reçete değil. Literatür taraması 2026-11-01'den kullanıcı onayıyla (2026-11-05).",
+    "sources": [
+      "liang-2026"
     ]
   },
   {

@@ -14,8 +14,8 @@
       "description": "Günlük protein hedefi 1,2-2,0 g/kg/gün (gün tipinden bağımsız), 4-5 saatte bir öğüne bölünmüş, öğün başına yaklaşık 0,3 g/kg.",
       "value": { "range": [1.2, 2.0], "per_meal": 0.3, "meal_interval_hours": [4, 5], "no_added_gain_above": 1.6, "unit": "g/kg/gün" },
       "applies_to": "her gün; kilo karbonhidrat hedefiyle aynı",
-      "sources": ["davis-2022", "jager-2017", "morton-2018", "thomas-2016"],
-      "notes": "Aralık ve öğün dozu basketbol derlemesinden (davis-2022: 1,2-2,0 g/kg/gün, 0,31 g/kg her 4-5 saatte; ortak bildirgeye, thomas-2016, dayanıyor). Bağımsız ISSN bildirgesi 1,4-2,0 veriyor (jager-2017). Meta-analizde 1,6 g/kg/gün üstü ek kas kazanımı getirmedi (morton-2018; güven aralığı geniş); açıklamada aralığın ortası olarak anılır, tavan değil. 0,31 yuvarlanarak 0,3."
+      "sources": ["davis-2022", "jager-2017", "morton-2018", "thomas-2016", "aragon-2026"],
+      "notes": "Aralık ve öğün dozu basketbol derlemesinden (davis-2022: 1,2-2,0 g/kg/gün, 0,31 g/kg her 4-5 saatte; ortak bildirgeye, thomas-2016, dayanıyor). Bağımsız ISSN bildirgesi 1,4-2,0 veriyor (jager-2017). Meta-analizde 1,6 g/kg/gün üstü ek kas kazanımı getirmedi (morton-2018; güven aralığı geniş); açıklamada aralığın ortası olarak anılır, tavan değil. 0,31 yuvarlanarak 0,3. Hedef enerji dengesindeki sporcu içindir; kalori açığı / kilo verme sorularında koçun dayanağı ISSN bildirgesi (aragon-2026: açıkta yağsız kütleyi korumak için kuvvet antrenmanı ve yeterli protein, zayıf ve kuvvet antrenmanlı kişilerde 1,9-3,2 g/kg). Uygulamada kilo verme dönemi modu yok; hedef bu yüzden değişmedi ve REDs riski (enerji-yeterliligi) birlikte anılır."
     },
     {
       "id": "ogun-besin-listesi",
