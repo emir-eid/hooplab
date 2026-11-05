@@ -3,7 +3,11 @@ import { test } from 'node:test';
 
 import { GOOGLE_RETURN_PATH, PWA_ORIGIN, pwaReturnUrl, publicEnvProblems, vercelConfig } from './pwa-lib.mjs';
 
-const ENV = { EXPO_PUBLIC_SUPABASE_URL: 'https://ornekproje.supabase.co', EXPO_PUBLIC_SUPABASE_PUBLISHABLE_KEY: 'sb_publishable_ornek' };
+const ENV = {
+  EXPO_PUBLIC_SUPABASE_URL: 'https://ornekproje.supabase.co',
+  EXPO_PUBLIC_SUPABASE_PUBLISHABLE_KEY: 'sb_publishable_ornek',
+  EXPO_PUBLIC_VAPID_PUBLIC_KEY: 'B'.repeat(87),
+};
 
 test('dönüş adresi PWA kökeni ve uygulamanın Google ekranı yolu', () => {
   assert.equal(pwaReturnUrl(), `${PWA_ORIGIN}${GOOGLE_RETURN_PATH}`);
@@ -17,7 +21,8 @@ test('dönüş adresi yalnız https kökeninden', () => {
 
 test('PWA ortamı: bulut adresi ve publishable anahtar şart', () => {
   assert.deepEqual(publicEnvProblems(ENV), []);
-  assert.equal(publicEnvProblems({}).length, 2);
+  assert.equal(publicEnvProblems({}).length, 3);
+  assert.equal(publicEnvProblems({ ...ENV, EXPO_PUBLIC_VAPID_PUBLIC_KEY: 'kisa' }).length, 1);
   assert.equal(publicEnvProblems({ ...ENV, EXPO_PUBLIC_SUPABASE_URL: 'http://127.0.0.1:54321' }).length, 1);
   assert.equal(publicEnvProblems({ ...ENV, EXPO_PUBLIC_SUPABASE_PUBLISHABLE_KEY: 'sb_secret_ornek' }).length, 1);
 });

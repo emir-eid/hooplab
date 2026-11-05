@@ -1,10 +1,11 @@
 // Ben → Bildirimler (karar 0045): yerel hatırlatmaların açılıp kapatıldığı yer. Anahtar açılınca izin istenir;
 // iOS izni reddedildiyse yalnız Ayarlar'dan açılabilir. Tercih bu cihazda saklanır, sunucuya gitmez.
+// PWA'da (karar 0058) aynı ekran Web Push'u açar: tercih ve abonelik Supabase'e yazılır, sunucu gönderir.
 
 import { layout, spacing } from '@hooplab/theme';
 import { useFocusEffect } from 'expo-router';
 import { useCallback, useState } from 'react';
-import { Linking, StyleSheet, Switch, View } from 'react-native';
+import { Linking, Platform, StyleSheet, Switch, View } from 'react-native';
 
 import { ListGroup, ListRow } from '@/components/list';
 import { PageHeader } from '@/components/page-header';
@@ -29,6 +30,7 @@ import {
   sendTestNotification,
   type PermissionState,
 } from '@/notifications/scheduler';
+import { enableWebPush, loadWebPrefs, saveWebPrefs, sendWebTest, webPermission, webPushSupport } from '@/notifications/web-push';
 import { usePalette } from '@/theme/appearance';
 
 export default function NotificationsScreen() {
@@ -36,24 +38,47 @@ export default function NotificationsScreen() {
   const demo = useDemoScenario();
   const [prefs, setPrefs] = useState<NotificationPrefs>(defaultNotificationPrefs);
   const [permission, setPermission] = useState<PermissionState>('undetermined');
-  const available = notificationsSupported && demo === null;
+  const [testNote, setTestNote] = useState<string | null>(null);
+  const isWeb = Platform.OS === 'web';
+  const webSupport = webPushSupport();
+  const available = (isWeb ? webSupport === 'ok' : notificationsSupported) && demo === null;
 
   useFocusEffect(
     useCallback(() => {
+      if (isWeb) {
+        if (webSupport !== 'ok' || demo !== null) return;
+        void loadWebPrefs().then(setPrefs);
+        setPermission(webPermission());
+        return;
+      }
       void loadNotificationPrefs().then(setPrefs);
       void notificationPermission().then(setPermission);
-    }, []),
+    }, [isWeb, webSupport, demo]),
   );
 
+  // Web'de izin isteği dokunuşun içinde kalmalı (iOS): `enableWebPush` ilk await'ten önce çağrılır.
   const update = async (next: NotificationPrefs, turningOn: boolean) => {
     if (turningOn) {
-      const granted = await ensureNotificationPermission();
+      const granted = isWeb ? await enableWebPush() : await ensureNotificationPermission();
       setPermission(granted);
       if (granted !== 'granted') return;
     }
     setPrefs(next);
+    if (isWeb) {
+      if (!(await saveWebPrefs(next))) setTestNote('Tercih kaydedilemedi; bağlantını kontrol edip yeniden dene.');
+      return;
+    }
     await saveNotificationPrefs(next);
     await refreshNotifications();
+  };
+
+  const sendTest = () => {
+    if (!isWeb) {
+      void sendTestNotification().then(() => notificationPermission()).then(setPermission);
+      return;
+    }
+    setTestNote(null);
+    void sendWebTest().then((ok) => setTestNote(ok ? 'Gönderildi; birkaç saniye içinde gelir.' : 'Gönderilemedi. Önce bir hatırlatmayı açıp izin ver.'));
   };
 
   const toggle = (label: string, value: boolean, onChange: (v: boolean) => void) => (
@@ -101,11 +126,16 @@ export default function NotificationsScreen() {
     );
   };
 
-  const unavailableNote = !notificationsSupported
-    ? 'Bildirimler yalnız iPhone uygulamasında çalışır; web önizlemesinde zamanlanmaz.'
-    : demo !== null
+  const unavailableNote =
+    demo !== null
       ? 'Demoda bildirim zamanlanmaz. Demodan çıkınca kendi ayarların geçerli olur.'
-      : null;
+      : !isWeb
+        ? null
+        : webSupport === 'install'
+          ? "Bildirimler, uygulama Safari'den ana ekrana eklenince açılır. Ana ekrandaki HoopLab simgesinden açıp burayı yeniden dene."
+          : webSupport === 'unconfigured'
+            ? 'Bu derlemede bildirim ayarlı değil.'
+            : null;
 
   return (
     <Screen>
@@ -150,11 +180,17 @@ export default function NotificationsScreen() {
       </ListGroup>
 
       {available ? (
-        <ListGroup label="Deneme" footer="Birkaç saniye sonra bir bildirim gelir; uygulamayı arka plana alıp bekleyebilirsin.">
-          <ListRow
-            label="Deneme bildirimi gönder"
-            onPress={() => void sendTestNotification().then(() => notificationPermission()).then(setPermission)}
-          />
+        <ListGroup
+          label="Deneme"
+          footer={testNote ?? 'Birkaç saniye sonra bir bildirim gelir; uygulamayı arka plana alıp bekleyebilirsin.'}
+        >
+          <ListRow label="Deneme bildirimi gönder" onPress={sendTest} />
+        </ListGroup>
+      ) : null}
+
+      {permission === 'denied' && isWeb && available ? (
+        <ListGroup label="İzin">
+          <ListRow label="Bildirim izni kapalı" detail="iPhone'da Ayarlar → Bildirimler → HoopLab'den açılır; sonra anahtarı yeniden aç." />
         </ListGroup>
       ) : null}
 
@@ -173,7 +209,9 @@ export default function NotificationsScreen() {
         </Text>
       ) : (
         <Text variant="footnoteRegular" tone="inkMuted" style={styles.note}>
-          Bildirimler bu telefonda zamanlanır; sunucuya gitmez. Metinlerde sağlık değerin yazmaz.
+          {isWeb
+            ? "Hatırlatmaları sunucu gönderir; tercihin, saat dilimin ve bu cihazın bildirim adresi Supabase'te durur. Metinlerde sağlık değerin yazmaz."
+            : 'Bildirimler bu telefonda zamanlanır; sunucuya gitmez. Metinlerde sağlık değerin yazmaz.'}
         </Text>
       )}
     </Screen>

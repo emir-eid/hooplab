@@ -7,6 +7,7 @@ import { useEffect } from 'react';
 import { AppState } from 'react-native';
 
 import { notificationsSupported, refreshNotifications } from '@/notifications/scheduler';
+import { refreshWebPush } from '@/notifications/web-push';
 
 const routes = new Set(['/checkin', '/me/google-health', '/']);
 
@@ -22,6 +23,11 @@ if (notificationsSupported) {
 }
 
 export function useNotifications(signedIn: boolean, ready: boolean) {
+  // PWA (karar 0058): izin verilmişse aboneliği tazeler; gönderim sunucuda, burada zamanlanacak bir şey yok.
+  useEffect(() => {
+    if (signedIn) void refreshWebPush();
+  }, [signedIn]);
+
   useEffect(() => {
     if (!notificationsSupported || !signedIn) return;
     void refreshNotifications();

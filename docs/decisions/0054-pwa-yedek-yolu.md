@@ -98,7 +98,7 @@ Karar tarihinde Apple'dan sonuç yok; seçenek 2'ye geçildi. Uzak adımların h
 - **Tarayıcıda 390×844:** `/` girişe yönlendi, `lang="tr"`, manifest bağlantısı var, yatay taşma yok, konsolda hata yok.
 - **Google dönüş adresi:** `supabase secrets set GHEALTH_WEB_RETURN_URL=https://app.hooplab.dev/me/google-health`; `ghealth-connect` girişsiz isteğe yine 401. Fonksiyon yeniden dağıtılmadı (değer çalışma anında okunur, v10 bu desteği içeriyor).
 - **Cihazda (kullanıcı, 2026-11-05):** Safari → ana ekrana ekle, giriş, Google bağlantısı ana ekran kipinde, 3D Vücut, PDF ve paylaşma başarılı. Giriş, 2026-10-04'te panoda açılan e-posta + şifre hesabıyla (iPhone oturumu o günden beri yenileme token'ıyla sürüyordu, şifre unutulmuştu).
-- **Kalan:** kurulum sihirbazı `GHEALTH_WEB_RETURN_URL`'i henüz bilmiyor (`setup:check` denetlemez); bildirim yolu kararı (Web Push ya da bildirimsiz) ayrı.
+- **Kalan:** kurulum sihirbazı `GHEALTH_WEB_RETURN_URL`'i henüz bilmiyor (`setup:check` denetlemez); bildirim yolu kararı: Web Push, [0058](0058-pwa-web-push.md) (2026-11-05).
 
 ## Kaynaklar (yalnız teknik olgular)
 - Expo, EAS Hosting özel alan adı (ücretsiz planda yok): https://docs.expo.dev/eas/hosting/custom-domain/

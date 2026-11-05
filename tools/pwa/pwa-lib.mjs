@@ -25,6 +25,9 @@ export function publicEnvProblems(env) {
   if (!/^https:\/\/[a-z0-9]+\.supabase\.co$/.test(url)) problems.push('EXPO_PUBLIC_SUPABASE_URL bulut proje adresi değil (https://<ref>.supabase.co).');
   if (!key) problems.push('EXPO_PUBLIC_SUPABASE_PUBLISHABLE_KEY boş.');
   else if (!key.startsWith('sb_publishable_')) problems.push('EXPO_PUBLIC_SUPABASE_PUBLISHABLE_KEY publishable anahtar değil (sb_publishable_ ile başlamalı).');
+  // Web Push açık anahtarı (karar 0058): P-256 noktası, base64url 65 bayt = 87 karakter. Herkese açık değer.
+  const vapid = env.EXPO_PUBLIC_VAPID_PUBLIC_KEY?.trim() ?? '';
+  if (!/^[A-Za-z0-9_-]{87}$/.test(vapid)) problems.push('EXPO_PUBLIC_VAPID_PUBLIC_KEY yok ya da biçimi bozuk (bildirimler çalışmaz).');
   if (env.EXPO_PUBLIC_HOOPLAB_DEMO_ONLY) problems.push('EXPO_PUBLIC_HOOPLAB_DEMO_ONLY ayarlı: PWA demo değil.');
   if (env.HOOPLAB_WEB_BASE_URL) problems.push('HOOPLAB_WEB_BASE_URL ayarlı: PWA kök adreste static çıktıyla derlenir (manifest yalnız orada, LESSONS).');
   return problems;

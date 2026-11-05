@@ -1,6 +1,6 @@
 # 0045. Bildirimler: telefonda zamanlanan yerel hatırlatmalar (check-in ve Google izni)
 
-- **Durum:** Kabul edildi. Uygulama testleri geçti. Web önizlemesinde ekran doğrulandı (web'de bildirim zamanlanmaz). iPhone'da Expo Go ile izin ve deneme bildirimi doğrulandı.
+- **Durum:** Kabul edildi; PWA'da hatırlatmalar sunucudan Web Push ile, [0058](0058-pwa-web-push.md) (iPhone uygulaması değişmedi). Uygulama testleri geçti. Web önizlemesinde ekran doğrulandı (web'de bildirim zamanlanmaz). iPhone'da Expo Go ile izin ve deneme bildirimi doğrulandı.
 - **Tarih:** 2026-10-15
 - **İlgili:** [0017](0017-sabah-check-in-olcegi.md) (check-in), [0019](0019-google-health-senkronu.md) (7 günlük izin), [0024](0024-eas-derleme-ve-guncelleme.md) (derleme), [0036](0036-mac-gunu-isareti.md) (maç günü)
 
