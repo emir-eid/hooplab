@@ -1,6 +1,6 @@
 # 0054. Apple kaydı uzarsa PWA yedek yolu
 
-- **Durum:** Kabul edildi (kullanıcı, 2026-10-20; karar tarihi 2026-11-03)
+- **Durum:** Kabul edildi (kullanıcı, 2026-10-20; karar tarihi 2026-11-03); 2026-11-03'te seçenek 2 uygulandı, PWA `app.hooplab.dev`'de yayında
 - **Tarih:** 2026-10-20
 - **İlgili:** [0002](0002-platform-expo-react-native.md), [0024](0024-eas-derleme-ve-guncelleme.md), [0045](0045-yerel-bildirimler.md), [0050](0050-portfolyo-sayfasi.md), [0053](0053-alan-adi-ve-google-yayin.md), [denetim 2026-10-20](../audits/2026-10-20.md), [oturum raporu](../sessions/2026-10-20-2302-koc-olcumu-ve-pwa.md)
 
@@ -88,6 +88,17 @@ Apple 2026-10-28'de bir belge daha istedi (gönderildi, sonuç yok); yayın gün
 - **Uzak (salt okuma):** Vercel'de HoopLab projesi yok; `app.hooplab.dev` Vercel'e çözülüyor; `GHEALTH_WEB_RETURN_URL` ayarlı değil; `ghealth-*` v10.
 - **Google bağlantısı web'de aynı pencerede:** önceki yol izin ekranını `openAuthSessionAsync` açılır penceresinde, sunucu isteği bittikten sonra açıyordu. Safari kullanıcı dokunuşundan sonra geçen istekle açılan pencereyi engelleyebilir; ana ekran kipinde açılan pencere uygulamaya geri bağlanamayabilir (ölçülmedi, koddan). Web'de artık `window.location.assign` ile aynı pencerede gidilir; dönüş `/me/google-health?ghealth=…` sayfayı yeniden açar, ekran sonucu sorgudan okur. Yerelde sahte Google ile uçtan uca denendi (SETUP §9): aynı sekmede dönüldü, "Bağlandı", durum bağlı, senkron yapıldı. iPhone'da ana ekran kipinde yayın günü denenir.
 - **PDF web'de:** ayrı web yolu zaten var ([share-pdf.web.ts](../../apps/mobile/src/lib/share-pdf.web.ts): rapor gizli çerçevede, tarayıcının yazdırma penceresi). Provada sayfanın "kilitlenmesi" bu gerçek yazdırma penceresiydi, hata değil. Düzeltilen yalnız web'deki açıklama: "paylaşım menüsü" yerine yazdırma penceresinden PDF olarak kaydetme. Ana ekran kipinde yazdırma penceresinin açılması cihazda denenir.
+
+## Yayın (2026-11-03)
+Karar tarihinde Apple'dan sonuç yok; seçenek 2'ye geçildi. Uzak adımların her biri kullanıcının tek satır onayıyla yapıldı.
+- **Senkron yoklaması önce:** `health_sync_status` bağlı, `last_error` boş, son başarılı senkron 2026-11-03 12:17 UTC (Supabase Data API değişikliğinin tüm projelerde yürürlüğe girdiği 2026-10-30'dan sonra da hatasız).
+- **Derleme:** `npm run pwa:build` `9ab30ad` üzerinde geçti (6,1 MB); pakette sır yok (yalnız supabase-js ve uygulamanın anahtar türü denetimi eşleşti).
+- **Vercel:** `vercel project add hooplab-app`, `vercel link --project hooplab-app --cwd apps/mobile/dist-pwa`, `vercel deploy --prod`, `vercel domains add app.hooplab.dev hooplab-app` (DNS kaydı eklenmedi, joker kayıt zaten Vercel'de). `vercel link` derleme klasörüne `.env.local` (kısa ömürlü OIDC token) ve `.gitignore` yazdı; canlıda `/.env.local`, `/.gitignore`, `/.vercel/project.json` 404 (nokta dosyaları sunulmuyor).
+- **`curl` denetimi:** `/`, `/explain/hrv`, `/me/google-health`, `/manifest.webmanifest` 200; `/yok` 404; her yanıtta `X-Robots-Tag: noindex`, `X-Frame-Options: DENY`, `X-Content-Type-Options: nosniff`, `Strict-Transport-Security`; HTML `max-age=0, must-revalidate`, `_expo/static` bir yıl `immutable`; manifest `application/manifest+json`; `http` → `https` 308.
+- **Tarayıcıda 390×844:** `/` girişe yönlendi, `lang="tr"`, manifest bağlantısı var, yatay taşma yok, konsolda hata yok.
+- **Google dönüş adresi:** `supabase secrets set GHEALTH_WEB_RETURN_URL=https://app.hooplab.dev/me/google-health`; `ghealth-connect` girişsiz isteğe yine 401. Fonksiyon yeniden dağıtılmadı (değer çalışma anında okunur, v10 bu desteği içeriyor).
+- **Cihazda (kullanıcı, 2026-11-05):** Safari → ana ekrana ekle, giriş, Google bağlantısı ana ekran kipinde, 3D Vücut, PDF ve paylaşma başarılı. Giriş, 2026-10-04'te panoda açılan e-posta + şifre hesabıyla (iPhone oturumu o günden beri yenileme token'ıyla sürüyordu, şifre unutulmuştu).
+- **Kalan:** kurulum sihirbazı `GHEALTH_WEB_RETURN_URL`'i henüz bilmiyor (`setup:check` denetlemez); bildirim yolu kararı (Web Push ya da bildirimsiz) ayrı.
 
 ## Kaynaklar (yalnız teknik olgular)
 - Expo, EAS Hosting özel alan adı (ücretsiz planda yok): https://docs.expo.dev/eas/hosting/custom-domain/

@@ -152,6 +152,8 @@ Tekrar yaşanabilecek hatalar ve önceden bilinen tuzaklar. Her madde: **ders**,
 - **[ölçüldü] Vercel DNS'te kökte özel A / AAAA kaydı eklenince Vercel'in varsayılan ALIAS ve HTTPS (ECH) kayıtları artık dönmüyor** (`dns.google` ile, 2026-10-19). Varsayılan HTTPS kaydı başka bir sunucuya (GitHub Pages) yönelen alanda kalsaydı tarayıcının ECH denemesi bağlantıyı bozabilirdi; kayıt eklendikten sonra `type=HTTPS` sorgusunun boş döndüğü denetlenir. Kanıt: [0053](decisions/0053-alan-adi-ve-google-yayin.md). Bekçi: yok.
 - **[ölçüldü] GitHub Pages proje sitesine özel alan adı bağlanınca `kullanici.github.io/repo/yol` adresi `alanadi/yol`'a 301 ile yönlenir (repo adı yoldan düşer).** `404.html`'deki `/hooplab/` yedeği yalnız alan adına doğrudan gelen eski yollar için. Sertifika birkaç dakikada onaylandı; ardından `https_enforced` API'yle açıldı. Kanıt: 2026-10-19 canlı `curl`.
 
+- **[ölçüldü] `vercel link --cwd <klasör>` o klasöre kısa ömürlü `VERCEL_OIDC_TOKEN`'lı bir `.env.local` ve `.gitignore` yazar; klasör dağıtılırsa bunlar da yüklenir.** Vercel nokta dosyalarını sunmadı (`/.env.local`, `/.vercel/project.json` 404); yine de her yayından sonra `curl` ile denetlenir. PWA derleme klasörü gitignore'lu. Kanıt: 2026-11-03 yayını ([0054](decisions/0054-pwa-yedek-yolu.md)). Bekçi: yok.
+
 ## Supabase
 
 - **[ölçüldü] Yerel `supabase functions serve`'de bir fonksiyonun ilk isteği "CPU time hard limit" ile düşebilir (soğuk başlatma, 2026-10-29 `ghealth-connect`); ikinci istek geçer.** Uygulama "Bağlantı başlatılamadı" der; yerel denemede bir kez yeniden denenir, kod hatası sanılmaz. Bekçi: yok.

@@ -5,6 +5,7 @@ Uygulamaya veya altyapıya görünür değişiklikler. Biçim: [Keep a Changelog
 ## [Yayınlanmamış]
 
 ### Eklendi
+- PWA yayında (karar 0054, 2026-11-03): `https://app.hooplab.dev` (Vercel projesi `hooplab-app`, statik, `noindex`); Google bağlantısı PWA'dan (Supabase `GHEALTH_WEB_RETURN_URL`); cihazda ana ekran kipinde giriş, Google, 3D Vücut, PDF ve paylaşma denendi (2026-11-05). Bildirim yok.
 - PWA çıktısı için yerel sunucu (karar 0054, 2026-10-29): `node tools/pwa/serve-pwa.mjs` (önizleme adı `pwa-yerel`) Vercel'in `cleanUrls` davranışını taklit eder; yalnız 127.0.0.1, yayın değil.
 - PWA derlemesi (karar 0054, 2026-10-22; yayın yok): `npm run pwa:build` gerçek projeye bağlı static web çıktısını ve Vercel yapılandırmasını `apps/mobile/dist-pwa`'ya yazar; açıklama sayfaları `generateStaticParams` ile ayrı HTML; hedef adres `app.hooplab.dev`.
 - Alan adı `hooplab.dev` (karar 0053, 2026-10-19): portfolyo kökte (`SITE_BASE` varsayılanı boş), eski `github.io/hooplab/` bağlantıları yönlenir; gizlilik politikası `/privacy/` ve `/tr/gizlilik/` (Google Kullanıcı Verisi Politikası ve Sınırlı Kullanım beyanı); Google'ın geri döndüğü statik sayfa `/oauth/google/` (sorguyu `ghealth-callback`'e iletir, hedef repo değişkeni `GHEALTH_CALLBACK_URL`'den, CSP ve `no-referrer`); Supabase `GHEALTH_REDIRECT_URI` yeni sayfa; `.claude/launch.json` → `portfolyo-hazir`.
