@@ -2,8 +2,12 @@ import assert from 'node:assert/strict';
 import { test } from 'node:test';
 
 import {
+  exerciseDayLabel,
+  exerciseDetail,
   exerciseLabel,
   exerciseSummary,
+  formatClockRange,
+  groupExercisesByDay,
   type ExerciseSession,
   formatStartClock,
   linkCandidates,
@@ -23,6 +27,9 @@ function exercise(over: Partial<ExerciseSession> & Pick<ExerciseSession, 'id'>):
     exerciseType: 'SPORT',
     displayName: null,
     avgHrBpm: null,
+    activeDurationS: null,
+    distanceM: null,
+    steps: null,
     kcal: null,
     dismissed: false,
     ...over,
@@ -106,4 +113,34 @@ test('özet: saatin kalorisi en yakın 10 kcal, tahmin işaretiyle (karar 0043)'
   const e = exercise({ id: 'a', avgHrBpm: 142, kcal: 643.6 });
   assert.equal(exerciseSummary(e, '2026-01-05', '2026-01-04').detail, 'Bugün · 18:00 · 92 dk · ort. 142 nabız · ~640\u00a0kcal');
   assert.equal(exerciseSummary({ ...e, kcal: 0 }, '2026-01-05', '2026-01-04').detail, 'Bugün · 18:00 · 92 dk · ort. 142 nabız');
+});
+
+test('liste ayrıntısı: saat aralığı yerel saatle, aktif süre yalnız toplamdan kısaysa, ölçümler varsa', () => {
+  const e = exercise({ id: 'a', avgHrBpm: 142, kcal: 640, activeDurationS: 4_680, distanceM: 5_230, steps: 6_432 });
+  assert.equal(formatClockRange(e), '18:00–19:32');
+  assert.deepEqual(exerciseDetail(e), {
+    time: '18:00–19:32 · 92 dk, aktif 78 dk',
+    metrics: 'ort. 142 nabız · ~640 kcal · 5,2 km · 6.432 adım',
+  });
+  const bare = exercise({ id: 'b', activeDurationS: 92 * 60, distanceM: 850 });
+  assert.deepEqual(exerciseDetail(bare), { time: '18:00–19:32 · 92 dk', metrics: '850 m' });
+  assert.equal(exerciseDetail(exercise({ id: 'c' })).metrics, '');
+});
+
+test('gün grupları: en yeni gün önce, gün içinde saat sırası; başlık Bugün / Dün / kısa tarih', () => {
+  const groups = groupExercisesByDay([
+    exercise({ id: 'old', localDate: '2026-01-03', startTime: '2026-01-03T15:00:00Z', endTime: '2026-01-03T16:00:00Z' }),
+    exercise({ id: 'late', startTime: '2026-01-05T17:00:00Z', endTime: '2026-01-05T18:00:00Z' }),
+    exercise({ id: 'early', startTime: '2026-01-05T06:00:00Z', endTime: '2026-01-05T07:00:00Z' }),
+  ]);
+  assert.deepEqual(
+    groups.map((g) => [g.localDate, g.exercises.map((e) => e.id)]),
+    [
+      ['2026-01-05', ['early', 'late']],
+      ['2026-01-03', ['old']],
+    ],
+  );
+  assert.equal(exerciseDayLabel('2026-01-05', '2026-01-05', '2026-01-04'), 'Bugün');
+  assert.equal(exerciseDayLabel('2026-01-04', '2026-01-05', '2026-01-04'), 'Dün');
+  assert.equal(exerciseDayLabel('2026-01-03', '2026-01-05', '2026-01-04'), 'Cmt 3 Ocak');
 });

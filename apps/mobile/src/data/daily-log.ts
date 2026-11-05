@@ -219,12 +219,15 @@ interface ExerciseRow {
   exercise_type: string;
   display_name: string | null;
   avg_hr_bpm: number | null;
+  active_duration_s: number | null;
+  distance_m: number | null;
+  steps: number | null;
   calories_kcal: number | null;
   dismissed_at: string | null;
 }
 
 const exerciseColumns =
-  'id, local_date, start_time, end_time, start_utc_offset_s, exercise_type, display_name, avg_hr_bpm, calories_kcal, dismissed_at';
+  'id, local_date, start_time, end_time, start_utc_offset_s, exercise_type, display_name, avg_hr_bpm, active_duration_s, distance_m, steps, calories_kcal, dismissed_at';
 
 function exerciseFromRow(r: ExerciseRow): ExerciseSession {
   return {
@@ -236,6 +239,9 @@ function exerciseFromRow(r: ExerciseRow): ExerciseSession {
     exerciseType: r.exercise_type,
     displayName: r.display_name,
     avgHrBpm: r.avg_hr_bpm,
+    activeDurationS: r.active_duration_s,
+    distanceM: r.distance_m,
+    steps: r.steps,
     kcal: r.calories_kcal,
     dismissed: r.dismissed_at !== null,
   };

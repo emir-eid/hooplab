@@ -106,6 +106,9 @@ for (const scheme of ['light', 'dark'] as const) {
       check(`statusInk.${s} / cardMuted`, p.statusInk[s], p.cardMuted, AA_TEXT);
       check(`statusInk.${s} ikon / statusTint`, p.statusInk[s], p.derived.statusTint[s], AA_GRAPHIC);
     }
+    check('noticeInk / card', p.noticeInk, p.card, AA_TEXT);
+    check('noticeInk / cardMuted', p.noticeInk, p.cardMuted, AA_TEXT);
+    check('notice nokta / card', p.notice, p.card, AA_GRAPHIC);
     assert.deepEqual(fails, []);
   });
 }

@@ -39,6 +39,7 @@ import {
   untaggedLabel,
   weekPartsLabel,
 } from '@/copy/training-load';
+import { loadRatioMark } from '@/data/tile-mark';
 import type { LoadParts, TrainingLoadView } from '@/data/training-load-view';
 import { usePalette } from '@/theme/appearance';
 import { formatShortDate } from '@/utils/format-date';
@@ -63,9 +64,8 @@ function GroupValue({ group, value }: { group: LoadGroup; value: number }) {
 
 const present = (parts: LoadParts): LoadGroup[] => loadGroups.filter((g) => parts[g] > 0);
 
-function openTagging(view: TrainingLoadView) {
-  const next = view.untagged[0];
-  if (next) router.push({ pathname: '/session-new', params: { exercise: next.id } });
+function openUntagged() {
+  router.push('/untagged');
 }
 
 /** Bugün: oran 1,5 ve üstündeyse tek satır; dokununca Trend. Değilse hiçbir şey. */
@@ -94,7 +94,7 @@ export function TrainingLoadSection({ view }: { view: TrainingLoadView }) {
         </Card>
         {view.untagged.length > 0 ? (
           <ListGroup footer={untaggedDetail}>
-            <ListRow label={untaggedLabel(view.untagged.length)} value="Etiketle" onPress={() => openTagging(view)} />
+            <ListRow label={untaggedLabel(view.untagged.length)} value="Gör" onPress={openUntagged} />
           </ListGroup>
         ) : null}
       </>
@@ -130,7 +130,7 @@ export function TrainingLoadSection({ view }: { view: TrainingLoadView }) {
 
       {view.untagged.length > 0 ? (
         <ListGroup footer={untaggedDetail}>
-          <ListRow label={untaggedLabel(view.untagged.length)} value="Etiketle" onPress={() => openTagging(view)} />
+          <ListRow label={untaggedLabel(view.untagged.length)} value="Gör" onPress={openUntagged} />
         </ListGroup>
       ) : null}
 
@@ -206,6 +206,7 @@ export function TrainingLoadSection({ view }: { view: TrainingLoadView }) {
           note={ratioNote(r)}
           flagged={false}
           state={null}
+          mark={loadRatioMark(r)}
         />
         <Tile
           label={averageWeeksLabel}

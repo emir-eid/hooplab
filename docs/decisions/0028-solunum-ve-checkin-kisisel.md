@@ -1,6 +1,6 @@
 # 0028. Solunum ve sabah check-in için kişisel kıyas: solunum bandı ve tek gece notu, check-in z-skoru; ikisi de günün durumuna girmez
 
-- **Durum:** Kabul edildi
+- **Durum:** Kabul edildi; solunum kartının aralık dışı rengi [0057](0057-kart-isaretleri.md) ile eklendi (mavi, iyi / kötü anlamı yok)
 - **Tarih:** 2026-10-07
 - **İlgili:** [0017](0017-sabah-check-in-olcegi.md), [0021](0021-toparlanma-kisisel-bant.md), [0026](0026-aciklama-sayfalari-ve-tur-rengi.md), `research/rules/toparlanma.json`, `research/rules/iyi-olus.json`
 

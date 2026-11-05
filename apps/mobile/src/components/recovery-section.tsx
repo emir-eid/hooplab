@@ -4,7 +4,7 @@
 // Sayılar motordan (packages/engine), metinler copy/recovery'den; burada yalnız yerleşim.
 
 import { flaggedSigns } from "@hooplab/engine";
-import { layout, radius, size, spacing } from "@hooplab/theme";
+import { layout, radius, size, spacing, type Palette } from "@hooplab/theme";
 import { router } from "expo-router";
 import { useState } from "react";
 import { Pressable, StyleSheet, View } from "react-native";
@@ -51,6 +51,7 @@ import {
   respirationHighTitle,
 } from "@/copy/personal-baseline";
 import type { RecoveryView } from "@/data/recovery-view";
+import { respirationMark, sleepHrMark, sleepMark, type TileMark } from "@/data/tile-mark";
 import { usePalette } from "@/theme/appearance";
 import { formatShortDate } from "@/utils/format-date";
 
@@ -145,15 +146,22 @@ export interface TileProps {
   /** Bu ölçüm günün durumuna katkı verdi mi (nokta ve not durum renginde). */
   flagged: boolean;
   state: "green" | "yellow" | "red" | null;
+  /**
+   * Kişisel aralığa ya da kaynaklı eşiğe göre küçük renk işareti (karar 0057): nokta ve not rengi. Ölçüm günün
+   * durumuna katkı verdiyse (`flagged`) durum rengi önce gelir.
+   */
+  mark?: TileMark | null;
   /** Verilirse kart dokunulabilir ve açıklama alt sayfasını açar (karar 0026); kısa açıklaması kartta görünür. */
   explain?: ExplainerId;
   /** Tam genişlik (ızgarada tek başına). */
   wide?: boolean;
 }
 
-export function Tile({ label, value, unit, note, rows, pageRows, flagged, state, explain, wide }: TileProps) {
+export function Tile({ label, value, unit, note, rows, pageRows, flagged, state, mark, explain, wide }: TileProps) {
   const palette = usePalette();
-  const accent = flagged && state ? palette.statusInk[state] : null;
+  const marked = flagged && state ? null : mark ? markColors(palette, mark) : null;
+  const accent = flagged && state ? palette.statusInk[state] : (marked?.ink ?? null);
+  const dotColor = flagged && state ? palette.status[state] : (marked?.dot ?? palette.dot);
   const hint = explain ? explainers[explain].hint : null;
   const spoken = [`${label}: ${value} ${unit}, ${note}`, ...(rows ?? []).map((r) => `${r.label} ${r.value}`)].join(". ");
   return (
@@ -179,8 +187,7 @@ export function Tile({ label, value, unit, note, rows, pageRows, flagged, state,
           style={[
             styles.dot,
             {
-              backgroundColor:
-                flagged && state ? palette.status[state] : palette.dot,
+              backgroundColor: dotColor,
             },
           ]}
         />
@@ -232,6 +239,17 @@ export function Tile({ label, value, unit, note, rows, pageRows, flagged, state,
 }
 
 const dash = "–";
+
+function markColors(palette: Palette, mark: TileMark): { dot: string; ink: string } {
+  switch (mark) {
+    case "calm":
+      return { dot: palette.status.green, ink: palette.statusInk.green };
+    case "attention":
+      return { dot: palette.status.yellow, ink: palette.statusInk.yellow };
+    case "notice":
+      return { dot: palette.notice, ink: palette.noticeInk };
+  }
+}
 
 /** "Gece verisi": HRV grafiği ve dört ölçüm kartı. */
 export function NightData({ view }: { view: RecoveryView }) {
@@ -345,6 +363,7 @@ export function NightData({ view }: { view: RecoveryView }) {
           pageRows={bandPageRows(rhr, "atım/dk")}
           flagged={signals.includes("rhr_high")}
           state={state}
+          mark={sleepHrMark(rhr)}
         />
         <Tile
           label="Uyku"
@@ -356,6 +375,7 @@ export function NightData({ view }: { view: RecoveryView }) {
           pageRows={sleepPageRows(sleep)}
           flagged={signals.includes("sleep_short")}
           state={state}
+          mark={sleepMark(sleep)}
         />
         <Tile
           label="Solunum"
@@ -367,6 +387,7 @@ export function NightData({ view }: { view: RecoveryView }) {
           pageRows={bandPageRows(respiration, "nefes/dk", 1)}
           flagged={false}
           state={state}
+          mark={respirationMark(respiration)}
           wide
         />
       </View>

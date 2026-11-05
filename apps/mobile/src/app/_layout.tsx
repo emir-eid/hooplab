@@ -90,6 +90,7 @@ function RootNavigator() {
           <Stack.Screen name="match-edit" options={{ presentation: 'modal' }} />
           <Stack.Screen name="trip-edit" options={{ presentation: 'modal' }} />
           <Stack.Screen name="matches" />
+          <Stack.Screen name="untagged" />
           <Stack.Screen name="recovery-method" />
           <Stack.Screen name="weekly" />
           <Stack.Screen name="weekly-share" options={{ presentation: 'modal' }} />

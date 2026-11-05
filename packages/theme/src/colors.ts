@@ -69,6 +69,13 @@ export interface BasePalette {
   /** Durum rengi yazı ve ikon olarak: kart ve renkli zemin üstünde en az 4,5:1. */
   statusInk: ByState<Hex>;
   /**
+   * "Her zamankinden farklı": kişisel aralığın dışında ama iyi ya da kötü denemeyen ölçüm (ör. solunum, karar 0028, 0057).
+   * Durum renklerinden ayrı bir mavi (yük grubunun doğrulanmış tonu); yanında her zaman metin olur.
+   */
+  notice: Hex;
+  /** `notice` yazı olarak: kart üstünde en az 4,5:1. */
+  noticeInk: Hex;
+  /**
    * Yük grafiğindeki seans türü grupları (maç, saha, kuvvet / kondisyon, hafif). Makette yok; dataviz doğrulayıcısıyla
    * kart zemininde denetlendi (karar 0026). Yanında her zaman açıklama satırı olur; renk tek başına anlam taşımaz.
    */
@@ -143,6 +150,8 @@ const light: BasePalette = {
   knob: '#FFFFFF',
   status: { green: '#1FA874', yellow: '#E8930C', red: '#E8492F' },
   statusInk: { green: '#077A52', yellow: '#9A6004', red: '#C82709' },
+  notice: '#2A78D6',
+  noticeInk: '#1F66BF',
   loadGroup: { game: '#D6528F', court: '#2A78D6', gym: '#4A3AA7', light: '#8B8E95' },
   nutrient: { carbs: '#D6528F', protein: '#4A3AA7', water: '#2A78D6' },
   destructive: '#C82709',
@@ -186,6 +195,8 @@ const dark: BasePalette = {
   knob: '#F1F0EC',
   status: { green: '#3CCB92', yellow: '#FFAE33', red: '#FF6B52' },
   statusInk: { green: '#3CCB92', yellow: '#FFAE33', red: '#FF6B52' },
+  notice: '#3B9AE6',
+  noticeInk: '#3B9AE6',
   loadGroup: { game: '#D9539A', court: '#3B9AE6', gym: '#7D55D9', light: '#7D8088' },
   nutrient: { carbs: '#D9539A', protein: '#7D55D9', water: '#3B9AE6' },
   destructive: '#C9311A',

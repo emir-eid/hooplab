@@ -5,7 +5,7 @@ import { durationLimits } from '@hooplab/engine';
 
 import { kcalShort } from '../copy/energy.ts';
 import type { SessionKind } from '../copy/labels.ts';
-import { formatShortDay } from '../utils/format-date.ts';
+import { formatShortDate, formatShortDay } from '../utils/format-date.ts';
 
 /** Saat oturumu, uygulamanın ihtiyaç duyduğu alanlarla. */
 export interface ExerciseSession {
@@ -18,6 +18,10 @@ export interface ExerciseSession {
   exerciseType: string;
   displayName: string | null;
   avgHrBpm: number | null;
+  /** Saatin saydığı aktif süre (duraklatmalar hariç, saniye). */
+  activeDurationS: number | null;
+  distanceM: number | null;
+  steps: number | null;
   /** Saatin oturum kalorisi (bileklik tahmini, karar 0043). */
   kcal: number | null;
   dismissed: boolean;
@@ -77,16 +81,20 @@ export function suggestDurationMin(e: Pick<ExerciseSession, 'startTime' | 'endTi
 
 /** Başlangıç saati "18:05", oturumun yapıldığı yerin saatiyle (seyahatte cihaz saatinden farklı olabilir). */
 export function formatStartClock(e: Pick<ExerciseSession, 'startTime' | 'startUtcOffsetS'>): string {
-  const t = Date.parse(e.startTime);
+  return formatClock(e.startTime, e.startUtcOffsetS);
+}
+
+function formatClock(iso: string, offsetS: number | null): string {
+  const t = Date.parse(iso);
   if (!Number.isFinite(t)) return '';
   let h: number;
   let m: number;
-  if (e.startUtcOffsetS === null) {
+  if (offsetS === null) {
     const d = new Date(t);
     h = d.getHours();
     m = d.getMinutes();
   } else {
-    const d = new Date(t + e.startUtcOffsetS * 1000);
+    const d = new Date(t + offsetS * 1000);
     h = d.getUTCHours();
     m = d.getUTCMinutes();
   }
@@ -109,6 +117,60 @@ export function exerciseSummary(
   const kcal = kcalShort(e.kcal);
   if (kcal) parts.push(kcal);
   return { title: exerciseLabel(e), detail: parts.filter((p) => p !== '').join(' · ') };
+}
+
+/** "18:05–19:32"; bitiş de başlangıcın yerel saatiyle (oturum ortasında saat dilimi değişmez varsayılır). */
+export function formatClockRange(e: Pick<ExerciseSession, 'startTime' | 'endTime' | 'startUtcOffsetS'>): string {
+  const start = formatClock(e.startTime, e.startUtcOffsetS);
+  const end = formatClock(e.endTime, e.startUtcOffsetS);
+  return start && end ? `${start}–${end}` : start;
+}
+
+/** 5230 m → "5,2 km"; 1 km'nin altı "850 m". */
+function formatDistance(m: number): string {
+  if (m < 1000) return `${Math.round(m)} m`;
+  return `${(m / 1000).toFixed(1).replace('.', ',')} km`;
+}
+
+/** 6432 → "6.432 adım" */
+function formatSteps(steps: number): string {
+  return `${String(Math.round(steps)).replace(/\B(?=(\d{3})+(?!\d))/g, '.')} adım`;
+}
+
+/**
+ * Etiketlenmemiş oturumlar listesi için ayrıntı: zaman satırı ("18:05–19:32 · 92 dk, aktif 78 dk") ve ölçüm satırı
+ * ("ort. 142 nabız · ~640 kcal · 5,2 km · 6.432 adım"; ölçüm yoksa boş). Hatırlayıp etiketlemeye yardım eder.
+ */
+export function exerciseDetail(e: ExerciseSession): { time: string; metrics: string } {
+  const minutes = wallClockMinutes(e);
+  const active = e.activeDurationS !== null && e.activeDurationS > 0 ? Math.round(e.activeDurationS / 60) : null;
+  const duration =
+    minutes === null ? '' : active !== null && active > 0 && active < minutes ? `${minutes} dk, aktif ${active} dk` : `${minutes} dk`;
+  const metrics: string[] = [];
+  if (e.avgHrBpm !== null) metrics.push(`ort. ${e.avgHrBpm} nabız`);
+  const kcal = kcalShort(e.kcal);
+  if (kcal) metrics.push(kcal);
+  if (e.distanceM !== null && e.distanceM > 0) metrics.push(formatDistance(e.distanceM));
+  if (e.steps !== null && e.steps > 0) metrics.push(formatSteps(e.steps));
+  return { time: [formatClockRange(e), duration].filter((p) => p !== '').join(' · '), metrics: metrics.join(' · ') };
+}
+
+/** Gün başlığı: "Bugün", "Dün" ya da "Sal 14 Ekim". */
+export function exerciseDayLabel(localDate: string, today: string, yesterday: string): string {
+  return localDate === today ? 'Bugün' : localDate === yesterday ? 'Dün' : formatShortDate(localDate);
+}
+
+/** Oturumları güne göre toplar: en yeni gün önce, gün içinde saat sırasıyla. */
+export function groupExercisesByDay(exercises: readonly ExerciseSession[]): { localDate: string; exercises: ExerciseSession[] }[] {
+  const byDay = new Map<string, ExerciseSession[]>();
+  for (const e of [...exercises].sort((a, b) => Date.parse(a.startTime) - Date.parse(b.startTime))) {
+    const list = byDay.get(e.localDate);
+    if (list) list.push(e);
+    else byDay.set(e.localDate, [e]);
+  }
+  return [...byDay.entries()]
+    .sort(([a], [b]) => (a < b ? 1 : a > b ? -1 : 0))
+    .map(([localDate, list]) => ({ localDate, exercises: list }));
 }
 
 /** Etiket bekleyen saat oturumları: "Seans değil" denmemiş ve hiçbir seans kaydına bağlanmamış, eskiden yeniye. */

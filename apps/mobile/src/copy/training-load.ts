@@ -39,6 +39,10 @@ export function untaggedLabel(count: number): string {
   return `Saatte ${count} oturum etiketlenmedi`;
 }
 export const untaggedDetail = 'Etiketlenmeyen oturum yüke girmez; yük eksik görünebilir.';
+export const untaggedListTitle = 'Etiketlenmemiş';
+export const untaggedListFooter =
+  'Saatin kaydettiği zaman, süre ve ölçümler. Hatırladığın oturumu aç; türünü ve zorluğunu ver ya da seans değilse listeden kaldır.';
+export const untaggedListEmpty = 'Etiket bekleyen oturum yok';
 
 export const monotonyEmpty = `son ${monotonyRule.windowDays} günde değişim yok veya kayıt az`;
 export const monotonyNote = `son ${monotonyRule.windowDays} gün · eşik yok`;

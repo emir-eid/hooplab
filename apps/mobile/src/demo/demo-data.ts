@@ -211,6 +211,9 @@ export function createDemoDb(scenario: DemoScenario, today: string, now: Date): 
       exerciseType: 'BASKETBALL',
       displayName: null,
       avgHrBpm: 138,
+      activeDurationS: 5_940,
+      distanceM: 4_820,
+      steps: 6_910,
       kcal: 984,
       dismissed: false,
     },
@@ -223,6 +226,9 @@ export function createDemoDb(scenario: DemoScenario, today: string, now: Date): 
       exerciseType: 'STRENGTH_TRAINING',
       displayName: null,
       avgHrBpm: 112,
+      activeDurationS: 2_880,
+      distanceM: null,
+      steps: 410,
       kcal: 357,
       dismissed: false,
     },
@@ -235,12 +241,30 @@ export function createDemoDb(scenario: DemoScenario, today: string, now: Date): 
       exerciseType: 'WALKING',
       displayName: null,
       avgHrBpm: 92,
+      activeDurationS: 2_040,
+      distanceM: 2_650,
+      steps: 3_480,
       kcal: 143,
+      dismissed: false,
+    },
+    {
+      id: 'demo-ex-earlier-sport',
+      localDate: addIsoDays(today, -3),
+      startTime: at(addIsoDays(today, -3), 19, 15),
+      endTime: at(addIsoDays(today, -3), 20, 20),
+      startUtcOffsetS: demoOffsetS,
+      exerciseType: 'SPORT',
+      displayName: null,
+      avgHrBpm: 129,
+      activeDurationS: 3_300,
+      distanceM: 3_140,
+      steps: 4_620,
+      kcal: 521,
       dismissed: false,
     },
   ];
 
-  // Dünkü takım antrenmanı elle girilmiş ve saatle eşleşmiş; kuvvet ve bugünkü yürüyüş etiket bekliyor.
+  // Dünkü takım antrenmanı elle girilmiş ve saatle eşleşmiş; kuvvet, bugünkü yürüyüş ve 3 gün önceki oturum etiket bekliyor.
   const sessions: TrainingSession[] = [
     {
       id: 'demo-session-yesterday-practice',

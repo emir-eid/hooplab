@@ -73,7 +73,7 @@ const px = (v: string | undefined) => {
 
 // ---------------------------------------------------------------- renkler
 
-const tokenToVar: Record<Exclude<keyof BasePalette, 'status' | 'statusInk' | 'loadGroup' | 'nutrient' | 'destructive' | 'onDestructive' | 'aura' | 'shadow' | 'statusBar'>, string> = {
+const tokenToVar: Record<Exclude<keyof BasePalette, 'status' | 'statusInk' | 'notice' | 'noticeInk' | 'loadGroup' | 'nutrient' | 'destructive' | 'onDestructive' | 'aura' | 'shadow' | 'statusBar'>, string> = {
   bg: '--bg',
   card: '--card',
   cardMuted: '--card2',
