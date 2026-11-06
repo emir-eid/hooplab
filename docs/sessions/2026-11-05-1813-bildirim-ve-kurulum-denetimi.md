@@ -43,7 +43,7 @@ STATE'teki ikinci iş: 2026-11-01 taramasında "Takviyeler" sorgusu çok geniş 
 - **Ölçüm** (PubMed E-utilities, WATCHLIST'teki yayın türü filtresiyle, betik scratchpad'de): son 45 günde 44 → 10 sonuç, yenilerin 10'u da konuyla ilgili; 2026-11-01'deki takviye adaylarının hepsi yeni sorguda da çıkıyor; son 365 günde 338 → 76. Düşen tek ilgili tür: sporcu olmayan gruplarda protein takviyesi (sporcularda protein beslenme sorgusunda).
 - Aylık literatür görevi sorguları bu dosyadan okuyor (görev talimatında doğrulandı); 2026-12-01 taraması yeni sorguyla çalışır.
 - Kas krampı adayı (costa-2026 adayı, inbox 2026-11-01 #9) 2026-11-05'te zaten "bekletildi"; değişiklik gerekmedi.
-- **Ek gözlem (Blok 1'in devamı):** `push_log`'da ilk gerçek hatırlatma: check-in, 2026-11-06, seçilen saatin penceresindeki ilk zamanlayıcı çalışmasında gönderildi. iPhone'da görülüp görülmediği kullanıcıya soruldu.
+- **Ek gözlem (Blok 1'in devamı):** `push_log`'da ilk gerçek hatırlatma: check-in, 2026-11-06, seçilen saatin penceresindeki ilk zamanlayıcı çalışmasında gönderildi. Kullanıcı iPhone'a geldiğini teyit etti (2026-11-06).
 - `npm run check` yeşil.
 
 ### Kararlar
@@ -57,8 +57,7 @@ STATE'teki ikinci iş: 2026-11-01 taramasında "Takviyeler" sorgusu çok geniş 
 
 ## Açık kalanlar
 - GitHub fatura kilidi kalkınca başarısız çalışmalar yeniden çalıştırılacak (`gh run rerun`), portfolyonun yayınlandığı doğrulanacak.
-- İlk gerçek PWA hatırlatması sunucudan gitti (2026-11-06, `push_log`); iPhone'da görüldü mü kullanıcı teyidi bekleniyor.
 - `setup:check --local` Docker'la denenmedi.
 
 ## Sıradaki adım
-- Bildirimin iPhone'da görüldüğünün teyidi ve fatura kilidi kalkınca CI'ın yeniden çalıştırılması.
+- Fatura kilidi kalkınca CI'ın yeniden çalıştırılması ve portfolyo yayınının doğrulanması.
