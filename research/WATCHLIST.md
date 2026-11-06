@@ -17,7 +17,11 @@ PubMed yayın türü filtresi (her sorguya eklenir):
 | Hidrasyon ve ter oranı | hidrasyon | `(hydration[tiab] OR dehydration[tiab] OR "sweat rate"[tiab]) AND (exercise[tiab] OR athlete*[tiab])` |
 | Patellar / Aşil tendinopatisi | kas-tendon | `(tendinopathy[tiab] OR "jumper's knee"[tiab]) AND (patellar[tiab] OR achilles[tiab])` |
 | Egzersize bağlı kas hasarı ve toparlanma | kas-tendon | `("exercise-induced muscle damage"[tiab] OR "muscle soreness"[tiab] OR DOMS[tiab]) AND recovery[tiab]` |
-| Takviyeler (kafein, kreatin vb.) | beslenme | `(caffeine[tiab] OR creatine[tiab] OR supplement*[tiab]) AND (athlete*[tiab] OR performance[tiab])` |
+| Takviyeler (kafein, kreatin, nitrat, beta-alanin, bikarbonat) | beslenme | `(caffeine[tiab] OR creatine[tiab] OR nitrate[tiab] OR "beta-alanine"[tiab] OR bicarbonate[tiab] OR "dietary supplement*"[tiab] OR "sports supplement*"[tiab] OR "ergogenic aid*"[tiab]) AND (athlete*[tiab] OR "team sport*"[tiab] OR basketball[tiab] OR "exercise performance"[tiab] OR "sport performance"[tiab] OR "sports performance"[tiab] OR "physical performance"[tiab])` |
 | Seyahat, jet lag, maç takvimi | uyku / yük | `("jet lag"[tiab] OR travel[tiab] OR "fixture congestion"[tiab]) AND (athlete*[tiab] OR basketball[tiab])` |
 
 Konu eklemek veya çıkarmak bir oturumda kullanıcıyla kararlaştırılır.
+
+## Sorgu değişiklikleri
+
+- **2026-11-06, Takviyeler daraltıldı:** eski sorgudaki tek başına `supplement*` ve `performance` her alandan sonuç getiriyordu (2026-11-01 taramasında 20 sonucun çoğu yapay zeka, onkoloji vb.). Yeni sorgu IOC uzlaşısında (maughan-2018) iyi kanıtı olan maddeleri adıyla arar, ikinci yarı sporcu ve spor performansı ifadeleriyle sınırlı. Ölçüm (PubMed, yayın türü filtresiyle): son 45 günde 44 → 10 sonuç, 10'u da konuyla ilgili; 2026-11-01 taramasındaki takviye adaylarının hepsi yeni sorguda da çıkıyor; son 365 günde 338 → 76. Düşen ilgili tür: sporcu olmayan gruplarda protein takviyesi (beslenme konusunun sorgusu sporcu çalışmalarını zaten kapsıyor).

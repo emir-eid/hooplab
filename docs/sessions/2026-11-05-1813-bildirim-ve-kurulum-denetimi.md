@@ -2,7 +2,7 @@
 
 - **Faz:** 4 tamamlandı (Faz 4 sonrası bakım; Faz 1'in TestFlight maddesi Apple onayını bekliyor)
 - **Durum:** açık (/rep)
-- **Model / efor:** Opus 5.5, düşük
+- **Model / efor:** Opus 5.5, düşük (Blok 1-2)
 - **Commit'ler:** bu bloğun `/rep` commit'i
 
 Oturum 2026-11-05 16:56'da açıldı (`/ac`).
@@ -33,10 +33,32 @@ STATE'teki ilk iş: zamanlayıcının gönderdiği ilk gerçek PWA hatırlatmas�
 ### Öğrenilenler
 - LESSONS "Git ve süreç": fatura kilidinde iş hiç başlamaz, log yoktur; neden ek açıklamalarda.
 
+## Blok 2 — WATCHLIST: takviye sorgusu daraltıldı (2026-11-06 15:30)
+
+### Amaç
+STATE'teki ikinci iş: 2026-11-01 taramasında "Takviyeler" sorgusu çok geniş çıktı (20 sonucun çoğu konu dışı); aylık tarama konu dışı sonuçla dolmasın.
+
+### Yapılanlar
+- [WATCHLIST.md](../../research/WATCHLIST.md): Takviyeler sorgusu IOC uzlaşısında (maughan-2018) iyi kanıtı olan maddeleri adıyla arıyor (kafein, kreatin, nitrat, beta-alanin, bikarbonat, "dietary / sports supplement", "ergogenic aid"); ikinci yarı sporcu, takım sporu, basketbol ve spor / egzersiz / fiziksel performans ifadeleriyle sınırlı. Eski sorgudaki tek başına `supplement*` ve `performance` çıkarıldı. Dosyaya tarihli "Sorgu değişiklikleri" notu eklendi.
+- **Ölçüm** (PubMed E-utilities, WATCHLIST'teki yayın türü filtresiyle, betik scratchpad'de): son 45 günde 44 → 10 sonuç, yenilerin 10'u da konuyla ilgili; 2026-11-01'deki takviye adaylarının hepsi yeni sorguda da çıkıyor; son 365 günde 338 → 76. Düşen tek ilgili tür: sporcu olmayan gruplarda protein takviyesi (sporcularda protein beslenme sorgusunda).
+- Aylık literatür görevi sorguları bu dosyadan okuyor (görev talimatında doğrulandı); 2026-12-01 taraması yeni sorguyla çalışır.
+- Kas krampı adayı (costa-2026 adayı, inbox 2026-11-01 #9) 2026-11-05'te zaten "bekletildi"; değişiklik gerekmedi.
+- **Ek gözlem (Blok 1'in devamı):** `push_log`'da ilk gerçek hatırlatma: check-in, 2026-11-06, seçilen saatin penceresindeki ilk zamanlayıcı çalışmasında gönderildi. iPhone'da görülüp görülmediği kullanıcıya soruldu.
+- `npm run check` yeşil.
+
+### Kararlar
+- yok (sorgu değişikliği WATCHLIST'in "kullanıcıyla kararlaştırılır" kuralına göre kullanıcının seçtiği işle yapıldı).
+
+### Sorunlar ve hatalar
+- yok
+
+### Öğrenilenler
+- yok
+
 ## Açık kalanlar
 - GitHub fatura kilidi kalkınca başarısız çalışmalar yeniden çalıştırılacak (`gh run rerun`), portfolyonun yayınlandığı doğrulanacak.
-- İlk gerçek PWA hatırlatması: 2026-11-06 sabahından sonra `push_log` ve iPhone'da görüldü mü.
+- İlk gerçek PWA hatırlatması sunucudan gitti (2026-11-06, `push_log`); iPhone'da görüldü mü kullanıcı teyidi bekleniyor.
 - `setup:check --local` Docker'la denenmedi.
 
 ## Sıradaki adım
-- Bildirim gözlemi (2026-11-06 sabahından sonra) ve fatura kilidi kalkınca CI'ın yeniden çalıştırılması.
+- Bildirimin iPhone'da görüldüğünün teyidi ve fatura kilidi kalkınca CI'ın yeniden çalıştırılması.
