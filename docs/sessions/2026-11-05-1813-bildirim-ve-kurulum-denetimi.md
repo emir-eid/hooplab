@@ -1,11 +1,11 @@
 # 2026-11-05 18:13 — Bildirim gözlemi ve kurulum denetimi
 
 - **Faz:** 4 tamamlandı (Faz 4 sonrası bakım; Faz 1'in TestFlight maddesi Apple onayını bekliyor)
-- **Durum:** açık (/rep)
-- **Model / efor:** Opus 5.5, düşük (Blok 1-2)
-- **Commit'ler:** bu bloğun `/rep` commit'i
+- **Durum:** kapandı (/kapat, 2026-11-06 16:51)
+- **Model / efor:** Opus 5.5, düşük (Blok 1-3)
+- **Commit'ler:** `b650517` (Blok 1), `b95cf9c` (Blok 2), `c508986`, `145cbee` (Blok 3) ve kapanış commit'i
 
-Oturum 2026-11-05 16:56'da açıldı (`/ac`).
+Oturum 2026-11-05 16:56'da açıldı (`/ac`), 2026-11-06 16:51'de kapandı (3 blok).
 
 ## Blok 1 — Bildirim gözlemi ve setup:check'te Web Push (18:13)
 
@@ -55,9 +55,27 @@ STATE'teki ikinci iş: 2026-11-01 taramasında "Takviyeler" sorgusu çok geniş 
 ### Öğrenilenler
 - yok
 
+## Blok 3 — Bildirim teyidi ve GitHub kilidinin kalkması (2026-11-06 16:51)
+
+### Amaç
+Blok 2'den kalan iki doğrulama: ilk zamanlanmış PWA hatırlatmasının cihaza gelişi ve GitHub fatura kilidi.
+
+### Yapılanlar
+- Kullanıcı ilk zamanlanmış check-in hatırlatmasının iPhone'a geldiğini teyit etti; Web Push uçtan uca doğrulandı (`c508986`).
+- Kullanıcı GitHub'da sorun olmaması gerektiğini söyledi; denetlendi: kilit 2026-11-05 15:16 UTC ile 2026-11-06 12:33 UTC arasında kalkmış. `b95cf9c` ve `c508986` çalışmalarında `kontrol`, `veritabani`, `uctan-uca`, Pages `derle` / `yayinla` başarılı; `curl` ile hooplab.dev 200 ve güncel başlık. Kilitli dönemin iki commit'i yeniden çalıştırılmadı: HEAD hepsini içeriyor ve yeşil (`145cbee`).
+
+### Kararlar
+- yok
+
+### Sorunlar ve hatalar
+- yok (kilidin nedeni ve kalkış anı kullanıcı tarafında; LESSONS'taki ders geçerli)
+
+### Öğrenilenler
+- yok
+
 ## Açık kalanlar
-- GitHub fatura kilidi kalkınca başarısız çalışmalar yeniden çalıştırılacak (`gh run rerun`), portfolyonun yayınlandığı doğrulanacak.
-- `setup:check --local` Docker'la denenmedi.
+- `setup:check --local` Docker'la denenmedi (birim testleri var).
+- TestFlight Apple onayını bekliyor.
 
 ## Sıradaki adım
-- Fatura kilidi kalkınca CI'ın yeniden çalıştırılması ve portfolyo yayınının doğrulanması.
+- TestFlight (Apple onayı gelince; kullanıcı haber verecek).
