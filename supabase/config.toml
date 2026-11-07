@@ -219,10 +219,10 @@ web3 = 30
 # secret = ""
 
 [auth.email]
-# Allow/disallow new user signups via email to your project.
-# HoopLab: true şart. Yerel GoTrue bunu e-posta sağlayıcısının açık/kapalı anahtarı olarak okur; false olunca
-# e-posta + şifre girişi de kapanır (email_provider_disabled). Yeni kayıt [auth] enable_signup = false ile kapalı.
-enable_signup = true
+# E-posta sağlayıcısı açık/kapalı (CLI 3'te `enabled`; eski adı `enable_signup`, adına rağmen sağlayıcıyı kapatıyordu).
+# HoopLab: true şart; false olunca e-posta + şifre girişi de kapanır (email_provider_disabled).
+# Yeni kayıt [auth] enable_signup = false ile kapalı.
+enabled = true
 # If enabled, a user will be required to confirm any email change on both the old, and new email
 # addresses. If disabled, only the new email is required to confirm.
 double_confirm_changes = true
@@ -259,8 +259,8 @@ otp_expiry = 3600
 # content_path = "./supabase/templates/password_changed_notification.html"
 
 [auth.sms]
-# Allow/disallow new user signups via SMS to your project.
-enable_signup = false
+# SMS sağlayıcısı açık/kapalı (CLI 3'te `enabled`; eski adı `enable_signup`).
+enabled = false
 # If enabled, users need to confirm their phone number before signing in.
 enable_confirmations = false
 # Template for sending OTP to users

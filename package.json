@@ -48,7 +48,7 @@
     "@supabase/server": "1.9.0",
     "@types/node": "~24.19.1",
     "@types/web-push": "3.6.4",
-    "supabase": "2.121.0",
+    "supabase": "3.0.0",
     "typescript": "~6.0.3",
     "web-push": "3.6.7"
   }

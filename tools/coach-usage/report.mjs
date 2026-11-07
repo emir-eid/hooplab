@@ -1,7 +1,7 @@
 // Koçun aylık token kullanımı raporu (karar 0032). Bağlı Supabase projesinden yalnız sayı, durum ve denetim sorun
 // kodu sütunlarını okur (özet metni, soru, anlık değerler okunmaz) ve markdown raporu ekrana yazar.
 //
-//   npm run coach:usage                        → bu ayın raporu (bulut, `supabase db query --linked`)
+//   npm run coach:usage                        → bu ayın raporu (bulut, `supabase db query --remote --read-only`)
 //   npm run coach:usage -- --ay 2026-10        → belirli bir ay
 //   npm run coach:usage -- --kredi 20          → Console'a yükleme yapıldıysa toplam kredi
 //   npm run coach:usage -- --dosya rows.json   → veritabanı yerine kayıt dosyası (sorgunun JSON çıktısı)
@@ -52,7 +52,8 @@ function supabaseCli() {
 
 function queryRows({ local }) {
   // `--agent no`: CLI ajan altında çıktı biçimini değiştiriyor (LESSONS "Supabase"); parseCliJson iki biçimi de okur.
-  const args = [supabaseCli(), 'db', 'query', local ? '--local' : '--linked', '-o', 'json', '--agent', 'no', USAGE_SQL];
+  // CLI 3: hedef verilmezse yerel; `--read-only` bulutta onay istemez (yalnız okuma).
+  const args = [supabaseCli(), 'db', 'query', ...(local ? [] : ['--remote']), '--read-only', '-o', 'json', '--agent', 'no', USAGE_SQL];
   const r = spawnSync(process.execPath, args, { cwd: ROOT, encoding: 'utf8', stdio: ['ignore', 'pipe', 'pipe'] });
   if (r.status !== 0) fail(`sorgu başarısız: ${(r.stderr ?? '').trim().split(/\r?\n/).at(-1) ?? ''}`);
   return parseCliJson(r.stdout);

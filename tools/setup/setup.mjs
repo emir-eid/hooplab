@@ -209,8 +209,11 @@ async function askHidden(question) {
 
 // --- Olgular ---
 
-function databaseQuery(target, sql) {
-  return cliJson(['db', 'query', ...target, sql]);
+// CLI 3: hedef verilmezse yerel, `--remote=<ref>` bulut. Okumalar `--read-only` (bulutta onay istemez);
+// bu kip kısıtlı bir rolle çalışır ve Vault'u çözemez, Vault özeti için `secretRead: true` (bulutta `--yes`, SQL yalnız SELECT).
+function databaseQuery(target, sql, { secretRead = false } = {}) {
+  const mode = secretRead ? (target.length ? ['--yes'] : []) : ['--read-only'];
+  return cliJson(['db', 'query', ...target, ...mode, sql]);
 }
 
 /** Uygulanmış migration'lar; tablo hiç yoksa (boş proje) boş liste. */
@@ -223,7 +226,7 @@ function appliedMigrations(target) {
 
 function databaseFacts(target) {
   const users = databaseQuery(target, 'select count(*)::int as users from auth.users');
-  const vault = databaseQuery(target, VAULT_DIGEST_SQL);
+  const vault = databaseQuery(target, VAULT_DIGEST_SQL, { secretRead: true });
   const cron = databaseQuery(target, "select active from cron.job where jobname = 'google-health-senkron'");
   const pushCron = databaseQuery(target, `select active from cron.job where jobname = '${PUSH_CRON_JOB}'`);
   return {
@@ -276,11 +279,11 @@ async function remoteFacts(google) {
   const base = { target: 'remote', cliLoggedIn: true, projects, project, projectUrl, vaultUrl: projectUrl };
   if (project.status !== 'ACTIVE_HEALTHY') return base;
 
-  const apiKeys = cliJson(['projects', 'api-keys', '--project-ref', project.ref]) ?? [];
+  const apiKeys = cliJson(['projects', 'api-keys', `--remote=${project.ref}`]) ?? [];
   const expectedKeys = publishableKeys(apiKeys);
   const appEnv = parseEnv(readText(APP_ENV));
-  const secrets = cliJson(['secrets', 'list', '--project-ref', project.ref]);
-  const functions = cliJson(['functions', 'list', '--project-ref', project.ref]);
+  const secrets = cliJson(['secrets', 'list', `--remote=${project.ref}`]);
+  const functions = cliJson(['functions', 'list', `--remote=${project.ref}`]);
   return {
     ...base,
     expectedKeys,
@@ -292,7 +295,7 @@ async function remoteFacts(google) {
     vapidBackup: parseVapidBackup(readText(VAPID_BACKUP)),
     webReturnUrl: pwaReturnUrl(),
     localMigrations: localMigrations(),
-    ...databaseFacts(['--linked', '--project-ref', project.ref]),
+    ...databaseFacts([`--remote=${project.ref}`]),
     secretDigests: secrets ? new Map(secrets.map((s) => [s.name, s.value])) : null,
     functions,
     signupDisabled: await signupDisabled(projectUrl, expectedKeys[0]),
@@ -315,7 +318,7 @@ async function localFacts(google) {
     // Veritabanı konteyneri fonksiyonlara Kong konteyneri üzerinden ulaşır (LESSONS "Supabase").
     vaultUrl: `http://supabase_kong_${localProjectId()}:8000`,
     localMigrations: localMigrations(),
-    ...databaseFacts(['--local']),
+    ...databaseFacts([]),
     secretDigests: new Map([...env].filter(([, v]) => v).map(([k, v]) => [k, sha256Hex(v)])),
     signupDisabled: await signupDisabled(status.API_URL, status.PUBLISHABLE_KEY),
     googleClient: google.client,
@@ -395,14 +398,15 @@ async function writeAppEnv(facts) {
 
 async function pushMigrations(facts) {
   if (facts.target === 'local') {
-    if (await confirm("Bekleyen migration'lar yerel veritabanına uygulansın mı?")) cli(['migration', 'up', '--local'], { interactive: true });
+    if (await confirm("Bekleyen migration'lar yerel veritabanına uygulansın mı?")) cli(['migration', 'up'], { interactive: true });
     return;
   }
   if (!(await ensureLinked(facts.project.ref))) return;
   console.log('\nUygulanacak migration\'lar (deneme, değişiklik yok):');
-  if (!cli(['db', 'push', '--dry-run'], { interactive: true }).ok) return;
+  // CLI 3: `db push` hedef verilmezse yerele gider; bulut için `--remote` (bağlı proje).
+  if (!cli(['db', 'push', '--remote', '--dry-run'], { interactive: true }).ok) return;
   if (!(await confirm('Bu migration\'lar buluta uygulansın mı?'))) return;
-  cli(['db', 'push', '--yes'], { interactive: true });
+  cli(['db', 'push', '--remote', '--yes'], { interactive: true });
 }
 
 async function resolveGoogleClient(google) {
@@ -436,14 +440,15 @@ function writeSecrets(facts, values) {
   }
   const body = Object.entries(values).map(([k, v]) => `${k}=${v}`).join('\n');
   const r = withTempFile('secrets.env', `${body}\n`, (file) =>
-    cli(['secrets', 'set', '--project-ref', facts.project.ref, '--env-file', file]),
+    // --yes: kullanıcı bu yazımı sihirbazda onayladı (CLI 3 etkileşimsiz bulut değişikliğinde ister).
+    cli(['secrets', 'set', `--remote=${facts.project.ref}`, '--yes', '--env-file', file]),
   );
   if (!r.ok) console.log(`Sırlar yazılamadı: ${lastLine(r.stderr)}`);
   return r.ok;
 }
 
 function writeVault(facts, name, value) {
-  const target = facts.target === 'local' ? ['--local'] : ['--linked', '--project-ref', facts.project.ref];
+  const target = facts.target === 'local' ? [] : [`--remote=${facts.project.ref}`, '--yes'];
   const r = withTempFile('vault.sql', vaultUpsertSql(name, value), (file) => cli(['db', 'query', ...target, '--file', file]));
   if (!r.ok) console.log(`Vault'a yazılamadı (${name}): ${lastLine(r.stderr)}`);
   return r.ok;
@@ -507,7 +512,7 @@ async function applyFixes(items, facts, google) {
   const deploy = todo.has('functions') || (opts.redeploy && facts.target === 'remote');
   if (deploy && (await confirm(`Edge Functions dağıtılsın mı (${FUNCTION_SLUGS.join(', ')})?`))) {
     // --use-api: paketleme sunucuda yapılır, Docker gerekmez.
-    cli(['functions', 'deploy', ...FUNCTION_SLUGS, '--project-ref', facts.project.ref, '--use-api'], { interactive: true });
+    cli(['functions', 'deploy', ...FUNCTION_SLUGS, `--remote=${facts.project.ref}`, '--yes', '--use-api'], { interactive: true });
   }
 
   if (facts.target === 'local' && (todo.has('google-secrets') || todo.has('cron-secret'))) localEnvChanged = true;
