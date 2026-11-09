@@ -51,5 +51,8 @@
     "supabase": "3.0.0",
     "typescript": "~6.0.3",
     "web-push": "3.6.7"
+  },
+  "overrides": {
+    "@expo/require-utils": "58.0.4"
   }
 }
