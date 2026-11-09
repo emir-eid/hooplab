@@ -47,3 +47,5 @@ for (const file of ['index.html', 'manifest.webmanifest', 'explain/hrv.html', '+
 copyFileSync(path.join(out, '+not-found.html'), path.join(out, '404.html'));
 writeFileSync(path.join(out, 'vercel.json'), `${JSON.stringify(vercelConfig(), null, 2)}\n`);
 console.log(`[pwa] ${path.relative(root, out)} hazır. Google dönüş adresi (GHEALTH_WEB_RETURN_URL): ${pwaReturnUrl()}`);
+// Vercel CLI 62 derleme klasöründeki bağlantıyı görmez, üst klasörde yeni proje açar (LESSONS, 0054 eki).
+console.log('[pwa] Yayın (repo kökünden): npx vercel deploy apps/mobile/dist-pwa --project hooplab-app --prod --yes');

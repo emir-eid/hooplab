@@ -100,6 +100,15 @@ Karar tarihinde Apple'dan sonuç yok; seçenek 2'ye geçildi. Uzak adımların h
 - **Cihazda (kullanıcı, 2026-11-05):** Safari → ana ekrana ekle, giriş, Google bağlantısı ana ekran kipinde, 3D Vücut, PDF ve paylaşma başarılı. Giriş, 2026-10-04'te panoda açılan e-posta + şifre hesabıyla (iPhone oturumu o günden beri yenileme token'ıyla sürüyordu, şifre unutulmuştu).
 - **Kalan:** kurulum sihirbazı `GHEALTH_WEB_RETURN_URL`'i henüz bilmiyor (`setup:check` denetlemez); bildirim yolu kararı: Web Push, [0058](0058-pwa-web-push.md) (2026-11-05).
 
+## Ek: yeniden yayın komutu (2026-11-09)
+Vercel CLI 62 bağlantı dosyasını derleme klasöründe aramıyor, `package.json` bulduğu `apps/mobile`'a çıkıp orada yeni proje açıyor (LESSONS "Alan adı ve barındırma"). Yeniden yayın bundan sonra repo kökünden, klasör ve proje açıkça verilerek yapılır:
+
+1. `npm run pwa:build`
+2. `npx vercel deploy apps/mobile/dist-pwa --project hooplab-app --prod --yes` (çıktıda `Deploying hooplab-app` ve `Aliased https://app.hooplab.dev` görülmeli)
+3. `curl`: `/`, `/manifest.webmanifest` 200; `/.env.local`, `/.vercel/project.json`, `/package.json` 404; `X-Robots-Tag: noindex`; canlı `index.html`'deki `entry-*.js` adı yerel derlemeyle aynı.
+
+`vercel promote` `--project` almıyor; korumalı önizleme dışarıdan `curl` ile görülemiyor (302 → giriş), bu yüzden doğrudan `--prod` ve canlıda denetim.
+
 ## Kaynaklar (yalnız teknik olgular)
 - Expo, EAS Hosting özel alan adı (ücretsiz planda yok): https://docs.expo.dev/eas/hosting/custom-domain/
 - Vercel, `vercel.json` (`cleanUrls`, `headers`): https://vercel.com/docs/project-configuration/vercel-json
