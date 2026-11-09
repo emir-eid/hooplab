@@ -1,9 +1,9 @@
 # 2026-11-09 15:18 — SDK 58.0.23 iPhone denemesi ve PWA yeniden yayını
 
 - **Faz:** 4 tamamlandı (Faz 4 sonrası bakım; Faz 1'in TestFlight maddesi Apple onayını bekliyor)
-- **Durum:** açık (/rep)
+- **Durum:** kapandı (2026-11-09 16:41)
 - **Model / efor:** Opus 5.5, düşük (Blok 1-2)
-- **Commit'ler:** `595ff2d` (Blok 1), Blok 2 `rep` commit'i
+- **Commit'ler:** `595ff2d` (Blok 1), `985e499` (Blok 2), kapanış `oturum` commit'i
 
 Oturum 2026-11-09 13:42'de açıldı (`/ac`). Açılışta ağaç temiz, CI yeşil; 2026-11-09 denetiminin orta bulgusu (commit'lenmemiş SDK yükseltmesi) ve açık rapor bulgusu önceki oturumun Blok 7'si ve kapanışıyla zaten kapanmıştı.
 
@@ -57,7 +57,7 @@ STATE sıradaki iş 2: 2026-11-07'de alınan SDK 58 yamalarını (`expo` 58.0.23
 
 ## Açık kalanlar
 - PWA'nın ana ekran kipinde yeni sürümle açıldığı cihazda ayrıca görülmedi (Expo Go denendi; PWA aynı kaynaktan, canlı paket doğrulandı).
-- Metro tüneli açık (Claude kapatır).
+- Apple Developer kaydı yanıt bekliyor (kullanıcı haber verecek). Metro tüneli oturum sonunda kapatıldı (8081 boş).
 
 ## Sıradaki adım
 - TestFlight (Apple onayı gelince).
