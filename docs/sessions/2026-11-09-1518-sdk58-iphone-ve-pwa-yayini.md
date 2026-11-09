@@ -2,8 +2,8 @@
 
 - **Faz:** 4 tamamlandı (Faz 4 sonrası bakım; Faz 1'in TestFlight maddesi Apple onayını bekliyor)
 - **Durum:** açık (/rep)
-- **Model / efor:** Opus 5.5, düşük (Blok 1)
-- **Commit'ler:** Blok 1 `rep` commit'i
+- **Model / efor:** Opus 5.5, düşük (Blok 1-2)
+- **Commit'ler:** `595ff2d` (Blok 1), Blok 2 `rep` commit'i
 
 Oturum 2026-11-09 13:42'de açıldı (`/ac`). Açılışta ağaç temiz, CI yeşil; 2026-11-09 denetiminin orta bulgusu (commit'lenmemiş SDK yükseltmesi) ve açık rapor bulgusu önceki oturumun Blok 7'si ve kapanışıyla zaten kapanmıştı.
 
@@ -32,10 +32,32 @@ STATE sıradaki iş 2: 2026-11-07'de alınan SDK 58 yamalarını (`expo` 58.0.23
 ### Öğrenilenler
 - LESSONS "Alan adı ve barındırma": Vercel CLI 62 derleme klasöründeki bağlantıyı görmüyor; yayın repo kökünden `--project hooplab-app` ile, çıktıda proje adına bakılır. Bekçi: `pwa:build` doğru komutu yazar.
 
+## Blok 2 — Denetimin küçük bulguları: skill güncellemesi, LESSONS, STATE (15:58)
+
+### Amaç
+2026-11-09 haftalık denetiminin açık kalan üç düşük bulgusunu kapatmak.
+
+### Yapılanlar
+- **Skill güncellemesi (kullanıcı kararı: ikisi de):** kaynak repolar sığ klonlandı (scratchpad), kayıtlı commit'ten bu yana farklar okundu.
+  - `review-animations` → `715c1807` (emilkowalski/skills): `SKILL.md`, `STANDARDS.md`'de 6 satır; web Motion kütüphanesinin `x`/`y`/`scale` kısayolları 14.2'den beri GPU'da, kural buna göre düzeltilmiş. React Native kodunu doğrudan etkilemiyor.
+  - `react-native-best-practices` → `43cde80a` (software-mansion-labs/skills): cihaz içi AI bölümü ayrı skill'e taşınmış; `references/on-device-ai/` altındaki `llm.md`, `setup.md`, `speech.md`, `vision.md` silindi (~1.300 satır), `SKILL.md` yönlendirme sayfası oldu; `README.md` ve kök `SKILL.md` tabloları buna göre. Animasyon, hareket, SVG bölümleri değişmedi.
+  - Kopyalar kaynakla satır sonu dışında birebir aynı (`diff -rq --strip-trailing-cr`).
+  - [THIRD_PARTY_NOTICES](../../.claude/skills/THIRD_PARTY_NOTICES.md): iki commit satırı; yeni sayfanın `npx skills add` önerisi için not (çalıştırılmaz, gerekirse önce karar kaydı).
+- [LESSONS](../LESSONS.md) "Supabase": Data API maddesi [kaynaklı] → [ölçüldü], kanıt satırıyla (2026-10-30 sonrası senkron hatasız; 2026-11-05 Web Push tabloları açık `grant`'la bulutta çalışıyor).
+- [STATE](../STATE.md) kullanıcı işleri: "uygulamayı 7 günde bir açmak" maddesi PWA'ya göre sadeleştirildi (hatırlatmaları sunucu gönderir; Expo Go yerel hatırlatmaları kapalı tutulur; iki yol native derlemede birleşir).
+
+### Kararlar
+- yok (skill güncellemesi mevcut kopyalama düzeniyle; yeni karar kaydı gerekmedi).
+
+### Sorunlar ve hatalar
+- İlk `diff` bütün dosyaları farklı gösterdi: klon CRLF ile çıkmıştı (`core.autocrlf=true`); `--strip-trailing-cr` ile gerçek fark yalnız beklenen dosyalar.
+
+### Öğrenilenler
+- yok
+
 ## Açık kalanlar
-- 2026-11-09 denetiminin küçük bulguları: `review-animations` ve `react-native-best-practices` skill'lerinin kaynakta yeni commit'i (bakılıp karar verilecek); LESSONS'taki Data API maddesinin [ölçüldü] yapılması; STATE'teki "uygulamayı 7 günde bir açmak" maddesinin PWA'ya göre sadeleştirilmesi.
 - PWA'nın ana ekran kipinde yeni sürümle açıldığı cihazda ayrıca görülmedi (Expo Go denendi; PWA aynı kaynaktan, canlı paket doğrulandı).
 - Metro tüneli açık (Claude kapatır).
 
 ## Sıradaki adım
-- TestFlight (Apple onayı gelince); beklerken denetimin küçük bulguları.
+- TestFlight (Apple onayı gelince).

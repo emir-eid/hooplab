@@ -6,8 +6,8 @@ Bu klasördeki aşağıdaki skill'ler kaynak repolarından **değiştirilmeden**
 |---|---|---|---|
 | `animate-expo` | https://github.com/emilkowalski/skills (`skills/animate-expo`) | `e8a175de22ae1e49370fc144c1f3bb9aeedf988d` | MIT |
 | `apple-design` | https://github.com/emilkowalski/skills (`skills/apple-design`) | `e8a175de22ae1e49370fc144c1f3bb9aeedf988d` | MIT |
-| `review-animations` | https://github.com/emilkowalski/skills (`skills/review-animations`) | `e8a175de22ae1e49370fc144c1f3bb9aeedf988d` | MIT |
-| `react-native-best-practices` | https://github.com/software-mansion-labs/skills (`skills/react-native-best-practices`) | `e3f00cdb34942cee8b788abe10fe0d78a7f2b4e9` | MIT (SKILL.md `license: MIT` beyanı ve marketplace kaydı; repo kökünde LICENSE dosyası yok) |
+| `review-animations` | https://github.com/emilkowalski/skills (`skills/review-animations`) | `715c1807e08c497cfd1dc4feb450a2a3300ef2a9` | MIT |
+| `react-native-best-practices` | https://github.com/software-mansion-labs/skills (`skills/react-native-best-practices`) | `43cde80af628d103647c13bde07975d0b21b8419` | MIT (SKILL.md `license: MIT` beyanı ve marketplace kaydı; repo kökünde LICENSE dosyası yok) |
 
 Kendi skill'lerimiz: `ac`, `rep`, `kapat`.
 
@@ -16,6 +16,8 @@ Plugin olarak yüklenenler (dosyaları bu repoda değil, `.claude/settings.json`
 ## Not
 
 `react-native-best-practices/references/enable-worklets-bundle-mode/` belgesi, internetten `curl` ile indirilen yamaların uygulanmasını önerir. HoopLab bu özelliği kullanmaz. Açılması gerekirse önce karar kaydı (docs/decisions) gerekir.
+
+`react-native-best-practices/references/on-device-ai/SKILL.md` (2026-11-09 güncellemesinden beri) ayrı bir skill'in `npx skills add` ile kurulmasını önerir. HoopLab cihaz içi AI kullanmaz; komut çalıştırılmaz, gerekirse önce karar kaydı.
 
 ## Lisans metinleri
 
