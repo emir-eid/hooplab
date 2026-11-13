@@ -5,7 +5,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>{{t.title}}</title>
   <meta name="description" content="{{t.description}}">
-  <meta name="color-scheme" content="light dark">
+  <meta name="color-scheme" content="light">
+  <meta name="theme-color" content="#EFEDE8">
   <meta property="og:title" content="{{t.title}}">
   <meta property="og:description" content="{{t.description}}">
   <meta property="og:type" content="website">
@@ -14,113 +15,152 @@
   <link rel="alternate" hreflang="tr" href="{{base}}/tr/">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,700;12..96,800&family=Figtree:wght@400;500;600&display=swap">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,700;12..96,800&family=Figtree:wght@400;500;600&family=Instrument+Serif:ital@1&display=swap">
   <link rel="stylesheet" href="{{base}}/site.css">
 </head>
-<body>
+<body class="home">
   <a class="skip" href="#main">{{t.skip}}</a>
 
-  <header class="top wrap">
-    <a class="wordmark" href="{{home}}">HoopLab</a>
-    <nav class="top-links">
-      <a href="{{altHome}}" hreflang="{{altLang}}" lang="{{altLang}}" aria-label="{{t.langSwitchLabel}}">{{t.langSwitch}}</a>
-      <a href="{{repo}}">GitHub</a>
-    </nav>
-  </header>
+  <div class="page" id="page">
+    <!-- Şut yayı (karar 0059): bantların üstünden geçen tek çizgi; konumu ve çizimi betikte. -->
+    <svg class="arc" id="arc" aria-hidden="true" focusable="false"><path></path></svg>
 
-  <main id="main">
-    <section class="hero wrap">
-      <div class="hero-text">
-        <h1>{{t.heroTitle}}</h1>
-        <p class="lead">{{t.heroLead}}</p>
-        <div class="actions">
-          <a class="button primary" href="{{demo}}">{{t.openDemo}}</a>
-          <a class="button" href="{{repo}}">{{t.viewSource}}</a>
+    <section class="band light hero-band" data-pts="0.60,0.10 0.57,0.45 0.62,0.80 0.50,1.00" data-pts-m="1.04,0.70 0.92,0.86 0.97,0.95 0.55,1.00">
+      <header class="top wrap">
+        <a class="wordmark" href="{{home}}">HoopLab</a>
+        <nav class="top-links">
+          <a href="{{altHome}}" hreflang="{{altLang}}" lang="{{altLang}}" aria-label="{{t.langSwitchLabel}}">{{t.langSwitch}}</a>
+          <a href="{{repo}}">GitHub</a>
+        </nav>
+      </header>
+
+      <main id="main">
+        <div class="hero wrap">
+          <div class="hero-text">
+            <p class="kicker">{{t.heroKicker}}</p>
+            <h1 class="head">{{t.heroHead}} <em>{{t.heroHeadEm}}</em></h1>
+            <p class="lead">{{t.heroLead}}</p>
+            <div class="actions">
+              <a class="button primary" href="{{demo}}">{{t.openDemo}}</a>
+              <a class="button" href="{{repo}}">{{t.viewSource}}</a>
+            </div>
+            <p class="note">{{t.demoNote}}</p>
+          </div>
+
+          <div class="stage">
+            <div class="halo" aria-hidden="true"><span></span><span></span><span></span></div>
+            <div class="device-box">
+              <div class="device" id="device" data-src="{{demo}}" data-title="{{t.demoFrameTitle}}">
+                <a class="poster" href="{{demo}}">
+                  <img src="{{base}}/img/bugun-hazir-light.webp" alt="{{t.demoPoster}}" width="390" height="844">
+                </a>
+              </div>
+            </div>
+            <div class="chips" aria-label="{{t.chipsLabel}}">
+              <div class="chip" data-depth="0.07"><span class="k">{{t.chipHrv}}</span><span class="v">64<small>ms</small></span><span class="s">{{t.chipInBand}}</span></div>
+              <div class="chip" data-depth="-0.05"><span class="k">{{t.chipHr}}</span><span class="v">49<small>{{t.chipHrUnit}}</small></span><span class="s">{{t.chipInBand}}</span></div>
+              <div class="chip" data-depth="0.1"><span class="k">{{t.chipSleep}}</span><span class="v">{{t.chipSleepValue}}</span><span class="s">{{t.chipInBand}}</span></div>
+            </div>
+          </div>
         </div>
-        <p class="note">{{t.demoNote}}</p>
-      </div>
+      </main>
+    </section>
 
-      <div class="stage">
-        <div class="halo" aria-hidden="true"><span></span><span></span><span></span></div>
-        <div class="device-box">
-          <div class="device" id="device" data-src="{{demo}}" data-title="{{t.demoFrameTitle}}">
-            <a class="poster" href="{{demo}}">
-              <picture>
-                <source media="(prefers-color-scheme: dark)" srcset="{{base}}/img/bugun-hazir-dark.webp">
-                <img src="{{base}}/img/bugun-hazir-light.webp" alt="{{t.demoPoster}}" width="390" height="844">
-              </picture>
-            </a>
+    <section class="band dark why" data-pts="0.50,0.00 0.94,0.08 0.98,0.40 0.92,0.30 0.96,0.22 0.98,0.72 0.62,1.00">
+      <div class="wrap split">
+        <div class="split-text">
+          <p class="kicker">{{t.whyTitle}}</p>
+          <h2 class="head">{{t.whyHead}} <em>{{t.whyHeadEm}}</em></h2>
+          <p class="lead">{{t.whyBody1}}</p>
+          <p class="lead">{{t.whyBody2}}</p>
+        </div>
+        <figure class="phone">
+          <img src="{{base}}/img/gece-verisi-dark.webp" alt="{{t.shot3}}" width="390" height="844" loading="lazy">
+        </figure>
+      </div>
+    </section>
+
+    <section class="band light flow" data-pts="0.55,0.00 0.12,0.10 0.03,0.40 0.12,0.62 0.05,0.80 0.36,1.00">
+      <div class="wrap">
+        <p class="kicker">{{t.flowTitle}}</p>
+        <h2 class="head">{{t.flowHead}} <em>{{t.flowHeadEm}}</em></h2>
+        <ol class="steps">
+          <li><h3>{{t.flow1Title}}</h3><p>{{t.flow1Body}}</p></li>
+          <li><h3>{{t.flow2Title}}</h3><p>{{t.flow2Body}}</p></li>
+          <li><h3>{{t.flow3Title}}</h3><p>{{t.flow3Body}}</p></li>
+          <li><h3>{{t.flow4Title}}</h3><p>{{t.flow4Body}}</p></li>
+          <li><h3>{{t.flow5Title}}</h3><p>{{t.flow5Body}}</p></li>
+        </ol>
+      </div>
+    </section>
+
+    <section class="band dark trace" data-pts="0.30,0.00 0.94,0.10 0.98,0.42 0.84,0.30 0.97,0.20 0.96,0.70 0.70,1.00">
+      <div class="wrap">
+        <p class="kicker">{{t.traceKicker}}</p>
+        <h2 class="head">{{t.traceHead}} <em>{{t.traceHeadEm}}</em></h2>
+        <p class="lead">{{t.traceLead}}</p>
+        <div class="trace-grid">
+          <figure class="rule">
+            <figcaption><a href="{{repo}}/blob/main/{{t.traceFile}}">{{t.traceFile}}</a></figcaption>
+            <pre><code>{{trace.rule}}</code></pre>
+          </figure>
+          <div class="sources">
+            <h3>{{t.traceSourcesTitle}}</h3>
+            <ul>
+{{trace.sources}}
+            </ul>
+          </div>
+        </div>
+        <dl class="counts">
+          <div><dt>{{t.countRules}}</dt><dd>{{count.rules}}</dd></div>
+          <div><dt>{{t.countSources}}</dt><dd>{{count.sources}}</dd></div>
+          <div><dt>{{t.countDecisions}}</dt><dd>{{count.decisions}}</dd></div>
+        </dl>
+        <p class="totals">{{t.traceTotals}}</p>
+      </div>
+    </section>
+
+    <section class="band light screens" data-pts="0.62,0.00 0.97,0.08 0.92,0.30 0.98,0.55 0.88,0.80 0.95,0.92 0.56,1.00">
+      <div class="wrap">
+        <p class="kicker">{{t.screensTitle}}</p>
+        <h2 class="head">{{t.screensHead}} <em>{{t.screensHeadEm}}</em></h2>
+        <div class="shots">
+          <figure><img src="{{base}}/img/bugun-hazir-light.webp" alt="{{t.shot1}}" width="390" height="844" loading="lazy"><figcaption>{{t.shot1Caption}}</figcaption></figure>
+          <figure><img src="{{base}}/img/bugun-toparlan-light.webp" alt="{{t.shot2}}" width="390" height="844" loading="lazy"><figcaption>{{t.shot2Caption}}</figcaption></figure>
+          <figure><img src="{{base}}/img/gece-verisi-light.webp" alt="{{t.shot3}}" width="390" height="844" loading="lazy"><figcaption>{{t.shot3Caption}}</figcaption></figure>
+          <figure><img src="{{base}}/img/vucut-light.webp" alt="{{t.shot4}}" width="390" height="844" loading="lazy"><figcaption>{{t.shot4Caption}}</figcaption></figure>
+        </div>
+        <p class="note">{{t.screensCaption}}</p>
+        <div class="pair">
+          <div>
+            <h2>{{t.privacyTitle}}</h2>
+            <p>{{t.privacyBody}}</p>
+          </div>
+          <div>
+            <h2>{{t.processTitle}}</h2>
+            <p>{{t.processBody}}</p>
+            <p class="note">{{t.stack}}</p>
           </div>
         </div>
       </div>
     </section>
 
-    <section class="why wrap narrow">
-      <h2>{{t.whyTitle}}</h2>
-      <p>{{t.whyBody1}}</p>
-      <p>{{t.whyBody2}}</p>
-    </section>
-
-    <section class="flow wrap">
-      <h2>{{t.flowTitle}}</h2>
-      <ol class="steps">
-        <li><h3>{{t.flow1Title}}</h3><p>{{t.flow1Body}}</p></li>
-        <li><h3>{{t.flow2Title}}</h3><p>{{t.flow2Body}}</p></li>
-        <li><h3>{{t.flow3Title}}</h3><p>{{t.flow3Body}}</p></li>
-        <li><h3>{{t.flow4Title}}</h3><p>{{t.flow4Body}}</p></li>
-        <li><h3>{{t.flow5Title}}</h3><p>{{t.flow5Body}}</p></li>
-      </ol>
-    </section>
-
-    <section class="trace wrap">
-      <div class="trace-intro narrow">
-        <h2>{{t.traceTitle}}</h2>
-        <p>{{t.traceLead}}</p>
-      </div>
-      <div class="trace-grid">
-        <figure class="rule">
-          <figcaption><a href="{{repo}}/blob/main/{{t.traceFile}}">{{t.traceFile}}</a></figcaption>
-          <pre><code>{{trace.rule}}</code></pre>
-        </figure>
-        <div class="sources">
-          <h3>{{t.traceSourcesTitle}}</h3>
-          <ul>
-{{trace.sources}}
-          </ul>
+    <section class="band dark finale" data-pts="0.50,0.00 0.14,0.12 0.22,0.30">
+      <div class="wrap">
+        <p class="word" id="word" aria-hidden="true">HoopLab</p>
+        <p class="lead">{{t.finaleLead}}</p>
+        <div class="actions">
+          <a class="button primary" href="{{demo}}">{{t.openDemo}}</a>
+          <a class="button" href="{{repo}}">{{t.viewSource}}</a>
         </div>
       </div>
-      <p class="totals narrow">{{t.traceTotals}}</p>
+      <footer class="foot wrap">
+        <p>{{t.footerMedical}}</p>
+        <p>{{t.footerLicense}} <a href="{{repo}}">github.com/emir-eid/hooplab</a></p>
+        <p><a href="{{privacy}}">{{t.privacyLink}}</a> · <a href="{{altHome}}" hreflang="{{altLang}}" lang="{{altLang}}">{{t.langSwitch}}</a></p>
+      </footer>
     </section>
-
-    <section class="screens wrap">
-      <h2>{{t.screensTitle}}</h2>
-      <div class="shots">
-        <figure><picture><source media="(prefers-color-scheme: dark)" srcset="{{base}}/img/bugun-hazir-dark.webp"><img src="{{base}}/img/bugun-hazir-light.webp" alt="{{t.shot1}}" width="390" height="844" loading="lazy"></picture><figcaption>{{t.shot1Caption}}</figcaption></figure>
-        <figure><picture><source media="(prefers-color-scheme: dark)" srcset="{{base}}/img/bugun-toparlan-dark.webp"><img src="{{base}}/img/bugun-toparlan-light.webp" alt="{{t.shot2}}" width="390" height="844" loading="lazy"></picture><figcaption>{{t.shot2Caption}}</figcaption></figure>
-        <figure><picture><source media="(prefers-color-scheme: dark)" srcset="{{base}}/img/gece-verisi-dark.webp"><img src="{{base}}/img/gece-verisi-light.webp" alt="{{t.shot3}}" width="390" height="844" loading="lazy"></picture><figcaption>{{t.shot3Caption}}</figcaption></figure>
-        <figure><picture><source media="(prefers-color-scheme: dark)" srcset="{{base}}/img/vucut-dark.webp"><img src="{{base}}/img/vucut-light.webp" alt="{{t.shot4}}" width="390" height="844" loading="lazy"></picture><figcaption>{{t.shot4Caption}}</figcaption></figure>
-      </div>
-      <p class="note">{{t.screensCaption}}</p>
-    </section>
-
-    <section class="pair wrap">
-      <div>
-        <h2>{{t.privacyTitle}}</h2>
-        <p>{{t.privacyBody}}</p>
-      </div>
-      <div>
-        <h2>{{t.processTitle}}</h2>
-        <p>{{t.processBody}}</p>
-        <p class="note">{{t.stack}}</p>
-      </div>
-    </section>
-  </main>
-
-  <footer class="foot wrap">
-    <p>{{t.footerMedical}}</p>
-    <p>{{t.footerLicense}} <a href="{{repo}}">github.com/emir-eid/hooplab</a></p>
-    <p><a href="{{privacy}}">{{t.privacyLink}}</a> · <a href="{{altHome}}" hreflang="{{altLang}}" lang="{{altLang}}">{{t.langSwitch}}</a></p>
-  </footer>
+  </div>
 
   <script>
     // Geniş ekranda canlı demo çerçevede açılır; dar ekranda ve JS'siz görsel kalır, dokununca demo tam ekran açılır.
@@ -133,6 +173,83 @@
       frame.width = '390';
       frame.height = '844';
       device.replaceChildren(frame);
+    })();
+
+    // Şut yayı (karar 0059). Her bandın data-pts'i (x, y: bandın genişlik ve yükseklik oranı) çizginin geçtiği
+    // noktalar (dar ekranda varsa data-pts-m); son nokta finaldeki kelime. Çizgi kaydırdıkça çizilir. Hareketi Azalt açıksa baştan tam çizili,
+    // JS yoksa hiç yok (sayfa çizgisiz de eksiksiz).
+    (function () {
+      var page = document.getElementById('page');
+      var svg = document.getElementById('arc');
+      var path = svg && svg.querySelector('path');
+      var word = document.getElementById('word');
+      if (!page || !path || !path.getTotalLength) return;
+      var reduce = window.matchMedia('(prefers-reduced-motion: reduce)');
+      var len = 0, top = 0, h = 0, queued = false;
+
+      // Catmull-Rom noktalarından yumuşak kübik Bezier.
+      function smooth(p) {
+        var d = 'M' + p[0][0].toFixed(1) + ' ' + p[0][1].toFixed(1);
+        for (var i = 0; i < p.length - 1; i++) {
+          var a = p[i - 1] || p[i], b = p[i], c = p[i + 1], e = p[i + 2] || c;
+          d += ' C' + (b[0] + (c[0] - a[0]) / 6).toFixed(1) + ' ' + (b[1] + (c[1] - a[1]) / 6).toFixed(1) +
+            ' ' + (c[0] - (e[0] - b[0]) / 6).toFixed(1) + ' ' + (c[1] - (e[1] - b[1]) / 6).toFixed(1) +
+            ' ' + c[0].toFixed(1) + ' ' + c[1].toFixed(1);
+        }
+        return d;
+      }
+
+      function layout() {
+        var box = page.getBoundingClientRect();
+        var w = box.width;
+        top = box.top + window.scrollY;
+        h = page.scrollHeight;
+        svg.setAttribute('viewBox', '0 0 ' + w + ' ' + h);
+        var pts = [];
+        page.querySelectorAll('[data-pts]').forEach(function (band) {
+          var r = band.getBoundingClientRect(), y0 = r.top - box.top;
+          var spec = (w < 720 && band.getAttribute('data-pts-m')) || band.getAttribute('data-pts');
+          spec.split(' ').forEach(function (pair) {
+            var xy = pair.split(',');
+            pts.push([parseFloat(xy[0]) * w, y0 + parseFloat(xy[1]) * r.height]);
+          });
+        });
+        if (word) {
+          var wr = word.getBoundingClientRect();
+          pts.push([wr.left - box.left + wr.width * 0.42, wr.top - box.top + wr.height * 0.5]);
+        }
+        path.setAttribute('d', smooth(pts));
+        path.style.strokeWidth = w < 720 ? 18 : w < 1080 ? 36 : 52;
+        len = path.getTotalLength();
+        path.style.strokeDasharray = len + ' ' + len;
+        draw();
+      }
+
+      function draw() {
+        queued = false;
+        var vh = window.innerHeight;
+        var p = reduce.matches ? 1 : (window.scrollY + vh * 0.62 - top) / Math.max(1, h - vh * 0.38);
+        p = Math.min(1, Math.max(0, p));
+        path.style.strokeDashoffset = (len * (1 - p)).toFixed(1);
+        if (reduce.matches) return;
+        page.querySelectorAll('[data-depth]').forEach(function (el) {
+          var r = el.parentElement.getBoundingClientRect();
+          var off = (r.top + r.height / 2 - vh / 2) * parseFloat(el.getAttribute('data-depth'));
+          el.style.transform = 'translate3d(0,' + off.toFixed(1) + 'px,0)';
+        });
+      }
+
+      window.addEventListener('scroll', function () {
+        if (!queued) { queued = true; requestAnimationFrame(draw); }
+      }, { passive: true });
+      var t;
+      function relayout() { clearTimeout(t); t = setTimeout(layout, 100); }
+      if (window.ResizeObserver) new ResizeObserver(relayout).observe(page);
+      else window.addEventListener('resize', relayout);
+      if (reduce.addEventListener) reduce.addEventListener('change', layout);
+      if (document.fonts && document.fonts.ready) document.fonts.ready.then(layout);
+      layout();
+      document.documentElement.classList.add('arc-on');
     })();
   </script>
 </body>
