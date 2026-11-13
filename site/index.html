@@ -23,9 +23,9 @@
 
   <div class="page" id="page">
     <!-- Şut yayı (karar 0059): bantların üstünden geçen tek çizgi; konumu ve çizimi betikte. -->
-    <svg class="arc" id="arc" aria-hidden="true" focusable="false"><path></path></svg>
+    <svg class="arc" id="arc" aria-hidden="true" focusable="false"><defs><clipPath id="arc-l"></clipPath><clipPath id="arc-d"></clipPath></defs><path class="on-light" clip-path="url(#arc-l)"></path><path class="on-dark" clip-path="url(#arc-d)"></path></svg>
 
-    <section class="band light hero-band" data-pts="0.60,0.10 0.57,0.45 0.62,0.80 0.50,1.00" data-pts-m="1.04,0.70 0.92,0.86 0.97,0.95 0.55,1.00">
+    <section class="band light hero-band" data-pts="0.60,0.10 0.57,0.45 0.62,0.80 0.60,b" data-pts-m="R,0.55 R,b">
       <header class="top wrap">
         <a class="wordmark" href="{{home}}">HoopLab</a>
         <nav class="top-links">
@@ -66,7 +66,7 @@
       </main>
     </section>
 
-    <section class="band dark why" data-pts="0.50,0.00 0.94,0.08 0.98,0.40 0.92,0.30 0.96,0.22 0.98,0.72 0.62,1.00">
+    <section class="band dark why" data-pts="R,t R,b" data-pts-m="L,t L,b">
       <div class="wrap split">
         <div class="split-text">
           <p class="kicker">{{t.whyTitle}}</p>
@@ -80,7 +80,7 @@
       </div>
     </section>
 
-    <section class="band light flow" data-pts="0.55,0.00 0.12,0.10 0.03,0.40 0.12,0.62 0.05,0.80 0.36,1.00">
+    <section class="band light flow" data-pts="L,t L,b" data-pts-m="R,t R,b">
       <div class="wrap">
         <p class="kicker">{{t.flowTitle}}</p>
         <h2 class="head">{{t.flowHead}} <em>{{t.flowHeadEm}}</em></h2>
@@ -94,7 +94,7 @@
       </div>
     </section>
 
-    <section class="band dark trace" data-pts="0.30,0.00 0.94,0.10 0.98,0.42 0.84,0.30 0.97,0.20 0.96,0.70 0.70,1.00">
+    <section class="band dark trace" data-pts="R,t R,b" data-pts-m="L,t L,b">
       <div class="wrap">
         <p class="kicker">{{t.traceKicker}}</p>
         <h2 class="head">{{t.traceHead}} <em>{{t.traceHeadEm}}</em></h2>
@@ -120,7 +120,7 @@
       </div>
     </section>
 
-    <section class="band light screens" data-pts="0.62,0.00 0.97,0.08 0.92,0.30 0.98,0.55 0.88,0.80 0.95,0.92 0.56,1.00">
+    <section class="band light screens" data-pts="L,t L,b" data-pts-m="R,t R,b">
       <div class="wrap">
         <p class="kicker">{{t.screensTitle}}</p>
         <h2 class="head">{{t.screensHead}} <em>{{t.screensHeadEm}}</em></h2>
@@ -145,7 +145,7 @@
       </div>
     </section>
 
-    <section class="band dark finale" data-pts="0.50,0.00 0.14,0.12 0.22,0.30">
+    <section class="band dark finale" data-pts="0.50,t 0.06,0.10" data-pts-m="0.50,t 0.03,0.06">
       <div class="wrap">
         <p class="word" id="word" aria-hidden="true">HoopLab</p>
         <p class="lead">{{t.finaleLead}}</p>
@@ -175,15 +175,19 @@
       device.replaceChildren(frame);
     })();
 
-    // Şut yayı (karar 0059). Her bandın data-pts'i (x, y: bandın genişlik ve yükseklik oranı) çizginin geçtiği
-    // noktalar (dar ekranda varsa data-pts-m); son nokta finaldeki kelime. Çizgi kaydırdıkça çizilir. Hareketi Azalt açıksa baştan tam çizili,
-    // JS yoksa hiç yok (sayfa çizgisiz de eksiksiz).
+    // Şut yayı (karar 0059). Her bandın data-pts'i (dar ekranda varsa data-pts-m) çizginin geçtiği noktalar:
+    // x bant genişliğinin oranı ya da L / R (sol / sağ kenar boşluğunun ortası), y bant yüksekliğinin oranı ya da
+    // t / b (üst / alt iç boşluğun ortası). Kenar boyunca iniş metne değmeden boşlukta hafifçe dalgalanır; karşı
+    // kenara geçiş bantlar arasındaki boşlukta olur. Son nokta finaldeki kelime. Çizgi metin ve görsellerin arkasında,
+    // açık bantta koyu, koyu bantta açık. Kaydırdıkça çizilir; Hareketi Azalt açıksa baştan tam çizili, JS yoksa yok.
     (function () {
       var page = document.getElementById('page');
       var svg = document.getElementById('arc');
-      var path = svg && svg.querySelector('path');
+      var paths = svg ? svg.querySelectorAll('path') : [];
+      var clipL = document.getElementById('arc-l'), clipD = document.getElementById('arc-d');
       var word = document.getElementById('word');
-      if (!page || !path || !path.getTotalLength) return;
+      if (!page || paths.length !== 2 || !paths[0].getTotalLength) return;
+      var NS = 'http://www.w3.org/2000/svg';
       var reduce = window.matchMedia('(prefers-reduced-motion: reduce)');
       var len = 0, top = 0, h = 0, queued = false;
 
@@ -205,23 +209,54 @@
         top = box.top + window.scrollY;
         h = page.scrollHeight;
         svg.setAttribute('viewBox', '0 0 ' + w + ' ' + h);
+        var bands = page.querySelectorAll('[data-pts]');
+        // Kenar boşluğu: içerik sütununun sayfa kenarına uzaklığı (en dar bant).
+        var m = w;
+        bands.forEach(function (band) {
+          var wrap = band.querySelector('.wrap');
+          if (!wrap) return;
+          var wr = wrap.getBoundingClientRect(), cs = getComputedStyle(wrap);
+          m = Math.min(m, wr.left - box.left + parseFloat(cs.paddingLeft), box.right - wr.right + parseFloat(cs.paddingRight));
+        });
+        var sw = Math.max(8, Math.min(w < 1080 ? 36 : 52, m * 0.72));
+        var amp = Math.max(0, m / 2 - sw / 2 - 2);
         var pts = [];
-        page.querySelectorAll('[data-pts]').forEach(function (band) {
-          var r = band.getBoundingClientRect(), y0 = r.top - box.top;
-          var spec = (w < 720 && band.getAttribute('data-pts-m')) || band.getAttribute('data-pts');
-          spec.split(' ').forEach(function (pair) {
-            var xy = pair.split(',');
-            pts.push([parseFloat(xy[0]) * w, y0 + parseFloat(xy[1]) * r.height]);
+        clipL.replaceChildren(); clipD.replaceChildren();
+        bands.forEach(function (band) {
+          var r = band.getBoundingClientRect(), y0 = r.top - box.top, cs = getComputedStyle(band);
+          var rect = document.createElementNS(NS, 'rect');
+          rect.setAttribute('x', -100); rect.setAttribute('y', y0);
+          rect.setAttribute('width', w + 200); rect.setAttribute('height', r.height);
+          (band.classList.contains('dark') ? clipD : clipL).appendChild(rect);
+          var X = function (v) { return v === 'L' ? m / 2 : v === 'R' ? w - m / 2 : parseFloat(v) * w; };
+          var Y = function (v) {
+            if (v === 't') return y0 + parseFloat(cs.paddingTop) / 2;
+            if (v === 'b') return y0 + r.height - parseFloat(cs.paddingBottom) / 2;
+            return y0 + parseFloat(v) * r.height;
+          };
+          var spec = ((w < 720 && band.getAttribute('data-pts-m')) || band.getAttribute('data-pts')).split(' ');
+          spec.forEach(function (pair, i) {
+            var xy = pair.split(','), x = X(xy[0]), y = Y(xy[1]);
+            var prev = i > 0 ? spec[i - 1].split(',') : null;
+            // Aynı kenarda uzun iniş: boşluğun içinde dalga.
+            if (prev && prev[0] === xy[0] && (xy[0] === 'L' || xy[0] === 'R') && amp > 0) {
+              var y1 = Y(prev[1]), n = Math.floor((y - y1) / 320);
+              for (var k = 1; k < n; k++) pts.push([x + (k % 2 ? amp : -amp), y1 + (y - y1) * k / n]);
+            }
+            pts.push([x, y]);
           });
         });
         if (word) {
-          var wr = word.getBoundingClientRect();
-          pts.push([wr.left - box.left + wr.width * 0.42, wr.top - box.top + wr.height * 0.5]);
+          // Kelimenin harflerinin kutusu; çizgi "H"nin hemen solunda biter (aynı renkteki harflerin arkasına girmez).
+          var range = document.createRange();
+          range.selectNodeContents(word);
+          var gr = range.getBoundingClientRect();
+          pts.push([gr.left - box.left - sw * 0.9, gr.top - box.top + gr.height * 0.52]);
         }
-        path.setAttribute('d', smooth(pts));
-        path.style.strokeWidth = w < 720 ? 18 : w < 1080 ? 36 : 52;
-        len = path.getTotalLength();
-        path.style.strokeDasharray = len + ' ' + len;
+        var d = smooth(pts);
+        paths.forEach(function (p) { p.setAttribute('d', d); p.style.strokeWidth = sw; });
+        len = paths[0].getTotalLength();
+        paths.forEach(function (p) { p.style.strokeDasharray = len + ' ' + len; });
         draw();
       }
 
@@ -230,7 +265,8 @@
         var vh = window.innerHeight;
         var p = reduce.matches ? 1 : (window.scrollY + vh * 0.62 - top) / Math.max(1, h - vh * 0.38);
         p = Math.min(1, Math.max(0, p));
-        path.style.strokeDashoffset = (len * (1 - p)).toFixed(1);
+        var off = (len * (1 - p)).toFixed(1);
+        paths.forEach(function (el) { el.style.strokeDashoffset = off; });
         if (reduce.matches) return;
         page.querySelectorAll('[data-depth]').forEach(function (el) {
           var r = el.parentElement.getBoundingClientRect();

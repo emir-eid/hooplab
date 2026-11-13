@@ -129,12 +129,18 @@ p { margin: 0 0 1em; }
 .page { position: relative; overflow: hidden; }
 @supports (overflow: clip) { .page { overflow: clip; } }
 
-.band { position: relative; background: var(--bg); color: var(--ink); padding-block: clamp(80px, 11vw, 150px); }
+/* Bant konumlandırılmaz: zemini çizginin altında, içeriği (konumlu çocuklar) çizginin üstünde boyanır. */
+.band { background: var(--bg); color: var(--ink); padding-block: clamp(80px, 11vw, 150px); }
+.band > * { position: relative; }
 .hero-band { padding-block: 0 clamp(80px, 10vw, 140px); }
 
-/* Şut yayı: betik viewBox'ı ve yolu kurar; JS yoksa boş kalır. */
-.arc { position: absolute; inset: 0; width: 100%; height: 100%; z-index: 3; pointer-events: none; mix-blend-mode: difference; overflow: visible; }
-.arc path { fill: none; stroke: #FFFFFF; stroke-linecap: round; stroke-linejoin: round; }
+/* Şut yayı: betik viewBox'ı, yolu ve bant kırpmalarını kurar; JS yoksa boş kalır. Bant zemininin üstünde,
+   metin ve görsellerin arkasında; açık bantta koyu, koyu bantta açık (iki kopya, bant dikdörtgenleriyle kırpılır).
+   mix-blend-mode kullanılmaz: iOS Safari uzun SVG katmanında karışımı bozuyordu (2026-11-13, LESSONS). */
+.arc { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; overflow: visible; }
+.arc path { fill: none; stroke-linecap: round; stroke-linejoin: round; }
+.arc .on-light { stroke: #15171A; }
+.arc .on-dark { stroke: #F1F0EC; }
 
 /* Başlık: kalın grotesk satır, altında italik serif devamı */
 .kicker { font-weight: 600; font-size: 0.8125rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--ink3); margin-bottom: 1.2em; }

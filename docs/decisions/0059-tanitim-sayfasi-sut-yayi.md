@@ -23,5 +23,12 @@ A. Uygulama:
 
 ## Sonuçlar
 - Teknoloji satırındaki "Expo SDK 57" bilgisi 58'e güncellendi.
-- Çizgi telefon genişliğinde 18 px'e incelir; metnin üstünden geçtiği yerlerde difference karışımı yazıyı ters renkte okunur tutar.
+- Çizgi telefon genişliğinde incelir; ilk yayındaki difference karışımı iPhone Safari yüzünden ekte değişti.
 - **Yeniden değerlendirme tetikleyicisi:** telefonda okunabilirlik şikayeti ya da kaydırmada takılma (çizgi her karede yalnız `stroke-dashoffset` değiştirir; yol yalnız boyut değişince yeniden kurulur).
+
+## Ek (2026-11-13 akşam): iPhone Safari düzeltmesi
+Yayından sonra kullanıcının iPhone ekran kaydında çizgi sayfanın üst kısmında (hero, "Neden") içi siyah, yalnız kenarları açık göründü; alt bantlarda doğruydu. iOS Safari uzun SVG'de `mix-blend-mode: difference`'ı bozuyor (LESSONS). Değişiklik:
+- Karışım kaldırıldı. Çizginin iki kopyası bant dikdörtgenleriyle kırpılır: açık bantta koyu (`#15171A`), koyu bantta açık (`#F1F0EC`).
+- Çizgi bant zemininin üstünde, metin ve görsellerin arkasında (bantlar konumlandırılmaz, içerikleri konumlanır). Arkada kalan çizgi aynı renkteki metni okunmaz yaptığı için bant içinde metin sütunlarından uzak durur: `data-pts` artık `L` / `R` (kenar boşluğunun ortası) ve `t` / `b` (bandın üst / alt iç boşluğu) da alır; kenar boyunca iniş boşluğun içinde hafifçe dalgalanır, karşı kenara geçiş bantlar arasındaki boşlukta olur. Hero'daki metin–telefon arası geçiş korunur.
+- Çizgi kalınlığı kenar boşluğuna sığar (telefonda ~12 px, masaüstünde 52 px). Final: çizgi aynı renkteki "HoopLab" harflerinin arkasına girmez, "H"nin hemen solunda biter.
+
