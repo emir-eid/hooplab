@@ -234,6 +234,8 @@ if (args.includes('--serve')) {
   const port = Number(args.includes('--port') ? args[args.indexOf('--port') + 1] : 4310);
   const types = { '.html': 'text/html; charset=utf-8', '.js': 'text/javascript; charset=utf-8', '.css': 'text/css; charset=utf-8', '.json': 'application/json', '.png': 'image/png', '.webp': 'image/webp', '.ico': 'image/x-icon', '.ttf': 'font/ttf', '.svg': 'image/svg+xml' };
   const isFile = (p) => existsSync(p) && statSync(p).isFile();
+  // --lan: telefondan aynı ağda bakmak için tüm arayüzlerde dinler (yalnız yerel deneme; site zaten herkese açık).
+  const host = args.includes('--lan') ? '0.0.0.0' : '127.0.0.1';
   createServer((req, res) => {
     const url = new URL(req.url ?? '/', 'http://localhost');
     if (base && !url.pathname.startsWith(`${base}/`)) {
@@ -245,5 +247,5 @@ if (args.includes('--serve')) {
     const file = [p, `${p}.html`, path.join(p, 'index.html')].find((c) => c.startsWith(dist) && isFile(c));
     res.writeHead(file ? 200 : 404, { 'content-type': types[path.extname(file ?? '404.html')] ?? 'application/octet-stream' });
     res.end(readFileSync(file ?? path.join(dist, '404.html')));
-  }).listen(port, '127.0.0.1', () => console.log(`[site] http://127.0.0.1:${port}${base}/`));
+  }).listen(port, host, () => console.log(`[site] http://${host}:${port}${base}/`));
 }

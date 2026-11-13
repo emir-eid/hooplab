@@ -21,6 +21,19 @@
       "port": 4310
     },
     {
+      "name": "portfolyo-lan",
+      "runtimeExecutable": "node",
+      "runtimeArgs": [
+        "tools/site/build-site.mjs",
+        "--skip-demo",
+        "--serve",
+        "--lan",
+        "--port",
+        "4311"
+      ],
+      "port": 4311
+    },
+    {
       "name": "pwa-yerel",
       "runtimeExecutable": "node",
       "runtimeArgs": [

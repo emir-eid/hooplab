@@ -23,7 +23,6 @@
 
   <div class="page" id="page">
     <!-- Şut yayı (karar 0059): bantların üstünden geçen tek çizgi; konumu ve çizimi betikte. -->
-    <svg class="arc" id="arc" aria-hidden="true" focusable="false"><defs><clipPath id="arc-l"></clipPath><clipPath id="arc-d"></clipPath></defs><path class="on-light" clip-path="url(#arc-l)"></path><path class="on-dark" clip-path="url(#arc-d)"></path></svg>
 
     <section class="band light hero-band" data-pts="0.60,0.10 0.57,0.45 0.62,0.80 0.60,b" data-pts-m="R,0.55 R,b">
       <header class="top wrap">
@@ -180,36 +179,64 @@
     // t / b (üst / alt iç boşluğun ortası). Kenar boyunca iniş metne değmeden boşlukta hafifçe dalgalanır; karşı
     // kenara geçiş bantlar arasındaki boşlukta olur. Son nokta finaldeki kelime. Çizgi metin ve görsellerin arkasında,
     // açık bantta koyu, koyu bantta açık. Kaydırdıkça çizilir; Hareketi Azalt açıksa baştan tam çizili, JS yoksa yok.
+    // Hız: her bandın kendi küçük SVG'si var ve yalnız o banda değen eğri parçalarını taşır. Her karede yalnız ucun
+    // bulunduğu bandın çizgisi değişir; tam ya da boş bantlar yeniden boyanmaz. Karede yerleşim okunmaz.
     (function () {
       var page = document.getElementById('page');
-      var svg = document.getElementById('arc');
-      var paths = svg ? svg.querySelectorAll('path') : [];
-      var clipL = document.getElementById('arc-l'), clipD = document.getElementById('arc-d');
       var word = document.getElementById('word');
-      if (!page || paths.length !== 2 || !paths[0].getTotalLength) return;
       var NS = 'http://www.w3.org/2000/svg';
+      if (!page || !document.createElementNS || !document.createElementNS(NS, 'svg').createSVGRect) return;
       var reduce = window.matchMedia('(prefers-reduced-motion: reduce)');
-      var len = 0, top = 0, h = 0, queued = false;
+      var bands = Array.prototype.slice.call(page.querySelectorAll('[data-pts]'));
+      var parts = [], chips = [], top = 0, total = 0, queued = false;
+      // Uç hızı sınırlı: ekrandaki uzunluk hedefe en fazla VMAX px/sn ile yaklaşır (60 Hz'de karede ~40 px). Bantlar
+      // arası neredeyse yatay geçişte uç tek karede ekranın yarısını atlamaz. Fark büyürse (hızlı kaydırma) sınır
+      // farkı CATCH sn'de kapatacak kadar esner, uç geride kalmaz.
+      var shown = -1, target = 0, lastT = 0, VMAX = 2400, CATCH = 0.2;
+      // Uç tablosu: örnek noktalarda (o ana kadarki en büyük y, o noktaya kadarki uzunluk).
+      var tabY = [], tabL = [], tailS = 0, tailY = 0;
 
-      // Catmull-Rom noktalarından yumuşak kübik Bezier.
-      function smooth(p) {
-        var d = 'M' + p[0][0].toFixed(1) + ' ' + p[0][1].toFixed(1);
+      bands.forEach(function (band) {
+        var svg = document.createElementNS(NS, 'svg');
+        svg.setAttribute('class', 'arc');
+        svg.setAttribute('aria-hidden', 'true');
+        svg.setAttribute('focusable', 'false');
+        svg.setAttribute('preserveAspectRatio', 'none');
+        var path = document.createElementNS(NS, 'path');
+        svg.appendChild(path);
+        band.insertBefore(svg, band.firstChild);
+        parts.push({ svg: svg, path: path, s: 0, l: 0, last: '' });
+      });
+
+      // Catmull-Rom noktalarından kübik Bezier parçaları; her parçanın uzunluğu örneklemeyle. Kontrol noktalarının
+      // x'i [lo, hi] içine sıkıştırılır: kenardaki inişte yumuşatma eğriyi ekranın dışına taşımasın.
+      function segments(p, lo, hi) {
+        var out = [], run = 0, maxY = -Infinity;
+        tabY = []; tabL = [];
         for (var i = 0; i < p.length - 1; i++) {
           var a = p[i - 1] || p[i], b = p[i], c = p[i + 1], e = p[i + 2] || c;
-          d += ' C' + (b[0] + (c[0] - a[0]) / 6).toFixed(1) + ' ' + (b[1] + (c[1] - a[1]) / 6).toFixed(1) +
-            ' ' + (c[0] - (e[0] - b[0]) / 6).toFixed(1) + ' ' + (c[1] - (e[1] - b[1]) / 6).toFixed(1) +
-            ' ' + c[0].toFixed(1) + ' ' + c[1].toFixed(1);
+          var cx = function (x) { return Math.min(hi, Math.max(lo, x)); };
+          var q = [b, [cx(b[0] + (c[0] - a[0]) / 6), b[1] + (c[1] - a[1]) / 6], [cx(c[0] - (e[0] - b[0]) / 6), c[1] - (e[1] - b[1]) / 6], c];
+          var len = 0, px = b[0], py = b[1];
+          for (var k = 1; k <= 32; k++) {
+            var t = k / 32, u = 1 - t;
+            var x = u * u * u * q[0][0] + 3 * u * u * t * q[1][0] + 3 * u * t * t * q[2][0] + t * t * t * q[3][0];
+            var y = u * u * u * q[0][1] + 3 * u * u * t * q[1][1] + 3 * u * t * t * q[2][1] + t * t * t * q[3][1];
+            len += Math.sqrt((x - px) * (x - px) + (y - py) * (y - py)); px = x; py = y;
+            maxY = Math.max(maxY, y); tabY.push(maxY); tabL.push(run + len);
+          }
+          run += len;
+          out.push({ q: q, len: len,
+            y0: Math.min(q[0][1], q[1][1], q[2][1], q[3][1]), y1: Math.max(q[0][1], q[1][1], q[2][1], q[3][1]) });
         }
-        return d;
+        return out;
       }
+      function f(n) { return n.toFixed(1); }
 
       function layout() {
         var box = page.getBoundingClientRect();
         var w = box.width;
         top = box.top + window.scrollY;
-        h = page.scrollHeight;
-        svg.setAttribute('viewBox', '0 0 ' + w + ' ' + h);
-        var bands = page.querySelectorAll('[data-pts]');
         // Kenar boşluğu: içerik sütununun sayfa kenarına uzaklığı (en dar bant).
         var m = w;
         bands.forEach(function (band) {
@@ -220,18 +247,16 @@
         });
         var sw = Math.max(8, Math.min(w < 1080 ? 36 : 52, m * 0.72));
         var amp = Math.max(0, m / 2 - sw / 2 - 2);
-        var pts = [];
-        clipL.replaceChildren(); clipD.replaceChildren();
+        var pts = [], spans = [];
         bands.forEach(function (band) {
           var r = band.getBoundingClientRect(), y0 = r.top - box.top, cs = getComputedStyle(band);
-          var rect = document.createElementNS(NS, 'rect');
-          rect.setAttribute('x', -100); rect.setAttribute('y', y0);
-          rect.setAttribute('width', w + 200); rect.setAttribute('height', r.height);
-          (band.classList.contains('dark') ? clipD : clipL).appendChild(rect);
+          spans.push([y0, y0 + r.height]);
           var X = function (v) { return v === 'L' ? m / 2 : v === 'R' ? w - m / 2 : parseFloat(v) * w; };
           var Y = function (v) {
-            if (v === 't') return y0 + parseFloat(cs.paddingTop) / 2;
-            if (v === 'b') return y0 + r.height - parseFloat(cs.paddingBottom) / 2;
+            // t / b içeriğe kalınlık kadar yakın: bantlar arası geçiş boşluğun tamamını kullanır, daha diyagonal olur.
+            var pt = parseFloat(cs.paddingTop), pb = parseFloat(cs.paddingBottom);
+            if (v === 't') return y0 + pt - Math.max(sw, pt * 0.25);
+            if (v === 'b') return y0 + r.height - pb + Math.max(sw, pb * 0.25);
             return y0 + parseFloat(v) * r.height;
           };
           var spec = ((w < 720 && band.getAttribute('data-pts-m')) || band.getAttribute('data-pts')).split(' ');
@@ -253,31 +278,90 @@
           var gr = range.getBoundingClientRect();
           pts.push([gr.left - box.left - sw * 0.9, gr.top - box.top + gr.height * 0.52]);
         }
-        var d = smooth(pts);
-        paths.forEach(function (p) { p.setAttribute('d', d); p.style.strokeWidth = sw; });
-        len = paths[0].getTotalLength();
-        paths.forEach(function (p) { p.style.strokeDasharray = len + ' ' + len; });
+        var seg = segments(pts, m / 2 - amp, w - m / 2 + amp), acc = [0];
+        seg.forEach(function (sg, i) { acc.push(acc[i] + sg.len); });
+        total = acc[seg.length];
+        // Her bant kendine (kalınlık payıyla) değen ardışık parçaları çizer; taşan kısmı kendi kutusu kırpar.
+        parts.forEach(function (pt, bi) {
+          var a = spans[bi][0], b = spans[bi][1], first = -1, last = -1;
+          seg.forEach(function (sg, i) {
+            if (sg.y0 - sw < b && sg.y1 + sw > a) { if (first < 0) first = i; last = i; }
+          });
+          pt.svg.setAttribute('viewBox', '0 ' + f(a) + ' ' + f(w) + ' ' + f(b - a));
+          pt.path.style.strokeWidth = sw;
+          pt.last = null;
+          if (first < 0) { pt.path.removeAttribute('d'); pt.s = 0; pt.l = 0; return; }
+          var q0 = seg[first].q[0], d = 'M' + f(q0[0]) + ' ' + f(q0[1]);
+          for (var i = first; i <= last; i++) {
+            var q = seg[i].q;
+            d += ' C' + f(q[1][0]) + ' ' + f(q[1][1]) + ' ' + f(q[2][0]) + ' ' + f(q[2][1]) + ' ' + f(q[3][0]) + ' ' + f(q[3][1]);
+          }
+          pt.path.setAttribute('d', d);
+          pt.s = acc[first];
+          pt.l = acc[last + 1] - acc[first];
+        });
+        // Son bant (final kavisi kelimeye neredeyse yatay gider) kalan kaydırmaya uzunlukça doğrusal yayılır.
+        var tail = parts[parts.length - 1];
+        tailS = tail ? tail.s : total; tailY = Infinity;
+        for (var j = 0; j < tabL.length; j++) if (tabL[j] >= tailS) { tailY = tabY[j]; break; }
+        // Parallax kartlarının sayfadaki yeri burada okunur, karede okunmaz.
+        chips = Array.prototype.map.call(page.querySelectorAll('[data-depth]'), function (el) {
+          var r = el.parentElement.getBoundingClientRect();
+          return { el: el, mid: r.top + window.scrollY + r.height / 2, k: parseFloat(el.getAttribute('data-depth')), last: '' };
+        });
+        shown = -1;
         draw();
       }
 
-      function draw() {
+      function draw(now) {
         queued = false;
-        var vh = window.innerHeight;
-        var p = reduce.matches ? 1 : (window.scrollY + vh * 0.62 - top) / Math.max(1, h - vh * 0.38);
-        p = Math.min(1, Math.max(0, p));
-        var off = (len * (1 - p)).toFixed(1);
-        paths.forEach(function (el) { el.style.strokeDashoffset = off; });
-        if (reduce.matches) return;
-        page.querySelectorAll('[data-depth]').forEach(function (el) {
-          var r = el.parentElement.getBoundingClientRect();
-          var off = (r.top + r.height / 2 - vh / 2) * parseFloat(el.getAttribute('data-depth'));
-          el.style.transform = 'translate3d(0,' + off.toFixed(1) + 'px,0)';
+        var sy = window.scrollY, vh = window.innerHeight;
+        // Uç ekranın %62 yüksekliğini izler: çizginin o y'ye ulaştığı uzunluk (tablodan, doğrusal ara değer).
+        // Son bant uç oraya varınca sayfanın sonuna kadar kalan kaydırmaya yayılır; çizgi en altta kelimede biter.
+        var smax = document.documentElement.scrollHeight - vh, drawn = total, y = sy + vh * 0.62 - top;
+        var stail = tailY + top - vh * 0.62;
+        if (reduce.matches || sy >= smax - 1) drawn = total;
+        else if (sy >= stail && smax - 1 > stail) drawn = tailS + (total - tailS) * Math.min(1, (sy - stail) / (smax - 1 - stail));
+        else {
+          var lo = 0, hi = tabY.length - 1;
+          if (!tabY.length || y < tabY[0]) drawn = 0;
+          else if (y < tabY[hi]) {
+            while (hi - lo > 1) { var mid = (lo + hi) >> 1; if (tabY[mid] <= y) lo = mid; else hi = mid; }
+            var dy = tabY[hi] - tabY[lo];
+            drawn = tabL[lo] + (dy > 0 ? (y - tabY[lo]) / dy : 0) * (tabL[hi] - tabL[lo]);
+          }
+        }
+        target = drawn;
+        now = now || performance.now();
+        if (shown < 0 || reduce.matches) shown = target;
+        else {
+          var gap = target - shown, dt = Math.min(1 / 30, (now - lastT) / 1000);
+          var step = Math.max(VMAX, Math.abs(gap) / CATCH) * dt;
+          shown = Math.abs(gap) <= step ? target : shown + (gap > 0 ? step : -step);
+        }
+        lastT = now;
+        parts.forEach(function (pt) {
+          var v = Math.min(pt.l, shown - pt.s), css;
+          // Boş bant gizli (yuvarlak uç sıfır boylu çizgide nokta bırakır), dolu bant kesiksiz, arada tek kesik.
+          if (v <= 0.5) css = 'none';
+          else if (v >= pt.l - 0.5) css = '';
+          else css = f(v) + ' ' + f(pt.l + 10);
+          if (css === pt.last) return;
+          pt.last = css;
+          pt.path.style.display = css === 'none' ? 'none' : '';
+          pt.path.style.strokeDasharray = css === 'none' ? '' : css;
         });
+        chips.forEach(function (c) {
+          var tr = reduce.matches ? '' : 'translate3d(0,' + f((c.mid - sy - vh / 2) * c.k) + 'px,0)';
+          if (tr !== c.last) { c.last = tr; c.el.style.transform = tr; }
+        });
+        if (shown !== target) tick();
+      }
+      function tick() {
+        if (!queued) { queued = true; requestAnimationFrame(draw); }
       }
 
-      window.addEventListener('scroll', function () {
-        if (!queued) { queued = true; requestAnimationFrame(draw); }
-      }, { passive: true });
+      window.addEventListener('scroll', tick, { passive: true });
       var t;
       function relayout() { clearTimeout(t); t = setTimeout(layout, 100); }
       if (window.ResizeObserver) new ResizeObserver(relayout).observe(page);

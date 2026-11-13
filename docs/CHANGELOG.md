@@ -5,6 +5,7 @@ Uygulamaya veya altyapıya görünür değişiklikler. Biçim: [Keep a Changelog
 ## [Yayınlanmamış]
 
 ### Eklendi
+- Tanıtım sayfası akıcılığı (karar 0059 eki, 2026-11-13): şut yayı bant başına küçük SVG'lerle çiziliyor, karede yalnız ucun bulunduğu parça değişiyor; uç ekran yüksekliğinin %62'sini izliyor ve hızı sınırlı (bantlar arası yatay geçişte sıçramıyor); telefonda hero'da ekran dışına taşan iniş düzeldi. Yerel derleme `--lan` ile telefondan açılabiliyor (`portfolyo-lan`).
 - Tanıtım sayfası iPhone Safari düzeltmesi (karar 0059 eki, 2026-11-13): şut yayı `mix-blend-mode` yerine bantlara göre iki renkle kırpılarak çiziliyor (Safari üst kısımda çizgiyi siyah gösteriyordu); çizgi metnin arkasında ve kenar boşluğunda, finalde "HoopLab"ın önünde biter.
 - Tanıtım sayfası yeni yönde (karar 0059, 2026-11-13): `hooplab.dev` ve `/tr/` açık ve koyu bantlar halinde; kaydırdıkça çizilen tek bir "şut yayı" çizgisi bantların üstünden geçip finaldeki "HoopLab" kelimesinde biter; başlıklar kalın grotesk + italik serif (Instrument Serif); canlı demonun çevresinde sentetik gece ölçümü kartları; kaynak izinin altında kural, kaynak ve karar sayıları. Hareketi Azalt açıksa çizgi tam çizili ve sabit. Teknoloji satırı Expo SDK 58'e güncellendi. Maketler: `design/maketler/landing/`.
 - PWA SDK 58.0.23 ile yeniden yayında (2026-11-09): `https://app.hooplab.dev` yeni derlemeyi sunuyor; iPhone'da Expo Go'da sorunsuz (kullanıcı teyidi). `pwa:build` sonunda doğru yayın komutunu yazar (Vercel CLI 62 klasör bağlantısını görmüyor, karar 0054 eki).
