@@ -90,6 +90,8 @@ Tekrar yaşanabilecek hatalar ve önceden bilinen tuzaklar. Her madde: **ders**,
 
 - **[ölçüldü] Kaçış karakteri (`\n`, `\r`, `\u0003`) içeren kod Python dize düzenlemesiyle (heredoc içinde `replace`) yazılmaz:** kaçışlar gerçek kontrol karakterine dönüşüp JS'i bozar ve dosyada görünmez kalır. Kod Write / Edit aracıyla ya da ayrı bir dosyadan aynen yazılır; sonra `node --check`. Kanıt: 2026-10-09 `tools/setup/setup.mjs` `askHidden` ([oturum raporu](sessions/2026-10-08-1206-takip-bant-ve-token.md) Blok 3). **Tekrarladı 2026-10-14:** bölünmez boşluğun kaçışı heredoc'taki Python'la yazılınca dosyaya görünmez U+00A0 olarak girdi; testler geçti, yalnız bayt dökümü (`od -c`) gösterdi. Görünmez karakter gereken yerde kaçış, karakteri kodla üreten ayrı bir betikle yazılır (`String.fromCharCode`) ve `grep` ile kaçışın dosyada olduğu denetlenir ([oturum raporu](sessions/2026-10-14-1844-yakilan-enerji.md)).
 
+- **[ölçüldü] Gizlilik bekçisi adında `fitbit`, `ghealth`, `google-health` veya `takeout` geçen `.json` / `.csv` / `.zip` dosyasını sağlık dışa aktarımı sayar** (kural `saglik-ihraci`, 2026-11-15: altın test anlık görüntüsü `__golden__/fitbit-basketbol.json` takıldı). Sentetik anlık görüntü ve fixture `__fixtures__/` veya `fixtures/synthetic/` altında, kaynak adı geçmeyen bir adla tutulur (`apps/mobile/src/data/__fixtures__/altin-sahip-profili.json`). Bekçi: kuralın kendisi.
+
 ## Windows
 
 - **[ölçüldü] PowerShell'in çalıştırma ilkesi npm'in `.ps1` sarmalayıcılarını engeller: `npm`, `npx` "running scripts is disabled" der.** Kullanıcıya verilen komutlarda `npm.cmd` / `npx.cmd` yazılır; ilkeyi değiştirmeye gerek yok. Kanıt: 2026-10-04 `supabase login`.

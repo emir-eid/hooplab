@@ -1,6 +1,6 @@
 # 0061. Profil: veri kaynağı × spor × cinsiyet; ikinci kullanıcı (Apple Watch, fitness)
 
-- **Durum:** Kabul edildi (kullanıcı, 2026-11-15). Henüz uygulanmadı; sıra aşağıda "Uygulama sırası". Aday kaynaklar [research/inbox/2026-11-15-profil-0061.md](../../research/inbox/2026-11-15-profil-0061.md).
+- **Durum:** Kabul edildi (kullanıcı, 2026-11-15). Sıra 1 uygulandı ve bulutta (2026-11-15: `profiles`, `source`, kaynak bekçisi, altın test, iki kullanıcılı pgTAP); sıra 2-6 bekliyor. Aday kaynaklar [research/inbox/2026-11-15-profil-0061.md](../../research/inbox/2026-11-15-profil-0061.md).
 - **Tarih:** 2026-11-15
 - **İlgili:**
   - [0001](0001-veri-kaynagi-google-health-api.md): Apple Health o gün HRV aktarılmadığı için elenmişti
