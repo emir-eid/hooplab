@@ -5,6 +5,7 @@ Uygulamaya veya altyapıya görünür değişiklikler. Biçim: [Keep a Changelog
 ## [Yayınlanmamış]
 
 ### Eklendi
+- Girişsiz TestFlight gönderimi (karar 0024 eki, 2026-11-14): `npm run eas` sarmalayıcısı `HOOPLAB_ASC_APP_ID`'yi (`.env.local`) yalnız `submit` / `build --auto-submit` süresince `eas.json`'a ekler, sonra geri alır; repodaki `eas.json`'da numara olmadığını bekçi test denetler. EAS CLI 27.10.0. Expo SDK 58 yamaları (`expo` 58.0.25, `expo-router` 58.0.31, `expo-notifications` 58.1.9 ve 11 paket); `@expo/require-utils` 58.0.4'te kalır (58.0.6 web geliştirme sunucusunu çökertiyor).
 - İlk iOS derlemesi ve TestFlight (karar 0024 eki, 2026-11-14): HoopLab 0.1.0 (1) EAS'ta derlendi, App Store Connect'e gönderildi ve iPhone'a TestFlight'tan kuruldu. Push Notifications yetkisi ve APNs anahtarı kuruldu (native push sonraki iş). EAS Update `production` kanalı açıldı. Faz 1 tamamlandı (`faz-1-tamam`).
 - Tanıtım sayfası akıcılığı (karar 0059 eki, 2026-11-13): şut yayı bant başına küçük SVG'lerle çiziliyor, karede yalnız ucun bulunduğu parça değişiyor; uç ekran yüksekliğinin %62'sini izliyor ve hızı sınırlı (bantlar arası yatay geçişte sıçramıyor); telefonda hero'da ekran dışına taşan iniş düzeldi. Yerel derleme `--lan` ile telefondan açılabiliyor (`portfolyo-lan`).
 - Tanıtım sayfası iPhone Safari düzeltmesi (karar 0059 eki, 2026-11-13): şut yayı `mix-blend-mode` yerine bantlara göre iki renkle kırpılarak çiziliyor (Safari üst kısımda çizgiyi siyah gösteriyordu); çizgi metnin arkasında ve kenar boşluğunda, finalde "HoopLab"ın önünde biter.

@@ -74,3 +74,13 @@ Apple üyeliği onaylandı (Individual). İlk derleme ve TestFlight gönderimi t
 - **Süre:** kuyruk ve derleme yaklaşık 7 dakika sürdü (13:25'te yüklendi, 13:32'de bitti). Gönderim birkaç dakika daha sürdü. Kullanıcı aynı gün TestFlight'tan iPhone'a kurdu, uygulama açılıyor ve çalışıyor.
 - **EAS CLI sürümü:** sarmalayıcı `eas-cli@24.10.0`'da kaldı, derleme sorunsuz geçti. Güncel sürüm 27.10 ve CLI her komutta uyarıyor. Yükseltme ayrı bir iş.
 - **Açık iş: sonraki gönderimlerin girişsiz yapılması.** Etkileşimsiz `eas submit`, App Store Connect uygulama numarasını (`ascAppId`) yalnız `eas.json`'dan okur. Bu alan ortam değişkeniyle doldurulamıyor (eas-cli 24.10 kaynağı: `@expo/eas-json` `IosSubmitProfileFieldsToEvaluate` yalnız `ascApiKeyPath`, `ascApiKeyIssuerId`, `ascApiKeyId` alanlarını ortamdan çözüyor). Numara sır değil, ama 0009 gereği repoya kişiye ait kimlik yazılmıyor. Seçenekler sonraki derlemede değerlendirilecek. Şimdilik gönderim interaktif yapılır: Apple oturum çerezi yerelde tutulduğu için bu oturumda yalnız onay soruları geldi.
+
+## Ek: girişsiz gönderim ve EAS CLI 27.10 (2026-11-14, Blok 2)
+- **`ascAppId` repoya yazılmaz (kullanıcı kararı).** Seçenekler:
+  - (a) sarmalayıcı ekler
+  - (b) `eas.json`'a sabit yazılır; 0009'a istisna olurdu, numara public repoda görünürdü
+  - (c) her gönderim etkileşimli yapılır
+
+  Kullanıcı (a)'yı seçti. Numara `apps/mobile/.env.local`'da, `HOOPLAB_ASC_APP_ID` olarak. [tools/dev/eas.mjs](../../tools/dev/eas.mjs) onu yalnız `submit` ve `build --auto-submit` süresince `eas.json`'ın submit profillerine ekler ve bitince (hata ve Ctrl+C dahil) özgün metni geri yazar; yarıda kalmış bir çalıştırmanın bıraktığı numarayı açılışta siler. Bekçi `tools/dev/eas-lib.test.mjs` repodaki `eas.json`'da numara olmadığını denetler. Numara yoksa komut etkileşimli çalışır.
+- **Akış:** derleme ve TestFlight gönderimi tek komut: `npm run eas -- build --platform ios --profile production --auto-submit --non-interactive`, her seferinde kullanıcı onayıyla. Gönderim EAS'ta saklı APP_MANAGER anahtarıyla yapılır, Apple girişi gerekmez (eas-cli kaynağından doğrulandı; gerçek gönderimde henüz denenmedi).
+- **EAS CLI 27.10.0.** 24.10'dan bu yana kırıcı değişiklikler yalnız simulator, workflow ve observe komutlarında (sürüm notları); `ascAppId` hala ortamdan çözülmüyor.

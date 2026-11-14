@@ -141,11 +141,12 @@ Koçun aylık token kullanımı raporu (ücretsiz, API çağırmaz): `npm run co
 
 ## 10. EAS (iOS derleme ve güncelleme)
 
-Proje mevcut kişisel Expo hesabında ([0024](decisions/0024-eas-derleme-ve-guncelleme.md)). Bu bilgisayarda EAS CLI o hesapla girişli. Yeni makinede kullanıcı bir kez `npx.cmd eas-cli@24.10.0 login` yapar.
+Proje mevcut kişisel Expo hesabında ([0024](decisions/0024-eas-derleme-ve-guncelleme.md)). Bu bilgisayarda EAS CLI o hesapla girişli. Yeni makinede kullanıcı bir kez `npx.cmd eas-cli@27.10.0 login` yapar.
 
 - Kimlik değerleri `apps/mobile/.env.local`'da durur (`HOOPLAB_IOS_BUNDLE_ID`, `HOOPLAB_EAS_PROJECT_ID`, `HOOPLAB_EAS_OWNER`; [.env.example](../apps/mobile/.env.example)). Aynı değerler ve iki `EXPO_PUBLIC_SUPABASE_*` değeri EAS'ta "production" ortam değişkeni olarak da durur: `npm run eas -- env:list --environment production`.
 - EAS CLI `.env.local`'ı kendisi yüklemez. Komutlar her zaman `npm run eas -- <komut>` ile çalıştırılır; sarmalayıcı değerleri ortama verir, sürüm sabittir.
-- Native değişiklik (paket, izin, eklenti, SDK) olursa derleme: `npm run eas -- build --platform ios --profile production`. TestFlight'a gönderim (`submit`) her seferinde kullanıcı onayıyla yapılır (CLAUDE.md §7).
+- Native değişiklik (paket, izin, eklenti, SDK) olursa derleme ve TestFlight gönderimi: `npm run eas -- build --platform ios --profile production --auto-submit --non-interactive`. TestFlight'a gönderim her seferinde kullanıcı onayıyla yapılır (CLAUDE.md §7).
+- Etkileşimsiz gönderim `HOOPLAB_ASC_APP_ID`'yi ister (App Store Connect uygulama numarası, `.env.local`). EAS bu alanı ortamdan okumadığı için sarmalayıcı numarayı yalnız `submit` / `--auto-submit` süresince `eas.json`'a ekler ve sonra geri alır. Repodaki `eas.json`'da numara olmaz; bekçi `tools/dev/eas-lib.test.mjs`. Gönderim anahtarı (APP_MANAGER) EAS'ta durur, Apple girişi gerekmez. Değer yoksa komut etkileşimli çalışır ve Apple girişi ister.
 - Yalnız JS, stil veya görsel değiştiyse güncelleme: `npm run eas -- update --channel production --environment production --message "..."`. Üretim kanalına yayın kullanıcı onayıyla yapılır. `runtimeVersion` politikası `fingerprint`: uyumsuz güncelleme eski derlemeye gitmez.
-- İlk derleme Apple Developer üyeliği onaylanınca yapılır. App Store Connect API anahtarı (`.p8`) `private/` klasörüne konur.
+- **İlk derleme** (yeni bir Apple hesabında) etkileşimlidir ve kullanıcının terminalinde çalışır: `npm run eas -- build --platform ios --profile production --auto-submit`. EAS Apple girişi ister, ardından sertifikayı, profili, push anahtarını, App Store Connect kaydını ve gönderim anahtarını kendisi kurar ([0024 eki](decisions/0024-eas-derleme-ve-guncelleme.md)). Sonunda yazdırdığı "ASC App ID" değeri `HOOPLAB_ASC_APP_ID` olarak `.env.local`'a yazılır.
 
