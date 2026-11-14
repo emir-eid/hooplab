@@ -28,3 +28,6 @@ Faz 1'de Supabase projesi açıldı (Frankfurt, ücretsiz plan, yalnız HoopLab'
 - Ücretsiz planda "sızan şifre koruması" yok (yalnız Pro); denetçinin bu uyarısı kabul edildi. Uzun ve benzersiz şifre şifre yöneticisinde.
 - Sabah check-in tablosu ölçek kararı (PRODUCT §10) kaynakla verilince, seans içerik etiketleri Faz 2'de kas / tendon modeliyle eklenir.
 - **Yeniden değerlendirme tetikleyicisi:** çevrimdışı kayıt kuyruğu gerekirse (istemcide üretilen kimlikler zaten uuid), ikinci kullanıcı veya paylaşım istenirse (politikalar sahiplikten fazlasını ister), Pro plana geçilirse (sızan şifre koruması açılır).
+
+## Ek (2026-11-15)
+"İkinci kullanıcı" tetikleyicisi [0061](0061-profil-kaynak-spor-cinsiyet.md) ile karşılandı: RLS kalıbı (her satır `user_id`, `auth.uid() = user_id`) aynen kalır; üstüne `profiles` tablosu, satırlarda `source` ve iki kullanıcılı pgTAP bekçileri gelir.

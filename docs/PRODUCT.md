@@ -10,7 +10,7 @@ Uygulamanın **ne** yaptığını ve **neden** yaptığını anlatır. Nasıl ya
 
 ## 2. Kim için
 
-**Tek kullanıcı:** uygulamanın sahibi, profesyonel basketbolcu, iPhone kullanıcısı. Uygulama başkalarına dağıtılmaz. Portfolyo için yalnız sentetik verili **demo modu** gösterilir.
+**Sahibi ve bir davetli:** uygulamanın sahibi, profesyonel basketbolcu, iPhone kullanıcısı (Fitbit · basketbol). 2026-11-15'ten beri TestFlight iç testine davetli bir kullanıcı daha alınabilir: Apple Watch · fitness profili ([0061](decisions/0061-profil-kaynak-spor-cinsiyet.md)). Kurallar ve modüller her hesabın profiline (veri kaynağı, spor, cinsiyet) göre seçilir; sahibinin hesabı bu ayrımdan etkilenmez. Genel yayın, kayıt ekranı ve App Store yok. Portfolyo için yalnız sentetik verili **demo modu** gösterilir.
 
 Kod public ve MIT lisanslı. Başkası kendi Supabase ve Google Cloud hesabıyla kendisi kurabilir. Merkezi servis yok ([0009](decisions/0009-herkes-kendi-hesabiyla.md)). Sunucu tarafını terminaldeki kurulum sihirbazı kurar ve denetler (`npm run setup`, `npm run setup:check`). Uygulama yalnız kurulum eksikse bunu söyler ([0023](decisions/0023-kurulum-sihirbazi-terminalde.md), [rehber](guides/kurulum.md)). Bu bir kolaylıktır, hedef kitle değil: ürün kararları sahibine göre verilir.
 
@@ -80,7 +80,7 @@ Planlama sırasında anılan çalışmalar. Doğrulanıp `research/sources`'a gi
 ## 8. Kapsam dışı
 
 - Teşhis veya tıbbi cihaz işlevi.
-- Başka kullanıcılar, sosyal özellikler, App Store'da genel yayın.
+- Davetli tek kullanıcı dışında başka kullanıcılar ([0061](decisions/0061-profil-kaynak-spor-cinsiyet.md)), açık kayıt, sosyal özellikler, App Store'da genel yayın.
 - Android.
 - Antrenman sırasında canlı takip (gerçek zamanlı nabız ekranı).
 - Takım / koç paneli. Faz 4'te paylaşılabilir rapor isteğe bağlı olarak değerlendirilebilir.
