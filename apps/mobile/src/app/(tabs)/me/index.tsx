@@ -9,10 +9,11 @@ import { PageHeader } from '@/components/page-header';
 import { Screen } from '@/components/screen';
 import { fetchSyncStatus } from '@/data/google-health';
 import { describeConnection } from '@/data/google-health-status';
-import { anyEnabled } from '@/data/notification-plan';
+import { anyEnabled } from '@/data/notification-prefs';
 import type { DemoScenario } from '@/demo/demo-data';
 import { startDemo, stopDemo, useDemoScenario } from '@/demo/demo-mode';
-import { loadNotificationPrefs } from '@/notifications/scheduler';
+import { unregisterNativePush } from '@/notifications/native';
+import { loadServerPrefs } from '@/notifications/server-prefs';
 import { useAppearance } from '@/theme/appearance';
 
 const themeLabels: Record<ThemePreference, string> = {
@@ -38,7 +39,7 @@ function MeScreen({ demo }: { demo: DemoScenario | null }) {
       void fetchSyncStatus().then((result) => {
         setHealthSummary(result.ok ? describeConnection(result.value, new Date()).summary : undefined);
       });
-      void loadNotificationPrefs().then((p) => setNotificationSummary(anyEnabled(p) ? 'Açık' : 'Kapalı'));
+      void loadServerPrefs().then((p) => setNotificationSummary(anyEnabled(p) ? 'Açık' : 'Kapalı'));
     }, []),
   );
 
@@ -48,9 +49,10 @@ function MeScreen({ demo }: { demo: DemoScenario | null }) {
       void signOut();
       return;
     }
+    // Çıkış yapılmış telefona hatırlatma gitmesin: önce bu iPhone'un bildirim kaydı silinir (karar 0060).
     Alert.alert('Çıkış yapılsın mı?', 'Yeniden girmek için e-posta ve şifren gerekecek.', [
       { text: 'Vazgeç', style: 'cancel' },
-      { text: 'Çıkış yap', style: 'destructive', onPress: () => void signOut() },
+      { text: 'Çıkış yap', style: 'destructive', onPress: () => void unregisterNativePush().then(signOut) },
     ]);
   };
 

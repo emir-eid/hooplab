@@ -1,21 +1,20 @@
 // PWA bildirimleri (karar 0058): ana ekrandaki web uygulamasında hatırlatmaları sunucu Web Push ile gönderir.
-// Bu modül aboneliği (service worker + PushManager) kurar, tercihi ve aboneliği Supabase'e yazar. iPhone
-// uygulamasında kullanılmaz; orada bildirimler telefonda zamanlanır (karar 0045).
+// Bu modül aboneliği (service worker + PushManager) kurar ve Supabase'e yazar; tercih `server-prefs.ts`'te. iPhone
+// uygulamasında kullanılmaz; orada sunucu Expo push servisiyle gönderir (karar 0060, `native.ts`).
 
 import { Platform } from 'react-native';
 
-import { defaultNotificationPrefs, type NotificationPrefs } from '@/data/notification-plan';
 import { demoStore } from '@/demo/demo-mode';
 import { supabase } from '@/lib/supabase';
 
-import type { PermissionState } from './scheduler';
+import type { PermissionState } from './native';
 
 // Expo yalnız doğrudan `process.env.EXPO_PUBLIC_*` erişimini paketlemede yerine koyar; parçalanmamalı.
 const vapidPublicKey = process.env.EXPO_PUBLIC_VAPID_PUBLIC_KEY ?? '';
 
 /**
  * `ok`: abone olunabilir. `install`: tarayıcı Web Push sunmuyor; iPhone'da yalnız ana ekrana eklenmiş uygulamada var.
- * `unconfigured`: derlemede VAPID açık anahtarı yok. `native`: iPhone uygulaması (yerel bildirim).
+ * `unconfigured`: derlemede VAPID açık anahtarı yok. `native`: iPhone uygulaması (Expo push, `native.ts`).
  */
 export type WebPushSupport = 'ok' | 'install' | 'unconfigured' | 'native';
 
@@ -76,55 +75,4 @@ async function subscribe(): Promise<boolean> {
 export async function refreshWebPush(): Promise<void> {
   if (webPushSupport() !== 'ok' || demoStore() || webPermission() !== 'granted') return;
   await subscribe();
-}
-
-const pad2 = (n: number) => String(n).padStart(2, '0');
-const toTime = (hour: number, minute: number) => `${pad2(hour)}:${pad2(minute)}`;
-function fromTime(value: unknown, fallback: { hour: number; minute: number }): { hour: number; minute: number } {
-  const m = typeof value === 'string' ? /^(\d{2}):(\d{2})/.exec(value) : null;
-  return m ? { hour: Number(m[1]), minute: Number(m[2]) } : fallback;
-}
-
-/** PWA'da tercihin doğru kaynağı sunucu: gönderimi o yapar. Satır yoksa varsayılanlar (hepsi kapalı). */
-export async function loadWebPrefs(): Promise<NotificationPrefs> {
-  if (!supabase || demoStore()) return defaultNotificationPrefs;
-  const { data, error } = await supabase
-    .from('notification_prefs')
-    .select('checkin_enabled, checkin_time, match_enabled, match_time, reconnect_enabled')
-    .maybeSingle();
-  if (error || !data) return defaultNotificationPrefs;
-  const d = defaultNotificationPrefs;
-  return {
-    checkin: { enabled: data.checkin_enabled === true, ...fromTime(data.checkin_time, d.checkin) },
-    match: { enabled: data.match_enabled === true, ...fromTime(data.match_time, d.match) },
-    reconnect: { enabled: data.reconnect_enabled === true },
-  };
-}
-
-/** Tercihi ve cihazın saat dilimini yazar (sunucu yerel saati bununla hesaplar). */
-export async function saveWebPrefs(prefs: NotificationPrefs): Promise<boolean> {
-  if (!supabase || demoStore()) return false;
-  const { data: auth } = await supabase.auth.getUser();
-  if (!auth.user) return false;
-  const { error } = await supabase.from('notification_prefs').upsert(
-    {
-      user_id: auth.user.id,
-      time_zone: Intl.DateTimeFormat().resolvedOptions().timeZone || 'UTC',
-      checkin_enabled: prefs.checkin.enabled,
-      checkin_time: toTime(prefs.checkin.hour, prefs.checkin.minute),
-      match_enabled: prefs.match.enabled,
-      match_time: toTime(prefs.match.hour, prefs.match.minute),
-      reconnect_enabled: prefs.reconnect.enabled,
-      updated_at: new Date().toISOString(),
-    },
-    { onConflict: 'user_id' },
-  );
-  return !error;
-}
-
-/** Sunucudan bu kullanıcının aboneliklerine deneme bildirimi. */
-export async function sendWebTest(): Promise<boolean> {
-  if (!supabase || demoStore()) return false;
-  const { error } = await supabase.functions.invoke('push-test', { body: {} });
-  return !error;
 }

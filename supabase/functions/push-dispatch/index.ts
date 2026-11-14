@@ -1,23 +1,29 @@
-// PWA hatırlatmalarının gönderimi (karar 0058). Yalnız 15 dakikalık zamanlayıcı çağırır (pg_cron + pg_net,
-// `x-hooplab-cron` başlığında Vault'taki paylaşılan sır). Tercihi ve aboneliği olan her kullanıcı için şu an
-// gereken hatırlatmalar `push_log`'a yazılır; yazılabilenler (daha önce gönderilmemiş) gönderilir.
-// Yanıtta sağlık değeri yok: yalnız sayımlar.
+// Hatırlatmaların gönderimi (karar 0058, 0060). Yalnız 15 dakikalık zamanlayıcı çağırır (pg_cron + pg_net,
+// `x-hooplab-cron` başlığında Vault'taki paylaşılan sır). Önce Expo makbuzlarına bakılır (uygulaması silinmiş cihaz
+// kaydı düşer). Tercihi olan her kullanıcı için şu an gereken hatırlatmalar `push_log`'a yazılır; yazılabilenler
+// (daha önce gönderilmemiş) iPhone uygulamasına, o yoksa PWA'ya gönderilir. Yanıtta sağlık değeri yok: yalnız sayımlar.
 
 import { withSupabase } from 'npm:@supabase/server@1.9.0';
 
 import { duePushes, localClock, type PushPrefsRow } from '../_shared/push/plan.ts';
-import { readPushEnv, secretsMatch, sendToUser } from '../_shared/push/send.ts';
+import { checkReceipts, readPushEnv, secretsMatch, sendToUser } from '../_shared/push/send.ts';
 
 export default {
   fetch: withSupabase({ auth: 'none' }, async (req, ctx) => {
     if (req.method !== 'POST') return Response.json({ error: 'method_not_allowed' }, { status: 405 });
     const env = readPushEnv((key) => Deno.env.get(key));
-    if (!env) return Response.json({ error: 'not_configured' }, { status: 503 });
     if (!(await secretsMatch(req.headers.get('x-hooplab-cron'), env.cronSecret))) {
       return Response.json({ error: 'unauthorized' }, { status: 401 });
     }
     const admin = ctx.supabaseAdmin;
     const now = new Date();
+
+    let removedDevices = 0;
+    try {
+      removedDevices = (await checkReceipts(admin, env, now)).removedDevices;
+    } catch {
+      console.error('push-dispatch', 'makbuz');
+    }
 
     const { data: prefsRows, error } = await admin
       .from('notification_prefs')
@@ -69,6 +75,6 @@ export default {
         failed++;
       }
     }
-    return Response.json({ users: (prefsRows ?? []).length, sent, failed });
+    return Response.json({ users: (prefsRows ?? []).length, sent, failed, removedDevices });
   }),
 };

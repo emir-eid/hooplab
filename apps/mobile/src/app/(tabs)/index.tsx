@@ -72,7 +72,6 @@ import { fetchTrainingLoad } from '@/data/training-load';
 import type { TrainingLoadView } from '@/data/training-load-view';
 import type { DemoScenario } from '@/demo/demo-data';
 import { useDemoScenario } from '@/demo/demo-mode';
-import { refreshNotifications } from '@/notifications/scheduler';
 import { usePalette } from '@/theme/appearance';
 import { formatDayHeader } from '@/utils/format-date';
 import { addDays, toLocalDate } from '@/utils/local-date';
@@ -233,7 +232,6 @@ function TodayScreen({ demo }: { demo: DemoScenario | null }) {
   async function changeMatchDay(matchDay: boolean) {
     const r = await saveMatchDay(today, matchDay);
     if (!r.ok) return setError(r.message);
-    void refreshNotifications();
     const n = await fetchNutrition(today);
     if (!n.ok) return;
     setNutrition(n.value);

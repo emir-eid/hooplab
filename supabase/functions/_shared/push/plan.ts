@@ -1,6 +1,6 @@
-// PWA hatırlatmalarının sunucu tarafı planı (karar 0058). Saf modül: hangi kullanıcıya şu an hangi hatırlatma
-// gider. Metinler iPhone'daki yerel planla aynı (apps/mobile/src/data/notification-plan.ts, karar 0045); eşitliği
-// test denetler. Metinlerde sağlık değeri yok: kilit ekranında görünürler.
+// Hatırlatmaların sunucu tarafı planı (karar 0058; 2026-11-14'ten beri iPhone uygulaması için de tek plan, karar 0060).
+// Saf modül: hangi kullanıcıya şu an hangi hatırlatma gider. Metinlerde sağlık değeri yok: kilit ekranında görünürler
+// (test denetler).
 
 export type PushKind = 'checkin' | 'match' | 'reconnect';
 

@@ -1,6 +1,6 @@
 # 0058. PWA bildirimleri: sunucudan Web Push (VAPID, `web-push`), 15 dakikalık zamanlayıcı
 
-- **Durum:** Kabul edildi (kullanıcı, 2026-11-05: "kurulsun")
+- **Durum:** Kabul edildi (kullanıcı, 2026-11-05: "kurulsun"). 2026-11-14 eki: iPhone uygulaması kayıtlıysa hatırlatmalar Expo push ile ona gider, PWA'ya yalnız native cihaz yokken ya da ona ulaşılamazken ([0060](0060-native-push-tek-yol.md))
 - **Tarih:** 2026-11-05
 - **İlgili:** [0045](0045-yerel-bildirimler.md) (iPhone uygulamasında yerel bildirimler; metinler ve tercihler), [0046](0046-mac-takvimi-ve-mac-cevresi.md), [0054](0054-pwa-yedek-yolu.md) (PWA; bildirim yolu kararı buraya bırakılmıştı), [oturum raporu](../sessions/2026-11-05-1237-pwa-yayini.md)
 

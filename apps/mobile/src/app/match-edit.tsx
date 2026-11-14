@@ -23,7 +23,6 @@ import { Text } from '@/components/text';
 import { matchRowLabel, venueLabels } from '@/copy/match';
 import { matchDaysAhead } from '@/data/match-view';
 import { deleteMatch, fetchMatches, saveMatch } from '@/data/matches';
-import { refreshNotifications } from '@/notifications/scheduler';
 import { usePalette } from '@/theme/appearance';
 import { toLocalDate } from '@/utils/local-date';
 
@@ -67,7 +66,6 @@ export default function MatchEditScreen() {
     setError(null);
     const r = await saveMatch({ date, startTime: time, venue });
     if (r.ok) {
-      void refreshNotifications();
       router.back();
     } else {
       setError(r.message);
@@ -80,7 +78,6 @@ export default function MatchEditScreen() {
     setBusy(true);
     const r = await deleteMatch(editing);
     if (r.ok) {
-      void refreshNotifications();
       router.back();
     } else {
       setError(r.message);

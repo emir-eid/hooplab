@@ -1,6 +1,6 @@
-// Ben → Bildirimler (karar 0045): yerel hatırlatmaların açılıp kapatıldığı yer. Anahtar açılınca izin istenir;
-// iOS izni reddedildiyse yalnız Ayarlar'dan açılabilir. Tercih bu cihazda saklanır, sunucuya gitmez.
-// PWA'da (karar 0058) aynı ekran Web Push'u açar: tercih ve abonelik Supabase'e yazılır, sunucu gönderir.
+// Ben → Bildirimler (karar 0045, 0058, 0060): hatırlatmaların açılıp kapatıldığı yer. Tercih Supabase'te tek satır;
+// hatırlatmaları sunucu gönderir: iPhone uygulamasına Expo push, iPhone uygulaması kayıtlı değilse PWA'ya Web Push.
+// Anahtar açılınca izin istenir ve bu cihaz kaydedilir; iOS izni reddedildiyse yalnız Ayarlar'dan açılabilir.
 
 import { layout, spacing } from '@hooplab/theme';
 import { useFocusEffect } from 'expo-router';
@@ -18,19 +18,17 @@ import {
   formatClock,
   stepCheckinTime,
   type NotificationPrefs,
-} from '@/data/notification-plan';
+} from '@/data/notification-prefs';
 import { useDemoScenario } from '@/demo/demo-mode';
 import {
   ensureNotificationPermission,
-  loadNotificationPrefs,
+  nativePushSupported,
   notificationPermission,
-  notificationsSupported,
-  refreshNotifications,
-  saveNotificationPrefs,
-  sendTestNotification,
+  registerNativePush,
   type PermissionState,
-} from '@/notifications/scheduler';
-import { enableWebPush, loadWebPrefs, saveWebPrefs, sendWebTest, webPermission, webPushSupport } from '@/notifications/web-push';
+} from '@/notifications/native';
+import { loadServerPrefs, saveServerPrefs, sendServerTest } from '@/notifications/server-prefs';
+import { enableWebPush, webPermission, webPushSupport } from '@/notifications/web-push';
 import { usePalette } from '@/theme/appearance';
 
 export default function NotificationsScreen() {
@@ -41,19 +39,15 @@ export default function NotificationsScreen() {
   const [testNote, setTestNote] = useState<string | null>(null);
   const isWeb = Platform.OS === 'web';
   const webSupport = webPushSupport();
-  const available = (isWeb ? webSupport === 'ok' : notificationsSupported) && demo === null;
+  const available = (isWeb ? webSupport === 'ok' : nativePushSupported) && demo === null;
 
   useFocusEffect(
     useCallback(() => {
-      if (isWeb) {
-        if (webSupport !== 'ok' || demo !== null) return;
-        void loadWebPrefs().then(setPrefs);
-        setPermission(webPermission());
-        return;
-      }
-      void loadNotificationPrefs().then(setPrefs);
-      void notificationPermission().then(setPermission);
-    }, [isWeb, webSupport, demo]),
+      if (!available) return;
+      void loadServerPrefs().then(setPrefs);
+      if (isWeb) setPermission(webPermission());
+      else void notificationPermission().then(setPermission);
+    }, [available, isWeb]),
   );
 
   // Web'de izin isteği dokunuşun içinde kalmalı (iOS): `enableWebPush` ilk await'ten önce çağrılır.
@@ -62,23 +56,23 @@ export default function NotificationsScreen() {
       const granted = isWeb ? await enableWebPush() : await ensureNotificationPermission();
       setPermission(granted);
       if (granted !== 'granted') return;
+      if (!isWeb && !(await registerNativePush())) {
+        setTestNote('Bu iPhone bildirim için kaydedilemedi; bağlantını kontrol edip yeniden dene.');
+        return;
+      }
     }
     setPrefs(next);
-    if (isWeb) {
-      if (!(await saveWebPrefs(next))) setTestNote('Tercih kaydedilemedi; bağlantını kontrol edip yeniden dene.');
-      return;
-    }
-    await saveNotificationPrefs(next);
-    await refreshNotifications();
+    if (!(await saveServerPrefs(next))) setTestNote('Tercih kaydedilemedi; bağlantını kontrol edip yeniden dene.');
   };
 
   const sendTest = () => {
-    if (!isWeb) {
-      void sendTestNotification().then(() => notificationPermission()).then(setPermission);
-      return;
-    }
     setTestNote(null);
-    void sendWebTest().then((ok) => setTestNote(ok ? 'Gönderildi; birkaç saniye içinde gelir.' : 'Gönderilemedi. Önce bir hatırlatmayı açıp izin ver.'));
+    void (async () => {
+      if (!isWeb && (await ensureNotificationPermission()) === 'granted') await registerNativePush();
+      if (!isWeb) setPermission(await notificationPermission());
+      const ok = await sendServerTest();
+      setTestNote(ok ? 'Gönderildi; birkaç saniye içinde gelir.' : 'Gönderilemedi. Önce bir hatırlatmayı açıp izin ver.');
+    })();
   };
 
   const toggle = (label: string, value: boolean, onChange: (v: boolean) => void) => (
@@ -194,7 +188,7 @@ export default function NotificationsScreen() {
         </ListGroup>
       ) : null}
 
-      {permission === 'denied' && notificationsSupported ? (
+      {permission === 'denied' && nativePushSupported ? (
         <ListGroup
           label="İzin"
           footer="Bildirim izni kapalı. iPhone'un Ayarlar uygulamasından açılabilir; açınca buraya dönüp anahtarı yeniden aç."
@@ -210,8 +204,8 @@ export default function NotificationsScreen() {
       ) : (
         <Text variant="footnoteRegular" tone="inkMuted" style={styles.note}>
           {isWeb
-            ? "Hatırlatmaları sunucu gönderir; tercihin, saat dilimin ve bu cihazın bildirim adresi Supabase'te durur. Metinlerde sağlık değerin yazmaz."
-            : 'Bildirimler bu telefonda zamanlanır; sunucuya gitmez. Metinlerde sağlık değerin yazmaz.'}
+            ? "Hatırlatmaları sunucu gönderir; tercihin, saat dilimin ve bu cihazın bildirim adresi Supabase'te durur. iPhone uygulaması kayıtlıysa hatırlatmalar oraya gider, buraya gelmez. Metinlerde sağlık değerin yazmaz."
+            : "Hatırlatmaları sunucu Expo'nun bildirim servisiyle gönderir; tercihin, saat dilimin ve bu iPhone'un bildirim kimliği Supabase'te durur. Hatırlatmalar PWA'ya değil buraya gelir. Metinlerde sağlık değerin yazmaz."}
         </Text>
       )}
     </Screen>

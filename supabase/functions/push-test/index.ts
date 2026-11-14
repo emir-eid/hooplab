@@ -1,5 +1,5 @@
-// PWA'da "Deneme bildirimi gönder" (karar 0058): giriş yapmış kullanıcının kendi aboneliklerine sabit bir deneme
-// bildirimi. Yükte sağlık değeri yok.
+// "Deneme bildirimi gönder" (karar 0058, 0060): giriş yapmış kullanıcıya, hatırlatmalarla aynı yoldan (önce iPhone
+// uygulaması, o yoksa PWA) sabit bir deneme bildirimi. Yükte sağlık değeri yok.
 
 import { withSupabase } from 'npm:@supabase/server@1.9.0';
 
@@ -12,7 +12,6 @@ export default {
     const userId = ctx.userClaims?.id;
     if (!userId || ctx.userClaims?.role !== 'authenticated') return Response.json({ error: 'unauthorized' }, { status: 401 });
     const env = readPushEnv((key) => Deno.env.get(key));
-    if (!env) return Response.json({ error: 'not_configured' }, { status: 503 });
     try {
       const result = await sendToUser(ctx.supabaseAdmin, env, userId, { ...pushTexts.test, route: '/', tag: 'hooplab-test' });
       return Response.json(result, { status: result.sent > 0 ? 200 : result.failed > 0 ? 502 : 404 });

@@ -3,7 +3,6 @@
 import assert from 'node:assert/strict';
 import { test } from 'node:test';
 
-import { planNotifications } from '../../../../apps/mobile/src/data/notification-plan.ts';
 import { duePushes, localClock, pushTexts, type PushPrefsRow } from '../../_shared/push/plan.ts';
 
 const prefs = (over: Partial<PushPrefsRow> = {}): PushPrefsRow => ({
@@ -54,20 +53,13 @@ test('senkron durdu: 09:00 sonrası, her kopma için tek anahtar', () => {
   assert.deepEqual(duePushes(p, { ...base, sync: { state: 'connected', lastSuccessAt: null }, now: at('2026-03-02T14:00:00Z') }), []);
 });
 
-test('metinler iPhone uygulamasının yerel planıyla aynı ve sayı içermez (karar 0045)', () => {
-  const now = new Date(2026, 2, 2, 6, 0);
-  const local = planNotifications(
-    { checkin: { enabled: true, hour: 8, minute: 30 }, reconnect: { enabled: true }, match: { enabled: true, hour: 9, minute: 0 } },
-    { now, checkinDoneToday: false, sync: { state: 'reconnect_required', connected_at: null }, matches: [{ date: '2026-03-02', startTime: '19:00' }] },
-  );
-  const byKind = (k: string) => local.find((n) => n.kind === k);
-  assert.deepEqual([byKind('checkin')?.title, byKind('checkin')?.body], [pushTexts.checkin.title, pushTexts.checkin.body]);
-  assert.deepEqual([byKind('reconnect')?.title, byKind('reconnect')?.body], [pushTexts.reconnect.title, pushTexts.reconnect.body]);
+test('metinler sayı içermez; maç metninde yalnız maç saati (kilit ekranında görünürler, karar 0045)', () => {
+  for (const t of [pushTexts.checkin, pushTexts.reconnect, pushTexts.test]) assert.doesNotMatch(`${t.title} ${t.body}`, /\d/);
   const [match] = duePushes(prefs({ checkin_enabled: false, reconnect_enabled: false }), {
     ...base,
     now: at('2026-03-02T06:01:00Z'),
     match: { startTime: '19:00:00' },
   });
-  assert.deepEqual([byKind('match')?.title, byKind('match')?.body], [match?.title, match?.body]);
-  for (const t of [pushTexts.checkin, pushTexts.reconnect, pushTexts.test]) assert.doesNotMatch(`${t.title} ${t.body}`, /\d/);
+  assert.equal(match?.title, pushTexts.matchTitle);
+  assert.doesNotMatch((match?.body ?? '').replace('19:00', ''), /\d/);
 });
