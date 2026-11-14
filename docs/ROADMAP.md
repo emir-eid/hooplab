@@ -28,7 +28,7 @@ Her faz, bitiş kriteri karşılanınca `/kapat` ile kapanır: faz özeti `docs/
 
 **Bitiş kriteri:** Seçilmiş yön ve TypeScript tema dosyasına çevrilebilir token seti.
 
-## Faz 1: Temel uygulama (MVP)
+## Faz 1: Temel uygulama (MVP) ✓ ([özet](phases/faz-1.md))
 
 - [x] Expo ve Supabase plugin'lerinin kurulumu (Faz 0'dan devir; 2026-10-03)
 - [x] SessionEnd / PreCompact arşiv hook'unun doğrulanması (2026-10-05; SessionEnd 2026-10-03'te, PreCompact gerçek `/compact`'te)
@@ -43,7 +43,7 @@ Her faz, bitiş kriteri karşılanınca `/kapat` ile kapanır: faz özeti `docs/
 - [x] Vücut görünümü: döndürülebilir 3D manken, ağrı haritası, 1 gün / 3 gün / 1 hafta (2026-10-04, [0018](decisions/0018-vucut-gorunumu.md); iPhone'da doğrulandı). Filtrenin bölge yükü raporu Faz 2'de
 - [x] Toparlanma ekranı (HRV / dinlenik nabız / uyku, kişisel banda göre) (2026-10-05, [0021](decisions/0021-toparlanma-kisisel-bant.md); Bugün'de durum, hale, HRV grafiği; web önizlemesinde ve iPhone'da doğrulandı)
 - [x] Demo modu (sentetik "demo sporcu") (2026-10-05, [0022](decisions/0022-demo-modu.md); uygulama içi, çevrimdışı; Hazır / Kontrollü / Toparlan seçici)
-- [ ] Apple Developer Programı, EAS Build, TestFlight. EAS hazır (2026-10-05, [0024](decisions/0024-eas-derleme-ve-guncelleme.md)): proje, `eas.json`, `expo-updates` (fingerprint), kimlik ortamdan, EAS ortam değişkenleri; yerelde doğrulandı. Bekleyen: Apple üyeliği (onay bekleniyor), API anahtarı, ilk derleme ve TestFlight
+- [x] Apple Developer Programı, EAS Build, TestFlight. EAS hazırlığı 2026-10-05 ([0024](decisions/0024-eas-derleme-ve-guncelleme.md)): proje, `eas.json`, `expo-updates` (fingerprint), kimlik ortamdan, EAS ortam değişkenleri. Apple üyeliği 2026-11-14'te onaylandı (Individual). İlk derleme 0.1.0 (1) aynı gün TestFlight'a gönderildi ve iPhone'a kuruldu ([0024 eki](decisions/0024-eas-derleme-ve-guncelleme.md)); Faz 1 tamamlandı ([özet](phases/faz-1.md), `faz-1-tamam`)
 - [x] Public'e geçiş öncesi denetim: `npm run guard:history` temiz (denylist dosyası ve secret ile), README hikayesi, LICENSE (MIT) (2026-10-05, [denetim raporu](audits/2026-10-05-public-oncesi.md)). Secret scanning + push protection private kişisel repoda açılamıyor (422), "Repo public" maddesine taşındı
 - [x] Repo public (2026-10-05 01:57): son geçmiş ve log taraması temiz; görünürlük değişti; secret scanning + push protection açık (ilk taramada uyarı 0); Wiki ve Projects kapatıldı ([denetim raporu](audits/2026-10-05-public-oncesi.md))
 

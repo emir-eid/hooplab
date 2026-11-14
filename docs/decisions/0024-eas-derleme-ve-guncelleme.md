@@ -1,6 +1,6 @@
 # 0024. EAS derleme ve güncelleme: mevcut Expo hesabı, kimlik ortamdan, fingerprint, tek üretim profili
 
-- **Durum:** Kabul edildi. Yapılandırma yerelde doğrulandı (Expo config, `expo-doctor` 21/21, yerel iOS dışa aktarımı, fingerprint). İlk derleme ve TestFlight, Apple Developer üyeliği onaylanınca yapılacak (2026-10-05).
+- **Durum:** Kabul edildi. Yapılandırma yerelde doğrulandı (Expo config, `expo-doctor` 21/21, yerel iOS dışa aktarımı, fingerprint; 2026-10-05). İlk derleme ve TestFlight 2026-11-14'te yapıldı; uygulama iPhone'da TestFlight'tan kurulu (ek aşağıda).
 - **Tarih:** 2026-10-05
 - **İlgili:** [0002](0002-platform-expo-react-native.md), [0009](0009-herkes-kendi-hesabiyla.md), [0016](0016-dis-servisleri-claude-yurutur.md), [0023](0023-kurulum-sihirbazi-terminalde.md), [COSTS](../COSTS.md), ROADMAP Faz 1
 
@@ -63,3 +63,14 @@ Faz 1'in bitiş kriteri: uygulama iPhone'da TestFlight'tan kurulu ve her gün ku
 - Klonlayan kişi kendi değerlerini `.env.local`'a ve kendi EAS projesine yazar ([kurulum rehberi](../guides/kurulum.md)). Repoda kimseye ait kimlik yok.
 - Expo'ya giden veri [DATA-INVENTORY](../DATA-INVENTORY.md)'de: uygulama kodu, herkese açık ortam değerleri, derleme ve güncelleme paketleri. Sağlık verisi gitmez.
 - **Yeniden değerlendirme tetikleyicisi:** Expo kotası yetmezse veya hesap paylaşılırsa (ayrı hesap); Apple kaydı sonuçsuz kalırsa (TestFlight yerine başka kurulum yolu); EAS CLI `.env` dosyalarını kendisi yüklemeye başlarsa (sarmalayıcı sadeleşir).
+
+## Ek: ilk derleme ve TestFlight (2026-11-14)
+Apple üyeliği onaylandı (Individual). İlk derleme ve TestFlight gönderimi tek komutla yapıldı: `npm run eas -- build --platform ios --profile production --auto-submit`. Komut kullanıcının Terminal panelinde çalıştı, çünkü EAS ilk kurulumda Apple hesabıyla interaktif oturum istiyor. Kullanıcı soruları yanıtladı, şifre ve kod sohbete girmedi.
+
+- **Kimlik bilgileri:** EAS paket kimliğini Apple'a kaydetti ve Push Notifications yetkisini açtı (`expo-notifications` eklentisinin `aps-environment` yetkisinden). Dağıtım sertifikasını, profili ve APNs push anahtarını da EAS üretti. Hepsi EAS'ın kimlik deposunda; sertifika ve profil 2027-11-14'e kadar geçerli.
+- **App Store Connect:** uygulama kaydını EAS açtı. "HoopLab" adı başkasına ait olduğu için ad "HoopLab (5d44fb)" oldu (App Store Connect'ten değiştirilebilir; telefonda simgenin altında `app.json`'daki "HoopLab" yazar). İç test grubu "Team (Expo)" kuruldu, kullanıcı eklendi.
+- **Gönderim anahtarı:** App Store Connect API anahtarını EAS üretti, rolü **APP_MANAGER** (en az yetki; ADMIN gerekmedi). Anahtar EAS sunucularında, `.p8` yerelde yok. Kimlikler `private/ops.md`'de.
+- **Sürüm:** `appVersionSource: remote` ilk derlemede `buildNumber`'ı 1 olarak başlattı. Uygulama sürümü 0.1.0. EAS Update'in `production` kanalı ve dalı bu komutla açıldı.
+- **Süre:** kuyruk ve derleme yaklaşık 7 dakika sürdü (13:25'te yüklendi, 13:32'de bitti). Gönderim birkaç dakika daha sürdü. Kullanıcı aynı gün TestFlight'tan iPhone'a kurdu, uygulama açılıyor ve çalışıyor.
+- **EAS CLI sürümü:** sarmalayıcı `eas-cli@24.10.0`'da kaldı, derleme sorunsuz geçti. Güncel sürüm 27.10 ve CLI her komutta uyarıyor. Yükseltme ayrı bir iş.
+- **Açık iş: sonraki gönderimlerin girişsiz yapılması.** Etkileşimsiz `eas submit`, App Store Connect uygulama numarasını (`ascAppId`) yalnız `eas.json`'dan okur. Bu alan ortam değişkeniyle doldurulamıyor (eas-cli 24.10 kaynağı: `@expo/eas-json` `IosSubmitProfileFieldsToEvaluate` yalnız `ascApiKeyPath`, `ascApiKeyIssuerId`, `ascApiKeyId` alanlarını ortamdan çözüyor). Numara sır değil, ama 0009 gereği repoya kişiye ait kimlik yazılmıyor. Seçenekler sonraki derlemede değerlendirilecek. Şimdilik gönderim interaktif yapılır: Apple oturum çerezi yerelde tutulduğu için bu oturumda yalnız onay soruları geldi.
