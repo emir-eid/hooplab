@@ -18,6 +18,10 @@ import { buildWeeklyCoachSnapshot } from './coach-weekly-snapshot.ts';
 import { buildEnergyView, energyFrom, energyHoursFrom } from './energy-view.ts';
 import { buildWeeklyReportView } from './weekly-report-view.ts';
 
+// Demo verisi saatlik enerjiyi cihazın yerel saatiyle (getHours) kurar; anlık görüntü UTC+3'te
+// yazıldı. Saat dilimi sabitlenmezse CI'da (UTC) sonuç 3 saat kayar. Etc/GMT-3 = UTC+3, yaz saati yok.
+process.env.TZ = 'Etc/GMT-3';
+
 const goldenUrl = new URL('./__fixtures__/altin-sahip-profili.json', import.meta.url);
 
 /** Pazartesi, perşembe, pazar: hafta içi ve hafta sonu, haftalık raporun farklı noktaları. */
