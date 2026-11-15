@@ -45,7 +45,15 @@
       "expo-web-browser",
       "expo-font",
       "expo-sharing",
-      "expo-status-bar"
+      "expo-status-bar",
+      [
+        "@kingstinct/react-native-healthkit",
+        {
+          "NSHealthShareUsageDescription": "HoopLab uyku, nabız, HRV, solunum, enerji, adım, antrenman ve döngü kayıtlarını okuyarak toparlanmanı kendi geçmişinle kıyaslar. Veriler yalnız senin hesabına yazılır, reklamda kullanılmaz.",
+          "NSHealthUpdateUsageDescription": "HoopLab Sağlık uygulamasına veri yazmaz ve yazma izni istemez. Bu açıklama, kullanılan HealthKit kütüphanesi yazma işlevleri de içerdiği için Apple tarafından zorunlu tutulur.",
+          "background": true
+        }
+      ]
     ],
     "experiments": {
       "typedRoutes": true,

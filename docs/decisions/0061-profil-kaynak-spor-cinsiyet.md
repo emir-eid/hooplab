@@ -1,6 +1,6 @@
 # 0061. Profil: veri kaynağı × spor × cinsiyet; ikinci kullanıcı (Apple Watch, fitness)
 
-- **Durum:** Kabul edildi (kullanıcı, 2026-11-15). Sıra 1 uygulandı ve bulutta (2026-11-15: `profiles`, `source`, kaynak bekçisi, altın test, iki kullanıcılı pgTAP); sıra 2-6 bekliyor. Aday kaynaklar [research/inbox/2026-11-15-profil-0061.md](../../research/inbox/2026-11-15-profil-0061.md).
+- **Durum:** Kabul edildi (kullanıcı, 2026-11-15). Sıra 1 uygulandı ve bulutta (2026-11-15: `profiles`, `source`, kaynak bekçisi, altın test, iki kullanıcılı pgTAP). Sıra 2 tamam (2026-11-15: kütüphane SDK 58'de sahibinin iPhone'unda izin istedi ve 11 tipi okudu, build 0.1.0 (4); [oturum raporu](../sessions/2026-11-15-0028-profil-karari.md) Blok 3). Sıra 3-6 bekliyor. Aday kaynaklar [research/inbox/2026-11-15-profil-0061.md](../../research/inbox/2026-11-15-profil-0061.md).
 - **Tarih:** 2026-11-15
 - **İlgili:**
   - [0001](0001-veri-kaynagi-google-health-api.md): Apple Health o gün HRV aktarılmadığı için elenmişti
