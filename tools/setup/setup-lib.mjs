@@ -18,6 +18,7 @@ export const FUNCTION_SLUGS = [
   'coach-weekly',
   'push-dispatch',
   'push-test',
+  'healthkit-ingest',
 ];
 export const CRON_JOB = 'google-health-senkron';
 /** PWA bildirimlerinin 15 dakikalık zamanlayıcısı (karar 0058, migration 20261105140528). */

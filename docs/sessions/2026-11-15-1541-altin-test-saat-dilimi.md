@@ -3,7 +3,7 @@
 - **Faz:** tüm fazlar tamam (Faz 1 sonrası)
 - **Durum:** açık (/rep)
 - **Model / efor:** Opus 5.5
-- **Commit'ler:** `1bbc7a9` (Blok 1), Blok 2 `10d9ed3`, Blok 3 `rep` commit'i
+- **Commit'ler:** `1bbc7a9` (Blok 1), Blok 2 `10d9ed3`, Blok 3 `dd7f7f1`, Blok 4 `rep` commit'i
 
 Oturum 2026-11-15 14:36'da açıldı (`/ac`). Ağaç temiz, push bekleyen yok; yeni denetim yok; literatür kutusunda 0061'in 54 adayı `bekliyor`. **CI `Kontroller` / `kontrol` işi üç commit'tir kırmızıydı** (`b39c5da`, `dd75d4c`, `e358a89`); önceki oturum raporunda geçmiyordu. Kullanıcı altın testin düzeltilmesini seçti.
 
@@ -74,12 +74,35 @@ Oturum 2026-11-15 14:36'da açıldı (`/ac`). Ağaç temiz, push bekleyen yok; y
 ### Öğrenilenler
 - yok (yeni ders yok)
 
+## Blok 4 — 0061 sıra 3b: Apple sütunları ve `healthkit-ingest` (23:22)
+
+### Amaç
+Apple verisinin buluta gireceği yolu kurmak: `health_daily`'de ayrı Apple sütunları, yalnız `apple_health` profilini kabul eden yükleme fonksiyonu, iki kullanıcılı pgTAP. Sahibinin satırları ve senkronu değişmeden.
+
+### Yapılanlar
+- **Migration** [`20261115195326_apple_sutunlari.sql`](../../supabase/migrations/20261115195326_apple_sutunlari.sql): `hrv_sleep_sdnn_ms` ve `sleep_hr_bpm` (pozitif); `health_daily_columns_by_source` kısıtı: Apple satırında Fitbit HRV / NREM nabzı, Google satırında Apple sütunları boş olmak zorunda. Kullanıcı yetkileri değişmedi (okur, yazamaz).
+- **Fonksiyon** `healthkit-ingest` ([ingest.ts](../../supabase/functions/_shared/healthkit/ingest.ts), [service.ts](../../supabase/functions/_shared/healthkit/service.ts), [index.ts](../../supabase/functions/healthkit-ingest/index.ts)): telefonun hesapladığı günlük / gecelik değerleri, uyku oturumlarını (Apple "core" → hafif uyku), antrenmanları ve saatlik enerjiyi alır; ham örnek gelmez. Yalnız `auth: 'user'` ve `apple_health` profili (değilse 403, hiçbir şey yazılmaz). Biçim denetimi: bilinmeyen alan, imkansız değer, saat dilimsiz zaman, 24 saati aşan oturum, yinelenen anahtar, 90 günden eski / bir günden ileri tarih ve sayı sınırları reddedilir; yanıtta yalnız alan yolu. Günler tam yazılır (upsert sütun birleşimi, LESSONS). Gövde sınırı 1 MB.
+- **Testler:** birim 11/11 ([ingest.test.ts](../../supabase/functions/tests/healthkit/ingest.test.ts)); pgTAP [apple_sutunlari.test.sql](../../supabase/tests/database/apple_sutunlari.test.sql) 17 madde, toplam 273/273. Yerelde sentetik iki kullanıcıyla uçtan uca: girişsiz 401, GET 405, Google profili 403, hatalı değer 400 (yalnız yol), Apple profili dört tabloya yazdı, tekrar yükleme çoğaltmadı; kullanıcılar silindi.
+- **Kurulum ve tip denetimi:** fonksiyon `setup-lib.mjs` listesinde ve `config.toml`'da (`verify_jwt = false`, kimlik kodda); `supabase/functions/tsconfig.json`'a `healthkit-ingest` ile birlikte dışarıda kalmış `coach-ask` ve `coach-weekly` eklendi (hatasız).
+- **Bulut:** `db push --remote --yes` (dry-run'da yalnız bu migration), `functions deploy healthkit-ingest`. Girişsiz ve sahte jetonlu istek 401; `db advisors` yalnız bilinen sızan şifre uyarısı; sahibinin satırları Google kaynaklı, Apple sütunları boş, kısıt yerinde (salt okuma sorgusu). Migration'dan sonraki ilk saatlik Google senkronu (20:17 UTC) başarılı, hata yok.
+
+### Kararlar
+- Gecelik değerleri telefon hesaplar, sunucu yalnız biçimi denetler: ham HealthKit örneği buluta çıkmaz (veri en aza indirme; 0061'in döngü ilkesiyle aynı).
+- Biçim sınırları sağlık eşiği değil (imkansız değer ve bozuk istemci için); yorum ve eşik motorda, kaynaklı kurallarla.
+- Hatalı istek bütünüyle reddedilir (sessiz düşürme yok); telefon tarafının buna nasıl davranacağı 3d'de.
+
+### Sorunlar ve hatalar
+- Fonksiyon kodunda TypeScript parametre özelliği (`constructor(readonly ...)`) Node'un tip silme kipinde çalışmadı; açık alan atamasına çevrildi.
+
+### Öğrenilenler
+- yok (yeni ders yok)
+
 ## Açık kalanlar
-- 0061 sıra 3b-3d bekliyor (Apple sütunları ve `healthkit-ingest`, motorun Apple seçimi, istemci senkronu ve yeni build; deneme ekranı kaldırılır), sonra sıra 4-6.
+- 0061 sıra 3c (motorun Apple seçimi) ve 3d (istemci senkronu, silinen kayıtların buluttan da silinmesi, reddedilen yüklemede telefonun davranışı, yeni build, deneme ekranının kaldırılması) bekliyor; sonra sıra 4-6.
 - Koçun profil okuması gerçek bir kullanıcıyla henüz çalışmadı (ilk koç çağrısında).
 - Inbox'ın A dışındaki bölümleri `bekliyor`; bakım (Supabase CLI 3.1.0) bekliyor.
 - PWA ana ekran simgesini silmek kullanıcıda.
 - TestFlight 0.1.0 (4) ~2027-02-13'te düşer.
 
 ## Sıradaki adım
-- 0061 sıra 3b: `health_daily` Apple sütunları (`hrv_sleep_sdnn_ms`, `sleep_hr_bpm`), yalnız `apple_health` profilini kabul eden `healthkit-ingest`, iki kullanıcılı pgTAP.
+- 0061 sıra 3c: motor profile göre Apple kurallarını seçer (SDNN bandı "tahmin", uyku nabzına dayanan günün durumu, Apple enerji tahmini); sahibinin altın testi değişmeden.

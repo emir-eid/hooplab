@@ -438,3 +438,7 @@ verify_jwt = false
 
 [functions.push-test]
 verify_jwt = false
+
+# Apple Health yüklemesi (karar 0061): kimlik kodda (@supabase/server, auth: 'user').
+[functions.healthkit-ingest]
+verify_jwt = false

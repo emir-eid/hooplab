@@ -23,5 +23,5 @@
       "npm:web-push@3.6.7": ["../../node_modules/@types/web-push"]
     }
   },
-  "include": ["_shared", "ghealth-connect", "ghealth-callback", "ghealth-sync", "coach-daily", "push-dispatch", "push-test"]
+  "include": ["_shared", "ghealth-connect", "ghealth-callback", "ghealth-sync", "coach-daily", "push-dispatch", "push-test", "coach-ask", "coach-weekly", "healthkit-ingest"]
 }
