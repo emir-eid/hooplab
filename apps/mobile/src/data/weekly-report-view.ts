@@ -27,6 +27,7 @@ import {
   weekPhase,
   weekStartOf,
   type BodySpot,
+  type DataSource,
   type DayLevel,
   type DayType,
   type Match,
@@ -44,7 +45,7 @@ import {
 import type { EnergyDayRow } from './energy-view.ts';
 import { buildNutritionView, toWeightSeries, weightFrom, type FluidRow, type MealRow, type WeightRow } from './nutrition-view.ts';
 import { painMapFromRows, painOf } from './pain-map.ts';
-import { nightlySleep, type HealthDailyRow, type SleepRow } from './recovery-view.ts';
+import { autonomicSeries, nightlySleep, type HealthDailyRow, type SleepRow } from './recovery-view.ts';
 import { loadFrom, loadGroupOf, type LoadParts } from './training-load-view.ts';
 
 export interface WeeklySessionRow {
@@ -163,7 +164,8 @@ export interface WeeklyReportView {
 
 const emptyParts = (): LoadParts => ({ game: 0, court: 0, gym: 0, light: 0 });
 
-export function buildWeeklyReportView(rows: WeeklyRows, weekStart: string, today: string): WeeklyReportView {
+/** `source`: profilin veri kaynağı (karar 0061); verilmezse sahibinin profili (Google Health). */
+export function buildWeeklyReportView(rows: WeeklyRows, weekStart: string, today: string, source: DataSource = 'google_health'): WeeklyReportView {
   const phase = weekPhase(weekStart, today);
   if (phase === 'future') throw new Error(`hafta henüz gelmedi: ${weekStart}`);
   const weekEnd = weekEndOf(weekStart);
@@ -195,8 +197,7 @@ export function buildWeeklyReportView(rows: WeeklyRows, weekStart: string, today
 
   // --- Toparlanma ---
   const health = rows.healthDaily.filter((r) => r.local_date <= last);
-  const hrvSeries = health.map((r) => ({ date: r.local_date, value: r.hrv_deep_rmssd_ms }));
-  const rhrSeries = health.map((r) => ({ date: r.local_date, value: r.nrem_hr_bpm }));
+  const { hrv: hrvSeries, rhr: rhrSeries } = autonomicSeries(health, source);
   const respSeries = health.map((r) => ({ date: r.local_date, value: r.respiratory_rate_bpm }));
   const signInputs = {
     rhr: rhrSeries,
@@ -206,7 +207,7 @@ export function buildWeeklyReportView(rows: WeeklyRows, weekStart: string, today
   const nightsSlept = nightlySleep(rows.sleep.filter((r) => r.local_date <= last));
   const statusDays = dates.map((date) => ({
     date,
-    level: dayStatus(readMetric(hrvSeries, date, { log: true }), readMetric(rhrSeries, date, { log: false }), readSleep(nightsSlept, date)).level,
+    level: dayStatus(readMetric(hrvSeries, date, { log: true }), readMetric(rhrSeries, date, { log: false }), readSleep(nightsSlept, date), source).level,
   }));
   const weekSleep = nightsSlept.filter((n) => inWeek(n.date) && n.value !== null);
   const sleepMinutes = meanOf(weekSleep.map((n) => n.value));

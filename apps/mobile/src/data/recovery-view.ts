@@ -9,6 +9,7 @@ import {
   readRespiration,
   readSleep,
   recoveryLookbackDays,
+  type DataSource,
   type DayStatus,
   type DayValue,
   type IllnessSigns,
@@ -33,11 +34,17 @@ export function chartIndexAt(x: number, width: number, count: number, padX: numb
   return Math.min(count - 1, Math.max(0, Math.round((x - padX) / step)));
 }
 
-/** Nabız: NREM uyku nabzı (rules/toparlanma.json → nabiz-olcu, karar 0041); günlük dinlenik nabız okunmaz. */
+/**
+ * Nabız: NREM uyku nabzı (rules/toparlanma.json → nabiz-olcu, karar 0041); günlük dinlenik nabız okunmaz.
+ * Apple profilinde (karar 0061) HRV gecelik SDNN ortalaması ve uyku nabzı ayrı sütunlardan gelir (hrv-olcu-apple,
+ * nabiz-olcu-apple); iki ölçü hiç karışmaz (veritabanında kaynağa göre kısıt).
+ */
 export interface HealthDailyRow {
   local_date: string;
   hrv_deep_rmssd_ms: number | null;
   nrem_hr_bpm: number | null;
+  hrv_sleep_sdnn_ms?: number | null;
+  sleep_hr_bpm?: number | null;
   respiratory_rate_bpm: number | null;
   spo2_avg_pct: number | null;
   skin_temp_nightly_c: number | null;
@@ -82,9 +89,22 @@ export function nightlySleep(rows: readonly SleepRow[]): DayValue[] {
   return [...byDate].map(([date, value]) => ({ date, value }));
 }
 
-export function buildRecoveryView(daily: readonly HealthDailyRow[], sleepRows: readonly SleepRow[], today: string): RecoveryView {
-  const hrvSeries = daily.map((r) => ({ date: r.local_date, value: r.hrv_deep_rmssd_ms }));
-  const rhrSeries = daily.map((r) => ({ date: r.local_date, value: r.nrem_hr_bpm }));
+/** Profilin kaynağına göre HRV ve uyku nabzı serileri (karar 0061). Varsayılan sahibinin profili (Google Health). */
+export function autonomicSeries(daily: readonly HealthDailyRow[], source: DataSource = 'google_health'): { hrv: DayValue[]; rhr: DayValue[] } {
+  const apple = source === 'apple_health';
+  return {
+    hrv: daily.map((r) => ({ date: r.local_date, value: apple ? (r.hrv_sleep_sdnn_ms ?? null) : r.hrv_deep_rmssd_ms })),
+    rhr: daily.map((r) => ({ date: r.local_date, value: apple ? (r.sleep_hr_bpm ?? null) : r.nrem_hr_bpm })),
+  };
+}
+
+export function buildRecoveryView(
+  daily: readonly HealthDailyRow[],
+  sleepRows: readonly SleepRow[],
+  today: string,
+  source: DataSource = 'google_health',
+): RecoveryView {
+  const { hrv: hrvSeries, rhr: rhrSeries } = autonomicSeries(daily, source);
 
   const hrv = readMetric(hrvSeries, today, { log: true });
   const rhr = readMetric(rhrSeries, today, { log: false });
@@ -113,7 +133,7 @@ export function buildRecoveryView(daily: readonly HealthDailyRow[], sleepRows: r
   );
 
   return {
-    status: dayStatus(hrv, rhr, sleep),
+    status: dayStatus(hrv, rhr, sleep, source),
     hrv,
     rhr,
     sleep,

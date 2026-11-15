@@ -18,6 +18,12 @@ export const energyRule = {
   typicalErrorPct: [15, 30],
 } as const;
 
+/**
+ * rules/enerji.json → enerji-harcamasi-tahmin-apple (karar 0061). Apple Watch için tek bir hata aralığı verilmez,
+ * yalnız "%10'dan fazla" denir (açıklama metni; eşik değil). Gösterim ve hesap Fitbit'le aynı.
+ */
+export const energyRuleApple = { mapeAbovePct: 10 } as const;
+
 /** Gösterilecek değer: en yakın 10 kcal. */
 export function roundKcal(kcal: number): number {
   return Math.round(kcal / energyRule.roundKcal) * energyRule.roundKcal;

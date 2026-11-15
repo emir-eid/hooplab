@@ -170,17 +170,45 @@ export function readSleep(nights: readonly DayValue[], today: string): SleepRead
 export type RecoverySignal = 'hrv_low' | 'hrv_high' | 'rhr_high' | 'sleep_short';
 export type DayLevel = 'ready' | 'caution' | 'recover' | 'insufficient';
 
-/** rules/toparlanma.json → gunun-durumu */
+interface DayStatusRule {
+  /** Bandı olmadan durum üretilmeyen ölçü: 'hrv' ya da 'heart_rate' (uyku nabzı). */
+  requires: 'hrv' | 'heart_rate';
+  recoverWhenAll: readonly RecoverySignal[];
+  cautionWhenAny: readonly RecoverySignal[];
+  noteOnly: readonly RecoverySignal[];
+}
+
+/** rules/toparlanma.json → gunun-durumu (Google Health / Fitbit profili). */
 export const dayStatusRule = {
+  requires: 'hrv',
   recoverWhenAll: ['hrv_low', 'rhr_high'],
   cautionWhenAny: ['hrv_low', 'hrv_high', 'sleep_short'],
   /** Durumu değiştirmez, yalnız not (karar 0041). */
   noteOnly: ['rhr_high'],
-} as const satisfies {
-  recoverWhenAll: readonly RecoverySignal[];
-  cautionWhenAny: readonly RecoverySignal[];
-  noteOnly: readonly RecoverySignal[];
-};
+} as const satisfies DayStatusRule;
+
+/**
+ * rules/toparlanma.json → gunun-durumu-apple (karar 0061). Apple Watch'ta HRV'nin bireysel hatası büyük, uyku nabzı
+ * doğru: durumun dayanağı uyku nabzı, HRV tek başına yalnız not; "toparlan" yine iki işaret birlikteyken.
+ */
+export const dayStatusRuleApple = {
+  requires: 'heart_rate',
+  recoverWhenAll: ['hrv_low', 'rhr_high'],
+  cautionWhenAny: ['rhr_high', 'sleep_short'],
+  noteOnly: ['hrv_low', 'hrv_high'],
+} as const satisfies DayStatusRule;
+
+/** Profilin veri kaynağı (karar 0061; veritabanında profiles.data_source). */
+export type DataSource = 'google_health' | 'apple_health';
+
+/**
+ * Kaynağa göre toparlanma kuralları. Bant yöntemi (toparlanma-bant, ln) ikisinde aynı; değişen ölçüler ve günün
+ * durumu. Apple HRV'si (gecelik SDNN) "tahmin" olarak gösterilir (hrv-olcu-apple).
+ */
+export const recoveryBySource = {
+  google_health: { hrvMetric: 'deep_sleep_rmssd', hrvTransform, hrvEstimate: false, heartRateMetric, dayStatus: dayStatusRule },
+  apple_health: { hrvMetric: 'sleep_sdnn', hrvTransform: 'ln', hrvEstimate: true, heartRateMetric: 'sleep_hr', dayStatus: dayStatusRuleApple },
+} as const satisfies Record<DataSource, { hrvMetric: string; hrvTransform: 'ln'; hrvEstimate: boolean; heartRateMetric: string; dayStatus: DayStatusRule }>;
 
 export interface DayStatus {
   level: DayLevel;
@@ -198,15 +226,18 @@ export function recoverySignals(hrv: MetricReading, rhr: MetricReading, sleep: S
 }
 
 /**
- * HRV bandı yoksa durum üretilmez ('insufficient'); nabız veya uyku eksikse yalnız o işaret yok sayılır.
- * Uyku nabzı yalnız HRV de bandın altındayken durumu ağırlaştırır; tek başına not olarak kalır (karar 0041).
+ * Google Health (varsayılan, sahibinin profili): HRV bandı yoksa durum üretilmez ('insufficient'); nabız veya uyku
+ * eksikse yalnız o işaret yok sayılır. Uyku nabzı yalnız HRV de bandın altındayken durumu ağırlaştırır; tek başına
+ * not olarak kalır (karar 0041). Apple Health: roller yer değiştirir (dayStatusRuleApple, karar 0061).
  */
-export function dayStatus(hrv: MetricReading, rhr: MetricReading, sleep: SleepReading): DayStatus {
+export function dayStatus(hrv: MetricReading, rhr: MetricReading, sleep: SleepReading, source: DataSource = 'google_health'): DayStatus {
+  const rule: DayStatusRule = recoveryBySource[source].dayStatus;
   const signals = recoverySignals(hrv, rhr, sleep);
-  if (hrv.position === null) return { level: 'insufficient', signals };
+  const required = rule.requires === 'hrv' ? hrv : rhr;
+  if (required.position === null) return { level: 'insufficient', signals };
   const has = (x: RecoverySignal) => signals.includes(x);
-  if (dayStatusRule.recoverWhenAll.every(has)) return { level: 'recover', signals };
-  if (dayStatusRule.cautionWhenAny.some(has)) return { level: 'caution', signals };
+  if (rule.recoverWhenAll.every(has)) return { level: 'recover', signals };
+  if (rule.cautionWhenAny.some(has)) return { level: 'caution', signals };
   return { level: 'ready', signals };
 }
 

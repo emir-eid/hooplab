@@ -34,6 +34,9 @@ import {
   checkinBaseline,
   durationLimits,
   energyRule,
+  energyRuleApple,
+  dayStatusRuleApple,
+  recoveryBySource,
   respirationNightRule,
   nightRhrRule,
   nightSpo2Rule,
@@ -73,6 +76,7 @@ const read = (rel: string) => readFileSync(new URL(rel, import.meta.url), 'utf8'
 interface Rule {
   id: string;
   value: Record<string, unknown>;
+  profile?: { source?: string[] };
 }
 function rule(file: string, id: string): Rule {
   const doc = JSON.parse(read(`../../../research/rules/${file}`)) as { rules: Rule[] };
@@ -217,6 +221,32 @@ test('günün durumu birleşimi kuralla aynı', () => {
   assert.deepEqual(value.caution_when_any, [...dayStatusRule.cautionWhenAny]);
   assert.deepEqual(value.note_only, [...dayStatusRule.noteOnly]);
   assert.equal(rule('toparlanma.json', 'nabiz-olcu').value.metric, heartRateMetric);
+  assert.deepEqual(value.requires, [dayStatusRule.requires]);
+});
+
+// Karar 0061: kaynağa göre kural sürümleri. Motorun seçtiği her ölçü ve durum birleşimi, o profile bağlı kuralla aynı.
+test('profil sürümleri: motorun kaynağa göre seçimi kurallarla ve profil alanıyla aynı', () => {
+  const requiresOf = { hrv: 'hrv', heart_rate: 'sleep_hr' } as const;
+  const ids = {
+    google_health: { hrv: 'hrv-olcu', hr: 'nabiz-olcu', status: 'gunun-durumu' },
+    apple_health: { hrv: 'hrv-olcu-apple', hr: 'nabiz-olcu-apple', status: 'gunun-durumu-apple' },
+  } as const;
+  for (const source of ['google_health', 'apple_health'] as const) {
+    const engine = recoveryBySource[source];
+    const hrv = rule('toparlanma.json', ids[source].hrv);
+    const hr = rule('toparlanma.json', ids[source].hr);
+    const status = rule('toparlanma.json', ids[source].status);
+    for (const r of [hrv, hr, status]) assert.deepEqual(r.profile?.source, [source], `${r.id} profili`);
+    assert.equal(hrv.value.metric, engine.hrvMetric, source);
+    assert.equal(hrv.value.transform, engine.hrvTransform, source);
+    assert.equal(hrv.value.estimate === true, engine.hrvEstimate, source);
+    assert.equal(hr.value.metric, engine.heartRateMetric, source);
+    assert.deepEqual(status.value.requires, [requiresOf[engine.dayStatus.requires]], source);
+    assert.deepEqual(status.value.recover_when_all, [...engine.dayStatus.recoverWhenAll], source);
+    assert.deepEqual(status.value.caution_when_any, [...engine.dayStatus.cautionWhenAny], source);
+    assert.deepEqual(status.value.note_only, [...engine.dayStatus.noteOnly], source);
+  }
+  assert.equal(recoveryBySource.apple_health.dayStatus, dayStatusRuleApple);
 });
 
 test('antrenman yükü pencereleri ve eşikleri kuralla aynı', () => {
@@ -354,4 +384,8 @@ test('yakılan enerji kuralla aynı (karar 0043)', () => {
   assert.deepEqual(est.typical_error_pct, [...energyRule.typicalErrorPct]);
   assert.equal(est.in_day_status, false);
   assert.equal(est.compared_with_intake, false);
+  const apple = rule('enerji.json', 'enerji-harcamasi-tahmin-apple').value;
+  assert.equal(apple.mape_above_pct, energyRuleApple.mapeAbovePct);
+  assert.equal(apple.in_day_status, false);
+  assert.equal(apple.compared_with_intake, false);
 });

@@ -3,7 +3,7 @@
 - **Faz:** tüm fazlar tamam (Faz 1 sonrası)
 - **Durum:** açık (/rep)
 - **Model / efor:** Opus 5.5
-- **Commit'ler:** `1bbc7a9` (Blok 1), Blok 2 `10d9ed3`, Blok 3 `dd7f7f1`, Blok 4 `rep` commit'i
+- **Commit'ler:** `1bbc7a9` (Blok 1), Blok 2 `10d9ed3`, Blok 3 `dd7f7f1`, Blok 4 `65e4ce8`, Blok 5 `rep` commit'i
 
 Oturum 2026-11-15 14:36'da açıldı (`/ac`). Ağaç temiz, push bekleyen yok; yeni denetim yok; literatür kutusunda 0061'in 54 adayı `bekliyor`. **CI `Kontroller` / `kontrol` işi üç commit'tir kırmızıydı** (`b39c5da`, `dd75d4c`, `e358a89`); önceki oturum raporunda geçmiyordu. Kullanıcı altın testin düzeltilmesini seçti.
 
@@ -97,12 +97,32 @@ Apple verisinin buluta gireceği yolu kurmak: `health_daily`'de ayrı Apple süt
 ### Öğrenilenler
 - yok (yeni ders yok)
 
+## Blok 5 — 0061 sıra 3c: motorun profile göre Apple kuralları (23:39)
+
+### Amaç
+Motor ve görünüm katmanı kullanıcının veri kaynağına göre Apple kural sürümlerini seçsin; sahibinin çıktısı bayt bayt aynı kalsın (altın test).
+
+### Yapılanlar
+- **Motor** ([recovery.ts](../../packages/engine/src/recovery.ts)): `DataSource` tipi; `dayStatusRuleApple` (`gunun-durumu-apple`: dayanak uyku nabzı, HRV tek başına not, "toparlan" iki işaretle); `recoveryBySource` kaynağa göre HRV / nabız ölçüsünü, "tahmin" bayrağını ve durum kuralını taşır; `dayStatus(..., source = 'google_health')` kuralın `requires` alanına göre (HRV ya da uyku nabzı bandı) `insufficient` verir. `dayStatusRule`'a `requires: 'hrv'` eklendi (değer aynı). [energy.ts](../../packages/engine/src/energy.ts): `energyRuleApple` (`mapeAbovePct: 10`, açıklama metni için).
+- **Görünüm** ([recovery-view.ts](../../apps/mobile/src/data/recovery-view.ts), [weekly-report-view.ts](../../apps/mobile/src/data/weekly-report-view.ts)): `autonomicSeries(daily, source)` Apple'da `hrv_sleep_sdnn_ms` / `sleep_hr_bpm`, varsayılanda Fitbit sütunları; `buildRecoveryView` ve `buildWeeklyReportView` isteğe bağlı `source` alır (varsayılan sahibinin profili). Sorgular değişmedi (3d).
+- **Testler:** `rules-sync` iki profilin ölçü, dönüşüm, "tahmin", nabız ölçüsü, durum birleşimi ve profil alanını kural dosyalarıyla karşılaştırır, Apple enerji kuralı dahil; motorda 5 Apple durum testi ve kaynak verilmezse bütün birleşimlerde Google kuralıyla eşitlik; görünümde Apple sütun seçimi, profiller arası okumama ve varsayılan eşitliği; haftalık raporda Apple satırlarıyla aynı bant. Altın testin anlık görüntüsü değişmedi; `npm run check` yeşil.
+
+### Kararlar
+- Kaynak parametresi her yerde isteğe bağlı ve varsayılanı `google_health`: sahibinin bütün çağrıları dokunulmadan aynı sonucu verir; Apple yolu yalnız açıkça istenince.
+- Ekran ve sorgu değişikliği 3d'ye bırakıldı (profilin okunması, Apple sütunlarının sorguya eklenmesi, "tahmin" etiketi ve Apple metinleri); bu blokta uygulamanın görünür davranışı değişmedi, web önizlemesine bakılmadı.
+
+### Sorunlar ve hatalar
+- yok
+
+### Öğrenilenler
+- yok (yeni ders yok)
+
 ## Açık kalanlar
-- 0061 sıra 3c (motorun Apple seçimi) ve 3d (istemci senkronu, silinen kayıtların buluttan da silinmesi, reddedilen yüklemede telefonun davranışı, yeni build, deneme ekranının kaldırılması) bekliyor; sonra sıra 4-6.
+- 0061 sıra 3d (uygulamada profilin okunması, Apple sütunlarının sorguya eklenmesi, "tahmin" etiketi ve Apple metinleri, istemci senkronu, silinen kayıtların buluttan da silinmesi, reddedilen yüklemede telefonun davranışı, yeni build, deneme ekranının kaldırılması) bekliyor; sonra sıra 4-6.
 - Koçun profil okuması gerçek bir kullanıcıyla henüz çalışmadı (ilk koç çağrısında).
 - Inbox'ın A dışındaki bölümleri `bekliyor`; bakım (Supabase CLI 3.1.0) bekliyor.
 - PWA ana ekran simgesini silmek kullanıcıda.
 - TestFlight 0.1.0 (4) ~2027-02-13'te düşer.
 
 ## Sıradaki adım
-- 0061 sıra 3c: motor profile göre Apple kurallarını seçer (SDNN bandı "tahmin", uyku nabzına dayanan günün durumu, Apple enerji tahmini); sahibinin altın testi değişmeden.
+- 0061 sıra 3d: uygulama profili okur ve görünümlere `source` geçer; Apple'da HealthKit senkronu (observer + saatlik arka plan, açılışta yakalama) `healthkit-ingest`'e; silinen kayıtlar ve reddedilen yükleme; "tahmin" etiketi ve Apple metinleri; yeni build, deneme ekranı kaldırılır. Sahibinde HealthKit hiç okunmaz.

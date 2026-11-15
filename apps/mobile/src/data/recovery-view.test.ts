@@ -153,3 +153,42 @@ test('gece işaretleri satırlardan okunur (karar 0039): nabız iki gece medyan�
   assert.equal(calm.signs.rhr.flagged, false);
   assert.equal(calm.signs.skinTemp.flagged, false);
 });
+
+// Karar 0061: Apple profili kendi sütunlarını okur; varsayılan (sahibinin profili) Fitbit sütunlarını.
+/** Apple satırı: Fitbit HRV / NREM sütunları boş (veritabanı kısıtı), SDNN ve uyku nabzı dolu. */
+function appleDaily(recentSdnn: number, recentHr: number): HealthDailyRow[] {
+  return daily(0, 0).map((r, i) => ({
+    ...r,
+    hrv_deep_rmssd_ms: null,
+    nrem_hr_bpm: null,
+    hrv_sleep_sdnn_ms: i < 7 ? recentSdnn : i % 2 === 0 ? 40 : 60,
+    sleep_hr_bpm: i < 7 ? recentHr : i % 2 === 0 ? 50 : 54,
+  }));
+}
+
+test('Apple profili: SDNN ve uyku nabzı sütunlarından okur, durum Apple kuralıyla', () => {
+  const v = buildRecoveryView(appleDaily(30, 52), nights(450), today, 'apple_health');
+  assert.equal(v.hrv.position, 'below');
+  assert.equal(v.rhr.position, 'within');
+  assert.deepEqual(v.status, { level: 'ready', signals: ['hrv_low'] }, 'HRV tek başına yalnız not');
+  assert.equal(v.chart.at(-1)?.value, 30);
+  const both = buildRecoveryView(appleDaily(30, 60), nights(450), today, 'apple_health');
+  assert.equal(both.status.level, 'recover');
+  const hrOnly = buildRecoveryView(appleDaily(49, 60), nights(450), today, 'apple_health');
+  assert.equal(hrOnly.status.level, 'caution', 'uyku nabzı tek başına kontrollü');
+});
+
+test('Apple satırları sahibinin yolunda okunmaz; Fitbit satırları Apple yolunda okunmaz', () => {
+  const appleAsOwner = buildRecoveryView(appleDaily(30, 60), nights(450), today);
+  assert.equal(appleAsOwner.hrv.rollingN, 0);
+  assert.equal(appleAsOwner.status.level, 'insufficient');
+  const fitbitAsApple = buildRecoveryView(daily(40, 56), nights(450), today, 'apple_health');
+  assert.equal(fitbitAsApple.rhr.rollingN, 0);
+  assert.equal(fitbitAsApple.status.level, 'insufficient');
+});
+
+test('kaynak verilmezse sahibinin profili: açık google_health ile aynı görünüm', () => {
+  for (const [h, r] of [[40, 56], [60, 50], [70, 48]] as const) {
+    assert.deepEqual(buildRecoveryView(daily(h, r), nights(400), today), buildRecoveryView(daily(h, r), nights(400), today, 'google_health'));
+  }
+});

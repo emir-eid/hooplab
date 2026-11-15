@@ -162,3 +162,19 @@ test('ilk hafta: en eski kaydın haftası', () => {
   assert.equal(firstWeekOf([null]), null);
   assert.equal(addIsoDays(weekStartOf('2026-10-03'), 0), '2026-09-28');
 });
+
+test('Apple profili (karar 0061): haftalık durum ve bant Apple sütunlarından; kaynak verilmezse sahibinin yolu', () => {
+  const rows = demo('green');
+  // Demo satırlarını Apple satırına çevir: aynı sayılar SDNN ve uyku nabzı sütunlarında, Fitbit sütunları boş.
+  const apple: WeeklyRows = {
+    ...rows,
+    healthDaily: rows.healthDaily.map((r) => ({ ...r, hrv_deep_rmssd_ms: null, nrem_hr_bpm: null, hrv_sleep_sdnn_ms: r.hrv_deep_rmssd_ms, sleep_hr_bpm: r.nrem_hr_bpm })),
+  };
+  const owner = buildWeeklyReportView(rows, lastWeek, today);
+  const asApple = buildWeeklyReportView(apple, lastWeek, today, 'apple_health');
+  assert.deepEqual(asApple.recovery.hrv, owner.recovery.hrv, 'aynı sayılar aynı bandı verir');
+  assert.deepEqual(asApple.recovery.rhr, owner.recovery.rhr);
+  assert.ok(asApple.recovery.days.every((d) => d.level !== 'insufficient'));
+  assert.deepEqual(buildWeeklyReportView(rows, lastWeek, today, 'google_health'), owner);
+  assert.ok(buildWeeklyReportView(apple, lastWeek, today).recovery.days.every((d) => d.level === 'insufficient'), 'Apple satırı sahibinin yolunda okunmaz');
+});

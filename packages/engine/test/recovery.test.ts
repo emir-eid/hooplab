@@ -162,3 +162,41 @@ test('günün durumu: HRV bandı yoksa durum yok, uyku işareti yine gelir', () 
     signals: ['rhr_high', 'sleep_short'],
   });
 });
+
+// Karar 0061: Apple Watch profili (gunun-durumu-apple). Varsayılan (kaynak verilmezse) Google Health davranışıdır.
+test('Apple profili: iki otonom işaret birlikte yine toparlan', () => {
+  assert.deepEqual(dayStatus(metric('below'), metric('above'), sleep(false), 'apple_health'), {
+    level: 'recover',
+    signals: ['hrv_low', 'rhr_high'],
+  });
+});
+
+test('Apple profili: HRV tek başına yalnız not, durumu değiştirmez', () => {
+  assert.deepEqual(dayStatus(metric('below'), metric('within'), sleep(false), 'apple_health'), { level: 'ready', signals: ['hrv_low'] });
+  assert.deepEqual(dayStatus(metric('above'), metric('within'), sleep(false), 'apple_health'), { level: 'ready', signals: ['hrv_high'] });
+});
+
+test('Apple profili: uyku nabzı yüksek ya da uyku kısa → kontrollü', () => {
+  assert.equal(dayStatus(metric('within'), metric('above'), sleep(false), 'apple_health').level, 'caution');
+  assert.equal(dayStatus(metric('within'), metric('within'), sleep(true), 'apple_health').level, 'caution');
+  assert.equal(dayStatus(metric('above'), metric('above'), sleep(false), 'apple_health').level, 'caution');
+});
+
+test('Apple profili: durumun dayanağı uyku nabzı; nabız bandı yoksa durum yok, HRV bandı olmasa da durum var', () => {
+  assert.deepEqual(dayStatus(metric('below'), metric(null), sleep(true), 'apple_health'), {
+    level: 'insufficient',
+    signals: ['hrv_low', 'sleep_short'],
+  });
+  assert.equal(dayStatus(metric(null), metric('within'), sleep(false), 'apple_health').level, 'ready');
+  assert.equal(dayStatus(metric(null), metric('above'), sleep(false), 'apple_health').level, 'caution');
+});
+
+test('kaynak verilmezse Google Health kuralı (sahibinin davranışı aynı)', () => {
+  for (const h of ['below', 'within', 'above', null] as const) {
+    for (const r of ['below', 'within', 'above', null] as const) {
+      for (const s of [true, false, null]) {
+        assert.deepEqual(dayStatus(metric(h), metric(r), sleep(s)), dayStatus(metric(h), metric(r), sleep(s), 'google_health'));
+      }
+    }
+  }
+});
