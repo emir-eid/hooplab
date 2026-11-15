@@ -230,6 +230,26 @@ export const kbSources: readonly KbSource[] = [
     "summary": "## Ne söylüyor (kendi cümlelerimizle)\n\n- Performansı artıran antrenman dönemlerinde dinlenik vagal HRV (rMSSD) küçük ölçüde arttı.\n- Aşırı yüklenme (performansın düştüğü dönem) dinlenik HRV'yi pek değiştirmedi; egzersiz sonrası HRV ve nabız toparlanması ise hem olumlu uyumda hem aşırı yüklenmede arttı.\n- Sonuç: HRV tek başına olumlu ve olumsuz uyumu ayırt etmeye yetmeyebilir; ek göstergeler gerekir.\n\n## Uygulamada kullanılan sayılar\n\n| Değer | Birim | Bağlam / koşul |\n|---|---|---|\n| HRV tek başına karar vermez | ilke | Günün durumu HRV, dinlenik nabız ve uykuyla birlikte okunur; arayüz \"teşhis\" değil \"izleme\" dili kullanır |\n\n## Sınırlılıklar\n\n- Dayanıklılık sporcuları; ölçüm protokolleri farklı. Basketbol yok.\n- Yalnız özet okundu."
   },
   {
+    "id": "bonneval-2025",
+    "title": "Validity of Heart Rate Variability Measured with Apple Watch Series 6 Compared to Laboratory Measures",
+    "authors": [
+      "Bonneval L",
+      "Wing D",
+      "Sharp S",
+      "Tristao Parra M",
+      "Moran R",
+      "LaCroix A",
+      "Godino J"
+    ],
+    "year": 2025,
+    "type": "cross-sectional",
+    "doi": "10.3390/s25082380",
+    "pmid": "40285070",
+    "journal": "Sensors",
+    "population": "Sağlıklı yetişkinler, n=78 (20-75 yaş); laboratuvarda dinlenme, konuşma, film izleme ve yürüyüş öncesi / sonrası",
+    "summary": "## Ne söylüyor (kendi cümlelerimizle)\n\n- Apple Watch Series 6'nın Breathe oturumlarında ölçtüğü değerler aynı anda alınan 3 derivasyonlu EKG ile kıyaslandı.\n- En iyi uyum dinlenirken görüldü: atımlar arası süre ve nabızda neredeyse tam uyum (ortalama mutlak yüzde hata ~%1).\n- HRV'nin dayandığı normal atım aralıklarında uyum orta düzeydeydi (dinlenirken ortalama mutlak yüzde hata ~%31).\n\n## Uygulamada kullanılan sayılar\n\n| Değer | Birim | Bağlam / koşul |\n|---|---|---|\n| ~%1 | MAPE | Dinlenirken Apple Watch nabzı doğru (`nabiz-olcu-apple`) |\n| ~%31 | MAPE | HRV'nin dayandığı aralıklarda hata büyük (`hrv-olcu-apple`) |\n\n## Sınırlılıklar\n\n- Laboratuvar koşulu, kısa kayıtlar; uyku içi ölçüm değil.\n- Tek model (Series 6); sporcu değil.\n- Yalnız özet okundu (tam metin açık: PMC12031371)."
+  },
+  {
     "id": "bosquet-2008",
     "title": "Is heart rate a convenient tool to monitor over-reaching? A systematic review of the literature",
     "authors": [
@@ -400,6 +420,21 @@ export const kbSources: readonly KbSource[] = [
     "summary": "## Ne söylüyor (kendi cümlelerimizle)\n\n- Nabız ve hareketi birlikte kullanan Fitbit'lerin enerji harcamasını referans yöntemlerle karşılaştıran Bland-Altman meta-analizi.\n- Yanlılık riski yüksek çalışmalar çıkarıldığında Fitbit dakikada ortalama 2,77 kcal az tahmin ediyor; tek bir ölçümün sapması dakikada yaklaşık −12,75 ile +7,41 kcal arasına yayılabiliyor.\n- Az tahmin ve dağınıklık orta-şiddetli yoğunlukta hafif yoğunluğa göre daha büyük; en kötü sonuç bisiklette.\n- Ortalama yanlılık küçük görünse de kişiden kişiye ve ölçümden ölçüme yayılım geniş: tek bir değer güvenilir bir ölçüm sayılmaz.\n\n## Uygulamada kullanılan sayılar\n\n| Değer | Birim | Bağlam / koşul |\n|---|---|---|\n| Ortalama az tahmin, geniş yayılım | ilke | Arayüzde değer \"Tahmin\" etiketli, en yakın 10 kcal'e yuvarlanır (karar 0043) |\n\n## Sınırlılıklar\n\n- Çalışmaların çoğu laboratuvarda ve kısa süreli; takım sporu yok. Eski Fitbit modelleri; Fitbit Air değil.\n- Tam metin okundu (Europe PMC, PMC9047731)."
   },
   {
+    "id": "choe-2025",
+    "title": "Apple watch accuracy in monitoring health metrics: a systematic review and meta-analysis",
+    "authors": [
+      "Choe JP",
+      "Kang M"
+    ],
+    "year": 2025,
+    "type": "meta-analysis",
+    "doi": "10.1088/1361-6579/adca82",
+    "pmid": "40199339",
+    "journal": "Physiological Measurement",
+    "population": "56 çalışma, 270 etki büyüklüğü (enerji 71, nabız 148, adım 51); yetişkinler",
+    "summary": "## Ne söylüyor (kendi cümlelerimizle)\n\n- Apple Watch'un enerji harcaması, nabız ve adım ölçümleri referans yöntemlerle kıyaslandı.\n- Nabız ve adım genel olarak doğru; enerji harcamasında bütün alt gruplarda ortalama mutlak yüzde hata %10 geçerlik eşiğini aştı.\n- Doğruluk yaşa, sağlık durumuna, cihaz serisine, etkinliğin türüne ve şiddetine göre değişti.\n\n## Uygulamada kullanılan sayılar\n\n| Değer | Birim | Bağlam / koşul |\n|---|---|---|\n| %10'un üzerinde (bütün alt gruplarda) | MAPE | Apple'ın enerji harcaması geçerlik eşiğinin dışında; \"tahmin\" olarak gösterilir (`enerji-harcamasi-tahmin-apple`) |\n| %10'un altında | MAPE | Apple nabzı geçerlik eşiği içinde (`nabiz-olcu-apple`) |\n\n## Sınırlılıklar\n\n- Çalışmaların çoğu etkinlik sırasında kısa ölçümler; günlük toplam enerji ve uyku nabzı ayrıca incelenmedi.\n- Sporculara özgü değil.\n- Yalnız özet okundu."
+  },
+  {
     "id": "collins-2021",
     "title": "UEFA expert group statement on nutrition in elite football. Current evidence to inform practical recommendations and guide future research",
     "authors": [
@@ -526,6 +561,26 @@ export const kbSources: readonly KbSource[] = [
     "journal": "Frontiers in Public Health",
     "population": "Takım sporcuları; 41 ileriye dönük çalışma, 16'sı meta-analizde (797 sporcu)",
     "summary": "## Ne söylüyor (kendi cümlelerimizle)\n\n- Yüksek oran, sakatlık riskindeki artışla küçük-orta düzeyde ilişkili; ancak çalışmalar arasındaki fark çok büyük (I² yaklaşık yüzde 96).\n- İlişki temaslı ve temassız sakatlıklarda daha belirgin; zaman kaybettiren sakatlıklarda ve diğer alt gruplarda anlamlı değil.\n- Sonuç: oran tek başına nedensel ya da tahmin edici bir model olarak kullanılmamalı; bireyselleştirilmiş, çok göstergeli bir yük yönetiminin içinde bağlam veren bir izleme göstergesi olarak okunmalı.\n- Dahil edilen çalışmalarda kayan ortalama ve EWMA, bağlı ve bağsız hesapların hepsi var.\n\n## Uygulamada kullanılan sayılar\n\nDoğrudan eşik alınmadı. Oranın HoopLab'de \"bağlam göstergesi\" olarak sunulmasının en güncel ve en yüksek düzeydeki dayanağı.\n\n## Sınırlılıklar\n\n- Yüksek heterojenlik; basketbol çalışması az.\n- Açık erişimli tam metnin ilgili bölümleri okundu (PMC13520966)."
+  },
+  {
+    "id": "dobbs-2019",
+    "title": "The Accuracy of Acquiring Heart Rate Variability from Portable Devices: A Systematic Review and Meta-Analysis",
+    "authors": [
+      "Dobbs WC",
+      "Fedewa MV",
+      "MacDonald HV",
+      "Holmes CJ",
+      "Cicone ZS",
+      "Plews DJ",
+      "Esco MR"
+    ],
+    "year": 2019,
+    "type": "meta-analysis",
+    "doi": "10.1007/s40279-019-01061-5",
+    "pmid": "30706234",
+    "journal": "Sports Medicine",
+    "population": "23 doğrulama çalışması, 301 etki büyüklüğü; taşınabilir cihazlar EKG'ye karşı (2017 Temmuz'a kadar yayınlar)",
+    "summary": "## Ne söylüyor (kendi cümlelerimizle)\n\n- Taşınabilir cihazların HRV değerleri EKG'den küçük ama çok heterojen bir farkla ayrıldı.\n- Hatanın büyüklüğünü ölçünün türü, vücut pozisyonu ve cinsiyet etkiledi; cihazın kendisi etkilemedi.\n- Ölçüler arasında en büyük mutlak hata SDNN'deydi; aykırı değerler çıkarılınca bu fark anlamlılığını yitirdi.\n- Yazarlar küçük hatanın sahada pratiklik karşılığında kabul edilebilir olduğunu söylüyor.\n\n## Uygulamada kullanılan sayılar\n\n| Değer | Birim | Bağlam / koşul |\n|---|---|---|\n| SDNN'de hata diğer ölçülerden büyük | ilke | Apple yolunda HRV tek başına durum tetiklemez, yalnız uyku nabzıyla birlikte (`gunun-durumu-apple`) |\n\n## Sınırlılıklar\n\n- 2017'ye kadar olan cihazlar; çoğu göğüs bandı ve parmak / kamera ölçümü. Apple Watch'un bugünkü algoritması kapsamda değil.\n- Heterojenlik çok yüksek (I² ~%79).\n- Yalnız özet okundu."
   },
   {
     "id": "doeven-2018",
@@ -1012,6 +1067,42 @@ export const kbSources: readonly KbSource[] = [
     "summary": "## Ne söylüyor (kendi cümlelerimizle)\n\n- Fitbit'in gece SpO2'si referansa göre ortalama yaklaşık 2 puan yüksek okudu.\n- Referansla uyumu zayıf, geceden geceye değişimi izleme gücü düşük bulundu.\n- Yazarlar bilekliğin uykuda üstüne yatılmasının ölçümü bozabileceğini belirtiyor.\n\n## Uygulamada kullanılan sayılar\n\nDoğrudan eşik alınmadı. Gece SpO2 notunun tek geceye değil son 3 gecenin 2'sine bakmasının ve \"cihaz ölçümü, tıbbi oksimetre değil\" uyarısının dayanağı.\n\n## Sınırlılıklar\n\n- SpO2 yalnız KOAH hastalarında analiz edildi; sağlıklı kişide uykuda doğruluk bilinmiyor. Küçük örneklem."
   },
   {
+    "id": "hirten-2021",
+    "title": "Use of Physiological Data From a Wearable Device to Identify SARS-CoV-2 Infection and Symptoms and Predict COVID-19 Diagnosis: Observational Study",
+    "authors": [
+      "Hirten RP",
+      "Danieletto M",
+      "Tomalin L",
+      "Choi KH",
+      "Zweig M",
+      "Golden E",
+      "Kaur S",
+      "Helmus D",
+      "Biello A",
+      "Pyzik R",
+      "Charney A",
+      "Miotto R",
+      "Glicksberg BS",
+      "Levin M",
+      "Nabeel I",
+      "Aberg J",
+      "Reich D",
+      "Charney D",
+      "Bottinger EP",
+      "Keefer L",
+      "Suarez-Farinas M",
+      "Nadkarni GN",
+      "Fayad ZA"
+    ],
+    "year": 2021,
+    "type": "cohort",
+    "doi": "10.2196/26107",
+    "pmid": "33529156",
+    "journal": "Journal of Medical Internet Research",
+    "population": "Sağlık çalışanları (ileriye dönük gözlem, Apple Watch ile sürekli izleme); sporcu değil",
+    "summary": "## Ne söylüyor (kendi cümlelerimizle)\n\n- Apple Watch'un gün boyu kaydettiği SDNN'nin günlük ritmi COVID-19 olan ve olmayan katılımcılar arasında farklıydı.\n- Tanıdan önceki ve sonraki haftalarda ve ilk belirti gününde SDNN'nin ortalaması ve günlük ritminin genliği değişti.\n- Yani Apple'ın SDNN'si, tek tek değerleri hatalı olsa da uzun süreli kişisel izlemede fizyolojik bir değişimi taşıyabiliyor.\n\n## Uygulamada kullanılan sayılar\n\n| Değer | Birim | Bağlam / koşul |\n|---|---|---|\n| Uzun süreli kişisel SDNN izlemesi sinyal taşır (eşik yok) | ilke | Apple'da HRV kişisel bantla gösterilir ama yalnız uyku nabzıyla birlikte duruma girer (`hrv-olcu-apple`) |\n\n## Sınırlılıklar\n\n- Konu enfeksiyon, antrenman yükü değil; model istatistiksel, bireysel karar eşiği vermiyor.\n- Sporcu değil; ölçümler gün boyu, gece penceresine özgü değil.\n- Yazarların çoğunun ticari ilişkileri var (makalede belirtilmiş).\n- Yalnız özet okundu (tam metin açık: PMC7901594)."
+  },
+  {
     "id": "hooper-1995",
     "title": "Markers for monitoring overtraining and recovery",
     "authors": [
@@ -1272,6 +1363,25 @@ export const kbSources: readonly KbSource[] = [
     "journal": "PLOS One",
     "population": "Sağlıklı yetişkinler, n=34 (enerji harcaması analizinde 30); koşu bandında maksimal test, referans dolaylı kalorimetri",
     "summary": "## Ne söylüyor (kendi cümlelerimizle)\n\n- Fitbit'in algoritmalarını kullanan bir Google saatinin enerji harcaması laboratuvarda dolaylı kalorimetriyle karşılaştırılmış.\n- Saat ortalamada hafifçe az tahmin etmiş; ortalama mutlak yüzde hata %15,02 (%95 GA 10,70-19,33).\n- Hata kişiden kişiye çok değişmiş: kişi bazında ortalama mutlak yüzde hata yaklaşık %2 ile %49 arasında.\n- Yazarlar sensör ve yazılım değiştiği için eski Fitbit çalışmalarının sonuçlarının yeni cihazlara taşınamayacağını belirtiyor.\n\n## Uygulamada kullanılan sayılar\n\n| Değer | Birim | Bağlam / koşul |\n|---|---|---|\n| 15 | % | Ortalama mutlak yüzde hata; tipik hata aralığının alt ucu (`enerji-harcamasi-tahmin`) |\n\n## Sınırlılıklar\n\n- Yalnız sürekli koşu bandı testi; aralıklı ya da sıçramalı hareket yok. Pixel Watch 3, Fitbit Air değil.\n- Google çalışmayı fonlamış; yazarlar bağımsız olduklarını belirtiyor.\n- Tam metin okundu (Europe PMC, PMC13577386)."
+  },
+  {
+    "id": "lambe-2026b",
+    "title": "The accuracy of Apple Watch measurements: a living systematic review and meta-analysis",
+    "authors": [
+      "Lambe R",
+      "Baldwin M",
+      "O'Grady B",
+      "Schumann M",
+      "Caulfield B",
+      "Doherty C"
+    ],
+    "year": 2026,
+    "type": "meta-analysis",
+    "doi": "10.1038/s41746-025-02238-1",
+    "pmid": "41513748",
+    "journal": "npj Digital Medicine",
+    "population": "82 doğrulama çalışması, 14 sağlık ölçüsü, toplam ~430.000 katılımcı (ortalama yaş ~41); Eylül 2025'e kadar",
+    "summary": "## Ne söylüyor (kendi cümlelerimizle)\n\n- Apple Watch'un ölçtüğü her şeyi kriter yöntemlerle kıyaslayan, güncellenen bir meta-analiz (repodaki `lambe-2026`'dan ayrı makale).\n- Nabız ortalamada çok az düşük ölçülüyor (yaklaşık −0,3 atım/dk) ama tek ölçümde ±7 atım/dk'ya varan oynama olabiliyor.\n- Uyku ve adımda doğruluk orta; enerji harcamasında hata tutarsız ve çoğu zaman büyük.\n- Doğruluk ölçüye, ölçüm koşuluna ve kişinin fizyolojisine göre değişiyor.\n\n## Uygulamada kullanılan sayılar\n\n| Değer | Birim | Bağlam / koşul |\n|---|---|---|\n| Ortalama fark −0,27, uyum sınırı yaklaşık −7 / +7 | atım/dk | Apple nabzı ortalamada doğru; tek gecelik değer değil bant kullanılır (`nabiz-olcu-apple`) |\n| Enerji harcaması hatası tutarsız ve büyük | ilke | Apple'da yakılan enerji \"tahmin\" olarak gösterilir, durum ve beslenme hedefiyle kıyaslanmaz (`enerji-harcamasi-tahmin-apple`) |\n\n## Sınırlılıklar\n\n- Çalışmaların çoğu laboratuvar ve kısa süreli; uzun süreli saha doğrulaması az.\n- Sporculara özgü değil.\n- Yalnız özet okundu (tam metin açık: PMC12823594)."
   },
   {
     "id": "latshang-2013",
@@ -1601,6 +1711,22 @@ export const kbSources: readonly KbSource[] = [
     "summary": "## Ne söylüyor (kendi cümlelerimizle)\n\n- Bileklikten ölçülen gece uykusundaki solunum hızının kişinin kendi olağanından sapması, enfeksiyonun erken işareti olarak modellendi.\n- Model, testi pozitif olanların bir kısmını belirtilerden önceki iki günde, çoğunu belirtilerin üçüncü gününe kadar yakaladı; benzer belirtileri olan negatif kişilere karşı da sınandı.\n- Gece solunumunun kişi içindeki değişimi küçük olduğu için olağandan sapma anlamlı bir sinyal olabiliyor.\n\n## Uygulamada kullanılan sayılar\n\nDoğrudan sayı alınmadı. Kaynak, gece solunumunun kişinin kendi geçmişiyle kıyaslanmasının ve tek gecelik belirgin artışın ayrıca söylenmesinin dayanaklarından biri.\n\n## Sınırlılıklar\n\n- Üç yazar WHOOP çalışanı veya hissedarı; ilk yazarın pozisyonu WHOOP destekli.\n- COVID-19'a özgü; başka enfeksiyonlar, sıcak, alkol veya yükseklik gibi etkenler ayrıca incelenmedi.\n- Yalnız özet okundu."
   },
   {
+    "id": "miller-2022",
+    "title": "A Validation of Six Wearable Devices for Estimating Sleep, Heart Rate and Heart Rate Variability in Healthy Adults",
+    "authors": [
+      "Miller DJ",
+      "Sargent C",
+      "Roach GD"
+    ],
+    "year": 2022,
+    "type": "cross-sectional",
+    "doi": "10.3390/s22166317",
+    "pmid": "36016077",
+    "journal": "Sensors",
+    "population": "Sağlıklı yetişkinler, n=53 (26 kadın, 27 erkek, yaş ~25); uyku laboratuvarında tek gece, polisomnografi ve EKG ile",
+    "summary": "## Ne söylüyor (kendi cümlelerimizle)\n\n- Apple Watch S6 dahil altı cihaz, uyku laboratuvarında tek gece polisomnografi ve EKG ile kıyaslandı.\n- Uyku / uyanıklık ayrımında bütün cihazlar geçerliydi; uyku evrelerini ayırmada hepsi zayıftı (Apple Watch evre uyumu ~%53).\n- Uykuda ve uykudan hemen önce Apple Watch'un nabzı EKG ile çok uyumluydu (ICC 0,96, ortalama fark ~0,5 atım/dk).\n- Aynı koşulda Apple Watch HRV'yi EKG'den hesaplanan RMSSD'ye göre ortalama ~9,6 ms düşük verdi; mutlak fark ~22,5 ms, ICC 0,67; düşük değerlerde fazla, yüksek değerlerde az tahmin etti (orantılı sapma).\n\n## Uygulamada kullanılan sayılar\n\n| Değer | Birim | Bağlam / koşul |\n|---|---|---|\n| 0,96 | ICC | Uykuda Apple Watch nabzı EKG'ye karşı; uyku nabzı Apple'da güvenilir işaret (`nabiz-olcu-apple`, `gunun-durumu-apple`) |\n| 0,67 | ICC | Uykuda Apple Watch HRV'si EKG RMSSD'sine karşı; HRV Apple'da tek başına durum tetiklemez (`gunun-durumu-apple`) |\n| Evre uyumu ~%53 | % | Uyku evreleri güvenilir değil; uyku nabzı evreye göre değil bütün uyku penceresinden hesaplanır (`nabiz-olcu-apple`) |\n\n## Sınırlılıklar\n\n- Tek gece, genç ve sağlıklı yetişkinler; sporcu değil.\n- Apple Watch'un HRV değeri SDNN iken referans RMSSD; fark kısmen ölçü farkından gelir.\n- Araştırma grubu WHOOP'tan destek alıyor (makalede belirtilmiş; WHOOP çalışmaya katılmamış).\n- Sayılar tam metinden okundu (açık: PMC9412437, Tablo 6)."
+  },
+  {
     "id": "morello-2025",
     "title": "Reliability and Validity of Nutrient Assessment Applications for Canadian Endurance Athletes: MyFitnessPal and Cronometer",
     "authors": [
@@ -1671,6 +1797,30 @@ export const kbSources: readonly KbSource[] = [
     "journal": "British Journal of Sports Medicine",
     "population": "Kadın ve erkek sporcular (IOC uzman paneli)",
     "summary": "## Ne söylüyor (kendi cümlelerimizle)\n\n- REDs, düşük enerji yeterliliğine (egzersiz harcamasına göre yetersiz enerji alımı) maruz kalan kadın ve erkek sporcularda görülen sağlık ve performans sonuçlarının toplamı.\n- 2018'den bu yana düşük karbonhidrat alımının rolü, ruh sağlığıyla etkileşim ve erkeklerdeki etkiler üzerine kanıt arttı.\n- Tanı ve risk sınıflaması için klinik bir değerlendirme aracı (REDs CAT2) tanıtılıyor; tanı klinisyen işidir.\n- Vücut kompozisyonu ölçümünün güvenli yapılması ve önleme / tedavi ilkeleri ayrıca ele alınıyor.\n\n## Uygulamada kullanılan sayılar\n\nDoğrudan sayı alınmadı. HoopLab enerji yeterliliğini hesaplamaz (kalori ve yağsız kütle yok); kaynak, uyarı yerine bilgilendirme ve sağlık ekibine yönlendirmenin dayanağı (karar 0029).\n\n## Sınırlılıklar\n\n- Tam metne erişilemedi (yayıncı sayfası otomatik erişime kapalı); yalnız özet okundu. Eşik değerleri bu yüzden kullanılmadı.\n- 2024'te bir düzeltme yayımlandı."
+  },
+  {
+    "id": "munoz-2015",
+    "title": "Validity of (Ultra-)Short Recordings for Heart Rate Variability Measurements",
+    "authors": [
+      "Munoz ML",
+      "van Roon A",
+      "Riese H",
+      "Thio C",
+      "Oostenbroek E",
+      "Westrik I",
+      "de Geus EJ",
+      "Gansevoort R",
+      "Lefrandt J",
+      "Nolte IM",
+      "Snieder H"
+    ],
+    "year": 2015,
+    "type": "cross-sectional",
+    "doi": "10.1371/journal.pone.0138921",
+    "pmid": "26414314",
+    "journal": "PLoS One",
+    "population": "Genel yetişkin nüfus, n=3387 (Hollanda kohortu); sporcu değil",
+    "summary": "## Ne söylüyor (kendi cümlelerimizle)\n\n- 10 sn, 30 sn ve 120 sn'lik EKG kayıtlarından hesaplanan SDNN ve RMSSD, 4-5 dakikalık kayıtla kıyaslandı.\n- Bütün kayıt sürelerinde ve bütün uyum ölçülerinde RMSSD, SDNN'den daha iyi uyum gösterdi; tek bir 10 sn kayıt bile RMSSD için geçerliydi, SDNN için en az 30 sn ya da birkaç 10 sn kaydın ortalaması önerildi.\n- Uyum kayıt süresi uzadıkça arttı, 120 sn'de iki ölçüde de neredeyse tamdı.\n\n## Uygulamada kullanılan sayılar\n\n| Değer | Birim | Bağlam / koşul |\n|---|---|---|\n| Kısa kayıtta SDNN, RMSSD'den daha az güvenilir | ilke | Apple Watch'un kısa, fırsatçı SDNN ölçümlerinin tek tek değil gecelik ortalama olarak kullanılması (`hrv-olcu-apple`) |\n\n## Sınırlılıklar\n\n- Ölçüm dinlenik EKG; bilekte optik sensör ve uyku sırasında ölçüm değil (aktarım varsayım).\n- Genel nüfus; sporcu değil.\n- Yalnız özet okundu (tam metin açık: PMC4586373)."
   },
   {
     "id": "murray-2017",
@@ -1758,6 +1908,24 @@ export const kbSources: readonly KbSource[] = [
     "journal": "BMJ Open Respiratory Research",
     "population": "16 yaş üstü hastane ve acil hastaları (ulusal kılavuzun yönetici özeti)",
     "summary": "## Ne söylüyor (kendi cümlelerimizle)\n\n- Akut hastalarda hedef oksijen doygunluğu aralığı %94-98.\n- Hedef aralığın içinde bile doygunlukta ani ve en az 3 puanlık bir düşüş, akut bir hastalığın ilk işareti olabileceği için daha kapsamlı değerlendirme (ve oksimetre sinyalinin kontrolü) gerektirir.\n- Sağlıklı kişilerde uykuda doygunluğun kısa süreliğine %90'a ya da altına inmesi olağandır.\n\n## Uygulamada kullanılan sayılar\n\n| Değer | Birim | Bağlam / koşul |\n|---|---|---|\n| En az 3 puan düşüş | % puan | Gece SpO2 notu: gece ortalaması kişisel medyanın bu kadar altında (son 3 gecenin 2'sinde) |\n\n## Sınırlılıklar\n\n- Hastane hastaları için tedavi hedefleri; uyanıkken parmak ucu ya da sürekli izlem ölçümleri. Evde, uykuda, bileklikten alınan gece ortalamasına aktarım varsayım.\n- Yaşa göre normal aralık tam kılavuzda (Thorax); o metin okunamadı."
+  },
+  {
+    "id": "ogrady-2024",
+    "title": "The Validity of Apple Watch Series 9 and Ultra 2 for Serial Measurements of Heart Rate Variability and Resting Heart Rate",
+    "authors": [
+      "O'Grady B",
+      "Lambe R",
+      "Baldwin M",
+      "Acheson T",
+      "Doherty C"
+    ],
+    "year": 2024,
+    "type": "cohort",
+    "doi": "10.3390/s24196220",
+    "pmid": "39409260",
+    "journal": "Sensors",
+    "population": "Sağlıklı yetişkinler, n=39, 14 günde 316 ölçüm; referans Polar H10 göğüs bandı + Kubios",
+    "summary": "## Ne söylüyor (kendi cümlelerimizle)\n\n- Apple Watch Series 9 ve Ultra 2'nin tekrarlı HRV ve dinlenik nabız ölçümleri iki hafta boyunca göğüs bandıyla kıyaslandı.\n- Apple Watch HRV'yi ortalama ~8 ms düşük verdi; ortalama mutlak yüzde hata ~%29, ortalama mutlak hata ~20 ms; önceden belirlenen ±10 ms eşdeğerlik sınırına girmedi.\n- Dinlenik nabız ise doğruydu: ortalama fark ~0, ortalama mutlak yüzde hata ~%6, mutlak hata ~3,7 atım/dk.\n- Yazarlar HRV'nin performans izlemesinde temkinle yorumlanmasını öneriyor.\n\n## Uygulamada kullanılan sayılar\n\n| Değer | Birim | Bağlam / koşul |\n|---|---|---|\n| ~%29 | MAPE | Apple Watch HRV'sinin bireysel hatası büyük; HRV tek başına durum tetiklemez, arayüzde \"tahmin\" (`hrv-olcu-apple`, `gunun-durumu-apple`) |\n| ~%6 | MAPE | Apple Watch dinlenik nabzı doğru; Apple'da durumun dayanağı uyku nabzı (`nabiz-olcu-apple`, `gunun-durumu-apple`) |\n\n## Sınırlılıklar\n\n- Küçük örneklem, sağlıklı yetişkinler; sporcu değil.\n- Ölçümler gündüz dinlenirken; uyku içi ölçüm değil (aktarım varsayım).\n- Yalnız yeni modeller (Series 9, Ultra 2); SE modelleri kapsamda değil.\n- Yalnız özet okundu (tam metin açık: PMC11478500)."
   },
   {
     "id": "osterberg-2009",
@@ -2205,6 +2373,20 @@ export const kbSources: readonly KbSource[] = [
     "journal": "British journal of sports medicine",
     "population": "Patellar tendinopatili ve tendinopatisiz sporcular; 31 çalışma (6 ileriye dönük)",
     "summary": "## Ne söylüyor (kendi cümlelerimizle)\n\n- Patellar tendinopati için değiştirilebilir risk etkenlerini derliyor.\n- Hiçbir etken için güçlü kanıt bulunamadı; ayak bileği hareket açıklığı gibi etkenler için kanıt sınırlı ya da çelişkili.\n\n## Uygulamada kullanılan sayılar\n\nSayı alınmadı; yalnız nitel bulgu (eşleme veya gerekçe) için kullanılır.\n\n## Sınırlılıklar\n\n- Çalışmaların çoğu kesitsel; neden-sonuç kurulamıyor."
+  },
+  {
+    "id": "task-force-1996",
+    "title": "Heart rate variability: standards of measurement, physiological interpretation and clinical use. Task Force of the European Society of Cardiology and the North American Society of Pacing and Electrophysiology",
+    "authors": [
+      "Task Force of the ESC and NASPE"
+    ],
+    "year": 1996,
+    "type": "consensus",
+    "doi": "10.1161/01.CIR.93.5.1043",
+    "pmid": "8598068",
+    "journal": "Circulation",
+    "population": "Ölçüm standardı (iki kardiyoloji derneğinin ortak bildirgesi); belirli bir örneklem yok",
+    "summary": "## Ne söylüyor (kendi cümlelerimizle)\n\n- HRV ölçülerinin tanımlarını ve ölçüm koşullarını standartlaştıran temel bildirge.\n- SDNN (normal atımlar arası sürelerin standart sapması) toplam değişkenliği yansıtır ve kaydın süresi uzadıkça büyür; bu yüzden farklı sürelerde alınmış SDNN değerleri birbiriyle kıyaslanmamalıdır.\n- RMSSD (ardışık farkların karekök ortalaması) kısa süreli, ağırlıkla vagal değişkenliği yansıtır; SDNN ile aynı ölçü değildir ve birinin bandı ötekine taşınamaz.\n- PubMed kaydında özet yok; bu maddeler bildirgenin herkesçe bilinen tanımlarıdır, sayısal eşik buradan alınmadı.\n\n## Uygulamada kullanılan sayılar\n\n| Değer | Birim | Bağlam / koşul |\n|---|---|---|\n| SDNN ile RMSSD ayrı ölçü | ilke | Apple yolunda HRV ayrı sütunda tutulur, Fitbit'in RMSSD bandıyla karıştırılmaz (`hrv-olcu-apple`, karar 0061) |\n\n## Sınırlılıklar\n\n- 1996 tarihli; giyilebilir cihazlar ve gece boyu fırsatçı ölçüm o dönemde yoktu.\n- Yalnız künye ve tanımlar kullanıldı; tam metin telifli, okunmadı."
   },
   {
     "id": "thomas-2016",
@@ -2754,7 +2936,33 @@ export const kbRules: readonly KbRule[] = [
       "feehan-2018",
       "doherty-2024",
       "argent-2022"
-    ]
+    ],
+    "profile": {
+      "source": [
+        "google_health"
+      ]
+    }
+  },
+  {
+    "id": "enerji-harcamasi-tahmin-apple",
+    "module": "enerji",
+    "description": "Apple Watch'un yakılan enerji değeri (aktif + bazal enerji ve antrenmanın kalorisi) ölçüm değil tahmindir. Günün durumuna girmez, beslenme hedefiyle kıyaslanmaz.",
+    "value": {
+      "mape_above_pct": 10,
+      "in_day_status": false,
+      "compared_with_intake": false
+    },
+    "appliesTo": "Apple Health profili: health_daily.calories_kcal (aktif + bazal) ve exercise_sessions.calories_kcal",
+    "notes": "Apple Watch'un enerji harcaması meta-analizlerde bütün alt gruplarda %10 geçerlik eşiğinin üzerinde hata verdi (choe-2025) ve hatası tutarsız, çoğu zaman büyük (lambe-2026b). Fitbit sürümündeki %15-30 aralığı Fitbit algoritmalı cihazlardan; Apple için tek bir aralık verilmez, yalnız '%10'dan fazla' denir.",
+    "sources": [
+      "lambe-2026b",
+      "choe-2025"
+    ],
+    "profile": {
+      "source": [
+        "apple_health"
+      ]
+    }
   },
   {
     "id": "enerji-yeterliligi",
@@ -2850,7 +3058,51 @@ export const kbRules: readonly KbRule[] = [
       "roete-2021",
       "altini-2021",
       "walsh-2021"
-    ]
+    ],
+    "profile": {
+      "source": [
+        "google_health"
+      ]
+    }
+  },
+  {
+    "id": "gunun-durumu-apple",
+    "module": "toparlanma",
+    "description": "Apple Watch'ta günün durumu: HRV bandın altında ve uyku nabzı bandın üstündeyse 'Toparlan'; uyku nabzı bandın üstündeyse veya uyku kısaysa 'Kontrollü'; hiçbiri yoksa 'Hazır'. HRV tek başına durumu değiştirmez; bandın dışındaysa bilgi notu düşer. Uyku nabzı bandı yoksa durum üretilmez.",
+    "value": {
+      "requires": [
+        "sleep_hr"
+      ],
+      "recover_when_all": [
+        "hrv_low",
+        "rhr_high"
+      ],
+      "caution_when_any": [
+        "rhr_high",
+        "sleep_short"
+      ],
+      "note_only": [
+        "hrv_low",
+        "hrv_high"
+      ]
+    },
+    "appliesTo": "Apple Health profilinde Bugün ekranındaki 'Bugünün durumu'; tanı değil, izleme özeti",
+    "notes": "Fitbit sürümündeki (gunun-durumu) mantık, ölçülerin güvenilirliğine göre yer değiştirir. Apple Watch HRV'sinin bireysel hatası büyük (ogrady-2024 ~%29; miller-2022 ICC 0,67; dobbs-2019), uyku nabzı ise doğru (miller-2022 ICC 0,96; ogrady-2024 ~%6): bu yüzden durumun dayanağı uyku nabzıdır, HRV tek başına yalnız not olur. En ağır durum yine iki otonom işaret aynı yönü gösterdiğinde (plews-2013, buchheit-2014). Nabzın tek başına zayıf bir yorgunluk göstergesi olduğu bilinir (Fitbit sürümünün notu); Apple'da tek başına yükselmesi yalnız 'Kontrollü'ye götürür, 'Toparlan'a değil; asıl alkol ve hastalıkta belirgin yükselir (altini-2021). HRV'ye dayalı karar kuralı (vesterinen-2016) Apple'da uygulanmaz, çünkü ölçüm hatası bandın genişliğiyle aynı büyüklükte olabilir. Uyku kısalığı (walsh-2021) yalnız 'Kontrollü'ye katkı verir. Bu birleşim HoopLab'in sentezidir, doğrulanmış bir hazır olma skoru değildir (karar 0061).",
+    "sources": [
+      "vesterinen-2016",
+      "plews-2013",
+      "buchheit-2014",
+      "altini-2021",
+      "walsh-2021",
+      "miller-2022",
+      "ogrady-2024",
+      "dobbs-2019"
+    ],
+    "profile": {
+      "source": [
+        "apple_health"
+      ]
+    }
   },
   {
     "id": "hastalik-isareti-yonlendirme",
@@ -2882,7 +3134,39 @@ export const kbRules: readonly KbRule[] = [
       "buchheit-2014",
       "plews-2013",
       "plews-2014"
-    ]
+    ],
+    "profile": {
+      "source": [
+        "google_health"
+      ]
+    }
+  },
+  {
+    "id": "hrv-olcu-apple",
+    "module": "toparlanma",
+    "description": "Apple Watch'ta izlenen HRV değeri: uyku penceresine düşen SDNN örneklerinin gecelik ortalaması (ms). Bant ve ortalamalar doğal logaritma (ln) üzerinden hesaplanır, ekranda ms olarak ve 'tahmin' etiketiyle gösterilir. Gecede örnek yoksa değer boş kalır.",
+    "value": {
+      "metric": "sleep_sdnn",
+      "transform": "ln",
+      "unit": "ms",
+      "estimate": true
+    },
+    "appliesTo": "Apple Health profili (health_daily.hrv_sleep_sdnn_ms); Fitbit'in derin uyku RMSSD'si ile karıştırılmaz",
+    "notes": "Apple Watch HRV'yi SDNN olarak, kullanıcı hareketsizken fırsat buldukça kısa kayıtlarla ölçer; uykuya özgü bir HRV değeri yoktur. SDNN kayıt süresine bağlıdır ve RMSSD ile aynı ölçü değildir (task-force-1996); kısa kayıtta SDNN RMSSD'den daha az güvenilirdir (munoz-2015), bu yüzden tek örnek değil gecelik ortalama kullanılır. Apple Watch HRV'sinin bireysel hatası büyük: uykuda EKG'ye karşı ICC 0,67 (miller-2022), dinlenirken ortalama mutlak yüzde hata ~%29-31 (ogrady-2024, bonneval-2025); taşınabilir cihazlarda en büyük hata SDNN'de (dobbs-2019). Uzun süreli kişisel SDNN izlemesi yine de fizyolojik değişimi taşıyabiliyor (hirten-2021). ln dönüşümü ve 7/28 günlük bant (toparlanma-bant) RMSSD çalışmalarından gelir; SDNN'de denendiği çalışma yok, aktarım varsayımdır (karar 0061). Gece örnek sayısı ilk iki haftada sahada ölçülür.",
+    "sources": [
+      "task-force-1996",
+      "munoz-2015",
+      "dobbs-2019",
+      "miller-2022",
+      "ogrady-2024",
+      "bonneval-2025",
+      "hirten-2021"
+    ],
+    "profile": {
+      "source": [
+        "apple_health"
+      ]
+    }
   },
   {
     "id": "jet-lag-uyum",
@@ -3135,7 +3419,36 @@ export const kbRules: readonly KbRule[] = [
     "sources": [
       "nuuttila-2022",
       "buchheit-2014"
-    ]
+    ],
+    "profile": {
+      "source": [
+        "google_health"
+      ]
+    }
+  },
+  {
+    "id": "nabiz-olcu-apple",
+    "module": "toparlanma",
+    "description": "Apple Watch'ta izlenen nabız değeri: uyku penceresindeki nabız örneklerinin ortalaması (atım/dk). Uyku evresine göre ayrılmaz. Ekranda 'Uyku nabzı'.",
+    "value": {
+      "metric": "sleep_hr",
+      "unit": "atım/dk"
+    },
+    "appliesTo": "Apple Health profili (health_daily.sleep_hr_bpm)",
+    "notes": "Apple Watch nabzı doğru: uykuda EKG'ye karşı ICC 0,96 (miller-2022), dinlenik nabızda ortalama mutlak yüzde hata ~%6 (ogrady-2024) ve dinlenirken ~%1 (bonneval-2025); meta-analizlerde ortalama fark sıfıra yakın, tek ölçüm ±7 atım/dk oynayabilir (lambe-2026b) ve hata %10 geçerlik eşiğinin altında (choe-2025). Uyku evrelerini ayırmada saatlerin uyumu zayıf (miller-2022, ~%53), bu yüzden Fitbit'teki gibi NREM'e özgü değil bütün uyku penceresinin ortalaması kullanılır. Gece nabzının tutarlılığı ve yüklenmeye duyarlılığı nuuttila-2022'den; evreye ayrılmamış ortalamaya aktarım varsayımdır.",
+    "sources": [
+      "nuuttila-2022",
+      "miller-2022",
+      "ogrady-2024",
+      "bonneval-2025",
+      "lambe-2026b",
+      "choe-2025"
+    ],
+    "profile": {
+      "source": [
+        "apple_health"
+      ]
+    }
   },
   {
     "id": "ogun-besin-listesi",

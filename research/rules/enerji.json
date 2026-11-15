@@ -3,6 +3,7 @@
   "rules": [
     {
       "id": "enerji-harcamasi-tahmin",
+      "profile": { "source": ["google_health"] },
       "description": "Bilekliğin yakılan enerji değeri (Google Health günlük toplamı ve egzersiz oturumunun kalorisi) ölçüm değil tahmindir. Tipik hata yaklaşık %15-30; dur-kalklı ve spor benzeri harekette çoğunlukla az tahmin. Eşik ve hedef yok, günün durumuna girmez, alımla karşılaştırılmaz (enerji dengesi hesaplanmaz).",
       "value": { "typical_error_pct": [15, 30], "in_day_status": false, "compared_with_intake": false },
       "applies_to": "health_daily.calories_kcal (dinlenirken yakılan dahil günlük toplam) ve exercise_sessions.calories_kcal",
@@ -16,6 +17,16 @@
       "applies_to": "Bugün'deki Yakılan enerji kartı ve saatlik grafiği, seans satırları, haftalık rapor",
       "sources": ["chevance-2022"],
       "notes": "Tek tek ölçümlerin sapması dakikada birkaç kcal'e yayıldığı için (chevance-2022) birler basamağı anlamsız; 10 kcal bir gösterim tercihi, bilimsel eşik değil. 7 günlük pencere uygulamanın öbür ortalamalarıyla aynı (toparlanma-bant); kaynağa dayanmaz, eşik değildir. Saatlik grafikte geriye 7 gün de aynı pencere; senkron bu yüzden bugün ve önceki 7 günün saatlerini çeker. Saatlik değerin ayrı bir doğruluk kaynağı yok: kaynaklar dakika ve etkinlik düzeyinde ölçtü (chevance-2022), saatlik toplam bu hatayı taşır."
+    },
+    {
+      "id": "enerji-harcamasi-tahmin-apple",
+      "variant_of": "enerji-harcamasi-tahmin",
+      "profile": { "source": ["apple_health"] },
+      "description": "Apple Watch'un yakılan enerji değeri (aktif + bazal enerji ve antrenmanın kalorisi) ölçüm değil tahmindir. Günün durumuna girmez, beslenme hedefiyle kıyaslanmaz.",
+      "value": { "mape_above_pct": 10, "in_day_status": false, "compared_with_intake": false },
+      "applies_to": "Apple Health profili: health_daily.calories_kcal (aktif + bazal) ve exercise_sessions.calories_kcal",
+      "sources": ["lambe-2026b", "choe-2025"],
+      "notes": "Apple Watch'un enerji harcaması meta-analizlerde bütün alt gruplarda %10 geçerlik eşiğinin üzerinde hata verdi (choe-2025) ve hatası tutarsız, çoğu zaman büyük (lambe-2026b). Fitbit sürümündeki %15-30 aralığı Fitbit algoritmalı cihazlardan; Apple için tek bir aralık verilmez, yalnız '%10'dan fazla' denir."
     }
   ]
 }

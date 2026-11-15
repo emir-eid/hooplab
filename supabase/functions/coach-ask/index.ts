@@ -8,9 +8,11 @@ import { withSupabase } from 'npm:@supabase/server@1.9.0';
 
 import { runAsk } from '../_shared/coach/ask.ts';
 import { kbRules, kbSources } from '../_shared/coach/kb-data.ts';
-import { readCoachEnv, supabaseAskStore } from '../_shared/coach/service.ts';
+import { forProfile } from '../_shared/coach/kb.ts';
+import { readCoachEnv, readProfile, supabaseAskStore } from '../_shared/coach/service.ts';
 
-const kb = { sources: kbSources, rules: kbRules };
+// Karar 0061: istek başına kullanıcının profiline göre süzülür (forProfile).
+const fullKbData = { sources: kbSources, rules: kbRules };
 
 export default {
   fetch: withSupabase({ auth: 'user' }, async (req, ctx) => {
@@ -30,6 +32,7 @@ export default {
     }
 
     // Süre ve yeniden deneme istek başına (ask.ts askTimeouts): ücretsiz plandaki 150 sn sınırının içinde.
+    const kb = forProfile(fullKbData, await readProfile(ctx.supabaseAdmin, userId));
     const client = new Anthropic({ apiKey: env.apiKey, ...(env.baseURL ? { baseURL: env.baseURL } : {}) });
     const result = await runAsk({ userId, body, now: new Date() }, { store: supabaseAskStore(ctx.supabaseAdmin), messages: client.beta.messages, kb });
     return Response.json(result.body, { status: result.httpStatus });

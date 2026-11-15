@@ -31,4 +31,4 @@ verified_on: 2026-10-04
 
 ## Bağlı kurallar
 
-- `rules/toparlanma.json` → `toparlanma-bant`, `gunun-durumu`
+- `rules/toparlanma.json` → `toparlanma-bant`, `gunun-durumu`, `gunun-durumu-apple`

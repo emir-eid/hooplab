@@ -3,6 +3,7 @@
   "rules": [
     {
       "id": "hrv-olcu",
+      "profile": { "source": ["google_health"] },
       "description": "İzlenen HRV değeri: gece derin uyku dönemindeki RMSSD (ms). Bant ve ortalamalar doğal logaritması (ln) üzerinden hesaplanır, ekranda ms olarak gösterilir.",
       "value": { "metric": "deep_sleep_rmssd", "transform": "ln", "unit": "ms" },
       "applies_to": "Google Health günlük HRV özeti (health_daily.hrv_deep_rmssd_ms)",
@@ -11,6 +12,7 @@
     },
     {
       "id": "nabiz-olcu",
+      "profile": { "source": ["google_health"] },
       "description": "İzlenen nabız değeri: HRV ile aynı gecenin uyku nabzı (NREM uykudaki ortalama nabız, atım/dk). Google'ın bütün gün verisinden hesaplanan günlük dinlenik nabzı saklanır ama günün durumunda ve gece işaretlerinde kullanılmaz.",
       "value": { "metric": "nrem_hr", "unit": "atım/dk" },
       "applies_to": "Google Health günlük HRV özeti (health_daily.nrem_hr_bpm)",
@@ -43,6 +45,7 @@
     },
     {
       "id": "gunun-durumu",
+      "profile": { "source": ["google_health"] },
       "description": "Günün durumu: HRV bandın altında ve uyku nabzı bandın üstündeyse 'Toparlan'; HRV bandın dışında (iki yönde) veya uyku kısaysa 'Kontrollü'; hiçbiri yoksa 'Hazır'. Uyku nabzı tek başına durumu değiştirmez; bandın üstündeyse bilgi notu düşer. HRV bandı yoksa durum üretilmez.",
       "value": {
         "requires": ["hrv"],
@@ -69,6 +72,41 @@
       "applies_to": "son gece; bant için yeterli veri varsa (toparlanma-veri-yeterliligi)",
       "sources": ["natarajan-2021", "miller-2020", "renteria-2024", "nicolo-2020"],
       "notes": "3 nefes/dk natarajan-2021'in tanımlayıcı sayısı: COVID-19'da belirtilerin çevresindeki haftada semptomlu kişilerin yaklaşık üçte birinde olağanın en az 3 nefes/dk üstünde bir gece. Doğrulanmış bir uyarı eşiği değil, özgüllüğü verilmedi; tam metindeki z ≥ 2,33 analizi daha hassas ama daha çok yanlış alarm üretebilir, temkinli olan seçildi (karar 0028). Solunum stres, sıcak ve efor gibi pek çok etkene duyarlı (nicolo-2020); bu yüzden not tek bir neden söylemez. Gece solunumu sporcularda diğer ölçümlerden önce değişebiliyor (renteria-2024, miller-2020). CLAUDE.md §3 tıbbi sınır: tanı yok, yönlendirme var."
+    },
+    {
+      "id": "hrv-olcu-apple",
+      "variant_of": "hrv-olcu",
+      "profile": { "source": ["apple_health"] },
+      "description": "Apple Watch'ta izlenen HRV değeri: uyku penceresine düşen SDNN örneklerinin gecelik ortalaması (ms). Bant ve ortalamalar doğal logaritma (ln) üzerinden hesaplanır, ekranda ms olarak ve 'tahmin' etiketiyle gösterilir. Gecede örnek yoksa değer boş kalır.",
+      "value": { "metric": "sleep_sdnn", "transform": "ln", "unit": "ms", "estimate": true },
+      "applies_to": "Apple Health profili (health_daily.hrv_sleep_sdnn_ms); Fitbit'in derin uyku RMSSD'si ile karıştırılmaz",
+      "sources": ["task-force-1996", "munoz-2015", "dobbs-2019", "miller-2022", "ogrady-2024", "bonneval-2025", "hirten-2021"],
+      "notes": "Apple Watch HRV'yi SDNN olarak, kullanıcı hareketsizken fırsat buldukça kısa kayıtlarla ölçer; uykuya özgü bir HRV değeri yoktur. SDNN kayıt süresine bağlıdır ve RMSSD ile aynı ölçü değildir (task-force-1996); kısa kayıtta SDNN RMSSD'den daha az güvenilirdir (munoz-2015), bu yüzden tek örnek değil gecelik ortalama kullanılır. Apple Watch HRV'sinin bireysel hatası büyük: uykuda EKG'ye karşı ICC 0,67 (miller-2022), dinlenirken ortalama mutlak yüzde hata ~%29-31 (ogrady-2024, bonneval-2025); taşınabilir cihazlarda en büyük hata SDNN'de (dobbs-2019). Uzun süreli kişisel SDNN izlemesi yine de fizyolojik değişimi taşıyabiliyor (hirten-2021). ln dönüşümü ve 7/28 günlük bant (toparlanma-bant) RMSSD çalışmalarından gelir; SDNN'de denendiği çalışma yok, aktarım varsayımdır (karar 0061). Gece örnek sayısı ilk iki haftada sahada ölçülür."
+    },
+    {
+      "id": "nabiz-olcu-apple",
+      "variant_of": "nabiz-olcu",
+      "profile": { "source": ["apple_health"] },
+      "description": "Apple Watch'ta izlenen nabız değeri: uyku penceresindeki nabız örneklerinin ortalaması (atım/dk). Uyku evresine göre ayrılmaz. Ekranda 'Uyku nabzı'.",
+      "value": { "metric": "sleep_hr", "unit": "atım/dk" },
+      "applies_to": "Apple Health profili (health_daily.sleep_hr_bpm)",
+      "sources": ["nuuttila-2022", "miller-2022", "ogrady-2024", "bonneval-2025", "lambe-2026b", "choe-2025"],
+      "notes": "Apple Watch nabzı doğru: uykuda EKG'ye karşı ICC 0,96 (miller-2022), dinlenik nabızda ortalama mutlak yüzde hata ~%6 (ogrady-2024) ve dinlenirken ~%1 (bonneval-2025); meta-analizlerde ortalama fark sıfıra yakın, tek ölçüm ±7 atım/dk oynayabilir (lambe-2026b) ve hata %10 geçerlik eşiğinin altında (choe-2025). Uyku evrelerini ayırmada saatlerin uyumu zayıf (miller-2022, ~%53), bu yüzden Fitbit'teki gibi NREM'e özgü değil bütün uyku penceresinin ortalaması kullanılır. Gece nabzının tutarlılığı ve yüklenmeye duyarlılığı nuuttila-2022'den; evreye ayrılmamış ortalamaya aktarım varsayımdır."
+    },
+    {
+      "id": "gunun-durumu-apple",
+      "variant_of": "gunun-durumu",
+      "profile": { "source": ["apple_health"] },
+      "description": "Apple Watch'ta günün durumu: HRV bandın altında ve uyku nabzı bandın üstündeyse 'Toparlan'; uyku nabzı bandın üstündeyse veya uyku kısaysa 'Kontrollü'; hiçbiri yoksa 'Hazır'. HRV tek başına durumu değiştirmez; bandın dışındaysa bilgi notu düşer. Uyku nabzı bandı yoksa durum üretilmez.",
+      "value": {
+        "requires": ["sleep_hr"],
+        "recover_when_all": ["hrv_low", "rhr_high"],
+        "caution_when_any": ["rhr_high", "sleep_short"],
+        "note_only": ["hrv_low", "hrv_high"]
+      },
+      "applies_to": "Apple Health profilinde Bugün ekranındaki 'Bugünün durumu'; tanı değil, izleme özeti",
+      "sources": ["vesterinen-2016", "plews-2013", "buchheit-2014", "altini-2021", "walsh-2021", "miller-2022", "ogrady-2024", "dobbs-2019"],
+      "notes": "Fitbit sürümündeki (gunun-durumu) mantık, ölçülerin güvenilirliğine göre yer değiştirir. Apple Watch HRV'sinin bireysel hatası büyük (ogrady-2024 ~%29; miller-2022 ICC 0,67; dobbs-2019), uyku nabzı ise doğru (miller-2022 ICC 0,96; ogrady-2024 ~%6): bu yüzden durumun dayanağı uyku nabzıdır, HRV tek başına yalnız not olur. En ağır durum yine iki otonom işaret aynı yönü gösterdiğinde (plews-2013, buchheit-2014). Nabzın tek başına zayıf bir yorgunluk göstergesi olduğu bilinir (Fitbit sürümünün notu); Apple'da tek başına yükselmesi yalnız 'Kontrollü'ye götürür, 'Toparlan'a değil; asıl alkol ve hastalıkta belirgin yükselir (altini-2021). HRV'ye dayalı karar kuralı (vesterinen-2016) Apple'da uygulanmaz, çünkü ölçüm hatası bandın genişliğiyle aynı büyüklükte olabilir. Uyku kısalığı (walsh-2021) yalnız 'Kontrollü'ye katkı verir. Bu birleşim HoopLab'in sentezidir, doğrulanmış bir hazır olma skoru değildir (karar 0061)."
     }
   ]
 }

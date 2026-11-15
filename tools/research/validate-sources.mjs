@@ -24,6 +24,74 @@ export const SOURCE_TYPES = [
   'narrative-review',
   'expert-opinion',
 ];
+/**
+ * Kural profili (karar 0061). Değerler `profiles` tablosunun CHECK'leriyle aynı (test denetler).
+ * `sex` için boş (null) da bir profil durumudur: cinsiyet belirtilmemiş hesap.
+ */
+export const PROFILE_VALUES = {
+  source: ['google_health', 'apple_health'],
+  sport: ['basketbol', 'fitness'],
+  sex: ['kadin', 'erkek', null],
+};
+
+/** Her profil bileşimi (kaynak × spor × cinsiyet). */
+export function profileCombinations() {
+  const out = [];
+  for (const source of PROFILE_VALUES.source)
+    for (const sport of PROFILE_VALUES.sport) for (const sex of PROFILE_VALUES.sex) out.push({ source, sport, sex });
+  return out;
+}
+
+/** Kural bu profile uygulanır mı? `profile` yoksa herkese; varsa verilen her boyutta değer listede olmalı. */
+export function ruleAppliesTo(rule, profile) {
+  if (!rule.profile) return true;
+  return Object.entries(rule.profile).every(([key, allowed]) => allowed.includes(profile[key]));
+}
+
+/**
+ * Profil ve sürüm denetimi (karar 0061): `profile` alanının biçimi; `variant_of` gösterdiği kural var mı;
+ * sürümü olan her ailede (ana kural + sürümleri) her profil bileşimine tam olarak bir kural düşüyor mu.
+ */
+export function validateProfiles(rules) {
+  const errors = [];
+  const byId = new Map(rules.filter((r) => r.id).map((r) => [r.id, r]));
+  for (const rule of rules) {
+    const where = `${rule.file ?? 'rules'} → ${rule.id}`;
+    if (rule.profile !== undefined) {
+      if (typeof rule.profile !== 'object' || rule.profile === null || Array.isArray(rule.profile)) {
+        errors.push(`${where}: 'profile' nesne olmalı`);
+        continue;
+      }
+      if (Object.keys(rule.profile).length === 0) errors.push(`${where}: 'profile' boş olamaz`);
+      for (const [key, allowed] of Object.entries(rule.profile)) {
+        if (!(key in PROFILE_VALUES)) errors.push(`${where}: bilinmeyen profil boyutu '${key}'`);
+        else if (!Array.isArray(allowed) || allowed.length === 0) errors.push(`${where}: profile.${key} boş olmayan liste olmalı`);
+        else for (const v of allowed) if (!PROFILE_VALUES[key].includes(v)) errors.push(`${where}: profile.${key} geçersiz değer '${v}'`);
+      }
+    }
+    if (rule.variant_of !== undefined) {
+      const base = byId.get(rule.variant_of);
+      if (!base) errors.push(`${where}: variant_of '${rule.variant_of}' kuralı yok`);
+      else if (base.variant_of) errors.push(`${where}: variant_of yalnız ana kurala işaret eder ('${rule.variant_of}' de bir sürüm)`);
+      if (!rule.profile) errors.push(`${where}: sürüm kuralının 'profile' alanı olmalı`);
+    }
+  }
+  if (errors.length) return errors;
+  const families = new Map();
+  for (const rule of rules) if (rule.variant_of) families.set(rule.variant_of, [...(families.get(rule.variant_of) ?? []), rule]);
+  for (const [baseId, variants] of families) {
+    const family = [byId.get(baseId), ...variants];
+    for (const profile of profileCombinations()) {
+      const hits = family.filter((r) => ruleAppliesTo(r, profile)).map((r) => r.id);
+      if (hits.length !== 1) {
+        const label = `${profile.source} · ${profile.sport} · ${profile.sex ?? 'boş'}`;
+        errors.push(`rules → ${baseId}: '${label}' profiline ${hits.length} kural düşüyor (${hits.join(', ') || 'hiçbiri'}); tam olarak bir olmalı`);
+      }
+    }
+  }
+  return errors;
+}
+
 const REQUIRED = ['id', 'title', 'authors', 'year', 'type', 'population', 'verified_on'];
 const USER_AGENT = 'HoopLab-source-validator/1.0 (https://github.com/emir-eid/hooplab)';
 
@@ -74,6 +142,7 @@ export function validateOffline(root) {
   }
 
   const ruleIds = new Set();
+  const allRules = [];
   const ruleFiles = existsSync(rulesDir) ? readdirSync(rulesDir).filter((f) => f.endsWith('.json')) : [];
   let ruleCount = 0;
   for (const file of ruleFiles) {
@@ -91,6 +160,7 @@ export function validateOffline(root) {
     }
     for (const rule of doc.rules) {
       ruleCount++;
+      allRules.push({ ...rule, file: rel });
       const where = `${rel} → ${rule.id ?? '(id yok)'}`;
       if (!rule.id) errors.push(`${where}: 'id' eksik`);
       else if (ruleIds.has(rule.id)) errors.push(`${where}: kural id tekrar ediyor`);
@@ -101,6 +171,7 @@ export function validateOffline(root) {
     }
   }
 
+  errors.push(...validateProfiles(allRules));
   return { errors, sources, ruleCount };
 }
 

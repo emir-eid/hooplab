@@ -72,6 +72,8 @@ export function buildKb(root) {
         ...(r.applies_to ? { appliesTo: r.applies_to } : {}),
         ...(r.notes ? { notes: r.notes } : {}),
         sources: r.sources,
+        // Karar 0061: koç fonksiyonu paketi kullanıcının profiline göre süzer (kb.ts forProfile), alanı modele vermez.
+        ...(r.profile ? { profile: r.profile } : {}),
       }));
     })
     .sort((a, b) => a.id.localeCompare(b.id, 'en'));

@@ -40,6 +40,41 @@ export interface KbRule {
   appliesTo?: string;
   notes?: string;
   sources: readonly string[];
+  /** Karar 0061: kural yalnız bu profillere uygulanır (yoksa herkese). Modele gitmez; forProfile atar. */
+  profile?: { readonly [dimension: string]: readonly (string | null)[] };
+}
+
+/** Kullanıcının profili (`profiles` tablosu, karar 0061). */
+export interface KbProfile {
+  source: string;
+  sport: string;
+  sex: string | null;
+}
+
+/** `profiles` satırı yoksa veritabanının varsayılanları (sahibinin profili, migration 20261114220538). */
+export const DEFAULT_PROFILE: KbProfile = { source: 'google_health', sport: 'basketbol', sex: null };
+
+function ruleApplies(rule: KbRule, profile: KbProfile): boolean {
+  if (!rule.profile) return true;
+  const values: Record<string, string | null> = { source: profile.source, sport: profile.sport, sex: profile.sex };
+  return Object.entries(rule.profile).every(([key, allowed]) => allowed.includes(values[key] ?? null));
+}
+
+/**
+ * Tabanı kullanıcının profiline göre süzer (karar 0061): profile uymayan kurallar ve yalnız onların kullandığı
+ * kaynaklar çıkar; kalan kurallardan `profile` alanı atılır. Sahibinin profilinde çıktı, profil alanı gelmeden
+ * önceki tabanla bayt bayt aynıdır (kb.test.ts parmak izi): koçun girdisi değişmez, önbellek öneki bozulmaz.
+ */
+export function forProfile(kb: Kb, profile: KbProfile): Kb {
+  const kept: KbRule[] = [];
+  const dropped: KbRule[] = [];
+  for (const rule of kb.rules) (ruleApplies(rule, profile) ? kept : dropped).push(rule);
+  const used = new Set(kept.flatMap((r) => r.sources));
+  const onlyDropped = new Set(dropped.flatMap((r) => r.sources).filter((id) => !used.has(id)));
+  return {
+    rules: kept.map(({ profile: _profile, ...rest }) => rest),
+    sources: kb.sources.filter((s) => !onlyDropped.has(s.id)),
+  };
 }
 
 export interface Kb {

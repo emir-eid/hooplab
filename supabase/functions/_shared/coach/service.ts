@@ -4,6 +4,7 @@
 import type { SupabaseClient } from 'npm:@supabase/supabase-js@2.117.2';
 
 import type { AskStore, NewAskRow } from './ask.ts';
+import { DEFAULT_PROFILE, type KbProfile } from './kb.ts';
 import type { CoachStore, NewSummaryRow, SummaryRow } from './daily.ts';
 import type { NewWeeklyRow, WeeklyRow, WeeklyStore } from './weekly.ts';
 
@@ -23,6 +24,17 @@ export function readCoachEnv(get: (key: string) => string | undefined): CoachEnv
 
 function dbError(where: string, error: { code?: string } | null): Error {
   return new Error(`${where}: veritabanı hatası ${error?.code ?? 'bilinmiyor'}`);
+}
+
+/**
+ * Kullanıcının profili (karar 0061); koçun tabanı buna göre süzülür (kb.ts forProfile). Satır yoksa veritabanının
+ * varsayılanı (sahibinin profili). Okuma hatası sessizce varsayılana düşmez: başka profilin kuralları modele gitmesin.
+ */
+export async function readProfile(db: SupabaseClient, userId: string): Promise<KbProfile> {
+  const { data, error } = await db.from('profiles').select('data_source, sport, sex').eq('user_id', userId).maybeSingle();
+  if (error) throw dbError('profiles', error);
+  if (!data) return DEFAULT_PROFILE;
+  return { source: data.data_source as string, sport: data.sport as string, sex: (data.sex as string | null) ?? null };
 }
 
 export function supabaseCoachStore(db: SupabaseClient): CoachStore {

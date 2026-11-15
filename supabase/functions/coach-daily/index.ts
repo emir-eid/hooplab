@@ -9,9 +9,11 @@ import { withSupabase } from 'npm:@supabase/server@1.9.0';
 
 import { runDaily } from '../_shared/coach/daily.ts';
 import { kbRules, kbSources } from '../_shared/coach/kb-data.ts';
-import { readCoachEnv, supabaseCoachStore } from '../_shared/coach/service.ts';
+import { forProfile } from '../_shared/coach/kb.ts';
+import { readCoachEnv, readProfile, supabaseCoachStore } from '../_shared/coach/service.ts';
 
-const kb = { sources: kbSources, rules: kbRules };
+// Karar 0061: istek başına kullanıcının profiline göre süzülür (forProfile).
+const fullKbData = { sources: kbSources, rules: kbRules };
 
 export default {
   fetch: withSupabase({ auth: 'user' }, async (req, ctx) => {
@@ -33,6 +35,7 @@ export default {
     // Ücretsiz planda fonksiyon süresi 150 sn; tek yeniden deneme bu sınırın içinde kalır.
     const client = new Anthropic({ apiKey: env.apiKey, ...(env.baseURL ? { baseURL: env.baseURL } : {}), timeout: 60_000, maxRetries: 1 });
     const params = new URL(req.url).searchParams;
+    const kb = forProfile(fullKbData, await readProfile(ctx.supabaseAdmin, userId));
     const result = await runDaily(
       { userId, body, regenerate: params.get('regenerate') === '1', peek: params.get('peek') === '1', now: new Date() },
       { store: supabaseCoachStore(ctx.supabaseAdmin), messages: client.beta.messages, kb },

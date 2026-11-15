@@ -30,5 +30,5 @@ verified_on: 2026-10-14
 
 ## Bağlı kurallar
 
-- `rules/toparlanma.json` → `nabiz-olcu`
+- `rules/toparlanma.json` → `nabiz-olcu`, `nabiz-olcu-apple`
 - `rules/hastalik-isaretleri.json` → `gece-nabzi-yuksek`

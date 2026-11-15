@@ -3,7 +3,7 @@
 - **Faz:** tüm fazlar tamam (Faz 1 sonrası)
 - **Durum:** açık (/rep)
 - **Model / efor:** Opus 5.5
-- **Commit'ler:** `1bbc7a9` (Blok 1), Blok 2 `rep` commit'i
+- **Commit'ler:** `1bbc7a9` (Blok 1), Blok 2 `10d9ed3`, Blok 3 `rep` commit'i
 
 Oturum 2026-11-15 14:36'da açıldı (`/ac`). Ağaç temiz, push bekleyen yok; yeni denetim yok; literatür kutusunda 0061'in 54 adayı `bekliyor`. **CI `Kontroller` / `kontrol` işi üç commit'tir kırmızıydı** (`b39c5da`, `dd75d4c`, `e358a89`); önceki oturum raporunda geçmiyordu. Kullanıcı altın testin düzeltilmesini seçti.
 
@@ -50,11 +50,36 @@ Oturum 2026-11-15 14:36'da açıldı (`/ac`). Ağaç temiz, push bekleyen yok; y
 ### Öğrenilenler
 - yok (yeni ders yok)
 
+## Blok 3 — 0061 sıra 3a: Apple kaynakları ve kural sürümleri, profile göre koç tabanı (22:46)
+
+### Amaç
+0061 sıra 3 dört parçaya bölündü (3a kaynaklar ve kurallar, 3b veritabanı ve `healthkit-ingest`, 3c motorun Apple seçimi, 3d istemci senkronu ve yeni build). 3a: Apple yolunun kaynaklarını ve kural sürümlerini eklemek; sahibinin uygulamasını, motorunu ve koç girdisini değiştirmeden.
+
+### Yapılanlar
+- **Kaynaklar (9, kullanıcı onayıyla):** `task-force-1996`, `munoz-2015`, `dobbs-2019`, `miller-2022`, `ogrady-2024`, `bonneval-2025`, `hirten-2021`, `lambe-2026b`, `choe-2025` (`research/sources/`). Her biri PubMed özetinden; `miller-2022`'nin HRV sayıları açık tam metnin tablosundan. hernando-2018 ve nelson-2019 reddedildi. Inbox'ın A bölümü işlendi; dosyanın kalan bölümleri `bekliyor`. Var olan 6 kaynağın "Bağlı kurallar" bölümü güncellendi.
+- **Kurallar:** `hrv-olcu`, `nabiz-olcu`, `gunun-durumu` ([toparlanma.json](../../research/rules/toparlanma.json)) ve `enerji-harcamasi-tahmin` ([enerji.json](../../research/rules/enerji.json)) yalnız `profile: { source: ["google_health"] }` aldı, kimlik ve değer aynı. Yanlarına `-apple` sürümleri (`variant_of`): HRV gecelik SDNN (ln, "tahmin"), uyku nabzı, uyku nabzına dayanan günün durumu (HRV yalnız not), enerji tahmini (gün içi durum ve alımla kıyas kapalı).
+- **Bekçi:** [validate-sources.mjs](../../tools/research/validate-sources.mjs) profil biçimini, `variant_of`'u ve her ailede her profil bileşimine tam bir kural düştüğünü denetler; profil değerleri `profiles` migration'ının CHECK listeleriyle aynı olmak zorunda (test).
+- **Koç:** kural paketi profil alanını taşır; `forProfile` tabanı kullanıcının profiline göre süzer ve profil alanını modele göndermez; `readProfile` satır yoksa varsayılanı (sahibinin profili) döner, okuma hatasında varsayılana düşmez. Üç koç fonksiyonu profile göre süzülmüş tabanla çalışır ve bulutta dağıtıldı (girişsiz istek 401).
+- **Testler:** sahibinin koç tabanı parmak iziyle kilitli (51 kural, 122 kaynak, değişiklik öncesi paketle aynı özet); Apple profilinin süzmesi; `readProfile` (3 test); uygulamanın kaynak alıntı listesi 9 kaynakla; toparlanma açıklama ekranının kaynak testi sahibinin profiliyle sınırlı (ekran değişmedi). Çevrimiçi kaynak doğrulaması 131/131 temiz. `npm run check` yeşil (altın test dahil).
+
+### Kararlar
+- Fitbit kurallarının kimlikleri değişmedi; Apple ayrı kimlikli varyant. Böylece motor ve uygulama 3c'ye kadar dokunulmadan kalır.
+- Profil okunamazsa koç hata verir (yanlış profilin kurallarının modele gitmesindense).
+- `gunun-durumu-apple`'da tek başına yüksek uyku nabzı "Kontrollü"ye götürür (0061); Fitbit kuralının kaynaklarıyla gerilim kural notlarında yazılı.
+
+### Sorunlar ve hatalar
+- Kaynak eklenince uygulama testleri düştü: alıntı listesi eksikti (eklendi; kurum yazarı için test uyarlandı), toparlanma ekranı testi bütün toparlanma kurallarıyla kıyaslıyordu (sahibinin profiliyle sınırlandı).
+- Doğrulayıcı testinde düzenli ifade kabuk üzerinden yazılırken ters bölüleri kaybetti; `indexOf` ile ayrıştırmaya geçildi.
+
+### Öğrenilenler
+- yok (yeni ders yok)
+
 ## Açık kalanlar
-- 0061 sıra 3-6 bekliyor (`healthkit-ingest`, Apple sütunları ve kuralları, istemcide profil denetimi, arka plan teslimatı; deneme ekranı kaldırılır).
-- Aday kaynaklar `bekliyor` (inbox); bakım (Supabase CLI 3.1.0) bekliyor.
+- 0061 sıra 3b-3d bekliyor (Apple sütunları ve `healthkit-ingest`, motorun Apple seçimi, istemci senkronu ve yeni build; deneme ekranı kaldırılır), sonra sıra 4-6.
+- Koçun profil okuması gerçek bir kullanıcıyla henüz çalışmadı (ilk koç çağrısında).
+- Inbox'ın A dışındaki bölümleri `bekliyor`; bakım (Supabase CLI 3.1.0) bekliyor.
 - PWA ana ekran simgesini silmek kullanıcıda.
 - TestFlight 0.1.0 (4) ~2027-02-13'te düşer.
 
 ## Sıradaki adım
-- 0061 sıra 3: Apple yolu (`healthkit-ingest`, `health_daily` Apple sütunları, istemcide profil denetimi, arka plan teslimatı, Apple kural sürümleri ve kaynakları; deneme ekranı kaldırılır).
+- 0061 sıra 3b: `health_daily` Apple sütunları (`hrv_sleep_sdnn_ms`, `sleep_hr_bpm`), yalnız `apple_health` profilini kabul eden `healthkit-ingest`, iki kullanıcılı pgTAP.

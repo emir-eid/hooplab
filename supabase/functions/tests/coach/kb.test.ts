@@ -3,7 +3,9 @@ import { execFileSync } from 'node:child_process';
 import { test } from 'node:test';
 import { fileURLToPath } from 'node:url';
 
-import { fullKb, selectForRules, UnknownRuleError, withoutAppNumbers, type Kb } from '../../_shared/coach/kb.ts';
+import { createHash } from 'node:crypto';
+
+import { DEFAULT_PROFILE, forProfile, fullKb, selectForRules, UnknownRuleError, withoutAppNumbers, type Kb, type KbProfile } from '../../_shared/coach/kb.ts';
 import { kbRules, kbSources } from '../../_shared/coach/kb-data.ts';
 
 const repo = fileURLToPath(new URL('../../../../', import.meta.url));
@@ -85,4 +87,39 @@ test('"Uygulamada kullanılan sayılar" bölümü çıkarılınca öbür bölüm
     for (const h of ['## Ne söylüyor', '## Sınırlılıklar']) if (s.summary.includes(h)) assert.ok(out.includes(h), `${s.id} ${h}`);
     assert.ok(out.length < s.summary.length);
   }
+});
+
+// Karar 0061: koçun tabanı kullanıcının profiline göre süzülür.
+const owner: KbProfile = DEFAULT_PROFILE;
+const apple: KbProfile = { source: 'apple_health', sport: 'fitness', sex: 'kadin' };
+
+test('sahibinin profili: koçun tabanı profil alanından önceki tabanla bayt bayt aynı (parmak izi)', () => {
+  // 2026-11-15 yayındaki paketin fullKb çıktısı (51 kural, 122 kaynak). Sahibi için koçun girdisi değişmemeli;
+  // değişirse bu bilinçli bir kural / kaynak değişikliğidir ve parmak izi gerekçesiyle birlikte güncellenir.
+  const selected = fullKb(forProfile(kb, owner));
+  const digest = createHash('sha256').update(JSON.stringify(selected)).digest('hex');
+  assert.equal(selected.rules.length, 51);
+  assert.equal(selected.sources.length, 122);
+  assert.equal(digest, '1d47b1bab9dc213f92f481aa01affbaf888f71389bcf7e5ef98874e87fafe7c9');
+});
+
+test('profil süzmesi: Apple profili Apple sürümlerini alır, Fitbit sürümlerini almaz; profil alanı modele gitmez', () => {
+  const a = forProfile(kb, apple);
+  const ids = a.rules.map((r) => r.id);
+  for (const id of ['hrv-olcu-apple', 'nabiz-olcu-apple', 'gunun-durumu-apple', 'enerji-harcamasi-tahmin-apple']) assert.ok(ids.includes(id), id);
+  for (const id of ['hrv-olcu', 'nabiz-olcu', 'gunun-durumu', 'enerji-harcamasi-tahmin']) assert.ok(!ids.includes(id), id);
+  assert.ok(ids.includes('protein-gunluk'), 'profilsiz kural herkese');
+  for (const rule of [...a.rules, ...forProfile(kb, owner).rules]) assert.equal('profile' in rule, false, rule.id);
+  const sourceIds = new Set(a.sources.map((s) => s.id));
+  for (const rule of a.rules) for (const id of rule.sources) assert.ok(sourceIds.has(id), `${rule.id} → ${id}`);
+  // Yalnız Fitbit kurallarının kullandığı kaynak Apple tabanında yok; ortak kaynak kalır.
+  assert.ok(!sourceIds.has('reddy-2018'));
+  assert.ok(sourceIds.has('nuuttila-2022'));
+});
+
+test('profil süzmesi: sahibinin tabanında Apple kuralı ve yalnız Apple kaynağı yok', () => {
+  const o = forProfile(kb, owner);
+  assert.ok(o.rules.every((r) => !r.id.endsWith('-apple')));
+  const sourceIds = new Set(o.sources.map((s) => s.id));
+  for (const id of ['ogrady-2024', 'miller-2022', 'task-force-1996', 'choe-2025', 'lambe-2026b']) assert.ok(!sourceIds.has(id), id);
 });

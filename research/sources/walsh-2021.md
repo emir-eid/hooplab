@@ -32,5 +32,5 @@ verified_on: 2026-10-04
 
 ## Bağlı kurallar
 
-- `rules/toparlanma.json` → `uyku-kisa`, `gunun-durumu`
+- `rules/toparlanma.json` → `uyku-kisa`, `gunun-durumu`, `gunun-durumu-apple`
 - `rules/mac.json` → `mac-oncesi-gun`

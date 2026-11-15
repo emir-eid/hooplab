@@ -26,7 +26,9 @@ test('her kaynak dosyası künye listesinde ve künye dosyayla aynı', () => {
     const id = f.slice(0, -3) as keyof typeof sources;
     const head = readFileSync(new URL(f, dir), 'utf8').split('---')[1] ?? '';
     const authors = head.match(/^authors:\s*\[(.*)\]/m)?.[1]?.split(',') ?? [];
-    const first = authors[0]?.trim().split(' ').slice(0, -1).join(' ') ?? '';
+    // Kişi adı 'Soyad AB' biçiminde: baş harfler atılır. Kurum adı (ör. Task Force) olduğu gibi kalır.
+    const words = authors[0]?.trim().split(' ') ?? [];
+    const first = /^[A-Z]{1,3}$/.test(words.at(-1) ?? '') ? words.slice(0, -1).join(' ') : words.join(' ');
     const year = head.match(/^year:\s*(\d+)/m)?.[1];
     const type = head.match(/^type:\s*(\S+)/m)?.[1] ?? '';
     const cite = authors.length > 1 ? `${first} ve ark., ${year}` : `${first}, ${year}`;

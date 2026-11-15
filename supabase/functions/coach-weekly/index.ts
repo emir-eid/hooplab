@@ -7,10 +7,12 @@ import Anthropic from 'npm:@anthropic-ai/sdk@0.128.0';
 import { withSupabase } from 'npm:@supabase/server@1.9.0';
 
 import { kbRules, kbSources } from '../_shared/coach/kb-data.ts';
-import { readCoachEnv, supabaseWeeklyStore } from '../_shared/coach/service.ts';
+import { forProfile } from '../_shared/coach/kb.ts';
+import { readCoachEnv, readProfile, supabaseWeeklyStore } from '../_shared/coach/service.ts';
 import { runWeekly } from '../_shared/coach/weekly.ts';
 
-const kb = { sources: kbSources, rules: kbRules };
+// Karar 0061: istek başına kullanıcının profiline göre süzülür (forProfile).
+const fullKbData = { sources: kbSources, rules: kbRules };
 
 export default {
   fetch: withSupabase({ auth: 'user' }, async (req, ctx) => {
@@ -32,6 +34,7 @@ export default {
     // Ücretsiz planda fonksiyon süresi 150 sn; tek yeniden deneme bu sınırın içinde kalır.
     const client = new Anthropic({ apiKey: env.apiKey, ...(env.baseURL ? { baseURL: env.baseURL } : {}), timeout: 60_000, maxRetries: 1 });
     const params = new URL(req.url).searchParams;
+    const kb = forProfile(fullKbData, await readProfile(ctx.supabaseAdmin, userId));
     const result = await runWeekly(
       { userId, body, regenerate: params.get('regenerate') === '1', peek: params.get('peek') === '1', now: new Date() },
       { store: supabaseWeeklyStore(ctx.supabaseAdmin), messages: client.beta.messages, kb },
