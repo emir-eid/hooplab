@@ -17,6 +17,7 @@ import {
   readRespiration,
   readSleep,
   readWeeklyCheckin,
+  readWeeklyActivity,
   readWeeklyEnergy,
   readWeeklyLoad,
   readWeeklyWeight,
@@ -36,6 +37,7 @@ import {
   type RangePosition,
   type SessionKind,
   type WeeklyCheckin,
+  type WeeklyActivityReading,
   type WeeklyEnergy,
   type WeeklyLoadReading,
   type WeeklyWeight,
@@ -161,6 +163,11 @@ export interface WeeklyReportView {
   weight: WeeklyWeight;
   /** Yakılan enerji: haftanın toplamı, gün ortalaması, önceki hafta (tahmin, eşik yok; karar 0043). */
   energy: WeeklyEnergy;
+  /**
+   * Haftalık aktivite (karar 0061 sıra 6): yalnız fitness profilinde; kaydedilen kondisyon dakikaları ve kuvvet günleri.
+   * Sahibinin (basketbol) görünümünde alan hiç yoktur: altın test ve PDF değişmez.
+   */
+  activity?: WeeklyActivityReading;
 }
 
 const emptyParts = (): LoadParts => ({ game: 0, court: 0, gym: 0, light: 0 });
@@ -305,6 +312,15 @@ export function buildWeeklyReportView(
       weekStart,
       today,
     ),
+    ...(sport === 'fitness'
+      ? {
+          activity: readWeeklyActivity(
+            weekSessions.map((s) => ({ date: s.local_date, kind: s.kind, durationMin: s.duration_min, rpe: s.rpe })),
+            weekStart,
+            today,
+          ),
+        }
+      : {}),
   };
 }
 

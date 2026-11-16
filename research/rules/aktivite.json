@@ -1,0 +1,35 @@
+{
+  "module": "aktivite",
+  "rules": [
+    {
+      "id": "adim-gunluk",
+      "profile": { "sport": ["fitness"] },
+      "description": "Günlük adım: kartta büyük sayı bugünün son eşitlemeye kadarki değeri (gün bitmeden eksik); altında dünün tamamı ve bugünden önceki 7 günün ortalaması. Hedef, renk ve uyarı yok. Açıklamada başvuru noktası günde 7000 adım; faydanın düzleştiği aralık 60 yaş altında yaklaşık 8000-10 000, 60 yaş ve üstünde yaklaşık 6000-8000 adım.",
+      "value": { "average_days": 7, "reference_steps": 7000, "plateau_under_60": [8000, 10000], "plateau_60_plus": [6000, 8000], "target": null, "alert": false, "unit": "adım/gün" },
+      "applies_to": "fitness profili; health_daily.steps (Apple Sağlık ya da Google Health günlük toplamı)",
+      "sources": ["paluch-2022", "ding-2025", "garber-2011"],
+      "notes": "Düzleşme aralıkları 15 kohortun bireysel veri meta-analizinden, yaşa göre (paluch-2022, tam metin). 7000 iki kaynakta birden geçiyor: daha geniş meta-analiz bunu 10 000'den daha gerçekçi bir hedef olarak anıyor (ding-2025), ACSM bildirgesi günde en az 7000 adımı faydalı sayıyor (garber-2011, kategori B). ding-2025'in bir düzeltme notu var ve okunamadı; risk oranı kullanılmaz. Kaynaklar gözlemsel: adım ölüm riskiyle ilişkili, nedeni değil; çoğu kalçaya takılan cihazla ölçüldü. Profilde yaş saklanmadığı için iki aralık da yazılır. Kart hedef koymaz: kullanıcı kendi olağanıyla (7 günlük ortalama) karşılaştırır; 7 günlük pencere uygulamanın öbür ortalamalarıyla aynı, kaynağa dayanmaz. Sporcu (basketbol) profilinde kart yok: antrenman yükü ayrı izlenir."
+    },
+    {
+      "id": "haftalik-aktivite",
+      "profile": { "sport": ["fitness"] },
+      "description": "Haftalık aktivite özeti: kaydedilen kondisyon seanslarının dakikaları seans RPE'sine göre orta (5-6) ve yüksek (7 ve üstü) yoğunluk diye ayrılır; DSÖ önerisi haftada 150-300 dakika orta ya da 75-150 dakika yüksek yoğunluk. Kuvvet seansı (RPE 5 ve üstü) olan gün sayısı; öneri haftada en az 2 gün. Orta ve yüksek dakikalar birleştirilmez; biri alt sınırı geçerse aerobik öneri karşılanmış sayılır.",
+      "value": {
+        "moderate_minutes": [150, 300],
+        "vigorous_minutes": [75, 150],
+        "strength_days_min": 2,
+        "moderate_rpe": [5, 6],
+        "vigorous_rpe_min": 7,
+        "strength_rpe_min": 5,
+        "same_muscle_rest_hours": 48,
+        "aerobic_kinds": ["conditioning"],
+        "strength_kinds": ["strength"],
+        "combine_moderate_vigorous": false,
+        "unit": "dk/hafta"
+      },
+      "applies_to": "fitness profili; training_sessions (kind, duration_min, rpe), haftalık rapor",
+      "sources": ["bull-2020", "garber-2011", "roberts-2020"],
+      "notes": "Dakikalar ve 2 gün DSÖ 2020 kılavuzundan (bull-2020, güçlü öneri, tam metin); ACSM aynı alt sınırları veriyor ve aynı kas grubu için iki seans arasında en az 48 saat öneriyor (garber-2011). Yoğunluk eşlemesi kılavuzun sözlüğünden: orta yoğunluk 0-10 algılanan zorluk ölçeğinde genellikle 5-6, yüksek 7-8 (bull-2020 Tablo 1); seans RPE'si (CR10, seans-rpe-olcek) ile bu ölçeği eşlemek varsayım, 9-10 yüksek sayılır. Kılavuz 'eşdeğer karışım' için oran vermediği için iki yoğunluk toplanmaz. Kas güçlendirmede 'orta ya da daha yüksek yoğunluk' şartı RPE 5 ve üstüyle karşılanır; kılavuzun 'bütün büyük kas grupları' şartı ölçülemez (set kaydı yok), metin bunu söyler. Kadın ve erkekte kuvvet antrenmanına yanıt benzer (roberts-2020, özet): cinsiyete göre ayrı eşik yok. Yalnız kaydedilen seanslar sayılır: yürüyüş, günlük hareket ve etiketlenmemiş saat antrenmanları girmez, bu yüzden özet etkinliği eksik sayar. Hareketlilik ve rehabilitasyon seansları aerobik sayılmaz."
+    }
+  ]
+}

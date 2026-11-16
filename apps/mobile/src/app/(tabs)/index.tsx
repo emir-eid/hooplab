@@ -29,6 +29,7 @@ import { Card } from '@/components/card';
 import { CoachCard } from '@/components/coach-card';
 import { DemoBar } from '@/components/demo-bar';
 import { EnergyCard } from '@/components/energy-section';
+import { StepsCard } from '@/components/steps-section';
 import { ExplainButton } from '@/components/info-button';
 import { GroupLabel, ListGroup, ListRow } from '@/components/list';
 import { LoadSpikeRow } from '@/components/load-section';
@@ -56,11 +57,13 @@ import {
   type TrainingSession,
 } from '@/data/daily-log';
 import { fetchEnergy } from '@/data/energy';
+import { fetchSteps } from '@/data/steps';
 import { matchDaysAhead } from '@/data/match-view';
 import { fetchMatches } from '@/data/matches';
 import { tripRange } from '@/data/trip-view';
 import { fetchTrips } from '@/data/trips';
 import type { EnergyView } from '@/data/energy-view';
+import type { StepsView } from '@/data/steps-view';
 import { exerciseSummary, type ExerciseSession } from '@/data/exercise-tagging';
 import { deleteMeal, fetchNutrition, saveDayType, saveMatchDay } from '@/data/nutrition';
 import type { NutritionView } from '@/data/nutrition-view';
@@ -104,6 +107,23 @@ function TodayScreen({ demo }: { demo: DemoScenario | null }) {
   const [checkinReading, setCheckinReading] = useState<CheckinReading | null>(null);
   const [nutrition, setNutrition] = useState<NutritionView | null>(null);
   const [energy, setEnergy] = useState<EnergyView | null>(null);
+  // Adım kartı yalnız fitness profilinde (karar 0061 sıra 6); sahibinde sorgu da yapılmaz.
+  const [steps, setSteps] = useState<StepsView | null>(null);
+  useFocusEffect(
+    useCallback(() => {
+      if (!fitness) {
+        setSteps(null);
+        return;
+      }
+      let cancelled = false;
+      void fetchSteps(toLocalDate(new Date())).then((r) => {
+        if (!cancelled) setSteps(r.ok && !r.value.empty ? r.value : null);
+      });
+      return () => {
+        cancelled = true;
+      };
+    }, [fitness]),
+  );
   const [nextMatch, setNextMatch] = useState<Match | null>(null);
   const [travel, setTravel] = useState<TravelReading | null>(null);
   const [coachInputs, setCoachInputs] = useState<CoachInputs | null>(null);
@@ -386,6 +406,8 @@ function TodayScreen({ demo }: { demo: DemoScenario | null }) {
           </View>
         </>
       ) : null}
+
+      {steps ? <StepsCard view={steps} /> : null}
 
       {energy ? <EnergyCard view={energy} today={today} /> : null}
 

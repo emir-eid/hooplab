@@ -9,6 +9,8 @@ import {
   checkinBaseline,
   energyRule,
   energyRuleApple,
+  stepsRule,
+  weeklyActivityRule,
   fluidQuickAddMl,
   fluidTargetRule,
   highDayRule,
@@ -45,6 +47,7 @@ import {
 } from '@hooplab/engine';
 
 import { formatDecimal, weeks } from './recovery.ts';
+import { formatSteps as fmtInt } from './steps.ts';
 import type { SourceId } from './sources.ts';
 
 /** Değer nereden geliyor: saatin ölçümü mü, kayıtlardan hesap mı, tahmin mi (CLAUDE.md §3: tahmin etiketlenir). */
@@ -455,6 +458,44 @@ export const explainers = {
       'Fitbit Air için yayımlanmış bir doğruluk çalışması yok; basketbolda bileklikle yapılmış bir çalışma da yok. Saatlik değerin ayrı bir doğruluk çalışması da yok; günün tahminiyle aynı hatayı taşır. Bugünün değeri son senkrona kadardır, gün bitince tamamlanır.',
     rules: ['enerji-harcamasi-tahmin', 'enerji-gosterim'],
     sources: ['lambe-2026', 'reddy-2018', 'shcherbina-2017', 'chevance-2022', 'feehan-2018', 'doherty-2024', 'argent-2022'],
+  },
+  steps: {
+    title: 'Adım',
+    basis: 'measured',
+    hint: 'Saatin ya da telefonun saydığı günlük adım.',
+    goal: 'Hedef yok: kendi olağanını (son günlerin ortalaması) görmek için. Araştırmalarda çok az adıma göre daha fazlası daha iyi sağlıkla ilişkili; bir noktadan sonra fayda azalarak artıyor.',
+    what: `Saatin ya da telefonun bir günde saydığı adım. Kartta büyük sayı bugünün son eşitlemeye kadarki değeri; gün bitmeden eksiktir. Altında dünün tamamı ve bugünden önceki ${stepsRule.averageDays} günün ortalaması.`,
+    read: [
+      `Büyük bir araştırmada günde ${fmtInt(stepsRule.referenceSteps)} civarı adım, günde ${fmtInt(2000)} adıma göre daha düşük hastalık ve ölüm riskiyle ilişkili bulundu; ${fmtInt(10000)} adımın şart olduğuna dair açık bir kanıt yok.`,
+      `Faydanın düzleştiği nokta yaşa göre değişiyor: 60 yaş altında yaklaşık ${fmtInt(stepsRule.plateauUnder60[0])}-${fmtInt(stepsRule.plateauUnder60[1])}, 60 yaş ve üstünde yaklaşık ${fmtInt(stepsRule.plateau60Plus[0])}-${fmtInt(stepsRule.plateau60Plus[1])} adım. Bunun üstü zararlı değil, yalnız ek fayda azalıyor.`,
+      'Adım her hareketi saymaz: bisiklet, yüzme ve kuvvet antrenmanı az adımla geçer. Antrenman gününde adımın düşük olması az hareket ettiğin anlamına gelmez.',
+      'Renk, uyarı ya da hedef yok; günün durumuna girmez.',
+    ],
+    reference:
+      'Başvuru noktaları iki meta-analizden: 15 kohortta yaklaşık 47 bin yetişkinin adım ve ölüm verisini birleştiren bir çalışma (yaşa göre düzleşme) ve 57 çalışmayı derleyen daha yeni bir çalışma (7 bin civarı gerçekçi bir hedef). ACSM bildirgesi de günde en az 7 bin adımı faydalı sayıyor.',
+    limits:
+      'Çalışmalar gözlemsel: adım daha iyi sağlıkla birlikte görülüyor, nedeni olduğu kanıtlanmadı. Adımların çoğu kalçaya takılan cihazlarla sayıldı; bilekteki saat biraz farklı sayabilir. Profilde yaş saklanmadığı için iki yaş aralığı da yazılır. Yeni meta-analizin bir düzeltme notu okunamadığı için oradan risk oranı alınmadı.',
+    rules: ['adim-gunluk'],
+    sources: ['paluch-2022', 'ding-2025', 'garber-2011'],
+  },
+  activity: {
+    title: 'Haftalık aktivite',
+    basis: 'computed',
+    hint: 'Kaydettiğin seanslardan haftalık kondisyon dakikası ve kuvvet günü.',
+    goal: `Dünya Sağlık Örgütü önerisi: haftada ${weeklyActivityRule.moderateMinutes[0]}-${weeklyActivityRule.moderateMinutes[1]} dakika orta ya da ${weeklyActivityRule.vigorousMinutes[0]}-${weeklyActivityRule.vigorousMinutes[1]} dakika yüksek yoğunlukta aerobik etkinlik ve haftada en az ${weeklyActivityRule.strengthDaysMin} gün kuvvet çalışması.`,
+    what: `Haftanın kaydettiğin seanslarından hesaplanır. Kondisyon seanslarının dakikaları, seansa verdiğin zorluk puanına (RPE) göre ayrılır: ${weeklyActivityRule.moderateRpe[0]}-${weeklyActivityRule.moderateRpe[1]} orta, ${weeklyActivityRule.vigorousRpeMin} ve üstü yüksek yoğunluk; daha düşük puanlı dakikalar ayrı gösterilir, öneriye sayılmaz. Kuvvet günü: zorluk puanı en az ${weeklyActivityRule.strengthRpeMin} olan kuvvet seansı yaptığın farklı gün sayısı.`,
+    read: [
+      'Orta ve yüksek yoğunluk dakikaları toplanmaz; ikisinden biri alt sınırı geçerse aerobik öneri karşılanmış sayılır. Kılavuz ikisinin karışımını da kabul ediyor ama bir oran vermiyor.',
+      'Biraz etkinlik hiç yoktan iyidir; kısa seanslar da sayılır.',
+      `Kuvvette kılavuz bütün büyük kas gruplarının çalışmasını ister; uygulama hangi kasları çalıştırdığını bilmez, yalnız günü sayar. Aynı kas grubunu iki seans arasında en az ${weeklyActivityRule.sameMuscleRestHours} saat dinlendirmek öneriliyor.`,
+      'Kadın ve erkekte kuvvet antrenmanına yanıt benzer; öneri ikisi için aynı.',
+    ],
+    reference:
+      'Dakikalar, kuvvet günü ve yoğunluğun 0-10 zorluk ölçeğindeki karşılığı Dünya Sağlık Örgütü 2020 kılavuzundan. Aynı alt sınırlar ve kas grubu başına dinlenme ACSM bildirgesinden. Kadın-erkek karşılaştırması bir meta-analizden.',
+    limits:
+      'Yalnız kaydettiğin seanslar sayılır: yürüyüş, günlük hareket ve seans olarak kaydetmediğin saat antrenmanları girmez, bu yüzden özet etkinliğini eksik sayabilir. Zorluk puanını kılavuzun ölçeğiyle eşlemek bir varsayım. Hareketlilik ve rehabilitasyon seansları aerobik sayılmaz.',
+    rules: ['haftalik-aktivite'],
+    sources: ['bull-2020', 'garber-2011', 'roberts-2020'],
   },
   weeklyReport: {
     title: 'Haftalık rapor',

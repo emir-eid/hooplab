@@ -2,7 +2,7 @@
 // beslenme ve kilo özeti. Sayılar motordan ve görünümden (data/weekly-report-view), metinler copy/weekly-report'tan;
 // burada yalnız yerleşim. Risk rengi yok: durum renkleri Bugün'deki günün durumu, yük renkleri seans türü (karar 0026).
 
-import { addIsoDays, weekLength, weekStartOf, shortSleep, type DayLevel, type MetricReading } from '@hooplab/engine';
+import { addIsoDays, weekLength, weekStartOf, shortSleep, type DayLevel, type MetricReading, type WeeklyActivityReading } from '@hooplab/engine';
 import { layout, loadGroups, radius, spacing } from '@hooplab/theme';
 import { router, useLocalSearchParams } from 'expo-router';
 import { useEffect, useMemo, useState } from 'react';
@@ -18,6 +18,7 @@ import { PageHeader } from '@/components/page-header';
 import { Tile } from '@/components/recovery-section';
 import { Screen } from '@/components/screen';
 import { Text } from '@/components/text';
+import { activityFooter, activityRows, activityTitle, aerobicSummary, noActivityText, strengthDaysText, strengthSummary } from '@/copy/activity';
 import { previousWeekEnergyText, weeklyEnergyDetail, weeklyEnergyFooter, weeklyEnergyLabel } from '@/copy/energy';
 import { wellnessLabels } from '@/copy/labels';
 import { bandDigits, bandNote, formatBand, formatDecimal, formatRolling, formatSleep, levelLabels, levelStates } from '@/copy/recovery';
@@ -165,6 +166,7 @@ function Report({ view }: { view: WeeklyReportView }) {
       </ListGroup>
       <CoachBlock view={view} />
       <LoadBlock view={view} />
+      {view.activity ? <ActivityBlock activity={view.activity} current={view.phase === 'current'} /> : null}
       <RecoveryBlock view={view} />
       <NightsBlock view={view} />
       <CheckinBlock view={view} />
@@ -616,6 +618,27 @@ function WeightBlock({ view }: { view: WeeklyReportView }) {
         label={w.mean === null ? 'Bu hafta tartı yok' : `${formatDecimal(w.mean)} kg`}
         detail={w.mean === null ? undefined : `${w.n} tartı${change ? ` · ${change}` : ''}`}
       />
+    </ListGroup>
+  );
+}
+
+// --- Haftalık aktivite (karar 0061 sıra 6, yalnız fitness) ---
+
+function ActivityBlock({ activity, current }: { activity: WeeklyActivityReading; current: boolean }) {
+  if (!activity.hasSessions) {
+    return (
+      <ListGroup label={activityTitle} footer={activityFooter}>
+        <ListRow label={noActivityText} onPress={() => openExplainer('activity')} />
+      </ListGroup>
+    );
+  }
+  return (
+    <ListGroup label={activityTitle} footer={activityFooter}>
+      <ListRow label="Kondisyon" detail={aerobicSummary(activity, current)} onPress={() => openExplainer('activity')} />
+      {activityRows(activity).map((r) => (
+        <ListRow key={r.label} label={r.label} value={r.value} />
+      ))}
+      <ListRow label="Kuvvet günü" value={strengthDaysText(activity)} detail={strengthSummary(activity)} />
     </ListGroup>
   );
 }

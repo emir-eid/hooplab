@@ -142,6 +142,13 @@ Bugünkü durum:
 - **Sıra ve açılış:** giriş → rıza → şifre → profil soruları. Gerçek oturumda açılış ekranı profil okuması bitene (başarılı ya da hatalı) kadar bekler; önceden profil bilinmeden sahibinin varsayılanı kullanıldığı için davetliye şifre ekranı rızadan önce görünüyordu (yerel denemede yakalandı).
 - **Gizlilik politikası:** hooplab.dev/tr/gizlilik ve /privacy (TR / EN) iki kullanıcıya, Apple Sağlık'tan okunan türlere (uygulamanın istediği HealthKit türleriyle karşılaştırıldı), sahibinin erişimine, Expo bildirim iletimine ve talep üzerine silmeye göre yeniden yazıldı; Google Sınırlı Kullanım bölümü aynı. Uygulamada rıza ekranından ve Ben → Gizlilik'ten açılır.
 
+## Ek (2026-11-17): sıra 6 Blok 2, davetli hesabı ve fitness aktivitesi
+- **Hesap:** `tools/admin/invite-user.mjs` hesabı Admin API ile açar (e-posta ve geçici şifre yalnız `private/ops.md`, yönetici anahtarı yalnız bellekte), profili Apple · fitness yapar; bulutta açıldı, sahibinin satırı değişmedi.
+- **Build birikimi (kullanıcı kararı):** iOS derleme kotası öbür projeyle ortak; build 6 birkaç iş birikince tek seferde. Davetli build 6'ya kadar giriş yapmaz. Build 6 kurulduktan sonra yalnız JS değişiklikleri EAS Update'le derleme harcamadan gider.
+- **Inbox D (kullanıcı seçimi):** adım kartı ve haftalık aktivite yapıldı, doğrulayıcı kaynaklar (garber-2011, roberts-2020) yeni `haftalik-aktivite` kuralına bağlandı (sahibinin `bolge-toparlanma-penceresi` kuralına eklenmedi: sahibinin koç tabanı kilitli). Kuvvet hacmi kaynakları ertelendi (set kaydı yok), EFSA su ve protein reddedildi.
+- **Adım:** yalnız fitness; hedef, renk, uyarı yok; başvuru 7000 (ding-2025, garber-2011), yaşa göre düzleşme (paluch-2022; profilde yaş yok, iki aralık yazılır). ding-2025'in düzeltme notu okunamadı: risk oranı kullanılmaz.
+- **Haftalık aktivite:** yalnız kaydedilen seanslar; kondisyon dakikası RPE 5-6 orta, 7+ yüksek (DSÖ sözlüğü, eşleme varsayım), iki yoğunluk toplanmaz (makale oran vermiyor); kuvvet günü RPE 5+ olan farklı gün, öneri en az 2. Haftalık rapor koça gitmez.
+
 ## Kaynaklar (teknik olgular)
 - https://github.com/kingstinct/react-native-healthkit · https://www.npmjs.com/package/@kingstinct/react-native-healthkit
 - https://developer.apple.com/documentation/healthkit/hkquantitytypeidentifier/heartratevariabilitysdnn

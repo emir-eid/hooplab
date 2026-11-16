@@ -68,5 +68,20 @@ begin
       470, 440 - 10 * (i % 4), 30, 240, 80, 120 - 10 * (i % 4), 'apple_health'
     );
   end loop;
+
+  -- Haftalık aktivite (karar 0061 sıra 6): son 14 günde uydurma kondisyon ve kuvvet seansları (RPE farklı).
+  for i in 0..13 loop
+    d := current_date - i;
+    if i % 7 in (1, 4) then
+      insert into public.training_sessions (user_id, local_date, kind, duration_min, rpe)
+      values (v_id, d, 'strength', 50, 6 + (i % 2));
+    elsif i % 7 in (2, 5) then
+      insert into public.training_sessions (user_id, local_date, kind, duration_min, rpe)
+      values (v_id, d, 'conditioning', 35, case when i % 7 = 2 then 5 else 7 end);
+    elsif i % 7 = 6 then
+      insert into public.training_sessions (user_id, local_date, kind, duration_min, rpe)
+      values (v_id, d, 'conditioning', 20, 3);
+    end if;
+  end loop;
 end;
 $$;

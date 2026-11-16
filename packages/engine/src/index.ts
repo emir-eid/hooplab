@@ -13,6 +13,7 @@ export * from './meals.ts';
 export * from './illness-signs.ts';
 export * from './weekly.ts';
 export * from './energy.ts';
+export * from './activity.ts';
 export * from './match.ts';
 export * from './travel.ts';
 export * from './cycle.ts';

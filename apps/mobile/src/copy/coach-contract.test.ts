@@ -45,6 +45,9 @@ const explainerMetrics: Record<ExplainerId, readonly MetricKey[]> = {
   // Seyahatin kuralları anlık değerlerdeki seyahat bilgisinden gelir (travelRuleIds, karar 0047).
   travel: [],
   energy: [],
+  // Adım ve haftalık aktivite koçun anlık değerlerine girmez (karar 0061 sıra 6).
+  steps: [],
+  activity: [],
 };
 
 /** Takvimde dün, bugün (saatli, şekerleme penceresiyle) ve yarın maç olan bir günün maç kuralları. */
@@ -70,6 +73,8 @@ const allTravelRules = [
 /** Koça hiç gitmeyen açıklama sayfaları ve nedeni. */
 const notInCoach: Partial<Record<ExplainerId, string>> = {
   energy: 'Yakılan enerji koçun anlık değerlerine girmez: tahmin, eşiği yok, alımla karşılaştırılmaz (karar 0043).',
+  steps: 'Adım koçun anlık değerlerine girmez: hedefi ve uyarısı yok, yalnız kartta gösterilir (karar 0061 sıra 6).',
+  activity: 'Haftalık aktivite haftalık raporda; haftalık rapor koça gitmez (karar 0040, 0061 sıra 6).',
 };
 
 /** Koçta olup açıklama sayfasında olmayan kurallar ve nedeni. */

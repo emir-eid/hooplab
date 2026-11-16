@@ -346,6 +346,49 @@ export const kbSources: readonly KbSource[] = [
     "summary": "## Ne söylüyor (kendi cümlelerimizle)\n\n- Haftalık artışı %10 kuralına göre sınırlayan 13 haftalık kademeli program, standart 8 haftalık programla karşılaştırıldı.\n- Koşu sakatlığı sıklığı iki grupta neredeyse aynıydı (%20,8 ve %20,3); kademeli program sakatlığı önlemedi.\n\n## Uygulamada kullanılan sayılar\n\n| Değer | Birim | Bağlam / koşul |\n|---|---|---|\n| %20,8 / %20,3 | sakatlık sıklığı | Sabit artış kuralı rekreasyonel bireyde doğrulanmadı; fitness profilinde yük artış notu gösterilmez (`yuk-artis-notu-fitness`) |\n\n## Sınırlılıklar\n\n- Yalnız acemi koşucular ve koşu; kuvvet antrenmanına doğrudan aktarılamaz.\n- Çevrimiçi 2007, baskı 2008 (Crossref yılı 2007).\n- Sayılar özetten okundu."
   },
   {
+    "id": "bull-2020",
+    "title": "World Health Organization 2020 guidelines on physical activity and sedentary behaviour",
+    "authors": [
+      "Bull FC",
+      "Al-Ansari SS",
+      "Biddle S",
+      "Borodulin K",
+      "Buman MP",
+      "Cardon G",
+      "Carty C",
+      "Chaput JP",
+      "Chastin S",
+      "Chou R",
+      "Dempsey PC",
+      "DiPietro L",
+      "Ekelund U",
+      "Firth J",
+      "Friedenreich CM",
+      "Garcia L",
+      "Gichu M",
+      "Jago R",
+      "Katzmarzyk PT",
+      "Lambert E",
+      "Leitzmann M",
+      "Milton K",
+      "Ortega FB",
+      "Ranasinghe C",
+      "Stamatakis E",
+      "Tiedemann A",
+      "Troiano RP",
+      "van der Ploeg HP",
+      "Wari V",
+      "Willumsen JF"
+    ],
+    "year": 2020,
+    "type": "consensus",
+    "doi": "10.1136/bjsports-2020-102955",
+    "pmid": "33239350",
+    "journal": "British Journal of Sports Medicine",
+    "population": "Yetişkinler 18-64 yaş (çocuk, yaşlı, gebe ve kronik hastalık için ayrı öneriler); DSÖ kılavuz geliştirme grubu",
+    "summary": "## Ne söylüyor (kendi cümlelerimizle)\n\n- Yetişkinler haftada en az 150-300 dakika orta yoğunlukta ya da en az 75-150 dakika yüksek yoğunlukta aerobik etkinlik yapmalı, ya da ikisinin eşdeğer bir karışımını (güçlü öneri).\n- Haftada 2 ya da daha fazla gün, bütün büyük kas gruplarını çalıştıran, orta ya da daha yüksek yoğunlukta kas güçlendirme etkinliği öneriliyor (güçlü öneri). Daha yüksek kuvvet hacminin ek faydası için doz-yanıt kanıtı bulunamadı.\n- Biraz etkinlik hiç yoktan iyidir; eski \"en az 10 dakikalık parçalar\" şartı kaldırıldı, her süre sayılır.\n- Yoğunluk tanımı: orta yoğunluk dinlenmenin 3 ile 6 katı enerji (MET) ve 0-10 algılanan zorluk ölçeğinde genellikle 5 ya da 6; yüksek yoğunluk 6 MET ve üstü, ölçekte genellikle 7 ya da 8.\n- 300 dakika orta ya da 150 dakika yüksek yoğunluğun üstü ek fayda sağlayabilir (koşullu öneri).\n\n## Uygulamada kullanılan sayılar\n\n| Değer | Birim | Bağlam / koşul |\n|---|---|---|\n| 150-300 | dk / hafta | Orta yoğunlukta aerobik etkinlik |\n| 75-150 | dk / hafta | Yüksek yoğunlukta aerobik etkinlik |\n| 2 | gün / hafta | Kas güçlendirme, en az |\n| 5-6 / 7-8 | 0-10 ölçek | Orta / yüksek yoğunluğun algılanan zorluk karşılığı; uygulamada seans RPE'si bununla sınıflanır |\n\n## Sınırlılıklar\n\n- Genel yetişkin nüfusu için; sporcuya özgü değil (fitness profilinde aranan da bu).\n- Makale \"eşdeğer karışım\" için bir oran vermiyor; uygulama orta ve yüksek dakikaları birleştirmez, ayrı gösterir.\n- Seans RPE'si (CR10) ile kılavuzun 0-10 algılanan zorluk ölçeğini eşlemek bir varsayımdır.\n- Sayılar PMC'deki tam metinden okundu (PMC7719906, 18-64 yaş öneri kutusu ve Tablo 1 sözlük)."
+  },
+  {
     "id": "burger-2024",
     "title": "Athlete Monitoring Systems in Elite Men's Basketball: Challenges, Recommendations, and Future Perspectives",
     "authors": [
@@ -590,6 +633,39 @@ export const kbSources: readonly KbSource[] = [
     "journal": "Sports Medicine",
     "population": "Kadınlar (her yaş); giyilebilir / mobil cihazla HRV ölçen 16 çalışma (doğal döngü, hormonal korunma, menopoz, gebelik)",
     "summary": "## Ne söylüyor (kendi cümlelerimizle)\n\n- Giyilebilir cihazla ölçülen HRV doğal döngüde döngü başında daha yüksek, sonuna doğru daha düşük; zaman alanı ölçülerinde fark yaklaşık %3-9.\n- Hormonal korunma kullananlarda HRV daha düşük, özellikle döngünün sonunda.\n- Menopozdan sonra ve yaşla HRV düşme eğiliminde.\n- Yazarlar bu farkların kadın kullanıcıya HRV gösterilirken hesaba katılmasını öneriyor.\n\n## Uygulamada kullanılan sayılar\n\n| Değer | Birim | Bağlam / koşul |\n|---|---|---|\n| %3-9 | HRV farkı | Döngü başı ile sonu arasında, giyilebilir cihaz; notun \"olabilir\" diliyle yazılmasının dayanağı (`dongu-notu`) |\n\n## Sınırlılıklar\n\n- Evre tanımları çalışmalar arasında farklı; nicel birleştirme (meta-analiz) yapılamadı. Kanıt kalitesi orta.\n- Yaşayan derleme: sonraki sürümlerde bulgular değişebilir.\n- Sayılar özetten ve tam metinden (açık: PMC13198475)."
+  },
+  {
+    "id": "ding-2025",
+    "title": "Daily steps and health outcomes in adults: a systematic review and dose-response meta-analysis",
+    "authors": [
+      "Ding D",
+      "Nguyen B",
+      "Nau T",
+      "Luo M",
+      "del Pozo Cruz B",
+      "Dempsey PC",
+      "Munn Z",
+      "Jefferis BJ",
+      "Sherrington C",
+      "Calleja EA",
+      "Hau Chong K",
+      "Davis R",
+      "Francois ME",
+      "Tiedemann A",
+      "Biddle SJH",
+      "Okely A",
+      "Bauman A",
+      "Ekelund U",
+      "Clare P",
+      "Owen K"
+    ],
+    "year": 2025,
+    "type": "meta-analysis",
+    "doi": "10.1016/S2468-2667(25)00164-1",
+    "pmid": "40713949",
+    "journal": "Lancet Public Health",
+    "population": "Yetişkinler; sistematik derlemede 57 çalışma (35 kohort), meta-analizlerde 31 çalışma (24 kohort), sonuca göre 61 594-161 176 katılımcı",
+    "summary": "## Ne söylüyor (kendi cümlelerimizle)\n\n- Günde 2000 adıma göre daha fazla adım; her nedenden ölüm, kalp-damar hastalığı, demans, depresif belirti ve düşme gibi sonuçlarda daha düşük riskle ilişkili.\n- Birkaç sonuçta riskteki düşüş günde yaklaşık 5000-7000 adımda yavaşlıyor; bazı sonuçlarda 7000'in üstünde de azalmayı sürdürüyor.\n- Yazarlar günde 7000 adımın bazı kişiler için 10 000'den daha gerçekçi ve ulaşılabilir bir hedef olabileceğini, daha hareketli olanlar için 10 000'in hala uygun olduğunu söylüyor; 10 000'in açık bir kanıta dayanmadığını belirtiyor.\n\n## Uygulamada kullanılan sayılar\n\n| Değer | Birim | Bağlam / koşul |\n|---|---|---|\n| 7000 | adım / gün | Gerçekçi bir başvuru noktası (açıklama metni; hedef ya da uyarı değil) |\n| 5000-7000 | adım / gün | Bazı sonuçlarda riskteki düşüşün yavaşladığı aralık (açıklama metni) |\n\n## Sınırlılıklar\n\n- Makalenin bir düzeltme notu var (Lancet Public Health 2025; 10(9): e731, DOI 10.1016/S2468-2667(25)00199-9, PMID 40883040); notun içeriği okunamadı. Okunan PDF'te 7000'e karşı 2000 adımda ölüm risk oranı özette 0,53, kanıt kesinliği tablosunda 0,8 yazıyor. Bu yüzden uygulamada risk oranı kullanılmaz; yalnız ilişkinin yönü ve 7000 başvuru noktası.\n- Gözlemsel çalışmalar; ölüm ve kalp-damar dışındaki sonuçlarda çalışma az, yazarlara göre keşif niteliğinde. Cinsiyete ve cihazın takıldığı yere göre alt analiz yok.\n- Tam metin Universidad Europea ABACUS deposundaki PDF'ten okundu (düzeltmeden önceki mi sonraki mi, belli değil)."
   },
   {
     "id": "ding-2026",
@@ -967,6 +1043,27 @@ export const kbSources: readonly KbSource[] = [
     "journal": "Journal of Strength and Conditioning Research",
     "population": "Profesyonel Avustralya futbolcuları, bir takım, yarışma dönemi (1835 kayıt)",
     "summary": "## Ne söylüyor (kendi cümlelerimizle)\n\n- Sabah iyi oluş z-skoru maçtan sonraki gün belirgin düşüyor; maçtan maça süre (6, 7, 8 gün) ve sezonun dönemi bu düşüşü değiştiriyor.\n- Maç ve maç dışındaki koşullar hesaba katılınca antrenman yükünün haftalık iyi oluş profiline ayrıca etkisi bulunmadı.\n- Yazarlar iyi oluştaki \"kırmızı bayrakların\" sporcunun kendi tipik haftalık profiline göre konmasını öneriyor.\n\n## Uygulamada kullanılan sayılar\n\nDoğrudan sayı alınmadı. Check-in'in popülasyon eşiğiyle değil sporcunun kendi geçmişine göre okunmasının ve maç ertesi düşüşün olağan sayılmasının dayanağı.\n\n## Sınırlılıklar\n\n- Avustralya futbolu, tek takım; basketbola aktarım varsayım.\n- HoopLab şimdilik haftanın gününe veya maçtan geçen süreye göre ayrı bir profil kurmuyor; maç ertesi düşüş bu yüzden açıklama metninde anlatılıyor.\n- Yalnız özet okundu."
+  },
+  {
+    "id": "garber-2011",
+    "title": "Quantity and Quality of Exercise for Developing and Maintaining Cardiorespiratory, Musculoskeletal, and Neuromotor Fitness in Apparently Healthy Adults",
+    "authors": [
+      "Garber CE",
+      "Blissmer B",
+      "Deschenes MR",
+      "Franklin BA",
+      "Lamonte MJ",
+      "Lee IM",
+      "Nieman DC",
+      "Swain DP"
+    ],
+    "year": 2011,
+    "type": "position-stand",
+    "doi": "10.1249/MSS.0b013e318213fefb",
+    "pmid": "21694556",
+    "journal": "Medicine & Science in Sports & Exercise",
+    "population": "Görünüşte sağlıklı yetişkinler (ACSM bildirgesi; her öneri A-D kanıt kategorisiyle)",
+    "summary": "## Ne söylüyor (kendi cümlelerimizle)\n\n- Her büyük kas grubu haftada 2-3 gün çalıştırılmalı; aynı kas grubunu çalıştıran iki seans arasında en az 48 saat dinlenme öneriliyor (kanıt kategorisi A). Metinde kas büyümesi için 48-72 saatlik ara anılıyor.\n- Aerobik etkinlik: haftada en az 150 dakika orta yoğunlukta (günde 30 dakika, haftada 5 gün) ya da en az 75 dakika yüksek yoğunlukta (günde 20 dakika, haftada 3 gün), ya da ikisinin karışımı.\n- Adım sayısını günde en az 2000 artırıp günde en az 7000 adıma ulaşmak faydalı (kanıt kategorisi B).\n\n## Uygulamada kullanılan sayılar\n\n| Değer | Birim | Bağlam / koşul |\n|---|---|---|\n| 48 | saat | Aynı kas grubunu çalıştıran iki seans arası, en az (açıklama metni) |\n| 2 | gün / hafta | Her büyük kas grubu için kuvvet antrenmanı, en az |\n| 7000 | adım / gün | Faydalı bulunan düzey (kategori B; açıklama metni) |\n\n## Sınırlılıklar\n\n- Bildirge, birincil çalışma değil; her öneri farklı kanıt kategorisinde (A sağlam RKÇ verisi, D panel uzlaşısı).\n- 10 dakikadan kısa parçaları yalnız çok kondisyonsuz kişilerde faydalı saymıştı; DSÖ 2020 (bull-2020) bunu değiştirdi.\n- Tam metin yayıncıda ücretli; Ankara Üniversitesi ders sayfasındaki PDF kopyasından okundu (Tablo 2)."
   },
   {
     "id": "gentle-2014",
@@ -2182,6 +2279,64 @@ export const kbSources: readonly KbSource[] = [
     "summary": "## Ne söylüyor (kendi cümlelerimizle)\n\n- Maç öncesi ve sonrası tartıyla ölçülen ter kaybı maç başına 1,0 ile 4,6 L arasındaydı (ortalama yaklaşık 2,2 L); yaklaşık 20 dakika oynayan oyuncularda 2 L'yi aştı.\n- Maç sırasında içilen sıvı ortalama yaklaşık 1 L'ydi; kaybın ancak yarısı kadar.\n- Oyuncuların yaklaşık yarısı maça idrar yoğunluğuna göre sıvı açığıyla başladı ve maç içindeki içme bunu kapatmadı.\n\n## Uygulamada kullanılan sayılar\n\nDoğrudan sayı alınmadı. Basketbolda ter kaybının kişiden kişiye ve maçtan maça çok değiştiğinin, bu yüzden kişisel ter testinin dayanağı.\n\n## Sınırlılıklar\n\n- Yaz Ligi; normal sezon maçlarından farklı olabilir. Yazarlar Gatorade Sports Science Institute çalışanı.\n- Yalnız özet okundu."
   },
   {
+    "id": "paluch-2022",
+    "title": "Daily steps and all-cause mortality: a meta-analysis of 15 international cohorts",
+    "authors": [
+      "Paluch AE",
+      "Bajpai S",
+      "Bassett DR",
+      "Carnethon MR",
+      "Ekelund U",
+      "Evenson KR",
+      "Galuska DA",
+      "Jefferis BJ",
+      "Kraus WE",
+      "Lee IM",
+      "Matthews CE",
+      "Omura JD",
+      "Patel AV",
+      "Pieper CF",
+      "Rees-Punia E",
+      "Dallmeier D",
+      "Klenk J",
+      "Whincup PH",
+      "Dooley EE",
+      "Pettee Gabriel K",
+      "Palta P",
+      "Pompeii LA",
+      "Chernofsky A",
+      "Larson MG",
+      "Vasan RS",
+      "Spartano N",
+      "Ballin M",
+      "Nordström P",
+      "Nordström A",
+      "Anderssen SA",
+      "Hansen BH",
+      "Cochrane JA",
+      "Dwyer T",
+      "Wang J",
+      "Ferrucci L",
+      "Liu F",
+      "Schrack J",
+      "Urbanek J",
+      "Saint-Maurice PF",
+      "Yamamoto N",
+      "Yoshitake Y",
+      "Newton RL",
+      "Yang S",
+      "Shiroma EJ",
+      "Fulton JE"
+    ],
+    "year": 2022,
+    "type": "meta-analysis",
+    "doi": "10.1016/S2468-2667(21)00302-9",
+    "pmid": "35247352",
+    "journal": "Lancet Public Health",
+    "population": "Yetişkinler, 15 kohort (7 yayımlanmış, 8 yayımlanmamış), n=47 471, 3013 ölüm; yüksek gelirli ülkeler",
+    "summary": "## Ne söylüyor (kendi cümlelerimizle)\n\n- Günlük adım arttıkça her nedenden ölüm riski düşüyor. Dörtte birlik dilimlerin ortancaları yaklaşık 3550, 5800, 7850 ve 10 900 adım; en az adım atan dilime göre risk oranları sırasıyla 0,60, 0,55 ve 0,47.\n- Faydanın düzleştiği nokta yaşa göre değişiyor: 60 yaş ve üstünde günde yaklaşık 6000-8000 adım, 60 yaş altında yaklaşık 8000-10 000 adım.\n- Kadın ve erkekte en düşük risk yaklaşık 7000-9000 adımda görülüyor.\n- Toplam adım hesaba katıldıktan sonra adım hızının (kadans) ek bir faydası olup olmadığı yazarlara göre kesin değil.\n\n## Uygulamada kullanılan sayılar\n\n| Değer | Birim | Bağlam / koşul |\n|---|---|---|\n| 6000-8000 | adım / gün | 60 yaş ve üstünde faydanın düzleştiği aralık (açıklama metni; eşik değil) |\n| 8000-10 000 | adım / gün | 60 yaş altında faydanın düzleştiği aralık (açıklama metni; eşik değil) |\n\n## Sınırlılıklar\n\n- Gözlemsel çalışmalar: neden-sonuç ilişkisi kurulamaz; artık karıştırıcılar ve ters nedensellik olabilir; adım tek bir zamanda ölçülmüş.\n- Cihazların çoğu kalçaya takılan ivmeölçerler; bilek cihazları farklı sayabilir.\n- Katılımcılar çoğunlukla yüksek gelirli ülkelerden ve beyaz gönüllüler; sporcuya özgü değil.\n- Sayılar PMC'deki yazar kopyasının tam metninden okundu (PMC9289978)."
+  },
+  {
     "id": "panagiotakis-2017",
     "title": "Biomechanical analysis of ankle ligamentous sprain injury cases from televised basketball games: Understanding when, how and why ligament failure occurs",
     "authors": [
@@ -2372,6 +2527,22 @@ export const kbSources: readonly KbSource[] = [
     "journal": "British Journal of Sports Medicine",
     "population": "Elit sporcular; 54 gözlemsel çalışma, uykunun nesnel ölçüldüğü (toplam uyku süresi ve/veya uyku verimi)",
     "summary": "## Ne söylüyor (kendi cümlelerimizle)\n\n- Elit sporcularda uykuyu nesnel ölçen gözlemsel çalışmaları derleyip yarışma ve antrenmanın uykuya etkisini meta-analizle hesaplıyor.\n- Yarışma gecesi, önceki gecelere göre toplam uyku süresi kısalıyor; çalışmaların çoğunda sporcular o gece uyku süresi önerisine ulaşamamış.\n- Akşam başlayan yarışmalarda (18:00 ve sonrası) kayıp, gündüz yarışmalarına göre çok daha büyük; uyku verimi de yalnız akşam yarışmasından sonra düşüyor.\n- Yarışma dışında da sporcular sık sık uyku önerisinin altında kalıyor. Çok erken antrenman (07:00 öncesi), antrenman yükünde ani artış (%25'in üstü), gece geç ya da sabah çok erken yola çıkış, doğuya uçuş ve yüksek rakım uykuyu bozan etkenler arasında.\n\n## Uygulamada kullanılan sayılar\n\n| Değer | Birim | Bağlam / koşul |\n|---|---|---|\n| ~80 dk daha kısa toplam uyku | dakika | Akşam yarışması (başlangıç ≥ 18:00) gecesi, önceki geceye göre; grup ortalaması |\n| ~20 dk daha kısa toplam uyku | dakika | Gündüz yarışması gecesi, önceki geceye göre |\n| ~60 dk daha kısa toplam uyku | dakika | Tüm yarışma geceleri birlikte, önceki gecelere göre |\n| %3-4 daha düşük uyku verimi | yüzde puan | Yalnız akşam yarışması gecesi; gündüz yarışmasında değişmiyor |\n\nBu sayılar \"maç gecesi uykunun kısalması beklenen bir şey\" açıklamasında bağlam olarak kullanılır; kullanıcının kendi maç gecesi uykusu yine kendi baseline'ıyla kıyaslanır, 80 dk bir eşik değildir.\n\n## Sınırlılıklar\n\n- Farklı sporlardan elit sporcular; basketbola özgü değil, kadın-erkek ayrımı özetten okunamıyor.\n- Çalışmalar gözlemsel; yarışma gecesindeki kaybın nedeni (geç bitiş, uyarılmışlık, seyahat, kafein) ayrıştırılmıyor.\n- Ölçüm aktigrafi ve benzeri cihazlarla; cihazlar arası fark var.\n- Yalnız özet okundu (BMJ tam metni otomatik isteğe kapalı, Europe PMC'de tam metin yok)."
+  },
+  {
+    "id": "roberts-2020",
+    "title": "Sex Differences in Resistance Training: A Systematic Review and Meta-Analysis",
+    "authors": [
+      "Roberts BM",
+      "Nuckols G",
+      "Krieger JW"
+    ],
+    "year": 2020,
+    "type": "meta-analysis",
+    "doi": "10.1519/JSC.0000000000003521",
+    "pmid": "32218059",
+    "journal": "Journal of Strength and Conditioning Research",
+    "population": "Genç ve orta yaşlı kadın ve erkekler, aynı programı izleyen; kas büyümesi 10, üst vücut kuvveti 17, alt vücut kuvveti 23 çalışma",
+    "summary": "## Ne söylüyor (kendi cümlelerimizle)\n\n- Aynı kuvvet programında kas büyümesi kadın ve erkekte benzer; fark anlamlı değil.\n- Alt vücutta göreli kuvvet artışı benzer; üst vücutta kadınlar lehine anlamlı bir fark var. Yazarlar bunun nedenini (sinirsel, kassal, öğrenme ya da kısa çalışma süresi) bilmiyor.\n- Kuvvet antrenmanına yanıt cinsiyetler arasında büyük ölçüde benzer.\n\n## Uygulamada kullanılan sayılar\n\nSayı kullanılmaz. Haftalık kuvvet günü kadın ve erkekte aynı tutulur; cinsiyete göre ayrı eşik yok.\n\n## Sınırlılıklar\n\n- Tam metin ücretli ve okunamadı; bulgular PubMed özetinden. Toplam katılımcı sayısı, antrenman geçmişi ve çalışma süreleri görülemedi.\n- Kuvvet sonuçlarında çalışmalar arası farklılık yüksek."
   },
   {
     "id": "roete-2021",
@@ -2982,6 +3153,38 @@ export const kbSources: readonly KbSource[] = [
 ];
 
 export const kbRules: readonly KbRule[] = [
+  {
+    "id": "adim-gunluk",
+    "module": "aktivite",
+    "description": "Günlük adım: kartta büyük sayı bugünün son eşitlemeye kadarki değeri (gün bitmeden eksik); altında dünün tamamı ve bugünden önceki 7 günün ortalaması. Hedef, renk ve uyarı yok. Açıklamada başvuru noktası günde 7000 adım; faydanın düzleştiği aralık 60 yaş altında yaklaşık 8000-10 000, 60 yaş ve üstünde yaklaşık 6000-8000 adım.",
+    "value": {
+      "average_days": 7,
+      "reference_steps": 7000,
+      "plateau_under_60": [
+        8000,
+        10000
+      ],
+      "plateau_60_plus": [
+        6000,
+        8000
+      ],
+      "target": null,
+      "alert": false,
+      "unit": "adım/gün"
+    },
+    "appliesTo": "fitness profili; health_daily.steps (Apple Sağlık ya da Google Health günlük toplamı)",
+    "notes": "Düzleşme aralıkları 15 kohortun bireysel veri meta-analizinden, yaşa göre (paluch-2022, tam metin). 7000 iki kaynakta birden geçiyor: daha geniş meta-analiz bunu 10 000'den daha gerçekçi bir hedef olarak anıyor (ding-2025), ACSM bildirgesi günde en az 7000 adımı faydalı sayıyor (garber-2011, kategori B). ding-2025'in bir düzeltme notu var ve okunamadı; risk oranı kullanılmaz. Kaynaklar gözlemsel: adım ölüm riskiyle ilişkili, nedeni değil; çoğu kalçaya takılan cihazla ölçüldü. Profilde yaş saklanmadığı için iki aralık da yazılır. Kart hedef koymaz: kullanıcı kendi olağanıyla (7 günlük ortalama) karşılaştırır; 7 günlük pencere uygulamanın öbür ortalamalarıyla aynı, kaynağa dayanmaz. Sporcu (basketbol) profilinde kart yok: antrenman yükü ayrı izlenir.",
+    "sources": [
+      "paluch-2022",
+      "ding-2025",
+      "garber-2011"
+    ],
+    "profile": {
+      "sport": [
+        "fitness"
+      ]
+    }
+  },
   {
     "id": "agri-olcek",
     "module": "agri",
@@ -3655,6 +3858,49 @@ export const kbRules: readonly KbRule[] = [
     "notes": "HRV'ye göre yönlendirilen antrenman sağlıklı ve rekreasyonel bireylerde önceden planlanmış antrenmana üstünlük göstermedi (medellin-ruiz-2020, 8 randomize çalışma). Bu yüzden fitness profilinde durum, antrenmanı değiştirme talimatı gibi sunulmaz. Durum mantığı kaynağa göre seçilen gunun-durumu / gunun-durumu-apple kuralından gelir; bu kural yalnız dili belirler.",
     "sources": [
       "medellin-ruiz-2020"
+    ],
+    "profile": {
+      "sport": [
+        "fitness"
+      ]
+    }
+  },
+  {
+    "id": "haftalik-aktivite",
+    "module": "aktivite",
+    "description": "Haftalık aktivite özeti: kaydedilen kondisyon seanslarının dakikaları seans RPE'sine göre orta (5-6) ve yüksek (7 ve üstü) yoğunluk diye ayrılır; DSÖ önerisi haftada 150-300 dakika orta ya da 75-150 dakika yüksek yoğunluk. Kuvvet seansı (RPE 5 ve üstü) olan gün sayısı; öneri haftada en az 2 gün. Orta ve yüksek dakikalar birleştirilmez; biri alt sınırı geçerse aerobik öneri karşılanmış sayılır.",
+    "value": {
+      "moderate_minutes": [
+        150,
+        300
+      ],
+      "vigorous_minutes": [
+        75,
+        150
+      ],
+      "strength_days_min": 2,
+      "moderate_rpe": [
+        5,
+        6
+      ],
+      "vigorous_rpe_min": 7,
+      "strength_rpe_min": 5,
+      "same_muscle_rest_hours": 48,
+      "aerobic_kinds": [
+        "conditioning"
+      ],
+      "strength_kinds": [
+        "strength"
+      ],
+      "combine_moderate_vigorous": false,
+      "unit": "dk/hafta"
+    },
+    "appliesTo": "fitness profili; training_sessions (kind, duration_min, rpe), haftalık rapor",
+    "notes": "Dakikalar ve 2 gün DSÖ 2020 kılavuzundan (bull-2020, güçlü öneri, tam metin); ACSM aynı alt sınırları veriyor ve aynı kas grubu için iki seans arasında en az 48 saat öneriyor (garber-2011). Yoğunluk eşlemesi kılavuzun sözlüğünden: orta yoğunluk 0-10 algılanan zorluk ölçeğinde genellikle 5-6, yüksek 7-8 (bull-2020 Tablo 1); seans RPE'si (CR10, seans-rpe-olcek) ile bu ölçeği eşlemek varsayım, 9-10 yüksek sayılır. Kılavuz 'eşdeğer karışım' için oran vermediği için iki yoğunluk toplanmaz. Kas güçlendirmede 'orta ya da daha yüksek yoğunluk' şartı RPE 5 ve üstüyle karşılanır; kılavuzun 'bütün büyük kas grupları' şartı ölçülemez (set kaydı yok), metin bunu söyler. Kadın ve erkekte kuvvet antrenmanına yanıt benzer (roberts-2020, özet): cinsiyete göre ayrı eşik yok. Yalnız kaydedilen seanslar sayılır: yürüyüş, günlük hareket ve etiketlenmemiş saat antrenmanları girmez, bu yüzden özet etkinliği eksik sayar. Hareketlilik ve rehabilitasyon seansları aerobik sayılmaz.",
+    "sources": [
+      "bull-2020",
+      "garber-2011",
+      "roberts-2020"
     ],
     "profile": {
       "sport": [

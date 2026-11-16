@@ -35,6 +35,8 @@ import {
   durationLimits,
   energyRule,
   energyRuleApple,
+  stepsRule,
+  weeklyActivityRule,
   dayStatusRuleApple,
   recoveryBySource,
   respirationNightRule,
@@ -389,6 +391,29 @@ test('yakılan enerji kuralla aynı (karar 0043)', () => {
   assert.equal(apple.mape_above_pct, energyRuleApple.mapeAbovePct);
   assert.equal(apple.in_day_status, false);
   assert.equal(apple.compared_with_intake, false);
+});
+
+test('aktivite: adım ve haftalık aktivite kuralla aynı (karar 0061 sıra 6)', () => {
+  const steps = rule('aktivite.json', 'adim-gunluk');
+  assert.deepEqual(steps.profile, { sport: ['fitness'] });
+  assert.equal(steps.value.average_days, stepsRule.averageDays);
+  assert.equal(steps.value.reference_steps, stepsRule.referenceSteps);
+  assert.deepEqual(steps.value.plateau_under_60, [...stepsRule.plateauUnder60]);
+  assert.deepEqual(steps.value.plateau_60_plus, [...stepsRule.plateau60Plus]);
+  assert.equal(steps.value.target, null);
+  assert.equal(steps.value.alert, false);
+  const week = rule('aktivite.json', 'haftalik-aktivite');
+  assert.deepEqual(week.profile, { sport: ['fitness'] });
+  assert.deepEqual(week.value.moderate_minutes, [...weeklyActivityRule.moderateMinutes]);
+  assert.deepEqual(week.value.vigorous_minutes, [...weeklyActivityRule.vigorousMinutes]);
+  assert.equal(week.value.strength_days_min, weeklyActivityRule.strengthDaysMin);
+  assert.deepEqual(week.value.moderate_rpe, [...weeklyActivityRule.moderateRpe]);
+  assert.equal(week.value.vigorous_rpe_min, weeklyActivityRule.vigorousRpeMin);
+  assert.equal(week.value.strength_rpe_min, weeklyActivityRule.strengthRpeMin);
+  assert.equal(week.value.same_muscle_rest_hours, weeklyActivityRule.sameMuscleRestHours);
+  assert.deepEqual(week.value.aerobic_kinds, [...weeklyActivityRule.aerobicKinds]);
+  assert.deepEqual(week.value.strength_kinds, [...weeklyActivityRule.strengthKinds]);
+  assert.equal(week.value.combine_moderate_vigorous, false);
 });
 
 // Karar 0061 sıra 4: spor sürümleri. Motorun fitness sabitleri -fitness kurallarıyla aynı; sahibininkiler değişmedi.
