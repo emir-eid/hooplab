@@ -1,6 +1,6 @@
 # 0061. Profil: veri kaynağı × spor × cinsiyet; ikinci kullanıcı (Apple Watch, fitness)
 
-- **Durum:** Kabul edildi (kullanıcı, 2026-11-15). Sıra 1 uygulandı ve bulutta (2026-11-15: `profiles`, `source`, kaynak bekçisi, altın test, iki kullanıcılı pgTAP). Sıra 2 tamam (2026-11-15: kütüphane SDK 58'de sahibinin iPhone'unda izin istedi ve 11 tipi okudu, build 0.1.0 (4); [oturum raporu](../sessions/2026-11-15-0028-profil-karari.md) Blok 3). Sıra 3a tamam (2026-11-15: Apple kaynakları ve kural sürümleri, koç tabanı profile göre; [oturum raporu](../sessions/2026-11-15-1541-altin-test-saat-dilimi.md) Blok 3). Sıra 3b bulutta (2026-11-15: Apple sütunları, kaynağa göre sütun kısıtı, `healthkit-ingest`; Blok 4). Sıra 3c tamam (2026-11-15: motor ve görünüm katmanı kaynağa göre Apple kurallarını seçer, varsayılan sahibinin profili; Blok 5). Sıra 3d ve 4-6 bekliyor. Aday kaynaklar [research/inbox/2026-11-15-profil-0061.md](../../research/inbox/2026-11-15-profil-0061.md).
+- **Durum:** Kabul edildi (kullanıcı, 2026-11-15). Sıra 1 uygulandı ve bulutta (2026-11-15: `profiles`, `source`, kaynak bekçisi, altın test, iki kullanıcılı pgTAP). Sıra 2 tamam (2026-11-15: kütüphane SDK 58'de sahibinin iPhone'unda izin istedi ve 11 tipi okudu, build 0.1.0 (4); [oturum raporu](../sessions/2026-11-15-0028-profil-karari.md) Blok 3). Sıra 3a tamam (2026-11-15: Apple kaynakları ve kural sürümleri, koç tabanı profile göre; [oturum raporu](../sessions/2026-11-15-1541-altin-test-saat-dilimi.md) Blok 3). Sıra 3b bulutta (2026-11-15: Apple sütunları, kaynağa göre sütun kısıtı, `healthkit-ingest`; Blok 4). Sıra 3c tamam (2026-11-15: motor ve görünüm katmanı kaynağa göre Apple kurallarını seçer, varsayılan sahibinin profili; Blok 5). Sıra 3d tamam (2026-11-16: uygulama profili okur, Apple metinleri ve "tahmin" etiketi, HealthKit okuması ve `healthkit-ingest`'e yükleme, pencere değiştirme; build 0.1.0 (5); [oturum raporu](../sessions/2026-11-16-1229-0061-sira-3d.md); senkron yönteminde sapma: aşağıda "Ek"). Sıra 4-6 bekliyor. Aday kaynaklar [research/inbox/2026-11-15-profil-0061.md](../../research/inbox/2026-11-15-profil-0061.md).
 - **Tarih:** 2026-11-15
 - **İlgili:**
   - [0001](0001-veri-kaynagi-google-health-api.md): Apple Health o gün HRV aktarılmadığı için elenmişti
@@ -68,7 +68,7 @@ Bugünkü durum:
 - **Enerji:** aktif + bazal enerji; mevcut "tahmin" kuralının Apple sürümü (lambe-2026b, choe-2025).
 - **Modelden bağımsız:** uygulama saat modelini sormaz ve modele göre dallanmaz. HealthKit'te bir tip için veri varsa kullanılır, yoksa ilgili kart ve işaret görünmez ("veri yok" denir, uydurulmaz). Aynı kod SE 2, SE 3 ve Series / Ultra'da çalışır; saat değişirse kendiliğinden yeni tipler devreye girer.
 - **Kapalı (veri gelmedikçe):** SpO2'ye dayanan gece işareti; bilek ısısı işareti (SE 3 ve Series 8+ veri üretir; Apple sürümü kuralı ve kaynağı ayrı iş, o zamana kadar gösterilmez).
-- **Senkron:** observer + saatlik arka plan teslimatı, anchored sorgu ile yalnız yeni veri; uygulama açılınca ve ön plana geçince yakalama senkronu. Yükleme `healthkit-ingest` Edge Function'a.
+- **Senkron:** observer + saatlik arka plan teslimatı, anchored sorgu ile yalnız yeni veri; uygulama açılınca ve ön plana geçince yakalama senkronu. Yükleme `healthkit-ingest` Edge Function'a. (2026-11-16: anchored sorgu yerine pencere yeniden hesabı; "Ek".)
 - Google Health ekranı ve senkron durum satırı `apple_health` profilinde gizlenir.
 
 ### Fitness yolu (`fitness`)
@@ -115,6 +115,11 @@ Bugünkü durum:
 - Ayda 15 iOS derlemesi kotasından ek derlemeler kullanılır (dev client + TestFlight).
 - Koç maliyeti ikinci kullanıcının kullanımı kadar artar (`coach:usage` kullanıcı başına ayrılır).
 - Kalıcı ölçüm: Apple yolunda gece SDNN örnek sayısı ve veri gecikmesi ilk iki haftada ölçülür; gece örneği azsa HRV Apple'da yalnız gösterilir, duruma girmez.
+
+## Ek (2026-11-16): senkron pencereyi yeniden hesaplar
+- **Değişen:** "anchored sorgu ile yalnız yeni veri" yerine telefon her eşitlemede son 3 günü (ilk seferde son 89 günü, 7 günlük parçalarla) baştan hesaplayıp `window {from, to}` ile gönderir; sunucu o pencerede olup gönderilmeyen Apple uyku, antrenman ve saatlik enerji satırlarını siler. Gözlemci ve saatlik arka plan teslimatı yalnız tetikleyicidir.
+- **Neden:** gecelik SDNN ve uyku nabzı ortalaması gecenin bütün örneklerine ihtiyaç duyar (yeni gelen tek örnek ortalamayı değiştirir); anchored sorgunun bildirdiği silinen örnek tarih taşımaz, hangi günün değiştiğini söylemez. Pencere yeniden hesabı ikisini de çözer; maliyeti küçük (günde birkaç bin örnek).
+- **Sınır:** ilerleme imleci telefonda (AsyncStorage, kullanıcı başına); telefon kilitliyken HealthKit okunamaz, eşitleme kilit açılınca sürer.
 
 ## Kaynaklar (teknik olgular)
 - https://github.com/kingstinct/react-native-healthkit · https://www.npmjs.com/package/@kingstinct/react-native-healthkit

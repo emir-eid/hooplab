@@ -77,6 +77,21 @@ export function forProfile(kb: Kb, profile: KbProfile): Kb {
   };
 }
 
+/**
+ * Profil sürümü olan kurallar (karar 0061): taban kullanıcının profiline göre süzüldüğü için ana kural yoksa
+ * `-apple` sürümü kullanılır. Sahibinin tabanında ana kural vardır; kimlikler ve dolayısıyla istem değişmez.
+ */
+export function profileRuleId(kb: Kb, baseId: string): string {
+  if (kb.rules.some((r) => r.id === baseId)) return baseId;
+  const apple = `${baseId}-apple`;
+  return kb.rules.some((r) => r.id === apple) ? apple : baseId;
+}
+
+/** Süzülmüş taban Apple Health profiline mi ait (HRV ölçüsü SDNN, tahmin)? */
+export function isAppleKb(kb: Kb): boolean {
+  return profileRuleId(kb, 'hrv-olcu') === 'hrv-olcu-apple';
+}
+
 export interface Kb {
   sources: readonly KbSource[];
   rules: readonly KbRule[];

@@ -7,23 +7,34 @@ import { Card } from '@/components/card';
 import { PageHeader } from '@/components/page-header';
 import { Screen } from '@/components/screen';
 import { Text } from '@/components/text';
-import { recoverySources } from '@/copy/recovery-sources';
+import { recoverySources, recoverySourcesApple } from '@/copy/recovery-sources';
+import { useDataSource } from '@/data/profile';
 
 const sd = String(recoveryBand.sdMultiplier).replace('.', ',');
 
 export default function RecoveryMethodScreen() {
+  // Apple Health profilinde ölçüler ve günün durumunun dayanağı farklı (karar 0061); sahibinin ekranı değişmez.
+  const apple = useDataSource() === 'apple_health';
   return (
     <Screen>
       <PageHeader title="Nasıl hesaplanıyor?" backLabel="Bugün" />
 
       <GroupLabel>Ne izleniyor</GroupLabel>
       <Card>
-        <Text variant="bodyCompact">
-          Gece derin uykudaki HRV (RMSSD), aynı gecenin uyku nabzı (REM dışı uykudaki ortalama) ve uyku süresi. Bütün
-          gecenin HRV'si uyku evrelerinden etkilendiği için derin uyku değeri izlenir. Fitbit uygulamasındaki dinlenik nabız
-          bütün gün verisinden hesaplanır ve yöntemi belgelenmemiş; burada kullanılmaz. İki sayı da Fitbit uygulamasındakinden
-          farklı olabilir.
-        </Text>
+        {apple ? (
+          <Text variant="bodyCompact">
+            Uyku sırasındaki nabzın ortalaması, saatin uykuda aldığı HRV ölçümlerinin (SDNN) gecelik ortalaması ve uyku
+            süresi. Apple Watch HRV'yi fırsat buldukça kısa kayıtlarla ölçer; uykuya özel bir değeri yok. Bu yüzden HRV
+            tahmin olarak gösterilir ve başka cihazların RMSSD değeriyle karşılaştırılmaz.
+          </Text>
+        ) : (
+          <Text variant="bodyCompact">
+            Gece derin uykudaki HRV (RMSSD), aynı gecenin uyku nabzı (REM dışı uykudaki ortalama) ve uyku süresi. Bütün
+            gecenin HRV'si uyku evrelerinden etkilendiği için derin uyku değeri izlenir. Fitbit uygulamasındaki dinlenik nabız
+            bütün gün verisinden hesaplanır ve yöntemi belgelenmemiş; burada kullanılmaz. İki sayı da Fitbit uygulamasındakinden
+            farklı olabilir.
+          </Text>
+        )}
       </Card>
 
       <GroupLabel>Kişisel bant</GroupLabel>
@@ -44,6 +55,29 @@ export default function RecoveryMethodScreen() {
       </Card>
 
       <GroupLabel>Günün durumu</GroupLabel>
+      {apple ? (
+        <>
+          <Card>
+            <Text variant="bodyCompact">Toparlan: HRV bandın altında ve uyku nabzı bandın üstünde.</Text>
+            <Text variant="bodyCompact">
+              {`Kontrollü: uyku nabzı bandın üstünde ya da son ${shortSleep.rollingNights} gecenin uyku ortalaması ${shortSleep.minHours} saatin altında.`}
+            </Text>
+            <Text variant="bodyCompact">Hazır: bunların hiçbiri yok.</Text>
+            <Text variant="bodyCompact">
+              HRV tek başına bandın dışındaysa durum değişmez, not olarak gösterilir: Apple Watch'ın HRV ölçümünde kişiye
+              göre hata büyük, nabız ölçümü ise EKG'ye yakın. Bu yüzden durumun dayanağı uyku nabzıdır; uyku nabzının bandı
+              yoksa durum hesaplanmaz.
+            </Text>
+          </Card>
+          <GroupFooter>
+            Bant içinde planlanan yoğunluk, dışında düşük yoğunluk kuralı HRV ile denendi; ölçüm hatası bandın genişliği
+            kadar olabileceği için Apple Watch'ta uygulanmaz. Nabız, HRV ve uykunun birleşimi HoopLab'in seçimidir;
+            doğrulanmış bir hazır olma skoru değildir. Bant yöntemi RMSSD çalışmalarından gelir; SDNN'ye ve bütün uyku
+            nabzına aktarımı bir varsayımdır.
+          </GroupFooter>
+        </>
+      ) : (
+        <>
       <Card>
         <Text variant="bodyCompact">Toparlan: HRV bandın altında ve uyku nabzı bandın üstünde.</Text>
         <Text variant="bodyCompact">
@@ -60,9 +94,11 @@ export default function RecoveryMethodScreen() {
         uykuyla birleşim HoopLab'in seçimidir; doğrulanmış bir hazır olma skoru değildir. Kaynaklar çoğunlukla dayanıklılık
         sporcularından ve sabah ölçümünden; basketbola ve gece bileklik ölçümüne aktarım bir varsayımdır.
       </GroupFooter>
+        </>
+      )}
 
       <ListGroup label="Kaynaklar">
-        {recoverySources.map((s) => (
+        {(apple ? recoverySourcesApple : recoverySources).map((s) => (
           <ListRow key={s.id} label={s.cite} detail={`${s.kind} · ${s.use}`} />
         ))}
       </ListGroup>

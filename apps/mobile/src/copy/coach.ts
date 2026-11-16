@@ -5,7 +5,9 @@
 import type { AuditSentence } from '../../../../supabase/functions/_shared/coach/audit.ts';
 import { dailyAttemptLimit, weeklyAttemptLimit, type RoutingNote } from '../../../../supabase/functions/_shared/coach/contract.ts';
 import { metricKeys, type MetricKey } from '../../../../supabase/functions/_shared/coach/snapshot.ts';
-import { explainers, type ExplainerId } from './explainers.ts';
+import type { DataSource } from '@hooplab/engine';
+
+import { explainerFor, explainers, type ExplainerId } from './explainers.ts';
 import { illnessSignsFooter, illnessSignsTitle } from './illness-signs.ts';
 import { respirationHighFooter, respirationHighTitle } from './personal-baseline.ts';
 import { painNoteFooter } from './region-load.ts';
@@ -104,12 +106,12 @@ export function basisTarget(blockId: string): BasisTarget {
 }
 
 /** Blok kimliğinin dayanaklar listesindeki adı. */
-export function basisLabel(blockId: string): string {
+export function basisLabel(blockId: string, source: DataSource = 'google_health'): string {
   if (blockId === 'day') return 'Maç takvimi';
   if (blockId === 'travel') return explainers.travel.title;
   const target = basisTarget(blockId);
   if (!target) return 'Günün sayıları';
-  return target.kind === 'method' ? 'Günün durumu' : explainers[target.id].title;
+  return target.kind === 'method' ? 'Günün durumu' : explainerFor(target.id, source).title;
 }
 
 // --- Özetin düzeni ---

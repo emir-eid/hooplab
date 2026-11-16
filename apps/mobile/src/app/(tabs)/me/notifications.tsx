@@ -19,6 +19,7 @@ import {
   stepCheckinTime,
   type NotificationPrefs,
 } from '@/data/notification-prefs';
+import { useDataSource } from '@/data/profile';
 import { useDemoScenario } from '@/demo/demo-mode';
 import {
   ensureNotificationPermission,
@@ -33,6 +34,8 @@ import { usePalette } from '@/theme/appearance';
 
 export default function NotificationsScreen() {
   const palette = usePalette();
+  // Senkron hatırlatması yalnız Google Health bağlantısı için (karar 0061: Apple profilinde gizli).
+  const google = useDataSource() === 'google_health';
   const demo = useDemoScenario();
   const [prefs, setPrefs] = useState<NotificationPrefs>(defaultNotificationPrefs);
   const [permission, setPermission] = useState<PermissionState>('undetermined');
@@ -161,17 +164,19 @@ export default function NotificationsScreen() {
         {prefs.match.enabled ? timeRow('match') : null}
       </ListGroup>
 
-      <ListGroup
-        label="Google Health"
-        footer="Google izni geçersiz olur ve senkron durursa ertesi sabah hatırlatır."
-      >
-        <ListRow
-          label="Senkron durursa hatırlat"
-          accessory={toggle('Google Health senkron hatırlatması', prefs.reconnect.enabled, (v) =>
-            void update({ ...prefs, reconnect: { enabled: v } }, v),
-          )}
-        />
-      </ListGroup>
+      {google ? (
+        <ListGroup
+          label="Google Health"
+          footer="Google izni geçersiz olur ve senkron durursa ertesi sabah hatırlatır."
+        >
+          <ListRow
+            label="Senkron durursa hatırlat"
+            accessory={toggle('Google Health senkron hatırlatması', prefs.reconnect.enabled, (v) =>
+              void update({ ...prefs, reconnect: { enabled: v } }, v),
+            )}
+          />
+        </ListGroup>
+      ) : null}
 
       {available ? (
         <ListGroup

@@ -9,6 +9,10 @@ import { PageHeader } from '@/components/page-header';
 import { Screen } from '@/components/screen';
 import { fetchSyncStatus } from '@/data/google-health';
 import { describeConnection } from '@/data/google-health-status';
+import { useDataSource } from '@/data/profile';
+import { appleSyncSupported, syncAppleHealth } from '@/health/apple-sync';
+import { describeAppleSync } from '@/health/apple-sync-status';
+import { useAppleSyncState } from '@/health/use-apple-sync';
 import { anyEnabled } from '@/data/notification-prefs';
 import type { DemoScenario } from '@/demo/demo-data';
 import { startDemo, stopDemo, useDemoScenario } from '@/demo/demo-mode';
@@ -33,14 +37,19 @@ function MeScreen({ demo }: { demo: DemoScenario | null }) {
   const { session, signOut } = useSession();
   const [healthSummary, setHealthSummary] = useState<string | undefined>(undefined);
   const [notificationSummary, setNotificationSummary] = useState<string | undefined>(undefined);
+  // Apple Health profilinde Google Health bağlantısı yok (karar 0061); satır ve durum sorgusu gösterilmez.
+  const source = useDataSource();
+  const google = source === 'google_health';
 
   useFocusEffect(
     useCallback(() => {
-      void fetchSyncStatus().then((result) => {
-        setHealthSummary(result.ok ? describeConnection(result.value, new Date()).summary : undefined);
-      });
+      if (google) {
+        void fetchSyncStatus().then((result) => {
+          setHealthSummary(result.ok ? describeConnection(result.value, new Date()).summary : undefined);
+        });
+      }
       void loadServerPrefs().then((p) => setNotificationSummary(anyEnabled(p) ? 'Açık' : 'Kapalı'));
-    }, []),
+    }, [google]),
   );
 
   const confirmSignOut = () => {
@@ -59,13 +68,16 @@ function MeScreen({ demo }: { demo: DemoScenario | null }) {
   return (
     <Screen>
       <PageHeader title="Ben" />
-      <ListGroup label="Veri">
-        <ListRow
-          label="Google Health"
-          {...(healthSummary ? { value: healthSummary } : {})}
-          onPress={() => router.push('/me/google-health')}
-        />
-      </ListGroup>
+      {google ? (
+        <ListGroup label="Veri">
+          <ListRow
+            label="Google Health"
+            {...(healthSummary ? { value: healthSummary } : {})}
+            onPress={() => router.push('/me/google-health')}
+          />
+        </ListGroup>
+      ) : null}
+      {source === 'apple_health' && !demo ? <AppleHealthGroup /> : null}
       <ListGroup label="Ayarlar">
         <ListRow
           label="Görünüm"
@@ -93,5 +105,29 @@ function MeScreen({ demo }: { demo: DemoScenario | null }) {
         </>
       )}
     </Screen>
+  );
+}
+
+/** Apple Sağlık eşitleme durumu (karar 0061 sıra 3d). Dokununca eşitler; izin ekranı ilk dokunuşta açılır. */
+function AppleHealthGroup() {
+  const { state, running } = useAppleSyncState();
+  if (!appleSyncSupported) {
+    return (
+      <ListGroup label="Veri" footer="Apple Sağlık verisi yalnız iPhone uygulamasından eşitlenir; burada eşitlenmiş veri görünür.">
+        <ListRow label="Apple Sağlık" value="iPhone'da" />
+      </ListGroup>
+    );
+  }
+  const summary = state ? describeAppleSync(state, running, new Date()) : null;
+  return (
+    <ListGroup label="Veri" {...(summary ? { footer: summary.detail } : {})}>
+      <ListRow
+        label="Apple Sağlık"
+        {...(summary ? { value: summary.value } : {})}
+        onPress={() => {
+          if (!running) void syncAppleHealth('manual');
+        }}
+      />
+    </ListGroup>
   );
 }

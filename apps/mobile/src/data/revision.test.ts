@@ -14,6 +14,7 @@ test('yalnız veri yazan istekler sürümü değiştirir', () => {
   assert.equal(isDataWrite('POST', `${base}/rest/v1/rpc/save_morning_checkin`), true);
   assert.equal(isDataWrite('POST', `${base}/functions/v1/ghealth-sync`), true);
   assert.equal(isDataWrite('DELETE', `${base}/functions/v1/ghealth-connect`), true);
+  assert.equal(isDataWrite('POST', `${base}/functions/v1/healthkit-ingest`), true);
   // Koç kendi özetini yönetir; oturum yenileme veri değildir.
   assert.equal(isDataWrite('POST', `${base}/functions/v1/coach-daily?peek=1`), false);
   assert.equal(isDataWrite('POST', `${base}/functions/v1/coach-ask`), false);

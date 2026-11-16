@@ -32,3 +32,32 @@ export const recoverySources: readonly SourceRef[] = [
   ref('miller-2020', 'Gece solunumunda olağandan sapma'),
   ref('nicolo-2020', 'Solunumu etkileyen etkenler'),
 ];
+
+/**
+ * Apple Health profilinin listesi (karar 0061): ortak kurallar (bant, veri yeterliliği, uyku, solunum) ve Apple
+ * sürümleri (hrv-olcu-apple, nabiz-olcu-apple, gunun-durumu-apple). recovery-sources.test.ts denetler.
+ */
+export const recoverySourcesApple: readonly SourceRef[] = [
+  ref('manresa-rocamora-2021', `${recoveryBand.rollingDays} günlük ortalama, ${weeks(recoveryBand.baselineDays)} haftalık bant, ± ${formatDecimal(recoveryBand.sdMultiplier)} SD`),
+  ref('vesterinen-2016', "HRV'ye dayalı karar kuralı; Apple'da uygulanmaz"),
+  ref('duking-2021', 'Giyilebilir cihazla ölçülen HRV'),
+  ref('plews-2014', `Haftada en az ${recoveryMinValues.rolling} geçerli gece`),
+  ref('plews-2013', 'Ortalamayla okuma, HRV nabızla birlikte'),
+  ref('buchheit-2014', 'İki işaret aynı yönde: en ağır durum'),
+  ref('task-force-1996', 'SDNN ile RMSSD aynı ölçü değil'),
+  ref('munoz-2015', 'Kısa kayıtta SDNN daha az güvenilir'),
+  ref('dobbs-2019', 'Taşınabilir cihazlarda en büyük hata SDNN’de'),
+  ref('miller-2022', 'Uykuda saatin nabzı EKG’ye yakın, HRV’si daha zayıf'),
+  ref('ogrady-2024', 'Apple Watch: dinlenik nabız doğru, HRV hatası büyük'),
+  ref('bonneval-2025', 'Apple Watch: dinlenirken nabız ve HRV doğruluğu'),
+  ref('hirten-2021', 'Uzun süreli kişisel SDNN izlemesi'),
+  ref('nuuttila-2022', 'Gece nabzı tutarlı ve yüklenmeye duyarlı'),
+  ref('lambe-2026b', 'Saat nabzının ortalama farkı ve tek ölçüm oynaması'),
+  ref('choe-2025', 'Saat nabzının hatası geçerlik sınırının altında'),
+  ref('altini-2021', 'Nabız antrenmandan çok alkol ve hastalıkla yükselir'),
+  ref('walsh-2021', `${shortSleep.minHours} saatin altı kısa uyku`),
+  ref('natarajan-2021', `Gece solunumu kişi içinde kararlı; ${respirationNightRule.aboveBaselineMean} nefes/dk notu`),
+  ref('renteria-2024', 'Sporcularda kişisel başlangıca göre solunum'),
+  ref('miller-2020', 'Gece solunumunda olağandan sapma'),
+  ref('nicolo-2020', 'Solunumu etkileyen etkenler'),
+];

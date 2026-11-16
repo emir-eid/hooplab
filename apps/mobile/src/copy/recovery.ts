@@ -3,9 +3,11 @@
 
 import type { DayState } from '@hooplab/theme';
 import {
+  dayStatusRuleApple,
   recoveryBand,
   recoveryMinValues,
   shortSleep,
+  type DataSource,
   type DayLevel,
   type MetricReading,
   type RecoverySignal,
@@ -35,6 +37,13 @@ export const weeks = (days: number) => days / 7;
 /** Toparlanma bölümündeki pencere metinleri (rules/toparlanma.json → toparlanma-bant, uyku-kisa). */
 export const bandSectionNote = `aralığın: önceki ${weeks(recoveryBand.baselineDays)} hafta`;
 export const hrvChartTitle = 'HRV · derin uyku';
+/** Apple profilinde HRV gecelik SDNN ortalaması ve tahmin (rules/toparlanma.json → hrv-olcu-apple, karar 0061). */
+export const hrvChartTitleApple = 'HRV · uyku';
+export const estimateTag = 'Tahmin';
+
+export function hrvTitleFor(source: DataSource = 'google_health'): string {
+  return source === 'apple_health' ? hrvChartTitleApple : hrvChartTitle;
+}
 export const rollingSpoken = `${recoveryBand.rollingDays} günlük ortalama`;
 export const hrvLineLegend = `Çizgi: ${recoveryBand.rollingDays} günlük ort.`;
 export const rollingLabel = `${recoveryBand.rollingDays} gün ort.`;
@@ -68,7 +77,40 @@ function joinTr(parts: readonly string[]): string {
 export const rhrAloneNote =
   'Uyku nabzı aralığının üstünde; tek başına durumu değiştirmez. Ağır yük, geç maç, alkol, stres ya da başlayan bir hastalıkla yükselebilir.';
 
-export function statusReason(v: RecoveryView): string {
+/** Apple Watch'ta HRV bandın dışındayken düşen not (rules/toparlanma.json → gunun-durumu-apple, note_only). */
+export const hrvAloneNoteApple = "Apple Watch'ta HRV ölçümünün hatası büyük; tek başına durumu değiştirmez.";
+
+const emptyApple = 'Henüz gece verisi yok. Apple Sağlık izni verilip saat bir gece takıldıktan sonra burada görünür.';
+
+/**
+ * Apple Health profili (karar 0061): durumun dayanağı uyku nabzı; HRV bandın dışındaysa yalnız not. "Toparlan"da
+ * iki işaret birlikte nedendir.
+ */
+function statusReasonApple(v: RecoveryView): string {
+  if (v.empty) return emptyApple;
+  const { level, signals } = v.status;
+  const notes = level === 'recover' ? [] : signals.filter((s) => (dayStatusRuleApple.noteOnly as readonly RecoverySignal[]).includes(s));
+  const causes = signals.filter((s) => !notes.includes(s));
+  const noteText = notes.length > 0 ? ` ${capitalize(joinTr(notes.map((s) => signalPhrases[s])))}. ${hrvAloneNoteApple}` : '';
+
+  if (level === 'insufficient') {
+    if (v.rhr.band === null) {
+      return `Kişisel bant, son ${recoveryBand.rollingDays} günden önceki ${weeks(recoveryBand.baselineDays)} haftanın en az ${recoveryMinValues.baseline} gecesinden kurulur; şu an ${v.rhr.baselineN} gece uyku nabzı var. O zamana kadar değerler yalnız gösterilir.`;
+    }
+    return `${recoveryBand.rollingDays} günlük ortalama için son ${recoveryBand.rollingDays} günde en az ${recoveryMinValues.rolling} gece uyku nabzı gerekiyor; şu an ${v.rhr.rollingN} gece var.`;
+  }
+
+  if (level === 'ready') {
+    const rhr = v.rhr.position === 'below' ? 'Uyku nabzı aralığının altında' : 'Uyku nabzı kendi aralığında';
+    const hrv = v.hrv.position === 'within' ? ', HRV de aralığında' : '';
+    return `${rhr}${hrv}${v.sleep.short === false ? ', uyku yeterli.' : '.'}${noteText}`;
+  }
+
+  return `${capitalize(joinTr(causes.map((s) => signalPhrases[s])))}.${noteText}`;
+}
+
+export function statusReason(v: RecoveryView, source: DataSource = 'google_health'): string {
+  if (source === 'apple_health') return statusReasonApple(v);
   if (v.empty) return 'Henüz gece verisi yok. Ben → Google Health ile bağlan; ilk senkrondan sonra burada görünür.';
   const { level, signals } = v.status;
 
@@ -121,7 +163,15 @@ export function statusAdvice(v: RecoveryView, matchDay = false): string | null {
   }
 }
 
-export function statusChips(v: RecoveryView): string[] {
+export function statusChips(v: RecoveryView, source: DataSource = 'google_health'): string[] {
+  if (source === 'apple_health' && v.status.level === 'ready') {
+    // Apple'da dayanak uyku nabzı; HRV notları (bandın dışı) çip olarak da görünür (karar 0061).
+    return [
+      'Uyku nabzı aralığında',
+      ...(v.sleep.short === false ? ['Uyku yeterli'] : []),
+      ...v.status.signals.filter((s) => s === 'hrv_low' || s === 'hrv_high').map((s) => signalChips[s]),
+    ];
+  }
   if (v.status.level === 'ready') {
     return [
       'HRV aralığında',

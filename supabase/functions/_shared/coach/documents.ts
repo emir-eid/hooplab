@@ -6,7 +6,7 @@
 // koçun cümlesi ekrandaki sayıyla çelişmesin. Eşikler ve pencere uzunlukları istemciden değil, kanıt tabanındaki
 // kural değerlerinden (research/rules → kb-data.ts) okunur.
 
-import type { Kb, KbRuleValue, KbSource } from './kb.ts';
+import { isAppleKb, profileRuleId, type Kb, type KbRuleValue, type KbSource } from './kb.ts';
 import {
   presentMetrics,
   type BandMetric,
@@ -178,6 +178,10 @@ const signalTexts: Record<RecoverySignal, string> = {
 };
 export const positionTexts = { below: 'altında', within: 'içinde', above: 'üstünde' } as const;
 
+/** Apple Health profilinin ölçü adları (karar 0061, hrv-olcu-apple, nabiz-olcu-apple); HRV tahmin olarak işaretlenir. */
+export const hrvNameApple = 'HRV tahmini (Apple Watch; uyku sırasındaki SDNN ölçümlerinin gecelik ortalaması, RMSSD ile kıyaslanmaz)';
+export const rhrNameApple = 'Uyku nabzı (Apple Watch; bütün uyku penceresinin ortalaması)';
+
 // --- Bloklar ---
 
 interface BandText {
@@ -221,7 +225,7 @@ function blocksFor(snapshot: CoachSnapshot, key: MetricKey, kb: Kb): NumbersBloc
       const label = `Günün durumu: ${levelLabels[s.level]}.`;
       if (s.level === 'insufficient') return [block(`${label} Kişisel bant için henüz yeterli gece yok.`)];
       // Not işaretleri (uyku nabzı tek başına) durumu değiştirmez; "Toparlan"da HRV ile birlikte nedendir (karar 0041).
-      const noteOnly = new Set(s.level === 'recover' ? [] : ruleStrings(kb, 'gunun-durumu', 'note_only'));
+      const noteOnly = new Set(s.level === 'recover' ? [] : ruleStrings(kb, profileRuleId(kb, 'gunun-durumu'), 'note_only'));
       const causes = s.signals.filter((x) => !noteOnly.has(x));
       const notes = s.signals.filter((x) => noteOnly.has(x));
       let text = causes.length === 0 ? `${label} Bandın dışında bir işaret yok.` : `${label} Nedeni: ${causes.map((x) => signalTexts[x]).join(', ')}.`;
@@ -229,9 +233,11 @@ function blocksFor(snapshot: CoachSnapshot, key: MetricKey, kb: Kb): NumbersBloc
       return [block(text)];
     }
     case 'hrv':
+      // Apple Health profilinde HRV gecelik SDNN ortalaması ve tahmin (karar 0061); sahibinin metni aynı.
+      if (isAppleKb(kb)) return [block(bandSentence(snapshot.hrv!, { name: hrvNameApple, unit: 'ms', digits: 0, ...band('toparlanma-bant') }), true)];
       return [block(bandSentence(snapshot.hrv!, { name: 'HRV (derin uyku, RMSSD)', unit: 'ms', digits: 0, ...band('toparlanma-bant') }))];
     case 'rhr':
-      return [block(bandSentence(snapshot.rhr!, { name: 'Uyku nabzı (REM dışı uyku ortalaması)', unit: 'atım/dk', digits: 0, ...band('toparlanma-bant') }))];
+      return [block(bandSentence(snapshot.rhr!, { name: isAppleKb(kb) ? rhrNameApple : 'Uyku nabzı (REM dışı uyku ortalaması)', unit: 'atım/dk', digits: 0, ...band('toparlanma-bant') }))];
     case 'respiration': {
       const r = snapshot.respiration!;
       let text = bandSentence(r, { name: 'Gece solunum hızı', unit: 'nefes/dk', digits: 1, ...band('solunum-bant') });

@@ -4,7 +4,13 @@ import assert from 'node:assert/strict';
 import { readdirSync, readFileSync } from 'node:fs';
 import { test } from 'node:test';
 
-import { explainers, isExplainerId, type Explainer } from './explainers.ts';
+import { appleExplainers, explainerFor, explainers, isExplainerId, type Explainer } from './explainers.ts';
+
+/** İki profilin açıklamaları birlikte (karar 0061): Apple sürümleri aynı denetimlerden geçer. */
+const all: [string, Explainer][] = [
+  ...(Object.entries(explainers) as [string, Explainer][]),
+  ...(Object.entries(appleExplainers) as [string, Explainer][]).map(([id, e]): [string, Explainer] => [`${id} (apple)`, e]),
+];
 
 const root = new URL('../../../../research/', import.meta.url);
 const ruleFiles = readdirSync(new URL('rules/', root)).filter((f) => f.endsWith('.json'));
@@ -15,7 +21,7 @@ for (const f of ruleFiles) {
 }
 
 test('her açıklamanın kuralları var, kaynakları o kuralların kaynaklarından', () => {
-  for (const [id, e] of Object.entries(explainers) as [string, Explainer][]) {
+  for (const [id, e] of all) {
     const allowed = new Set<string>();
     for (const r of e.rules) {
       const s = rules.get(r);
@@ -29,7 +35,7 @@ test('her açıklamanın kuralları var, kaynakları o kuralların kaynaklarınd
 });
 
 test('metinlerde "â" yok ve bölümler dolu', () => {
-  for (const [id, e] of Object.entries(explainers) as [string, Explainer][]) {
+  for (const [id, e] of all) {
     const text = [e.title, e.hint, e.goal ?? '', e.what, e.reference, ...e.read, e.limits ?? ''].join(' ');
     assert.ok(!/[âÂ]/.test(text), id);
     assert.ok(e.what.length > 0 && e.reference.length > 0 && e.read.length > 0, id);
@@ -37,7 +43,7 @@ test('metinlerde "â" yok ve bölümler dolu', () => {
 });
 
 test('her açıklamanın kısa cümlesi var; kartta sığacak kadar kısa (sade dil, 2026-10-14)', () => {
-  for (const [id, e] of Object.entries(explainers) as [string, Explainer][]) {
+  for (const [id, e] of all) {
     assert.ok(e.hint.length > 0 && e.hint.length <= 72, `${id}: ${e.hint.length}`);
     assert.ok(e.hint.endsWith('.'), id);
   }
@@ -47,6 +53,24 @@ test('günün durumunu belirleyen ve not düşen ölçümlerde hedef yazılı', 
   for (const id of ['hrv', 'rhr', 'sleep', 'respiration', 'checkin', 'illnessSigns', 'ratio', 'sweatTest', 'painMonitoring'] as const) {
     assert.ok((explainers[id].goal ?? '').length > 0, id);
   }
+});
+
+test('Apple açıklamaları yalnız Apple kurallarına dayanır, sahibininkiler Fitbit sürümlerine (karar 0061)', () => {
+  const appleOnly = /-apple$/;
+  for (const [id, e] of Object.entries(appleExplainers) as [string, Explainer][]) {
+    assert.ok(e.rules.some((r) => appleOnly.test(r)), id);
+    for (const r of e.rules) assert.ok(!['hrv-olcu', 'nabiz-olcu', 'gunun-durumu', 'enerji-harcamasi-tahmin'].includes(r), `${id}: ${r}`);
+    assert.equal(e.title, explainers[id as keyof typeof appleExplainers].title.replace(' · derin uyku', ' · uyku'), id);
+  }
+  for (const e of Object.values(explainers) as Explainer[]) for (const r of e.rules) assert.ok(!appleOnly.test(r), r);
+  assert.equal(appleExplainers.hrv.basis, 'estimate');
+});
+
+test('explainerFor: varsayılan ve Google Health sahibinin açıklaması, Apple yalnız tanımlı olanlarda farklı', () => {
+  assert.equal(explainerFor('hrv'), explainers.hrv);
+  assert.equal(explainerFor('hrv', 'google_health'), explainers.hrv);
+  assert.equal(explainerFor('hrv', 'apple_health'), appleExplainers.hrv);
+  assert.equal(explainerFor('sleep', 'apple_health'), explainers.sleep);
 });
 
 test('isExplainerId yalnız bilinen kimlikleri kabul eder', () => {

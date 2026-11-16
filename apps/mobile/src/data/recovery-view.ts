@@ -89,6 +89,11 @@ export function nightlySleep(rows: readonly SleepRow[]): DayValue[] {
   return [...byDate].map(([date, value]) => ({ date, value }));
 }
 
+/** Kaynağın HRV ve uyku nabzı sütunları (sorgu için); Google Health'te sahibinin sorgusu birebir aynı kalır. */
+export function autonomicColumns(source: DataSource = 'google_health'): string {
+  return source === 'apple_health' ? 'hrv_sleep_sdnn_ms, sleep_hr_bpm' : 'hrv_deep_rmssd_ms, nrem_hr_bpm';
+}
+
 /** Profilin kaynağına göre HRV ve uyku nabzı serileri (karar 0061). Varsayılan sahibinin profili (Google Health). */
 export function autonomicSeries(daily: readonly HealthDailyRow[], source: DataSource = 'google_health'): { hrv: DayValue[]; rhr: DayValue[] } {
   const apple = source === 'apple_health';

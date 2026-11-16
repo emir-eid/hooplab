@@ -10,6 +10,8 @@ export const SOURCE = 'apple_health';
 /** İlk yüklemede telefon en çok bu kadar gün geriye gider (Google senkronunun BACKFILL_DAYS'iyle aynı). */
 export const MAX_DAYS_BACK = 90;
 export const LIMITS = { days: 92, sleep: 400, workouts: 500, hourlyEnergy: 240 } as const;
+/** İsteğe bağlı gövde anahtarları (liste olmayanlar). */
+const OTHER_KEYS = ['window'] as const;
 /** Gövde sınırı (bayt); yukarıdaki üst sınırlarla dolu bir istek ~400 KB. */
 export const MAX_BODY_BYTES = 1_000_000;
 
@@ -54,7 +56,17 @@ export interface IngestRows {
   hourlyEnergy: Row[];
 }
 
-export type ParseResult = { ok: true; rows: IngestRows } | { ok: false; issues: string[] };
+/**
+ * Yenileme penceresi (yerel tarihler, uçlar dahil). Telefon pencerenin bütün uyku oturumlarını, antrenmanlarını ve
+ * saatlik enerjisini gönderir; pencerede olup gönderilmeyen Apple satırı silinmiş sayılır ve silinir
+ * (HealthKit'te silinen kayıt buluttan da kalkar). Pencere yoksa yalnız upsert yapılır.
+ */
+export interface ReplaceWindow {
+  from: string;
+  to: string;
+}
+
+export type ParseResult = { ok: true; rows: IngestRows; window: ReplaceWindow | null } | { ok: false; issues: string[] };
 
 const MAX_ISSUES = 20;
 
@@ -152,7 +164,21 @@ export function parseIngestBody(body: unknown, now: Date): ParseResult {
   const today = now.toISOString().slice(0, 10);
   const c = new Checker(addDays(today, -MAX_DAYS_BACK), addDays(today, 1));
   if (!isObject(body)) return { ok: false, issues: ['body'] };
-  for (const key of Object.keys(body)) if (!(key in LIMITS)) c.fail(key);
+  for (const key of Object.keys(body)) if (!(key in LIMITS) && !(OTHER_KEYS as readonly string[]).includes(key)) c.fail(key);
+
+  let window: ReplaceWindow | null = null;
+  if (body.window !== undefined) {
+    const w = body.window;
+    if (!isObject(w) || Object.keys(w).some((k) => k !== 'from' && k !== 'to')) c.fail('window');
+    else {
+      const from = c.date(w, 'from', 'window');
+      const to = c.date(w, 'to', 'window');
+      if (from && to) {
+        if (from > to) c.fail('window.to');
+        else window = { from, to };
+      }
+    }
+  }
 
   const daily = list(c, body, 'days').map((d, i): Row => {
     const path = `days[${i}]`;
@@ -226,19 +252,44 @@ export function parseIngestBody(body: unknown, now: Date): ParseResult {
   duplicates(c, exercise, 'source_id', 'workouts');
   duplicates(c, hourlyEnergy, 'hour_start', 'hourlyEnergy');
 
+  // Pencere varken silinecek satırlar yalnız pencereden seçilir; pencere dışı satır gönderilemez.
+  if (window) {
+    const w = window;
+    const outside = (rows: Row[], path: string) =>
+      rows.forEach((r, i) => {
+        const d = r.local_date as string | null;
+        if (d && (d < w.from || d > w.to)) c.fail(`${path}[${i}].localDate`);
+      });
+    outside(sleep, 'sleep');
+    outside(exercise, 'workouts');
+    outside(hourlyEnergy, 'hourlyEnergy');
+  }
+
   if (c.issues.length > 0) return { ok: false, issues: c.issues };
-  return { ok: true, rows: { daily, sleep, exercise, hourlyEnergy } };
+  return { ok: true, rows: { daily, sleep, exercise, hourlyEnergy }, window };
 }
 
 export interface IngestStore {
   /** Kullanıcının profilindeki veri kaynağı; satır yoksa null. */
   dataSource(userId: string): Promise<string | null>;
   upsert(table: 'health_daily' | 'sleep_sessions' | 'exercise_sessions' | 'health_hourly_energy', onConflict: string, rows: Row[]): Promise<void>;
+  /** Penceredeki Apple satırlarının anahtarları (yalnız bu kullanıcı, yalnız apple_health). */
+  keysInWindow(table: ReplaceTable, key: ReplaceKey, userId: string, window: ReplaceWindow): Promise<string[]>;
+  /** Verilen anahtarlı Apple satırlarını siler (yalnız bu kullanıcı, yalnız apple_health). */
+  deleteKeys(table: ReplaceTable, key: ReplaceKey, userId: string, keys: string[]): Promise<void>;
+}
+
+export type ReplaceTable = 'sleep_sessions' | 'exercise_sessions' | 'health_hourly_energy';
+export type ReplaceKey = 'source_id' | 'hour_start';
+
+/** Zaman damgası anahtarları veritabanından farklı biçimde dönebilir; kıyas ISO UTC'de yapılır. */
+function normalizeKey(key: ReplaceKey, v: string): string {
+  return key === 'hour_start' ? new Date(v).toISOString() : v;
 }
 
 export interface IngestResult {
   httpStatus: number;
-  body: { error: string; issues?: string[] } | { counts: Record<keyof IngestRows, number> };
+  body: { error: string; issues?: string[] } | { counts: Record<keyof IngestRows, number>; deleted: number };
 }
 
 /** Yalnız apple_health profili yükleyebilir; veritabanındaki kaynak bekçisi aynı kuralı ikinci kez uygular. */
@@ -249,12 +300,27 @@ export async function runIngest(input: { userId: string; body: unknown; now: Dat
   const parsed = parseIngestBody(input.body, input.now);
   if (!parsed.ok) return { httpStatus: 400, body: { error: 'invalid_body', issues: parsed.issues } };
 
-  const { rows } = parsed;
+  const { rows, window } = parsed;
   const withUser = (list: Row[]) => list.map((r) => ({ ...r, user_id: input.userId }));
   if (rows.daily.length) await store.upsert('health_daily', 'user_id,local_date', withUser(rows.daily));
   if (rows.sleep.length) await store.upsert('sleep_sessions', 'user_id,source_id', withUser(rows.sleep));
   if (rows.exercise.length) await store.upsert('exercise_sessions', 'user_id,source_id', withUser(rows.exercise));
   if (rows.hourlyEnergy.length) await store.upsert('health_hourly_energy', 'user_id,hour_start', withUser(rows.hourlyEnergy));
+
+  let deleted = 0;
+  if (window) {
+    const replace: [ReplaceTable, ReplaceKey, Row[]][] = [
+      ['sleep_sessions', 'source_id', rows.sleep],
+      ['exercise_sessions', 'source_id', rows.exercise],
+      ['health_hourly_energy', 'hour_start', rows.hourlyEnergy],
+    ];
+    for (const [table, key, sent] of replace) {
+      const keep = new Set(sent.map((r) => normalizeKey(key, r[key] as string)));
+      const stale = (await store.keysInWindow(table, key, input.userId, window)).filter((k) => !keep.has(normalizeKey(key, k)));
+      if (stale.length) await store.deleteKeys(table, key, input.userId, stale);
+      deleted += stale.length;
+    }
+  }
 
   return {
     httpStatus: 200,
@@ -265,6 +331,7 @@ export async function runIngest(input: { userId: string; body: unknown; now: Dat
         exercise: rows.exercise.length,
         hourlyEnergy: rows.hourlyEnergy.length,
       },
+      deleted,
     },
   };
 }

@@ -45,15 +45,20 @@ function validBody() {
   };
 }
 
-function memoryStore(dataSource: string | null) {
+function memoryStore(dataSource: string | null, existing: Record<string, string[]> = {}) {
   const writes: { table: string; onConflict: string; rows: Row[] }[] = [];
+  const deletes: { table: string; key: string; keys: string[] }[] = [];
   const store: IngestStore = {
     dataSource: async () => dataSource,
     upsert: async (table, onConflict, rows) => {
       writes.push({ table, onConflict, rows: structuredClone(rows) });
     },
+    keysInWindow: async (table) => existing[table] ?? [],
+    deleteKeys: async (table, key, _user, keys) => {
+      deletes.push({ table, key, keys: [...keys] });
+    },
   };
-  return { store, writes };
+  return { store, writes, deletes };
 }
 
 test('geçerli gövde: satırlar kurulur, kaynak apple_health, zamanlar UTC ISO', () => {
@@ -168,7 +173,7 @@ test('profil kapısı: yalnız apple_health yükler; sahibinin profili ve profil
 test('Apple profili: dört tabloya user_id ile, doğru çakışma anahtarıyla yazılır', async () => {
   const { store, writes } = memoryStore('apple_health');
   const result = await runIngest({ userId: USER, body: validBody(), now: NOW }, store);
-  assert.deepEqual(result, { httpStatus: 200, body: { counts: { daily: 2, sleep: 1, exercise: 1, hourlyEnergy: 1 } } });
+  assert.deepEqual(result, { httpStatus: 200, body: { counts: { daily: 2, sleep: 1, exercise: 1, hourlyEnergy: 1 }, deleted: 0 } });
   assert.deepEqual(
     writes.map((w) => [w.table, w.onConflict]),
     [
@@ -189,4 +194,44 @@ test('hatalı gövdede 400, hiçbir şey yazılmaz; boş gövde yazmadan 200', a
   const empty = memoryStore('apple_health');
   assert.equal((await runIngest({ userId: USER, body: {}, now: NOW }, empty.store)).httpStatus, 200);
   assert.equal(empty.writes.length, 0);
+});
+
+test('pencere: penceredeki gönderilmeyen Apple satırı silinir, gönderilen kalır; saat anahtarı biçimden bağımsız', async () => {
+  const body = { ...validBody(), window: { from: '2026-01-14', to: '2026-01-15' } };
+  const { store, deletes } = memoryStore('apple_health', {
+    sleep_sessions: ['A1B2C3D4-0000-4000-8000-000000000001', 'SILINEN-UYKU'],
+    exercise_sessions: ['A1B2C3D4-0000-4000-8000-000000000002'],
+    // Veritabanı aynı anı +00:00 biçiminde döndürür: silinmemeli.
+    health_hourly_energy: ['2026-01-15T03:00:00+00:00', '2026-01-15T04:00:00+00:00'],
+  });
+  const result = await runIngest({ userId: USER, body, now: NOW }, store);
+  assert.equal(result.httpStatus, 200);
+  assert.deepEqual(deletes, [
+    { table: 'sleep_sessions', key: 'source_id', keys: ['SILINEN-UYKU'] },
+    { table: 'health_hourly_energy', key: 'hour_start', keys: ['2026-01-15T04:00:00+00:00'] },
+  ]);
+  assert.equal((result.body as { deleted: number }).deleted, 2);
+});
+
+test('pencere yoksa hiçbir şey silinmez', async () => {
+  const { store, deletes } = memoryStore('apple_health', { sleep_sessions: ['SILINEN-UYKU'] });
+  await runIngest({ userId: USER, body: validBody(), now: NOW }, store);
+  assert.equal(deletes.length, 0);
+});
+
+test('pencere biçimi: ters sıra, pencere dışı satır, bilinmeyen anahtar ve 90 günden eski uç reddedilir; hiçbir şey silinmez', async () => {
+  const cases: [unknown, string][] = [
+    [{ from: '2026-01-15', to: '2026-01-14' }, 'window.to'],
+    [{ from: '2026-01-15', to: '2026-01-15' }, 'workouts[0].localDate'],
+    [{ from: '2026-01-14', to: '2026-01-15', x: 1 }, 'window'],
+    [{ from: '2025-01-01', to: '2026-01-15' }, 'window.from'],
+    ['2026-01-14', 'window'],
+  ];
+  for (const [window, issue] of cases) {
+    const { store, writes, deletes } = memoryStore('apple_health', { sleep_sessions: ['SILINEN-UYKU'] });
+    const result = await runIngest({ userId: USER, body: { ...validBody(), window }, now: NOW }, store);
+    assert.equal(result.httpStatus, 400, issue);
+    assert.ok((result.body as { issues: string[] }).issues.includes(issue), issue);
+    assert.equal(writes.length + deletes.length, 0);
+  }
 });

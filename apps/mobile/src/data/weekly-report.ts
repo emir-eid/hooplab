@@ -7,7 +7,8 @@ import type { Result } from '@/data/daily-log';
 import type { EnergyDayRow } from '@/data/energy-view';
 import { toMatches, type MatchRow } from '@/data/match-view';
 import type { FluidRow, MealRow, WeightRow } from '@/data/nutrition-view';
-import type { HealthDailyRow, SleepRow } from '@/data/recovery-view';
+import { fetchDataSource } from '@/data/profile';
+import { autonomicColumns, type HealthDailyRow, type SleepRow } from '@/data/recovery-view';
 import {
   buildWeeklyReportView,
   firstWeekOf,
@@ -28,6 +29,9 @@ export async function fetchWeeklyReport(weekStart: string, today: string): Promi
   if (!supabase) return { ok: false, message: offline };
   const r = weeklyRanges(weekStart);
   const end = r.end < today ? r.end : today;
+  const source = await fetchDataSource();
+  // Sütunlar kaynağa göre (karar 0061); string olarak tutulur, sorgu tipi satır tipinden gelir.
+  const dailyColumns: string = `local_date, ${autonomicColumns(source)}, respiratory_rate_bpm, spo2_avg_pct, skin_temp_nightly_c, skin_temp_baseline_c, calories_kcal`;
   const first = (table: string) => supabase!.from(table).select('local_date').order('local_date', { ascending: true }).limit(1).maybeSingle();
   const [sessions, firstSession, firstHealth, firstCheckin, daily, sleep, checkins, pain, weights, dayTypes, match, meals, fluids] =
     await Promise.all([
@@ -41,7 +45,7 @@ export async function fetchWeeklyReport(weekStart: string, today: string): Promi
       first('daily_checkins'),
       supabase
         .from('health_daily')
-        .select('local_date, hrv_deep_rmssd_ms, nrem_hr_bpm, respiratory_rate_bpm, spo2_avg_pct, skin_temp_nightly_c, skin_temp_baseline_c, calories_kcal')
+        .select(dailyColumns)
         .gte('local_date', r.health)
         .lte('local_date', end),
       supabase.from('sleep_sessions').select('local_date, minutes_asleep, is_nap').gte('local_date', r.health).lte('local_date', end),
@@ -65,8 +69,8 @@ export async function fetchWeeklyReport(weekStart: string, today: string): Promi
   const rows: WeeklyRows = {
     sessions: sessionRows.map(({ sweat_pre_kg, ...s }) => ({ ...s, sweat: sweat_pre_kg !== null })),
     earliestSession: date(firstSession),
-    healthDaily: (daily.data ?? []) as HealthDailyRow[],
-    energy: ((daily.data ?? []) as EnergyDayRow[]).map((r) => ({ local_date: r.local_date, calories_kcal: r.calories_kcal })),
+    healthDaily: (daily.data ?? []) as unknown as HealthDailyRow[],
+    energy: ((daily.data ?? []) as unknown as EnergyDayRow[]).map((r) => ({ local_date: r.local_date, calories_kcal: r.calories_kcal })),
     sleep: (sleep.data ?? []) as SleepRow[],
     checkins: (checkins.data ?? []) as WeeklyRows['checkins'],
     pain: (pain.data ?? []) as WeeklyPainRow[],
@@ -79,7 +83,7 @@ export async function fetchWeeklyReport(weekStart: string, today: string): Promi
   return {
     ok: true,
     value: {
-      view: buildWeeklyReportView(rows, weekStart, today),
+      view: buildWeeklyReportView(rows, weekStart, today, source),
       firstWeek: firstWeekOf([date(firstSession), date(firstHealth), date(firstCheckin)]),
     },
   };

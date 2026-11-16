@@ -11,7 +11,7 @@ import type Anthropic from 'npm:@anthropic-ai/sdk@0.128.0';
 import { auditResponse, salvageAudit, salvageOptions, statusSentence, type AuditResult, type ResponseBlock, type ResponseCitation, type SalvageOptions } from './audit.ts';
 import { dailyAttemptLimit, routingNotes, type DailyResponse, type RoutingNote } from './contract.ts';
 import { dailyDocuments } from './documents.ts';
-import { selectForRules, withoutAppNumbers, type Kb } from './kb.ts';
+import { profileRuleId, selectForRules, withoutAppNumbers, type Kb } from './kb.ts';
 import { attentionMetrics, parseSnapshot, presentMetrics, snapshotRuleIds, type CoachSnapshot } from './snapshot.ts';
 
 export const coachModel = 'claude-sonnet-5-5';
@@ -117,7 +117,8 @@ export function buildRequest(snapshot: CoachSnapshot, kb: Kb, options: SourceOpt
   layout: ReturnType<typeof dailyDocuments>['layout'];
 } {
   const metrics = options.selection === 'attention' ? attentionMetrics(snapshot) : presentMetrics(snapshot);
-  const selected = selectForRules(kb, snapshotRuleIds(snapshot, metrics)).sources;
+  // Ölçümün kuralı profilin sürümüne çevrilir (karar 0061); sahibinde kimlikler aynı kalır.
+  const selected = selectForRules(kb, snapshotRuleIds(snapshot, metrics).map((id) => profileRuleId(kb, id))).sources;
   const sources = options.appNumbers === false ? selected.map(withoutAppNumbers) : selected;
   const { documents, layout } = dailyDocuments(snapshot, kb, sources);
   return {

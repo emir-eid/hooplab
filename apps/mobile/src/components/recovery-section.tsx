@@ -22,8 +22,9 @@ import {
   formatBand,
   formatRolling,
   formatSleep,
-  hrvChartTitle,
+  estimateTag,
   hrvLineLegend,
+  hrvTitleFor,
   levelLabels,
   levelStates,
   rollingCaption,
@@ -37,7 +38,8 @@ import {
   statusReason,
   type ValueRow,
 } from "@/copy/recovery";
-import { explainers, type ExplainerId } from "@/copy/explainers";
+import { explainerFor, type ExplainerId } from "@/copy/explainers";
+import { useDataSource } from "@/data/profile";
 import {
   illnessSignLine,
   illnessSignsCauses,
@@ -60,8 +62,9 @@ const openMethod = () => router.push("/recovery-method");
 /** "Bugünün durumu": büyük etiket, gerekçe, çipler ve tek öneri. Hale ekranın kendisinde çizilir. */
 export function RecoveryState({ view, matchDay = false }: { view: RecoveryView; matchDay?: boolean }) {
   const palette = usePalette();
+  const source = useDataSource();
   const state = levelStates[view.status.level];
-  const chips = statusChips(view);
+  const chips = statusChips(view, source);
   const advice = statusAdvice(view, matchDay);
   const label = view.empty ? "Veri bekleniyor" : levelLabels[view.status.level];
 
@@ -80,7 +83,7 @@ export function RecoveryState({ view, matchDay = false }: { view: RecoveryView; 
         </Text>
         <View style={styles.reasonRow}>
           <Text variant="body" style={styles.reason}>
-            {statusReason(view)}
+            {statusReason(view, source)}
           </Text>
           <InfoButton
             onPress={openMethod}
@@ -159,10 +162,11 @@ export interface TileProps {
 
 export function Tile({ label, value, unit, note, rows, pageRows, flagged, state, mark, explain, wide }: TileProps) {
   const palette = usePalette();
+  const source = useDataSource();
   const marked = flagged && state ? null : mark ? markColors(palette, mark) : null;
   const accent = flagged && state ? palette.statusInk[state] : (marked?.ink ?? null);
   const dotColor = flagged && state ? palette.status[state] : (marked?.dot ?? palette.dot);
-  const hint = explain ? explainers[explain].hint : null;
+  const hint = explain ? explainerFor(explain, source).hint : null;
   const spoken = [`${label}: ${value} ${unit}, ${note}`, ...(rows ?? []).map((r) => `${r.label} ${r.value}`)].join(". ");
   return (
     <Pressable
@@ -254,6 +258,9 @@ function markColors(palette: Palette, mark: TileMark): { dot: string; ink: strin
 /** "Gece verisi": HRV grafiği ve dört ölçüm kartı. */
 export function NightData({ view }: { view: RecoveryView }) {
   const palette = usePalette();
+  const source = useDataSource();
+  // Apple Watch'ta HRV gecelik SDNN ortalaması: tahmin olarak etiketlenir (CLAUDE.md §3, karar 0061).
+  const hrvEstimate = source === "apple_health";
   const state = levelStates[view.status.level];
   const signals = view.status.signals;
   const { hrv, rhr, sleep, respiration, signs } = view;
@@ -283,8 +290,15 @@ export function NightData({ view }: { view: RecoveryView }) {
               <Text variant="footnote" tone="inkSecondary">
                 {day
                   ? `${formatShortDate(day.date)} · gece`
-                  : hrvChartTitle}
+                  : hrvTitleFor(source)}
               </Text>
+              {hrvEstimate ? (
+                <View style={[styles.estimateBadge, { backgroundColor: palette.track }]}>
+                  <Text variant="caption2Strong" tone="inkSecondary">
+                    {estimateTag}
+                  </Text>
+                </View>
+              ) : null}
               <ExplainButton id="hrv" value={hrv.rolling === null ? undefined : `${hrvValue} ms`} rows={bandPageRows(hrv, "ms")} />
             </View>
             <View style={styles.valueRow}>
@@ -297,7 +311,8 @@ export function NightData({ view }: { view: RecoveryView }) {
               variant="caption"
               tone="inkMuted"
               style={
-                !day && state && (signals.includes("hrv_low") || signals.includes("hrv_high"))
+                // "Hazır"da HRV işareti yalnız not olabilir (Apple, karar 0061): durum rengiyle boyanmaz.
+                !day && state && view.status.level !== "ready" && (signals.includes("hrv_low") || signals.includes("hrv_high"))
                   ? { color: palette.statusInk[state] }
                   : undefined
               }
@@ -332,7 +347,7 @@ export function NightData({ view }: { view: RecoveryView }) {
           accent={state ? palette.status[state] : null}
           selected={selected}
           onSelect={setSelected}
-          accessibilityLabel={`HRV, son ${view.chart.length} gün. ${rollingSpoken} ${hrvValue} milisaniye${band ? `, kişisel bant ${band}` : ", bant henüz yok"}.`}
+          accessibilityLabel={`HRV${hrvEstimate ? " tahmini" : ""}, son ${view.chart.length} gün. ${rollingSpoken} ${hrvValue} milisaniye${band ? `, kişisel bant ${band}` : ", bant henüz yok"}.`}
         />
         <View style={styles.legend}>
           <Text variant="caption2" tone="inkMuted">
@@ -348,7 +363,7 @@ export function NightData({ view }: { view: RecoveryView }) {
           ) : null}
         </View>
         <Text variant="caption2" tone="inkMuted" style={styles.chartHint}>
-          {explainers.hrv.hint}
+          {explainerFor("hrv", source).hint}
         </Text>
       </Card>
 
@@ -463,6 +478,7 @@ const styles = StyleSheet.create({
   reason: { flexShrink: 1, maxWidth: 330 },
   cite: { marginTop: 3 },
   titleRow: { flexDirection: "row", alignItems: "center", gap: spacing[1.5] },
+  estimateBadge: { paddingHorizontal: spacing[1.5], paddingVertical: spacing[0.5], borderRadius: radius.full },
   chips: {
     flexDirection: "row",
     flexWrap: "wrap",

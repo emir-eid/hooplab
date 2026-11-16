@@ -6,6 +6,7 @@ import {
   carbTargets,
   checkinBaseline,
   energyRule,
+  energyRuleApple,
   fluidQuickAddMl,
   fluidTargetRule,
   highDayRule,
@@ -37,6 +38,7 @@ import {
   targetWeightDays,
   wellnessScale,
   wellnessTotalRange,
+  type DataSource,
 } from '@hooplab/engine';
 
 import { formatDecimal, weeks } from './recovery.ts';
@@ -492,6 +494,89 @@ export type ExplainerId = keyof typeof explainers;
 
 export function isExplainerId(value: unknown): value is ExplainerId {
   return typeof value === 'string' && Object.hasOwn(explainers, value);
+}
+
+/**
+ * Apple Health profilinin açıklamaları (karar 0061): ölçü (SDNN, bütün uyku nabzı), günün durumunun dayanağı ve
+ * enerji tahmininin hata bilgisi farklı; kurallar -apple sürümleri (rules/toparlanma.json, rules/enerji.json).
+ * Burada olmayan açıklamalar iki profilde aynı.
+ */
+export const appleExplainers = {
+  hrv: {
+    title: 'HRV · uyku',
+    basis: 'estimate',
+    hint: 'Saatin uykudaki HRV tahmini; tek başına durumu değiştirmez.',
+    goal: `Kendi aralığında kalması hedeflenir. Apple Watch'ta HRV tek başına günün durumunu değiştirmez, aralığın dışına çıkarsa not düşer; ${recoveryBand.rollingDays} günlük ortalama aralığın altındayken uyku nabzı da yüksekse durum "Toparlan" olur.`,
+    what: "Kalp atımları arasındaki sürenin ne kadar değiştiğini gösterir (milisaniye). Apple Watch bunu SDNN olarak, sen hareketsizken fırsat buldukça kısa kayıtlarla ölçer; uykuya özel bir HRV değeri yok. Burada uyku sırasında alınan ölçümlerin gecelik ortalaması kullanılır. Gece hiç ölçüm yoksa o gece boş kalır.",
+    read: [
+      `Tek gece gürültülüdür; bu yüzden büyük sayı son ${recoveryBand.rollingDays} günün ortalamasıdır. Nokta tek geceyi, çizgi ortalamayı gösterir.`,
+      'Aralığının içi: alıştığın düzeydesin. Aralığın altı da üstü de "her zamankinden farklı" demektir; yüksek değer her zaman iyi değildir.',
+      "Apple Watch'ın HRV ölçümünde kişiye göre hata büyük. Bu yüzden aralığın dışına çıkması yalnız not olarak görünür; günün durumunu uyku nabzı belirler.",
+      'SDNN, başka cihazların gösterdiği RMSSD ile aynı ölçü değildir; sayılar birbiriyle karşılaştırılmaz.',
+      'Grafikte bir güne dokununca o gecenin değeri başlıkta görünür.',
+    ],
+    reference: `${bandText} Bu yöntem RMSSD çalışmalarından geliyor; SDNN'de denenmedi, aktarımı bir varsayım.`,
+    limits: `${bandLimits} Apple Watch'ın HRV'si EKG ile karşılaştırıldığında uykuda ancak orta düzeyde uyumlu, dinlenirken sapması büyük. SDNN kayıt süresine bağlıdır ve kısa kayıtta daha az güvenilirdir; tek ölçüm yerine gecelik ortalama bu yüzden alınır. Değer bu nedenle tahmin olarak gösterilir.`,
+    medical: true,
+    rules: ['hrv-olcu-apple', 'toparlanma-bant', 'toparlanma-veri-yeterliligi', 'gunun-durumu-apple'],
+    sources: ['ogrady-2024', 'miller-2022', 'dobbs-2019', 'task-force-1996', 'munoz-2015', 'hirten-2021', 'manresa-rocamora-2021'],
+  },
+  hrvNight: {
+    title: 'Son gece HRV',
+    basis: 'estimate',
+    hint: 'Tek gecenin HRV tahmini; geceden geceye çok oynar.',
+    what: 'Dün gece uyku sırasında saatin aldığı HRV ölçümlerinin ortalaması (SDNN, milisaniye). Gece ölçüm yoksa boş kalır.',
+    read: [
+      'Tek gece gürültülüdür; saatin o gece kaç ölçüm aldığı da değeri oynatır.',
+      `Karar için ${recoveryBand.rollingDays} günlük ortalamaya bak; bant karşılaştırması o ortalamayla yapılır, bu değerle değil.`,
+    ],
+    reference: 'Kendi gecelerin. Tek değerin bir eşiği yok.',
+    medical: true,
+    rules: ['hrv-olcu-apple'],
+    sources: ['ogrady-2024', 'munoz-2015'],
+  },
+  rhr: {
+    title: 'Uyku nabzı',
+    basis: 'measured',
+    hint: 'Uykudaki nabız; günün durumunun dayanağı.',
+    goal: 'Aralığında ya da altında kalması iyi. Aralığın üstü durumu "Kontrollü"ye çeker; HRV de aralığının altındaysa durum "Toparlan" olur.',
+    what: `Uyku sırasında saatin ölçtüğü nabzın dakikadaki ortalaması; uyku evrelerine ayrılmaz. Kartta büyük sayı son ${recoveryBand.rollingDays} günün ortalaması; son gece ve aralığın altındaki satırlarda. Düşük değer genellikle dinlenmiş bir vücudu, alıştığından yüksek değer vücudun hala bir şeyle uğraştığını gösterir.`,
+    read: [
+      'Aralığının içi: alıştığın düzey.',
+      'Aralığının üstü günün durumunu "Kontrollü"ye çeker. Antrenmandan sonra nabız az değişir; belirgin yükseliş daha çok alkol ya da başlayan bir hastalıkla görülür.',
+      'HRV de aralığının altındaysa iki işaret aynı yönü gösterir ve durum "Toparlan" olur.',
+      "Apple Watch'ta günün durumunun dayanağı uyku nabzıdır: saatin nabız ölçümü EKG'ye yakın, HRV'si daha hatalı.",
+    ],
+    reference: `${bandText} Gece nabzı geceden geceye tutarlı ölçülür ve zorlu bir antrenmandan sonraki gece yükselir. Apple Watch'ın nabzı uykuda ve dinlenirken EKG'ye yakın ölçülüyor; tek ölçüm yine de birkaç atım oynayabilir.`,
+    limits: `${bandLimits} Çalışmalardaki gece nabzı göğüs bandıyla ölçüldü; saatin bütün uyku ortalaması aynı ölçü değil. Saatler uyku evrelerini iyi ayıramadığı için değer evreye göre ayrılmaz.`,
+    medical: true,
+    rules: ['nabiz-olcu-apple', 'toparlanma-bant', 'toparlanma-veri-yeterliligi', 'gunun-durumu-apple'],
+    sources: ['nuuttila-2022', 'miller-2022', 'ogrady-2024', 'bonneval-2025', 'lambe-2026b', 'altini-2021', 'manresa-rocamora-2021'],
+  },
+  energy: {
+    title: 'Yakılan enerji',
+    basis: 'estimate',
+    hint: 'Saatin yakılan kalori tahmini; dinlenirken yakılan da dahil.',
+    what: `Apple Watch'un bir günde yaktığını tahmin ettiği enerji (kcal): dinlenirken harcanan ve hareketle harcanan birlikte. Kartta büyük sayı bugünün son eşitlemeye kadarki değeri; gün bitmeden eksiktir. Altında dünün tamamı ve bugünden önceki ${energyRule.averageDays} günün ortalaması. Kartın grafiği günü saat saat gösterir: bir saate dokununca o saatte yakılan görünür, oklarla geriye ${energyRule.hourlyDaysBack} gün gidilir; bugünün son çubuğu süren saattir. Seans satırlarındaki değer saatin o antrenman için tahmini.`,
+    read: [
+      'Ölçüm değil tahmin: saat kaloriyi hareketten ve nabızdan hesaplar.',
+      `Çalışmaları birleştiren derlemelerde Apple Watch'ın kalori tahmini ölçülen değerden %${energyRuleApple.mapeAbovePct}'dan fazla sapıyor; hata kişiye ve harekete göre tutarsız.`,
+      `Değer en yakın ${energyRule.roundKcal} kcal'e yuvarlanır; bu hatayla tek tek kaloriler anlamsız.`,
+      'Hedef ve eşik yok, günün durumuna girmez. Alımla karşılaştırılmaz: öğün kaydı kalori saymaz ve eksik kalabilir; iki tahminin farkı güvenilir bir enerji dengesi vermez.',
+    ],
+    reference:
+      'Hata bilgisi, akıllı saatlerin enerji tahminini solunum gazı ölçümüyle (dolaylı kalorimetri) karşılaştıran çalışmaları birleştiren iki meta-analizden. Fitbit için verilen dar hata aralığı Apple Watch için verilmez; yalnız geçerlik sınırının üstünde olduğu söylenir.',
+    limits:
+      'Saatlik değerin ayrı bir doğruluk çalışması yok; günün tahminiyle aynı hatayı taşır. Bugünün değeri telefonun son eşitlemesine kadardır, gün bitince tamamlanır.',
+    rules: ['enerji-harcamasi-tahmin-apple', 'enerji-gosterim'],
+    sources: ['lambe-2026b', 'choe-2025', 'chevance-2022'],
+  },
+} as const satisfies Partial<Record<ExplainerId, Explainer>>;
+
+/** Profilin kaynağına göre açıklama; varsayılan sahibinin profili (Google Health). */
+export function explainerFor(id: ExplainerId, source: DataSource = 'google_health'): Explainer {
+  if (source === 'apple_health' && Object.hasOwn(appleExplainers, id)) return appleExplainers[id as keyof typeof appleExplainers];
+  return explainers[id];
 }
 
 export const medicalNote =

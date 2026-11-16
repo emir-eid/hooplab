@@ -12,6 +12,7 @@ import { GestureHandlerRootView } from 'react-native-gesture-handler';
 
 import { SessionProvider, useSession } from '@/auth/session';
 import { useDemoScenario } from '@/demo/demo-mode';
+import { useAppleHealthSync } from '@/health/use-apple-sync';
 import { useNotifications } from '@/notifications/use-notifications';
 import { AppearanceProvider, useAppearance } from '@/theme/appearance';
 import { fontMap } from '@/theme/fonts';
@@ -50,6 +51,8 @@ function RootNavigator() {
 
   // Yerel bildirimler (karar 0045): plan yenileme ve bildirime dokununca açılan ekran.
   useNotifications(session !== null && demo === null, loaded);
+  // Apple Health senkronu (karar 0061): yalnız apple_health profilinde ve iPhone'da; sahibinde hiçbir şey yapmaz.
+  useAppleHealthSync(session !== null && demo === null && loaded);
 
   if (!loaded) return null;
 

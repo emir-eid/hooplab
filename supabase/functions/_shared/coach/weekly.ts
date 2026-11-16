@@ -15,10 +15,12 @@ import {
   formatDecimal,
   formatLoad,
   hours,
+  hrvNameApple,
   levelLabels,
   numbersDocument,
   positionTexts,
   regionLabels,
+  rhrNameApple,
   ruleNumber,
   sideLabels,
   sourceDocument,
@@ -27,7 +29,7 @@ import {
   type DocumentParam,
   type NumbersBlock,
 } from './documents.ts';
-import { selectForRules, type Kb } from './kb.ts';
+import { isAppleKb, profileRuleId, selectForRules, type Kb } from './kb.ts';
 import { rangePositions, type DayLevel } from './snapshot.ts';
 import {
   isCompletedWeek,
@@ -111,8 +113,10 @@ export function weeklyBlocks(s: WeeklySnapshot, kb: Kb): NumbersBlock[] {
   const levels = levelOrder.filter((l) => s.status[l] > 0).map((l) => `${s.status[l]} gün ${levelLabels[l]}`);
   add('status', `Haftanın günlerinin durumu: ${levels.join(', ')}.`);
 
-  if (s.hrv) add('hrv', weekBandText(s.hrv, 'HRV (derin uyku, RMSSD)', 'ms', baselineDays));
-  if (s.rhr) add('rhr', weekBandText(s.rhr, 'Uyku nabzı (REM dışı uyku ortalaması)', 'atım/dk', baselineDays));
+  // Apple Health profilinde ölçüler farklı ve HRV tahmin (karar 0061); sahibinin metni aynı.
+  const apple = isAppleKb(kb);
+  if (s.hrv) add('hrv', weekBandText(s.hrv, apple ? hrvNameApple : 'HRV (derin uyku, RMSSD)', 'ms', baselineDays), apple);
+  if (s.rhr) add('rhr', weekBandText(s.rhr, apple ? rhrNameApple : 'Uyku nabzı (REM dışı uyku ortalaması)', 'atım/dk', baselineDays));
   if (s.sleep) {
     const min = ruleNumber(kb, 'uyku-kisa', 'min_hours');
     let text = s.sleep.meanHours === null ? 'Uyku: haftanın gece ortalaması hesaplanamadı.' : `Uyku: haftanın gece ortalaması ${hours(s.sleep.meanHours)}, ${s.sleep.nights} gece ölçüldü.`;
@@ -227,7 +231,7 @@ export const weeklyUserInstruction = 'Biten haftanın yorumunu yaz.';
 export const weeklySalvageOptions: SalvageOptions = { ...salvageOptions, maxSentences: 7 };
 
 export function buildWeeklyRequest(s: WeeklySnapshot, kb: Kb): { params: Anthropic.Beta.Messages.MessageCreateParamsNonStreaming; layout: DocumentEntry[] } {
-  const sources = selectForRules(kb, weeklyRuleIds(s)).sources;
+  const sources = selectForRules(kb, weeklyRuleIds(s).map((id) => profileRuleId(kb, id))).sources;
   const { documents, layout } = weeklyDocuments(s, kb, sources);
   return {
     layout,

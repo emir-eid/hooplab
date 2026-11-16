@@ -21,8 +21,8 @@ export function isDataWrite(method: string, url: string): boolean {
   const m = method.toUpperCase();
   if (m === 'GET' || m === 'HEAD' || m === 'OPTIONS') return false;
   const path = safePath(url);
-  // Senkron ve bağlantı fonksiyonları sağlık verisini değiştirir; koç kendi özetini kendi yönetir.
-  return path.includes('/rest/v1/') || path.includes('/functions/v1/ghealth-');
+  // Senkron, bağlantı ve Apple Health yüklemesi sağlık verisini değiştirir; koç kendi özetini kendi yönetir.
+  return path.includes('/rest/v1/') || path.includes('/functions/v1/ghealth-') || path.includes('/functions/v1/healthkit-ingest');
 }
 
 function safePath(url: string): string {

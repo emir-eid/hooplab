@@ -6,7 +6,8 @@ import { router } from 'expo-router';
 import { Pressable, StyleSheet, type StyleProp, type ViewStyle } from 'react-native';
 
 import { Text } from '@/components/text';
-import { explainers, type ExplainerId } from '@/copy/explainers';
+import { explainerFor, type ExplainerId } from '@/copy/explainers';
+import { useDataSource } from '@/data/profile';
 import type { ValueRow } from '@/copy/recovery';
 import { usePalette } from '@/theme/appearance';
 
@@ -68,8 +69,9 @@ export function ExplainButton({
   rows?: readonly ExplainerRow[];
   style?: StyleProp<ViewStyle>;
 }) {
+  const source = useDataSource();
   return (
-    <InfoButton onPress={() => openExplainer(id, { value, rows })} accessibilityLabel={`${explainers[id].title}: bu ne?`} style={style} />
+    <InfoButton onPress={() => openExplainer(id, { value, rows })} accessibilityLabel={`${explainerFor(id, source).title}: bu ne?`} style={style} />
   );
 }
 
