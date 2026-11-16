@@ -574,6 +574,24 @@ export const kbSources: readonly KbSource[] = [
     "summary": "## Ne söylüyor (kendi cümlelerimizle)\n\n- Seanstan 30 dakika sonra verilen tek puan (seans RPE) kuvvet antrenmanının yoğunluğunu ayırt etti: yüksek yoğunluklu seans, orta ve düşük yoğunluklu seanstan daha zor puanlandı.\n- Az tekrarla ağır yük, çok tekrarla hafif yükten daha zor algılandı.\n- Aynı seans tekrarlandığında seans RPE tutarlıydı (ICC 0,88).\n\n## Uygulamada kullanılan sayılar\n\n| Değer | Birim | Bağlam / koşul |\n|---|---|---|\n| 0,88 | ICC | Kuvvet antrenmanında seans RPE'sinin güvenilirliği; fitness profilinde `seans-rpe-olcek-fitness` |\n\n## Sınırlılıklar\n\n- Küçük örneklem; tek set ve beş hareketlik laboratuvar protokolü.\n- Sayılar özetten okundu."
   },
   {
+    "id": "dejager-2026",
+    "title": "Wearable-Derived Heart Rate Variability Across the Menstrual Cycle, Hormonal Contraceptive Use, and Reproductive Life Stages in Females: A Living Systematic Review",
+    "authors": [
+      "de Jager E",
+      "Caulfield B",
+      "Angelidi E",
+      "MacNamee B",
+      "Holden S"
+    ],
+    "year": 2026,
+    "type": "systematic-review",
+    "doi": "10.1007/s40279-025-02388-y",
+    "pmid": "41545627",
+    "journal": "Sports Medicine",
+    "population": "Kadınlar (her yaş); giyilebilir / mobil cihazla HRV ölçen 16 çalışma (doğal döngü, hormonal korunma, menopoz, gebelik)",
+    "summary": "## Ne söylüyor (kendi cümlelerimizle)\n\n- Giyilebilir cihazla ölçülen HRV doğal döngüde döngü başında daha yüksek, sonuna doğru daha düşük; zaman alanı ölçülerinde fark yaklaşık %3-9.\n- Hormonal korunma kullananlarda HRV daha düşük, özellikle döngünün sonunda.\n- Menopozdan sonra ve yaşla HRV düşme eğiliminde.\n- Yazarlar bu farkların kadın kullanıcıya HRV gösterilirken hesaba katılmasını öneriyor.\n\n## Uygulamada kullanılan sayılar\n\n| Değer | Birim | Bağlam / koşul |\n|---|---|---|\n| %3-9 | HRV farkı | Döngü başı ile sonu arasında, giyilebilir cihaz; notun \"olabilir\" diliyle yazılmasının dayanağı (`dongu-notu`) |\n\n## Sınırlılıklar\n\n- Evre tanımları çalışmalar arasında farklı; nicel birleştirme (meta-analiz) yapılamadı. Kanıt kalitesi orta.\n- Yaşayan derleme: sonraki sürümlerde bulgular değişebilir.\n- Sayılar özetten ve tam metinden (açık: PMC13198475)."
+  },
+  {
     "id": "ding-2026",
     "title": "Acute:chronic workload ratio and load management for team sports: a multilevel meta-analysis",
     "authors": [
@@ -672,6 +690,48 @@ export const kbSources: readonly KbSource[] = [
     "journal": "Journal of Science and Medicine in Sport",
     "population": "8 çalışma, 9 müdahale, 198 katılımcı; HRV'si giyilebilir cihazla ölçülen dayanıklılık sporcuları",
     "summary": "## Ne söylüyor (kendi cümlelerimizle)\n\n- Giyilebilir cihazla ölçülen HRV'ye göre ayarlanan antrenman, sabit programa göre submaksimal fizyolojik göstergelerde orta düzeyde daha iyi sonuç verdi.\n- Performans ve VO2peak üzerindeki fark küçük ve anlamlı değil; HRV yönlendirmesinde performansta yanıt vermeyen kişi sayısı daha az.\n- HRV grubunda genellikle daha az orta ve yüksek yoğunluklu seans yapıldı.\n\n## Uygulamada kullanılan sayılar\n\n| Değer | Birim | Bağlam / koşul |\n|---|---|---|\n| Giyilebilir cihaz HRV'si karar için kullanılabilir | ilke | Bileklik ölçümüyle bant yaklaşımı; etki küçük, arayüz kesinlik iddia etmez |\n\n## Sınırlılıklar\n\n- Dayanıklılık sporcuları, az sayıda çalışma, farklı protokoller.\n- Yalnız özet okundu."
+  },
+  {
+    "id": "elliottsale-2020",
+    "title": "The Effects of Oral Contraceptives on Exercise Performance in Women: A Systematic Review and Meta-analysis",
+    "authors": [
+      "Elliott-Sale KJ",
+      "McNulty KL",
+      "Ansdell P",
+      "Goodall S",
+      "Hicks KM",
+      "Thomas K",
+      "Swinton PA",
+      "Dolan E"
+    ],
+    "year": 2020,
+    "type": "meta-analysis",
+    "doi": "10.1007/s40279-020-01317-5",
+    "pmid": "32666247",
+    "journal": "Sports Medicine",
+    "population": "Oral kontraseptif kullanan ve doğal döngülü kadınlar; 42 çalışma, n=590",
+    "summary": "## Ne söylüyor (kendi cümlelerimizle)\n\n- Hap kullananların performansı doğal döngülü kadınlara göre ortalamada çok az düşük olabilir; grup düzeyindeki etki büyük olasılıkla önemsiz.\n- Hap döngüsü içinde (etken haplar ile ara hafta) performans tutarlı.\n- Kanıt genel bir \"kullan / kullanma\" önerisine yetmiyor; performans öncelikliyse kişisel yaklaşım öneriliyor.\n\n## Uygulamada kullanılan sayılar\n\nDoğrudan sayı alınmadı. Hormonal korunmada da döngüye göre antrenman önerisi yapılmamasının dayanağı (`dongu-notu`).\n\n## Sınırlılıklar\n\n- Çalışmaların %83'ü orta, düşük ya da çok düşük kalitede.\n- Yalnız oral kontraseptif; spiral, implant gibi diğer yöntemler kapsam dışı.\n- Özetten okundu (tam metin açık: PMC7497464)."
+  },
+  {
+    "id": "elliottsale-2021",
+    "title": "Methodological Considerations for Studies in Sport and Exercise Science with Women as Participants: A Working Guide for Standards of Practice for Research on Women",
+    "authors": [
+      "Elliott-Sale KJ",
+      "Minahan CL",
+      "de Jonge XAKJ",
+      "Ackerman KE",
+      "Sipilä S",
+      "Constantini NW",
+      "Lebrun CM",
+      "Hackney AC"
+    ],
+    "year": 2021,
+    "type": "expert-opinion",
+    "doi": "10.1007/s40279-021-01435-8",
+    "pmid": "33725341",
+    "journal": "Sports Medicine",
+    "population": "Spor bilimi araştırmalarında kadın katılımcılar (sporcu ve sporcu olmayan); uzman grubu yöntem kılavuzu",
+    "summary": "## Ne söylüyor (kendi cümlelerimizle)\n\n- Kadınlarla yapılan spor bilimi çalışmalarında döngü, hormonal korunma, gebelik ve menopoz için ortak terim ve yöntem öneriyor.\n- Düzenli (eumenoreik) döngüyü 21-35 gün uzunluk, yılda en az 9 ardışık adet ve hormon / yumurtlama kanıtıyla tanımlıyor; yalnız takvimle izlenen döngüyü ayrı adlandırıyor.\n- 35 günden uzun döngüyü oligomenore, gebelik dışında art arda en az 3 adetin olmamasını ikincil amenore sayıyor.\n- Döngü özelliklerinin en az iki ay takvimle izlenmesini öneriyor.\n\n## Uygulamada kullanılan sayılar\n\n| Değer | Birim | Bağlam / koşul |\n|---|---|---|\n| 21-35 | gün | Döngü uzunluğunun düzenli sayıldığı aralık; dışındaki döngüde evre hesaplanmaz (`dongu-evre`) |\n| > 35 | gün | Oligomenore tanımı; yönlendirme notu (`dongu-duzensiz`) |\n\n## Sınırlılıklar\n\n- Araştırma yöntemi kılavuzu, klinik kılavuz değil; uzman görüşü düzeyinde. Döngü uzunluğu aralığı jinekolojik tanımlara dayanır.\n- HoopLab hormon ölçmez: döngü takvim sayımıyla izlenir ve evre \"tahmin\"dir.\n- Sayılar tam metinden okundu (açık: PMC8053180, Tablo 1)."
   },
   {
     "id": "feehan-2018",
@@ -1084,6 +1144,23 @@ export const kbSources: readonly KbSource[] = [
     "summary": "## Ne söylüyor (kendi cümlelerimizle)\n\n- Yetişkinlerde ağrı şiddetini ölçen yaygın araçları (görsel analog ölçek, sayısal derecelendirme ölçeği ve diğerleri) ölçüm özellikleriyle birlikte derliyor.\n- Sayısal derecelendirme ölçeği (NRS), ağrı şiddeti için yerleşik araçlardan biri olarak ele alınıyor.\n\n## Uygulamada kullanılan sayılar\n\nBu kayıttan doğrudan sayı alınmadı. Tam metne erişilemedi; yalnız künye ve başlık doğrulandı. NRS'nin 0-10 aralığı ve uç ifadeleri `todri-2025`'ten.\n\n## Sınırlılıklar\n\n- Klinik (romatoloji) popülasyon; sporcuya özgü değil.\n- Tam metin okunmadı."
   },
   {
+    "id": "heneghan-2026",
+    "title": "Assessing the impact of menstrual cycle phase on respiration rate, resting heart rate, heart rate variability, nocturnal oxygenation and sleep time using wearable devices",
+    "authors": [
+      "Heneghan C",
+      "Lafon B",
+      "Schneider L",
+      "Young-Lin N"
+    ],
+    "year": 2026,
+    "type": "cohort",
+    "doi": "10.1177/17455057261503611",
+    "pmid": "42980658",
+    "journal": "Women's Health",
+    "population": "Fitbit / Pixel Watch kullanan kadınlar, geriye dönük; 7279 doğal döngü, 1754 hormonal korunma (hap); döngü kullanıcı kaydından; sporcu değil",
+    "summary": "## Ne söylüyor (kendi cümlelerimizle)\n\n- Doğal döngüde gece solunum hızı, dinlenik nabız ve HRV evreye göre değişiyor; farklar küçük ama anlamlı.\n- Dinlenik nabız ve solunum adet öncesinde en yüksek; HRV adet öncesinde en düşük, adet sırasında en yüksek.\n- Hormonal korunma (hap) kullananlarda aynı desen daha küçük genlikle görülüyor.\n- Uyku süresi ve gece SpO2 üzerindeki etki ihmal edilebilir. Farklar genellikle ancak birçok döngü ortalandığında fark ediliyor.\n\n## Uygulamada kullanılan sayılar\n\n| Değer | Birim | Bağlam / koşul |\n|---|---|---|\n| ~3,0 atım/dk (~%4) | dinlenik nabız | Foliküler ile luteal arası, doğal döngü; uyku nabzı notunun dayanağı (`dongu-notu`) |\n| ~6 ms (~%14) | HRV | Foliküler ile luteal arası, doğal döngü (`dongu-notu`) |\n| ~0,6 nefes/dk | solunum | Foliküler ile luteal arası; HoopLab'in 3 nefes/dk gece eşiğinin çok altında, solunuma not eklenmez |\n| daha küçük genlik | — | Hormonal korunmada; notun zayıflatılmasının dayanağı (`dongu-notu`) |\n\n## Sınırlılıklar\n\n- Yazarlar Google çalışanı ve hissedarı (cihaz ve döngü takibi üreten şirket); çıkar çatışması makalede belirtilmiş.\n- Evreler kullanıcının kaydettiği adet tarihlerinden varsayılmış, hormonla doğrulanmamış.\n- Fitbit / Pixel Watch verisi; Apple Watch'a aktarım varsayımdır. Sporcu değil.\n- Sayılar özetten okundu."
+  },
+  {
     "id": "hermans-2024",
     "title": "Validity of a Consumer-Based Wearable to Measure Clinical Parameters in Patients With Chronic Obstructive Pulmonary Disease and Healthy Controls: Observational Study",
     "authors": [
@@ -1326,6 +1403,24 @@ export const kbSources: readonly KbSource[] = [
     "journal": "Sports Medicine",
     "population": "Seyahat eden sporcular (26 araştırmacı ve klinisyenden oluşan uzman paneli, 11 ülke; öneriler büyük ölçüde laboratuvar, genel nüfus ve askeri çalışmalardan aktarılmış)",
     "summary": "## Ne söylüyor (kendi cümlelerimizle)\n\n- Seyahat yorgunluğu ile jet lag iki ayrı durumdur. Seyahat yorgunluğu yönden ve saat farkından bağımsız olarak her uzun yolculukta görülebilir; tek bir yolculuktan sonra akut, sezon boyunca tekrar eden yolculuklarla birikimli olabilir. Jet lag ise hızlıca 3 veya daha fazla saat dilimi geçildiğinde ortaya çıkar ve iç saat yeni saate uyunca tamamen geçer.\n- Saat dilimi geçmeyen uçuşlarla ilgili takım sporu çalışmalarında performans göstergelerinde belirgin bir düşüş görülmemiş; buna karşılık uyanıklık, motivasyon ve ruh hali gibi algısal ölçütler kötüleşmiş.\n- Kaba bir kural olarak iç saat batıya gidişte daha hızlı (geciktirme), doğuya gidişte daha yavaş (ilerletme) uyum sağlar. Doğuya 8 saatten fazla gidişte saati ileri değil geri alarak uyum sağlamak daha kolay olabilir.\n- Jet lag yönetiminin temeli uykuyu korumak, ışığa çıkma ve ışıktan kaçınmayı iç saatin en düşük noktasına (CBTmin) göre zamanlamak ve gerekirse hekim denetiminde melatonindir. Yanlış zamanda ışık veya melatonin uyumu ters yöne itebilir.\n- 1-3 günlük kısa ziyaretlerde iç saati kaydırmaya çalışmak yerine uyku ve yemek saatlerini varış yerine uydurmak, uyku borcunu kısa uykularla azaltmak önerilir.\n- Kanıt zayıftır: öneriler ilkelerden ve uzman görüşünden türetilmiştir. Panel, doğrulanmamış jet lag hesaplayıcı uygulamalarına karşı uyarır.\n\n## Uygulamada kullanılan sayılar\n\nNot: \"Görsel\" yazan satırlar makalenin metninde değil, Tablo 4 ve Şekil 4-5 görsellerinde yer alır (yayıncının görsellerinden okundu, metin aramasıyla doğrulanamaz).\n\n| Değer | Birim | Bağlam / koşul |\n|---|---|---|\n| ≥ 3 | saat dilimi | Hızlı geçişte jet lag beklenir; altında yalnız seyahat yorgunluğu konuşulur |\n| Batı: 0,5 gün / saat dilimi (≈ 2 sa/gün); doğu: 1 gün / saat dilimi (≈ 1 sa/gün) | gün | Müdahalesiz doğal uyum için kaba kural (\"rule of thumb\"); bireysel fark büyük |\n| > 8 | saat (doğu) | Saati geri alarak (geciktirerek) uyum tercih edilebilir |\n| 0-3 (en güçlü), 0-6 (etkili) | saat | CBTmin'in iki yanında ışığa çıkmanın faz kaydırma penceresi; parlak ışık ≥ 2500 lx |\n| ~2 | saat | Melatonin salgısının başlaması (DLMO) olağan yatış saatinden önce |\n| ~7 | saat | CBTmin, DLMO'dan sonra (görsel, Tablo 4); 23:00-07:00 uyuyan için ~04:00 |\n| 1-3 | gün | Kısa ziyaret: iç saat kaydırılmaz, uyku ve yemek saatleri varış yerine uydurulur (görsel, Tablo 4) |\n| ≤ 72 | saat | Varıştan sonra azaltılmış antrenman, yoğunluk ve hareket karmaşıklığı sınırlı (görsel, Şekil 4) |\n| 30-60 | dk/gün | Uçuştan önceki 3-4 günde yatış, kalkış ve yemek saatini hedef yöne kaydırma (görsel, Şekil 5; Şekil 4'te \"en fazla 1 sa\"). Takım sporcularında çoğu zaman uygulanamaz |\n| 7-9 | saat/gün | Uyku hedefi, öncesinde ve sonrasında (görsel, Şekil 4) |\n| ± 6 | saat | Yatmadan önce kafeinden kaçınma (Tablo 3, metin) |\n| < 30 dk, 13:00-16:00 | dk, saat | Varış sonrası kısa şekerleme (görsel, Şekil 4) |\n| 1 | mg/kg | Kafein dozu, sabah ve öğleden sonra erken (görsel, Tablo 4 ve Şekil 4). Kişisel doz: uygulama doz önermez |\n| 0,5-10 (3-5 en uygun) | mg | Melatonin doz aralığı (görsel, Şekil 4). Kişisel doz: uygulama doz önermez |\n\nMelatonin bir takviyedir. Kullanılacaksa önce hekimle konuşulur, güncel WADA listesine bakılır ve bağımsız partide test edilmiş (batch-tested) ürün seçilir; takviyelerde bulaşma yoluyla yasaklı madde riski vardır. Makale de tüm farmakolojik müdahalelerde güncel WADA kurallarının gözetilmesini ister.\n\n## Sınırlılıklar\n\n- Uzman konsensüsü; panelin kendi değerlendirmesine göre sporculara özgü kanıt az ve düşük kaliteli. Öneriler laboratuvar, genel nüfus ve askeri çalışmalardan aktarılmış.\n- Basketbola özgü değil; NBA yalnız seyahat yükü örneği olarak geçiyor.\n- \"Saat dilimi başına gün\" kuralı bir ortalama tahmindir; kronotip ve kişisel farklar uyumu değiştirir. Leota 2022 gibi çalışmalar her iki yön için 1 sa/gün kullanır.\n- Şekillerde iç tutarsızlık var: Şekil 4-5 başlığında batı için \"CBTmin advance\" yazıyor (metin ve Tablo 4 \"delay\" diyor); Şekil 4 uçuş sırasında melatonini \"düşünülebilir\" derken Şekil 5 \"önerilmez\" diyor. Uygulama metindeki ifadeyi esas alır.\n- Önerilerin çoğu tablo ve şekil görsellerinde; tam metin Europe PMC'den (PMC8279034) okundu, görseller yayıncı sunucusundan açıldı.\n- Yazarlar çıkar çatışması bildirmemiş."
+  },
+  {
+    "id": "jasinski-2024",
+    "title": "A Novel method for quantifying fluctuations in wearable derived daily cardiovascular parameters across the menstrual cycle",
+    "authors": [
+      "Jasinski SR",
+      "Presby DM",
+      "Grosicki GJ",
+      "Capodilupo ER",
+      "Lee VH"
+    ],
+    "year": 2024,
+    "type": "cohort",
+    "doi": "10.1038/s41746-024-01394-0",
+    "pmid": "39715818",
+    "journal": "npj Digital Medicine",
+    "population": "Bilek cihazı (WHOOP) kullanan kadınlar, n=11 590, 45 811 döngü; ortalama döngü ~27 gün",
+    "summary": "## Ne söylüyor (kendi cümlelerimizle)\n\n- Aynı kişide dinlenik nabız ve RMSSD döngü boyunca düzenli bir desenle iniş çıkış gösteriyor.\n- Toplulukta dinlenik nabız en düşük ve RMSSD en yüksek döngünün 5. gününde; nabız en yüksek 26., RMSSD en düşük 27. günde, yani bir sonraki adetten hemen önce.\n- Bu dalgalanmanın genliği yaşla ve hormonal korunma kullananlarda küçülüyor.\n\n## Uygulamada kullanılan sayılar\n\n| Değer | Birim | Bağlam / koşul |\n|---|---|---|\n| Gün 26 / 27 | döngü günü | Nabız en yüksek / RMSSD en düşük (topluluk ortalaması, ~27 günlük döngü); notun adet öncesi evrede verilmesinin dayanağı (`dongu-notu`) |\n| daha küçük genlik | — | Hormonal korunmada (`dongu-notu`) |\n\n## Sınırlılıklar\n\n- Yazarlar WHOOP çalışanı; şirket bu bulguya dayanan ürün geliştiriyor ve \"üreme evresine göre koçluk\" patent başvurusu var (makalede belirtilmiş).\n- Evreler kullanıcı kaydından; hormonla doğrulanmamış. WHOOP verisi; Apple Watch'a aktarım varsayımdır.\n- Sayılar özetten ve tam metinden (açık: PMC11666598)."
   },
   {
     "id": "juliff-2015",
@@ -1731,6 +1826,27 @@ export const kbSources: readonly KbSource[] = [
     "journal": "International Journal of Sports Physiology and Performance",
     "population": "Profesyonel rugby ligi oyuncuları (erkek), n=12, aynı takım",
     "summary": "## Ne söylüyor (kendi cümlelerimizle)\n\n- Maçlar arası 5, 7 ve 9 günlük döngülerde sıçrama performansı, algılanan yorgunluk, genel iyi oluş ve kas ağrısı izlendi; antrenman yükü seans RPE yöntemiyle ölçüldü.\n- Maçtan sonraki 48 saatte sıçrama değerleri, yorgunluk algısı, iyi oluş ve kas ağrısı belirgin biçimde kötüleşti.\n- Sıçrama değişkenlerinin çoğu yaklaşık 4 günde başlangıç düzeyine döndü; uygun antrenmanla algısal ölçümlerin de 4 gün içinde toparlanabildiği görüldü.\n- Öznel iyi oluş maddeleri maç yüküne günler içinde tepki veriyor; yani günlük takipte anlamlı sinyal taşıyor.\n\n## Uygulamada kullanılan sayılar\n\nBu çalışmadan doğrudan sayı alınmadı (ölçek aralığı `zhang-2026`'dan). \"Maçtan sonra yaklaşık 48 saat bozulma, yaklaşık 4 günde toparlanma\" gözlemi Faz 2'deki toparlanma yorumları için aday; kural yazılmadan önce tam metin ve basketbol kaynaklarıyla karşılaştırılacak.\n\n## Sınırlılıklar\n\n- Rugby ligi (temaslı); basketbolun yük profili farklı.\n- Küçük örneklem (n=12), tek takım.\n- Yalnız özet okundu."
+  },
+  {
+    "id": "mcnulty-2020",
+    "title": "The Effects of Menstrual Cycle Phase on Exercise Performance in Eumenorrheic Women: A Systematic Review and Meta-Analysis",
+    "authors": [
+      "McNulty KL",
+      "Elliott-Sale KJ",
+      "Dolan E",
+      "Swinton PA",
+      "Ansdell P",
+      "Goodall S",
+      "Thomas K",
+      "Hicks KM"
+    ],
+    "year": 2020,
+    "type": "meta-analysis",
+    "doi": "10.1007/s40279-020-01319-3",
+    "pmid": "32661839",
+    "journal": "Sports Medicine",
+    "population": "Düzenli döngülü kadınlar (sporcu ve sporcu olmayan); 78 çalışma, 51'i ikili, 73'ü ağ meta-analizinde",
+    "summary": "## Ne söylüyor (kendi cümlelerimizle)\n\n- Dayanıklılık ve kuvvet performansı erken foliküler evrede diğer evrelere göre önemsiz derecede düşük olabilir.\n- Etki çok küçük, çalışmalar arası fark büyük ve kanıt kalitesi düşük; bu yüzden döngü evresine göre genel performans önerisi yapılamaz.\n- Yazarlar her kadının kendi tepkisine göre kişisel yaklaşım öneriyor.\n\n## Uygulamada kullanılan sayılar\n\n| Değer | Birim | Bağlam / koşul |\n|---|---|---|\n| ES = −0,06 (%95 GA −0,16 / 0,04) | etki büyüklüğü | Erken foliküler ile diğer evreler; döngüye göre antrenman önerisi yapılmamasının dayanağı (`dongu-notu`) |\n| \"düşük\" | GRADE | Kanıt kalitesi |\n\n## Sınırlılıklar\n\n- Evre doğrulaması çalışmalar arasında tutarsız; birçok çalışma düşük kaliteli.\n- Performans ölçümü üzerine; HRV ve toparlanma işaretleriyle ilgili değil.\n- Sayılar özetten okundu (tam metin açık: PMC7497427)."
   },
   {
     "id": "medellin-ruiz-2020",
@@ -2311,6 +2427,26 @@ export const kbSources: readonly KbSource[] = [
     "summary": "## Ne söylüyor (kendi cümlelerimizle)\n\n- Egzersiz sırasında içmenin amacı, su kaybına bağlı vücut ağırlığı kaybının %2'yi geçmesini ve elektrolit dengesinin aşırı bozulmasını önlemek; bu düzeyin üstünde performans bozulabilir.\n- Ter oranı ve terdeki elektrolit kişiden kişiye çok değiştiği için kişiye göre bir sıvı planı öneriliyor.\n- Kişisel ter oranı egzersiz öncesi ve sonrası tartıyla tahmin edilebilir.\n- Egzersizden sonra amaç sıvı ve elektrolit açığını kapatmak; ne kadar hızlı gerektiği sonraki seansa kalan süreye bağlı.\n\n## Uygulamada kullanılan sayılar\n\n| Değer | Birim | Bağlam / koşul |\n|---|---|---|\n| %2 | vücut ağırlığı | Ter testinde seans boyunca kayıp bunu aşarsa not |\n\n## Sınırlılıklar\n\n- 2007 tarihli; güncel NATA bildirgesi (mcdermott-2017) aynı sınırı koruyor.\n- Yalnız özet okundu."
   },
   {
+    "id": "schmalenberger-2019",
+    "title": "A Systematic Review and Meta-Analysis of Within-Person Changes in Cardiac Vagal Activity across the Menstrual Cycle: Implications for Female Health and Future Studies",
+    "authors": [
+      "Schmalenberger KM",
+      "Eisenlohr-Moul TA",
+      "Würth L",
+      "Schneider E",
+      "Thayer JF",
+      "Ditzen B",
+      "Jarczok MN"
+    ],
+    "year": 2019,
+    "type": "meta-analysis",
+    "doi": "10.3390/jcm8111946",
+    "pmid": "31726666",
+    "journal": "Journal of Clinical Medicine",
+    "population": "Doğal döngülü, menopoz öncesi kadınlar; 37 gözlem çalışması, n=1004 (ince evre kıyasları 21 çalışmadan); sporcu değil",
+    "summary": "## Ne söylüyor (kendi cümlelerimizle)\n\n- Aynı kişide tekrarlanan ölçümlerde, vagal kalp aktivitesi (parasempatik HRV) foliküler evreden luteal evreye düşüyor (küçük-orta etki).\n- Düşüş en çok adet öncesi evrede belirgin: adet evresine ve orta-geç foliküler evreye göre büyük etki, ama güven aralıkları geniş ve az çalışmaya dayanıyor.\n- Döngü evresini belirlemek için iki sayım yöntemi var: adetin ilk gününden ileri sayım (yalnız adet ve foliküler evre için güvenilir) ve bir sonraki adetten geri sayım (yumurtlama, luteal ve adet öncesi evreler için gerekli). Luteal evre görece sabit, ~14 gün sayılıyor.\n- Yazarlar HRV kullanan çalışmaların döngü evresini hesaba katmasını öneriyor.\n\n## Uygulamada kullanılan sayılar\n\n| Değer | Birim | Bağlam / koşul |\n|---|---|---|\n| d = −0,39 (%95 GA −0,67 / −0,11) | etki büyüklüğü | Foliküler → luteal vagal HRV düşüşü (37 çalışma); döngü notunun dayanağı (`dongu-notu`) |\n| d = −1,17 ve −1,32 | etki büyüklüğü | Adet → adet öncesi ve orta-geç foliküler → adet öncesi (5 ve 8 çalışma); not yalnız adet öncesi evrede (`dongu-notu`) |\n| Gün 1-7 | döngü günü | Adet evresi, ileri sayım (Tablo 2; `dongu-evre`) |\n| Gün −11 / −8 | bir sonraki adete göre | Erken-orta luteal, geri sayım (Tablo 2; `dongu-evre`) |\n| Gün −7 / −1 | bir sonraki adete göre | Adet öncesi evre, geri sayım (Tablo 2; `dongu-evre`) |\n| Gün −15 / −12 | bir sonraki adete göre | Yumurtlama evresi, geri sayım (Tablo 2); HoopLab'in kaba evresinde foliküler içinde sayılır (`dongu-evre`) |\n\n## Sınırlılıklar\n\n- Sporcu değil; ölçümler çoğunlukla laboratuvarda, kısa kayıtlarla. Giyilebilir cihazın gece HRV'sine aktarım varsayımdır (dejager-2026 giyilebilir çalışmalarını derler).\n- Adet öncesi kıyasları az çalışmaya dayanıyor, güven aralıkları geniş.\n- Evre tanımları hormon ölçümüyle değil, takvim sayımıyla; HoopLab da takvim sayımı yapar ve evreyi \"tahmin\" olarak gösterir.\n- Sayılar tam metinden okundu (açık: PMC6912442, özet ve Tablo 2)."
+  },
+  {
     "id": "schwellnus-2016",
     "title": "How much is too much? (Part 2) International Olympic Committee consensus statement on load in sport and risk of illness",
     "authors": [
@@ -2427,6 +2563,38 @@ export const kbSources: readonly KbSource[] = [
     "journal": "The American journal of sports medicine",
     "population": "Aşil tendinopatili hastalar, n=38",
     "summary": "## Ne söylüyor (kendi cümlelerimizle)\n\n- Aşil tendinopatisinde koşu ve sıçramaya ağrı izleme modeliyle devam eden grup ile 6 hafta aktif dinlenen grup karşılaştırıldı.\n- İki grup da 12 ayda belirgin düzeldi; devam eden grupta olumsuz etki görülmedi.\n- Aşil tendinopatisi koşu ve sıçrama içeren sporlarda sık görülen bir aşırı kullanım yaralanması.\n\n## Uygulamada kullanılan sayılar\n\n| Değer | Birim | Bağlam / koşul |\n|---|---|---|\n| Ağrı izleme modeli | NRS ≤ 5 | etkinlik sırası ve sonrası; ertesi sabah azalmış olmalı (ayrıntı seidler-2025 tam metninden) |\n\n## Sınırlılıklar\n\n- Hasta grubu, sağlıklı sporcu değil; yalnız özet okundu. Modelin sayısal ayrıntısı açık erişimli seidler-2025 tam metninden doğrulandı."
+  },
+  {
+    "id": "sims-2023",
+    "title": "International society of sports nutrition position stand: nutritional concerns of the female athlete",
+    "authors": [
+      "Sims ST",
+      "Kerksick CM",
+      "Smith-Ryan AE",
+      "Janse de Jonge XAK",
+      "Hirsch KR",
+      "Arent SM",
+      "Hewlings SJ",
+      "Kleiner SM",
+      "Bustillo E",
+      "Tartar JL",
+      "Starratt VG",
+      "Kreider RB",
+      "Greenwalt C",
+      "Rentería LI",
+      "Ormsbee MJ",
+      "VanDusseldorp TA",
+      "Campbell BI",
+      "Kalman DS",
+      "Antonio J"
+    ],
+    "year": 2023,
+    "type": "position-stand",
+    "doi": "10.1080/15502783.2023.2204066",
+    "pmid": "37221858",
+    "journal": "Journal of the International Society of Sports Nutrition",
+    "population": "Kadın sporcular (üreme çağı, menopoz çevresi ve sonrası); ISSN uzman paneli",
+    "summary": "## Ne söylüyor (kendi cümlelerimizle)\n\n- Kadın sporcuların hormon profili kişiye göre değişken ve öngörülmesi zor; üreme çağındaki sporcunun hormon durumunu (doğal döngü ya da hormonal korunma) antrenman ve toparlanmayla birlikte izleyerek kendi desenini bulması öneriliyor.\n- Öncelik her dönemde yeterli enerji alımı.\n- Luteal evrede ve haptaki etken haftalarda karbonhidrat ve protein ihtiyacının biraz daha yüksek olabileceğini, kanıtın sınırlı olduğunu belirtiyor.\n\n## Uygulamada kullanılan sayılar\n\nDoğrudan sayı alınmadı. Döngünün kişisel olarak izlenip işaretlerin yanına not düşülmesinin dayanağı (`dongu-notu`). Evreye göre beslenme hedefi değiştirilmez (kanıt sınırlı; ayrı iş).\n\n## Sınırlılıklar\n\n- Position stand; evreye özgü beslenme önerilerinin dayandığı çalışmalar az ve küçük.\n- Özetten okundu (tam metin açık: PMC10210857)."
   },
   {
     "id": "smarr-2020",
@@ -2728,6 +2896,34 @@ export const kbSources: readonly KbSource[] = [
     "journal": "British Journal of Sports Medicine",
     "population": "Yöntem mektubu (popülasyon yok)",
     "summary": "## Ne söylüyor (kendi cümlelerimizle)\n\n- Akut ve kronik yükü basit kayan ortalama yerine üstel ağırlıklı kayan ortalamayla (EWMA) hesaplamayı öneriyor: yakın günler daha ağır sayılır, yükün birikmesi ve sönmesi daha gerçekçi modellenir.\n- Günlük güncelleme: bugünkü EWMA = bugünkü yük × λ + (1 − λ) × dünkü EWMA; λ = 2 / (N + 1), N gün cinsinden zaman sabiti.\n\n## Uygulamada kullanılan sayılar\n\n| Değer | Birim | Bağlam / koşul |\n|---|---|---|\n| λ = 2 / (N + 1) | - | EWMA ağırlığı |\n| N = 7 | gün | Akut yük |\n| N = 28 | gün | Kronik yük |\n\n## Sınırlılıklar\n\n- Bir mektup; ampirik karşılaştırma murray-2017'de.\n- Mektubun tam metni açık erişimde değil, okunmadı. Formül ve N değerleri bu mektuba atıf yapan açık erişimli ren-2024 (PMC11402767) tam metninden doğrulandı."
+  },
+  {
+    "id": "williams-2025",
+    "title": "2025 Update to the Female Athlete Triad Coalition Consensus Statement Part 2: Clinical Guidelines for Screening, Diagnosis, Treatment, and Return to Play for Adolescents and Adults",
+    "authors": [
+      "Williams NI",
+      "De Souza MJ",
+      "Misra M",
+      "Nattiv A",
+      "Joy E",
+      "Barrack M",
+      "Ricker EA",
+      "Gorrell S",
+      "Koltun KJ",
+      "O'Donnell E",
+      "Mallinson RJ",
+      "Salamunes ACC",
+      "Woodruff K",
+      "Fredericson M",
+      "Plessow F"
+    ],
+    "year": 2025,
+    "type": "consensus",
+    "doi": "10.1007/s40279-025-02332-0",
+    "pmid": "41474492",
+    "journal": "Sports Medicine",
+    "population": "Ergen ve yetişkin kadın sporcular (Female Athlete Triad Coalition uzman paneli)",
+    "summary": "## Ne söylüyor (kendi cümlelerimizle)\n\n- Kadın sporcu triadının (enerji yetersizliği, adet bozukluğu, kemik sağlığı) taranması, tanısı, tedavisi ve sahaya dönüşü için güncel klinik kılavuz.\n- Adetin kesilmesi (birincil / ikincil amenore) ya da uzamış seyrek adet (oligomenore) için öykü, muayene, laboratuvar ve tanının hekim tarafından yapılmasını öneriyor; hekim deneyimli değilse endokrinoloğa yönlendirme.\n- Enerji yetersizliğine bağlı adet bozukluğu yeterli beslenmeyle geri dönebilir; ama tek bir adetin dönmesi hormonların düzeldiği anlamına gelmez.\n\n## Uygulamada kullanılan sayılar\n\nDoğrudan sayı alınmadı. Uzun ya da kesilmiş adette yorum yapmadan hekime yönlendirme notunun dayanağı (`dongu-duzensiz`). Teşhis ve tedavi HoopLab'in kapsamında değil (CLAUDE.md §3).\n\n## Sınırlılıklar\n\n- Klinik kılavuz; uygulama tanı koymaz, yalnız yönlendirir. Takvimdeki boşluk (kaydedilmemiş adet) uzun döngü gibi görünebilir; not bu yüzden \"kayıt eksik değilse\" diye yazılır.\n- Tam metinden okundu (açık: PMC12982345, Şekil 4 açıklaması)."
   },
   {
     "id": "xie-2026",
@@ -3118,6 +3314,128 @@ export const kbRules: readonly KbRule[] = [
       "chen-2020",
       "alavi-2022"
     ]
+  },
+  {
+    "id": "dongu-duzensiz",
+    "module": "dongu",
+    "description": "Son döngülerden biri 35 günden uzunsa, mevcut döngü 35. günü geçtiyse ya da Sağlık son 6 ayda döngü sapması (düzensiz, seyrek, uzamış adet, sürekli ara kanama) kaydettiyse evre ve not gösterilmez, yorum yapılmaz; 'kayıt eksik değilse bir hekime danış' notu gösterilir.",
+    "value": {
+      "cycle_days_above": 35,
+      "history_cycles": 3,
+      "healthkit_deviation_lookback_days": 182,
+      "healthkit_deviations": [
+        "irregular",
+        "infrequent",
+        "prolonged",
+        "persistent_intermenstrual_bleeding"
+      ],
+      "action": "hekime_yonlendir",
+      "comment": false
+    },
+    "appliesTo": "Apple Health profili, kadın, döngü takibi açık",
+    "notes": "35 günden uzun döngü oligomenore sayılır (elliottsale-2021). Uzamış seyrek adet ve adetin kesilmesinde değerlendirme ve tanı hekim işidir (williams-2025); HoopLab teşhis koymaz, sebep (enerji yetersizliği vb.) söylemez, demir veya başka takviye önermez (CLAUDE.md §3, karar 0061). Takvimde kaydedilmemiş bir adet uzun döngü gibi görünebilir; not bu yüzden 'kayıt eksik değilse' diye yazılır. Sapma kayıtlarını Sağlık uygulaması üretir; 6 aylık geriye bakış yöntem seçimidir (eski bir sapma kaydı süresiz not üretmesin diye).",
+    "sources": [
+      "williams-2025",
+      "elliottsale-2021"
+    ],
+    "profile": {
+      "source": [
+        "apple_health"
+      ],
+      "sex": [
+        "kadin"
+      ]
+    }
+  },
+  {
+    "id": "dongu-evre",
+    "module": "dongu",
+    "description": "Döngü günü ve kaba evre (tahmin): telefon HealthKit adet kayıtlarından takvim sayımıyla hesaplar. Adet başlangıcı: Sağlık'ta 'döngü başlangıcı' işaretli ya da önceki 7 günde akış kaydı olmayan akış günü. Döngü günü başlangıçtan ileri sayılır (başlangıç günü 1). Gün 1-7 adet; bir sonraki adetten geri sayımla −11 / −8 luteal, −7 / −1 adet öncesi; aradaki günler (yumurtlama dahil) foliküler. Bir sonraki adet tarihi son tam döngülerin uzunluğundan tahmin edilir; en az 2 tam döngü yoksa yalnız gün 1-7 adet ve 8-12 foliküler sayılır, sonrası evresiz. Beklenen uzunluk geçildiyse evre boş kalır.",
+    "value": {
+      "estimate": true,
+      "count": "takvim",
+      "phases": [
+        "adet",
+        "folikuler",
+        "luteal",
+        "adet_oncesi"
+      ],
+      "onset_gap_days": 7,
+      "menstrual_days": {
+        "from": 1,
+        "to": 7
+      },
+      "forward_follicular_days": {
+        "from": 8,
+        "to": 12
+      },
+      "luteal_days_before_next": {
+        "from": -11,
+        "to": -8
+      },
+      "premenstrual_days_before_next": {
+        "from": -7,
+        "to": -1
+      },
+      "regular_cycle_days": {
+        "min": 21,
+        "max": 35
+      },
+      "min_cycles_for_backward_count": 2,
+      "history_cycles": 3,
+      "expected_length": "median"
+    },
+    "appliesTo": "Apple Health profili, cinsiyet kadın ve döngü takibi açık (profiles.cycle_tracking); buluta yalnız yerel gün, döngü günü ve evre gider (cycle_days)",
+    "notes": "Evre sınırları schmalenberger-2019 Tablo 2'den: ileri sayım (28 günlük döngü varsayımı) yalnız adet (gün 1-7) ve orta-geç foliküler (8-12) için güvenilir; yumurtlama (−15 / −12), erken-orta luteal (−11 / −8) ve adet öncesi (−7 / −1) bir sonraki adetten geri sayım ister. HoopLab dört kaba evre kullanır, yumurtlama penceresini foliküler içinde sayar (HRV notu yalnız adet öncesinde, schmalenberger-2019 en büyük farkı orada buldu). Adet başlangıcını ayırmak için 7 günlük boşluk adet evresinin uzunluğundan gelir (yöntem seçimi; lekelenme yeni döngü sayılmasın diye). Düzenli döngü 21-35 gün (elliottsale-2021); dışında kalan döngü uzunluk tahminine girmez, son döngülerden biri dışındaysa evre hesaplanmaz. En az 2 tam döngü şartı elliottsale-2021'in en az iki ay takvim izlemesi önerisinden; son 3 döngünün ortancası yöntem seçimidir (kaynak tek bir sonraki adet tarihini bilir, uygulama tahmin eder; bu yüzden evre 'tahmin'). Hormon ya da yumurtlama testi yok: elliottsale-2021'in tanımıyla bu 'doğal döngü' sayımıdır, eumenore doğrulanmış değildir. elliottsale-2021 uzman görüşü düzeyinde; evre sınırları için meta-analiz (schmalenberger-2019) dayanaktır, 21-35 gün tanımı jinekolojik tanımlardan gelir.",
+    "sources": [
+      "schmalenberger-2019",
+      "elliottsale-2021"
+    ],
+    "profile": {
+      "source": [
+        "apple_health"
+      ],
+      "sex": [
+        "kadin"
+      ]
+    }
+  },
+  {
+    "id": "dongu-notu",
+    "module": "dongu",
+    "description": "Adet öncesi evrede 'HRV bandın altında' veya 'uyku nabzı bandın üstünde' işaretine 'döngüyle uyumlu olabilir' notu eklenir. Bant, eşik ve günün durumu değişmez. Hormonal korunma 'var' ise not daha zayıf dille yazılır. Döngüye göre antrenman veya beslenme önerisi yapılmaz.",
+    "value": {
+      "phases": [
+        "adet_oncesi"
+      ],
+      "signals": [
+        "hrv_low",
+        "rhr_high"
+      ],
+      "changes_band": false,
+      "changes_status": false,
+      "weaker_with_contraception": true,
+      "training_advice": false
+    },
+    "appliesTo": "Apple Health profili, kadın, döngü takibi açık; evre 'adet_oncesi' (dongu-evre) ve döngü düzensiz değil",
+    "notes": "Vagal HRV foliküler → luteal düşer (schmalenberger-2019, d = −0,39), en çok adet öncesinde; giyilebilir cihazlarda fark %3-9 (dejager-2026). Büyük cihaz kohortlarında luteal evrede dinlenik nabız ~3 atım/dk yüksek, HRV ~%14 düşük (heneghan-2026); topluluk ortalamasında nabız en yüksek döngünün 26., RMSSD en düşük 27. gününde (jasinski-2024). İki kohortun yazarları cihaz üreticisi çalışanı (çıkar çatışması); evreler kullanıcı kaydından. Hormonal korunmada genlik küçülür (heneghan-2026, jasinski-2024; dejager-2026'da korunmada HRV düşük): not 'genelde daha az belirgin' diye zayıflar. Fark kişisel bandın genişliğiyle aynı büyüklükte olduğundan bant ve eşik kaydırılmaz, evreye özel bant için kanıt yok (karar 0061); not işaretin yalnız olası bir açıklamasıdır, başka bir sebebi (hastalık, yük, uyku) dışlamaz. Döngü evresine göre performans farkı önemsiz ve kanıt düşük (mcnulty-2020), hormonal korunmada da (elliottsale-2020): antrenman önerisi yok; sims-2023 kişisel izlemeyi önerir. Apple Watch'ta uyku nabzı ve SDNN'ye aktarım varsayımdır (çalışmalar Fitbit, WHOOP ve laboratuvar HRV'si).",
+    "sources": [
+      "schmalenberger-2019",
+      "dejager-2026",
+      "heneghan-2026",
+      "jasinski-2024",
+      "mcnulty-2020",
+      "elliottsale-2020",
+      "sims-2023"
+    ],
+    "profile": {
+      "source": [
+        "apple_health"
+      ],
+      "sex": [
+        "kadin"
+      ]
+    }
   },
   {
     "id": "enerji-gosterim",

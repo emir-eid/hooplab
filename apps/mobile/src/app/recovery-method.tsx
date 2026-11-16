@@ -1,21 +1,26 @@
 // Toparlanma yöntemi ve kaynakları (karar 0021, 0028): Bugün'deki durumun nasıl hesaplandığı, sayılar motor sabitlerinden.
 
-import { recoveryBand, recoveryMinValues, respirationNightRule, shortSleep } from '@hooplab/engine';
+import { cycleIrregularRule, cyclePhaseRule, recoveryBand, recoveryMinValues, respirationNightRule, shortSleep } from '@hooplab/engine';
 
 import { GroupFooter, GroupLabel, ListGroup, ListRow } from '@/components/list';
 import { Card } from '@/components/card';
 import { PageHeader } from '@/components/page-header';
 import { Screen } from '@/components/screen';
 import { Text } from '@/components/text';
-import { recoverySources, recoverySourcesApple, recoverySourcesAppleFitness, recoverySourcesFitness } from '@/copy/recovery-sources';
-import { useDataSource, useSport } from '@/data/profile';
+import { cycleSources, recoverySources, recoverySourcesApple, recoverySourcesAppleFitness, recoverySourcesFitness } from '@/copy/recovery-sources';
+import { useProfile } from '@/data/profile';
 
 const sd = String(recoveryBand.sdMultiplier).replace('.', ',');
 
 export default function RecoveryMethodScreen() {
   // Apple Health profilinde ölçüler ve günün durumunun dayanağı farklı (karar 0061); sahibinin ekranı değişmez.
-  const apple = useDataSource() === 'apple_health';
-  const fitness = useSport() === 'fitness';
+  const profile = useProfile();
+  const apple = profile.dataSource === 'apple_health';
+  const fitness = profile.sport === 'fitness';
+  // Döngü (karar 0061 sıra 5): yalnız Apple · kadın · döngü takibi açık profilde.
+  const cycle = apple && profile.sex === 'kadin' && profile.cycleTracking;
+  const pm = cyclePhaseRule.premenstrualDaysBeforeNext;
+  const len = cyclePhaseRule.regularCycleDays;
   const list = apple ? (fitness ? recoverySourcesAppleFitness : recoverySourcesApple) : fitness ? recoverySourcesFitness : recoverySources;
   return (
     <Screen>
@@ -104,11 +109,37 @@ export default function RecoveryMethodScreen() {
         </GroupFooter>
       ) : null}
 
+      {cycle ? (
+        <>
+          <GroupLabel>Döngü</GroupLabel>
+          <Card>
+            <Text variant="bodyCompact">
+              {`Telefon, Sağlık'taki adet kayıtlarından döngü gününü sayar; buluta yalnız gün ve kaba evre gider, adet kaydının kendisi gitmez. Evre takvimle tahmin edilir: ilk ${cyclePhaseRule.menstrualDays.to} gün adet, beklenen adetten önceki ${pm.to - pm.from + 1} gün adet öncesi. Beklenen gün son ${cyclePhaseRule.historyCycles} döngünün ortancasından bulunur; en az ${cyclePhaseRule.minCyclesForBackwardCount} tam döngü ve ${len.min}-${len.max} günlük döngüler gerekir.`}
+            </Text>
+            <Text variant="bodyCompact">
+              Adet öncesinde HRV aralığının altında ya da uyku nabzı üstündeyse not düşülür: bu küçük değişim birçok kadında
+              görülür ve döngüyle uyumlu olabilir. Durum ve aralık değişmez. Evreye göre performans farkı önemsiz bulunduğu için
+              döngüye göre antrenman önerisi yapılmaz.
+            </Text>
+            <Text variant="bodyCompact">
+              {`${cycleIrregularRule.cycleDaysAbove} günü aşan bir döngü ya da Sağlık'ın döngü sapması uyarısı varsa evre hesaplanmaz; yalnız hekime danışma notu gösterilir.`}
+            </Text>
+          </Card>
+        </>
+      ) : null}
+
       <ListGroup label="Kaynaklar">
         {list.map((s) => (
           <ListRow key={s.id} label={s.cite} detail={`${s.kind} · ${s.use}`} />
         ))}
       </ListGroup>
+      {cycle ? (
+        <ListGroup label="Döngü kaynakları">
+          {cycleSources.map((s) => (
+            <ListRow key={s.id} label={s.cite} detail={`${s.kind} · ${s.use}`} />
+          ))}
+        </ListGroup>
+      ) : null}
     </Screen>
   );
 }

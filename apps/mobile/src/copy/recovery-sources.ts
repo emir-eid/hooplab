@@ -1,7 +1,7 @@
 // "Nasıl hesaplanıyor?" ekranının kaynak listesi. Kimlikler research/sources dosya adlarıdır, künyeler copy/sources'tan;
 // recovery-sources.test.ts listenin rules/toparlanma.json'daki kaynaklarla aynı kaldığını denetler.
 
-import { recoveryBand, recoveryMinValues, respirationNightRule, shortSleep } from '@hooplab/engine';
+import { cyclePhaseRule, recoveryBand, recoveryMinValues, respirationNightRule, shortSleep } from '@hooplab/engine';
 
 import { formatDecimal, weeks } from './recovery.ts';
 import { sources, type SourceCite, type SourceId } from './sources.ts';
@@ -77,3 +77,19 @@ function fitnessList(list: readonly SourceRef[]): SourceRef[] {
 
 export const recoverySourcesFitness: readonly SourceRef[] = fitnessList(recoverySources);
 export const recoverySourcesAppleFitness: readonly SourceRef[] = fitnessList(recoverySourcesApple);
+
+/**
+ * Döngü takibi açık profilin ek listesi (karar 0061 sıra 5; rules/dongu.json). recovery-sources.test.ts kuralların
+ * kaynaklarıyla aynı kaldığını denetler.
+ */
+export const cycleSources: readonly SourceRef[] = [
+  ref('schmalenberger-2019', 'HRV adet öncesinde düşer; evre sınırları'),
+  ref('elliottsale-2021', `Düzenli döngü ${cyclePhaseRule.regularCycleDays.min}-${cyclePhaseRule.regularCycleDays.max} gün; daha uzunu seyrek adet`),
+  ref('dejager-2026', 'Giyilebilir cihazda döngü boyunca HRV farkı'),
+  ref('heneghan-2026', 'Büyük kohortta adet öncesi nabız ve HRV'),
+  ref('jasinski-2024', 'Nabız ve HRV döngünün sonunda en uç'),
+  ref('mcnulty-2020', 'Evreye göre performans farkı önemsiz: antrenman önerisi yok'),
+  ref('elliottsale-2020', 'Hormonal korunmada da öneri yok'),
+  ref('sims-2023', 'Döngüyü kişisel olarak izlemek'),
+  ref('williams-2025', 'Uzun ya da kesilmiş adette hekim değerlendirmesi'),
+];

@@ -16,6 +16,7 @@ import {
   type DayLevel,
   type DayType,
   type MatchBrief,
+  type CycleContext,
   type TravelContext,
   type TravelDirection,
   type TravelPhase,
@@ -29,7 +30,7 @@ import {
 /** Günün sayıları belgesinde bir blok. `id` ölçüm anahtarı, dizilerde `regions.0` gibi. */
 export interface NumbersBlock {
   id: string;
-  metric: MetricKey | 'day' | 'travel';
+  metric: MetricKey | 'day' | 'travel' | 'cycle';
   text: string;
   /** Tahmin olan değer (CLAUDE.md §3); denetçi bu bloğa dayanan cümlede "tahmin" sözünü arar. */
   estimate: boolean;
@@ -480,12 +481,26 @@ function travelText(t: TravelContext, kb: Kb): string {
   return parts.join(' ');
 }
 
-/** Günün sayıları: ilk blok maç günü ve çevresi, varsa seyahat, sonra bulunan her ölçüm sabit sırayla. */
+/**
+ * Döngü bloğu (karar 0061 sıra 5): yalnız motorun notu; döngü günü ve evre takvimi gitmez. Evre takvim sayımıyla
+ * tahmindir; düzensizde yorum yok.
+ */
+function cycleText(c: CycleContext, kb: Kb): string {
+  if (c.note === 'irregular') {
+    return `Döngü (motor notu): kayıtlarda düzensiz döngü işareti var (${ruleNumber(kb, 'dongu-duzensiz', 'cycle_days_above')} günü aşan döngü ya da Sağlık sapma uyarısı). Döngü hakkında yorum yok; kayıt eksik değilse hekime danışması önerilir.`;
+  }
+  const weak = c.weak ? ' Hormonal korunma kullanıyor: bu etki genelde daha küçük.' : '';
+  return `Döngü (motor notu, takvim sayımıyla tahmin): adet öncesi evre. Bugünkü HRV ya da uyku nabzı işareti döngüyle uyumlu olabilir; günün durumu ve kişisel bant değişmedi.${weak}`;
+}
+
+/** Günün sayıları: ilk blok maç günü ve çevresi, varsa seyahat ve döngü, sonra bulunan her ölçüm sabit sırayla. */
 export function numbersBlocks(snapshot: CoachSnapshot, kb: Kb): NumbersBlock[] {
   const day: NumbersBlock = { id: 'day', metric: 'day', text: matchDayText(snapshot, kb), estimate: false };
   const t = snapshot.travel;
   const travel: NumbersBlock[] = t ? [{ id: 'travel', metric: 'travel', text: travelText(t, kb), estimate: t.jetLag }] : [];
-  return [day, ...travel, ...presentMetrics(snapshot).flatMap((key) => blocksFor(snapshot, key, kb))];
+  const cy = snapshot.cycle;
+  const cycle: NumbersBlock[] = cy ? [{ id: 'cycle', metric: 'cycle', text: cycleText(cy, kb), estimate: cy.note === 'compatible' }] : [];
+  return [day, ...travel, ...cycle, ...presentMetrics(snapshot).flatMap((key) => blocksFor(snapshot, key, kb))];
 }
 
 export function sourceDocument(source: KbSource): DocumentParam {

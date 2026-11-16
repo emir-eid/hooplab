@@ -45,11 +45,12 @@ function validBody() {
   };
 }
 
-function memoryStore(dataSource: string | null, existing: Record<string, string[]> = {}) {
+function memoryStore(dataSource: string | null, existing: Record<string, string[]> = {}, cycleEnabled = false) {
   const writes: { table: string; onConflict: string; rows: Row[] }[] = [];
   const deletes: { table: string; key: string; keys: string[] }[] = [];
   const store: IngestStore = {
     dataSource: async () => dataSource,
+    cycleEnabled: async () => cycleEnabled,
     upsert: async (table, onConflict, rows) => {
       writes.push({ table, onConflict, rows: structuredClone(rows) });
     },
@@ -173,7 +174,7 @@ test('profil kapısı: yalnız apple_health yükler; sahibinin profili ve profil
 test('Apple profili: dört tabloya user_id ile, doğru çakışma anahtarıyla yazılır', async () => {
   const { store, writes } = memoryStore('apple_health');
   const result = await runIngest({ userId: USER, body: validBody(), now: NOW }, store);
-  assert.deepEqual(result, { httpStatus: 200, body: { counts: { daily: 2, sleep: 1, exercise: 1, hourlyEnergy: 1 }, deleted: 0 } });
+  assert.deepEqual(result, { httpStatus: 200, body: { counts: { daily: 2, sleep: 1, exercise: 1, hourlyEnergy: 1, cycle: 0 }, deleted: 0 } });
   assert.deepEqual(
     writes.map((w) => [w.table, w.onConflict]),
     [
@@ -234,4 +235,70 @@ test('pencere biçimi: ters sıra, pencere dışı satır, bilinmeyen anahtar ve
     assert.ok((result.body as { issues: string[] }).issues.includes(issue), issue);
     assert.equal(writes.length + deletes.length, 0);
   }
+});
+
+// Karar 0061 sıra 5: döngü günleri. Yalnız gün, döngü günü, evre, düzensiz bayrağı; takip kapalıysa yazılmaz.
+const cycleBody = () => ({
+  cycle: [
+    { localDate: '2026-01-14', cycleDay: 24, phase: 'adet_oncesi' },
+    { localDate: '2026-01-15', cycleDay: 25, phase: 'adet_oncesi', irregular: false },
+  ],
+});
+
+test('döngü: satırlar kurulur; evresiz gün ve düzensiz gün geçerli', () => {
+  const r = parseIngestBody({ cycle: [...cycleBody().cycle, { localDate: '2026-01-13', cycleDay: 40, irregular: true }] }, NOW);
+  assert.ok(r.ok);
+  assert.deepEqual(r.rows.cycle, [
+    { local_date: '2026-01-14', cycle_day: 24, phase: 'adet_oncesi', irregular: false },
+    { local_date: '2026-01-15', cycle_day: 25, phase: 'adet_oncesi', irregular: false },
+    { local_date: '2026-01-13', cycle_day: 40, phase: null, irregular: true },
+  ]);
+});
+
+test('döngü biçimi: bilinmeyen evre ve alan, düzensiz günde evre, sınır dışı gün, yinelenen gün reddedilir', () => {
+  const cases: [unknown, string][] = [
+    [{ localDate: '2026-01-14', cycleDay: 5, phase: 'yumurtlama' }, 'cycle[0].phase'],
+    [{ localDate: '2026-01-14', cycleDay: 5, flow: 'heavy' }, 'cycle[0].flow'],
+    [{ localDate: '2026-01-14', cycleDay: 40, phase: 'luteal', irregular: true }, 'cycle[0].phase'],
+    [{ localDate: '2026-01-14', cycleDay: 0 }, 'cycle[0].cycleDay'],
+    [{ localDate: '2026-01-14', cycleDay: 2.5 }, 'cycle[0].cycleDay'],
+    [{ localDate: '2026-01-14' }, 'cycle[0].cycleDay'],
+  ];
+  for (const [row, issue] of cases) {
+    const r = parseIngestBody({ cycle: [row] }, NOW);
+    assert.ok(!r.ok && r.issues.includes(issue), issue);
+  }
+  const dup = parseIngestBody({ cycle: [cycleBody().cycle[0], cycleBody().cycle[0]] }, NOW);
+  assert.ok(!dup.ok && dup.issues.includes('cycle[1].local_date'));
+  const outside = parseIngestBody({ ...cycleBody(), window: { from: '2026-01-15', to: '2026-01-15' } }, NOW);
+  assert.ok(!outside.ok && outside.issues.includes('cycle[0].localDate'));
+});
+
+test('döngü takibi açık: cycle_days tablosuna user_id ile yazılır, penceredeki gönderilmeyen gün silinir', async () => {
+  const { store, writes, deletes } = memoryStore('apple_health', { cycle_days: ['2026-01-14', '2026-01-15', '2026-01-13'] }, true);
+  const body = { ...cycleBody(), window: { from: '2026-01-13', to: '2026-01-15' } };
+  const result = await runIngest({ userId: USER, body, now: NOW }, store);
+  assert.equal(result.httpStatus, 200);
+  assert.deepEqual(writes.map((w) => [w.table, w.onConflict, w.rows.length]), [['cycle_days', 'user_id,local_date', 2]]);
+  for (const row of writes[0]!.rows) assert.equal(row.user_id, USER);
+  assert.deepEqual(deletes, [{ table: 'cycle_days', key: 'local_date', keys: ['2026-01-13'] }]);
+  assert.equal((result.body as { counts: { cycle: number } }).counts.cycle, 2);
+});
+
+test('döngü takibi kapalı: döngü satırı yazılmaz ve silme sorgusu yapılmaz; diğer veri yazılır', async () => {
+  const { store, writes, deletes } = memoryStore('apple_health', { cycle_days: ['2026-01-14'] }, false);
+  const body = { ...validBody(), ...cycleBody(), window: { from: '2026-01-14', to: '2026-01-15' } };
+  const result = await runIngest({ userId: USER, body, now: NOW }, store);
+  assert.equal(result.httpStatus, 200);
+  assert.ok(!writes.some((w) => w.table === 'cycle_days'));
+  assert.ok(!deletes.some((d) => d.table === 'cycle_days'));
+  assert.equal((result.body as { counts: { cycle: number } }).counts.cycle, 0);
+  assert.ok(writes.some((w) => w.table === 'health_daily'));
+});
+
+test('döngü: sahibinin profili 403, döngü satırı yazılmaz', async () => {
+  const { store, writes } = memoryStore('google_health', {}, true);
+  const result = await runIngest({ userId: USER, body: cycleBody(), now: NOW }, store);
+  assert.equal(result.httpStatus, 403);
+  assert.equal(writes.length, 0);
 });

@@ -6,7 +6,11 @@
 //   * hrv-olcu-apple: ana uyku penceresine düşen SDNN örneklerinin ortalaması; örnek yoksa boş.
 //   * nabiz-olcu-apple: ana uyku penceresindeki nabız örneklerinin ortalaması; evreye ayrılmaz.
 //   * enerji-harcamasi-tahmin-apple (enerji.json): aktif + bazal enerji.
+//   * dongu-evre, dongu-duzensiz (dongu.json): döngü günü ve evre motorda (@hooplab/engine cycle.ts); buradan
+//     buluta yalnız gün, döngü günü, evre ve düzensiz bayrağı gider. Akış miktarı ve sapma kaydının kendisi gitmez.
 // Buradaki sabitler sağlık eşiği değildir: uyku örneklerini oturuma toplama ve yükleme parçası biçimidir.
+
+import { cycleDaysBetween, type CycleDeviation, type CyclePhase } from '@hooplab/engine';
 
 /** Yerel saat; testte sabit dilimli bir saat verilir, uygulamada telefonun saati. */
 export interface LocalClock {
@@ -266,6 +270,55 @@ export interface IngestBody {
   sleep: SleepSessionOut[];
   workouts: WorkoutOut[];
   hourlyEnergy: HourOut[];
+  /** Yalnız döngü takibi açıkken; yoksa anahtar gönderilmez (karar 0061 sıra 5). */
+  cycle?: CycleOut[];
+}
+
+/** HealthKit adet akışı örneği (HKCategoryTypeIdentifierMenstrualFlow). */
+export interface FlowSampleIn {
+  start: Date;
+  /** HKCategoryValueMenstrualFlow: 1 belirtilmemiş, 2 hafif, 3 orta, 4 yoğun, 5 yok. */
+  value: number;
+  /** Sağlık'ın HKMenstrualCycleStart meta verisi. */
+  cycleStart: boolean;
+}
+
+/** HealthKit döngü sapması örneği (düzensiz, seyrek, uzamış adet, sürekli ara kanama). */
+export interface DeviationSampleIn {
+  start: Date;
+  kind: CycleDeviation;
+}
+
+export interface CycleOut {
+  localDate: string;
+  cycleDay: number;
+  phase?: CyclePhase;
+  irregular?: true;
+}
+
+export const MenstrualFlowValue = { unspecified: 1, light: 2, medium: 3, heavy: 4, none: 5 } as const;
+
+/**
+ * Pencerenin döngü günleri. Akış ve sapma örnekleri pencereden önceyi de kapsamalı (cycleFlowLookbackDays,
+ * dongu-duzensiz geriye bakışı): döngü günü önceki başlangıçlardan sayılır. "Akış yok" kaydı akış sayılmaz.
+ */
+export function buildCycleRows(
+  from: string,
+  to: string,
+  flow: readonly FlowSampleIn[],
+  deviations: readonly DeviationSampleIn[],
+  clock: LocalClock,
+): CycleOut[] {
+  const flowDays = flow
+    .filter((f) => f.value !== MenstrualFlowValue.none && f.value >= MenstrualFlowValue.unspecified && f.value <= MenstrualFlowValue.heavy)
+    .map((f) => ({ date: clock.date(f.start), start: f.cycleStart }));
+  const deviationDates = deviations.map((d) => clock.date(d.start));
+  return cycleDaysBetween(from, to, flowDays, deviationDates).map((d) => ({
+    localDate: d.date,
+    cycleDay: d.cycleDay,
+    ...(d.phase ? { phase: d.phase } : {}),
+    ...(d.irregular ? { irregular: true as const } : {}),
+  }));
 }
 
 export interface ChunkInput {

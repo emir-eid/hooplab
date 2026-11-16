@@ -16,15 +16,20 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Platform } from 'react-native';
 
-import { fetchDataSource } from '@/data/profile';
+import { cycleFlowLookbackDays, cycleIrregularRule, type CycleDeviation } from '@hooplab/engine';
+
+import { fetchProfile } from '@/data/profile';
 import { demoStore } from '@/demo/demo-mode';
 import {
   addDays,
+  buildCycleRows,
   buildIngestBody,
   buildSleepSessions,
   deviceClock,
   syncWindows,
   type DayStats,
+  type DeviationSampleIn,
+  type FlowSampleIn,
   type HourEnergyIn,
   type IngestBody,
   type SleepSampleIn,
@@ -49,8 +54,19 @@ const ACTIVE = 'HKQuantityTypeIdentifierActiveEnergyBurned';
 const BASAL = 'HKQuantityTypeIdentifierBasalEnergyBurned';
 const WORKOUT = 'HKWorkoutTypeIdentifier';
 
+// Döngü (karar 0061 sıra 5): yalnız kadın + döngü takibi açık profilde izin istenir ve okunur.
+const MENSTRUAL_FLOW = 'HKCategoryTypeIdentifierMenstrualFlow';
+const DEVIATION_TYPES = {
+  HKCategoryTypeIdentifierIrregularMenstrualCycles: 'irregular',
+  HKCategoryTypeIdentifierInfrequentMenstrualCycles: 'infrequent',
+  HKCategoryTypeIdentifierProlongedMenstrualPeriods: 'prolonged',
+  HKCategoryTypeIdentifierPersistentIntermenstrualBleeding: 'persistent_intermenstrual_bleeding',
+} as const satisfies Record<string, CycleDeviation>;
+
 /** İzin ekranında sorulan tipler: yalnız bu senkronun okuduğu tipler. */
 export const readTypes = [SLEEP, SDNN, HEART_RATE, RESPIRATORY, RESTING_HR, STEPS, DISTANCE, ACTIVE, BASAL, WORKOUT] as const;
+/** Döngü takibi açıkken ek olarak sorulan tipler. */
+export const cycleReadTypes = [MENSTRUAL_FLOW, ...(Object.keys(DEVIATION_TYPES) as (keyof typeof DEVIATION_TYPES)[])] as const;
 /** Yeni veri bildirimi istenen tipler (her biri saatte en çok bir kez uyandırır). */
 const observedTypes = [SLEEP, SDNN, RESTING_HR, ACTIVE, WORKOUT] as const;
 
@@ -194,8 +210,32 @@ async function workouts(hk: HealthKit, from: string, to: string): Promise<Workou
   return out;
 }
 
+/**
+ * Döngü satırları için adet akışı ve sapma kayıtları. Döngü günü önceki başlangıçlardan sayıldığı için pencereden
+ * önceyi de okur. Kayıtlar telefonda kalır; buluta yalnız hesaplanan gün / evre gider.
+ */
+async function readCycle(hk: HealthKit, from: string, to: string) {
+  const end = localMidnight(addDays(to, 1));
+  const flowRaw = await hk.queryCategorySamples(MENSTRUAL_FLOW, {
+    limit: 0,
+    filter: { date: { startDate: localMidnight(addDays(from, -cycleFlowLookbackDays)), endDate: end } },
+  });
+  const flow: FlowSampleIn[] = flowRaw.map((s) => ({
+    start: s.startDate,
+    value: Number(s.value),
+    cycleStart: (s.metadata as { HKMenstrualCycleStart?: unknown } | undefined)?.HKMenstrualCycleStart === true,
+  }));
+  const deviations: DeviationSampleIn[] = [];
+  const deviationStart = localMidnight(addDays(from, -cycleIrregularRule.healthkitDeviationLookbackDays));
+  for (const [type, kind] of Object.entries(DEVIATION_TYPES) as [keyof typeof DEVIATION_TYPES, CycleDeviation][]) {
+    const rows = await hk.queryCategorySamples(type, { limit: 0, filter: { date: { startDate: deviationStart, endDate: end } } });
+    for (const r of rows) deviations.push({ start: r.startDate, kind });
+  }
+  return buildCycleRows(from, to, flow, deviations, deviceClock);
+}
+
 /** Bir pencerenin HealthKit okuması ve gövdesi. Nabız yalnız ana uyku pencerelerinde okunur (gündüz örneği çok). */
-async function readWindow(hk: HealthKit, from: string, to: string): Promise<IngestBody> {
+async function readWindow(hk: HealthKit, from: string, to: string, cycle: boolean): Promise<IngestBody> {
   // Pencerenin ilk gününe uyanılan uyku bir önceki akşam başlar.
   const sleepStart = new Date(localMidnight(from).getTime() - 18 * 3600_000);
   const sleepEnd = localMidnight(addDays(to, 1));
@@ -220,7 +260,7 @@ async function readWindow(hk: HealthKit, from: string, to: string): Promise<Inge
     respiratory.push(...(await samplesIn(hk, RESPIRATORY, 'count/min', start, end)));
   }
 
-  return buildIngestBody(
+  const body = buildIngestBody(
     {
       from,
       to,
@@ -234,6 +274,8 @@ async function readWindow(hk: HealthKit, from: string, to: string): Promise<Inge
     },
     deviceClock,
   );
+  // Döngü takibi kapalıyken anahtar hiç gönderilmez.
+  return cycle ? { ...body, cycle: await readCycle(hk, from, to) } : body;
 }
 
 async function upload(body: IngestBody): Promise<string | null> {
@@ -264,7 +306,9 @@ async function run(reason: SyncReason): Promise<SyncOutcome> {
   const { data } = await supabase.auth.getSession();
   const userId = data.session?.user.id;
   if (!userId) return 'skipped';
-  if ((await fetchDataSource()) !== 'apple_health') return 'skipped';
+  const profile = await fetchProfile();
+  if (profile.dataSource !== 'apple_health') return 'skipped';
+  const cycle = profile.sex === 'kadin' && profile.cycleTracking;
   notify();
 
   const hk = await import('@kingstinct/react-native-healthkit');
@@ -276,12 +320,12 @@ async function run(reason: SyncReason): Promise<SyncOutcome> {
   try {
     // İzin ekranı yalnız ön planda: iOS her tipi bir kez sorar, sonra çağrı hemen döner.
     if (reason !== 'background') {
-      await hk.requestAuthorization({ toRead: [...readTypes] });
+      await hk.requestAuthorization({ toRead: cycle ? [...readTypes, ...cycleReadTypes] : [...readTypes] });
       await hk.configureBackgroundTypes([...observedTypes], hk.UpdateFrequency.hourly);
     }
     const today = deviceClock.date(new Date());
     for (const w of syncWindows(today, syncStart(state, today))) {
-      const error = await upload(await readWindow(hk, w.from, w.to));
+      const error = await upload(await readWindow(hk, w.from, w.to, cycle));
       if (error) {
         state = { ...state, lastError: error };
         await saveState(userId, state);

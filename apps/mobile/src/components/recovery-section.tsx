@@ -38,6 +38,7 @@ import {
   statusReason,
   type ValueRow,
 } from "@/copy/recovery";
+import { cycleNoteText, cycleNoteTitle } from "@/copy/cycle";
 import { explainerFor, type ExplainerId } from "@/copy/explainers";
 import { useDataSource, useSport } from "@/data/profile";
 import {
@@ -92,6 +93,17 @@ export function RecoveryState({ view, matchDay = false }: { view: RecoveryView; 
             style={styles.cite}
           />
         </View>
+        {view.cycleNote ? (
+          // Döngü notu (karar 0061 sıra 5): durumu değiştirmez, yalnız açıklar; düzensizde hekime yönlendirir.
+          <View style={[styles.cycleNote, { backgroundColor: palette.cardMuted }]} accessibilityRole="text">
+            <Text variant="footnote" tone="inkSecondary">
+              {cycleNoteTitle}
+            </Text>
+            <Text variant="footnoteRegular" tone="inkSecondary">
+              {cycleNoteText(view.cycleNote)}
+            </Text>
+          </View>
+        ) : null}
         {chips.length > 0 ? (
           <View style={styles.chips}>
             {chips.map((c) => (
@@ -480,6 +492,13 @@ const styles = StyleSheet.create({
   cite: { marginTop: 3 },
   titleRow: { flexDirection: "row", alignItems: "center", gap: spacing[1.5] },
   estimateBadge: { paddingHorizontal: spacing[1.5], paddingVertical: spacing[0.5], borderRadius: radius.full },
+  cycleNote: {
+    gap: spacing[1],
+    padding: spacing[3],
+    borderRadius: radius.lg,
+    marginTop: spacing[3],
+    maxWidth: 360,
+  },
   chips: {
     flexDirection: "row",
     flexWrap: "wrap",

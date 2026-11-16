@@ -192,3 +192,23 @@ test('kaynak verilmezse sahibinin profili: açık google_health ile aynı görü
     assert.deepEqual(buildRecoveryView(daily(h, r), nights(400), today), buildRecoveryView(daily(h, r), nights(400), today, 'google_health'));
   }
 });
+
+// Karar 0061 sıra 5: döngü notu yalnız döngü girdisi verilince ve not varken; durum değişmez. Sahibinin çağrısında alan yok.
+test('döngü notu: adet öncesinde HRV düşükken not; durum aynı; girdi yoksa alan yok', () => {
+  const pm = { today: { phase: 'adet_oncesi' as const, irregular: false }, contraception: 'yok' as const };
+  const plain = buildRecoveryView(appleDaily(30, 52), nights(450), today, 'apple_health');
+  const withCycle = buildRecoveryView(appleDaily(30, 52), nights(450), today, 'apple_health', pm);
+  assert.ok(!('cycleNote' in plain));
+  assert.deepEqual(withCycle.cycleNote, { kind: 'compatible', signals: ['hrv_low'], weak: false });
+  assert.deepEqual(withCycle.status, plain.status);
+  assert.deepEqual({ ...withCycle, cycleNote: undefined }, { ...plain, cycleNote: undefined });
+
+  const luteal = buildRecoveryView(appleDaily(30, 52), nights(450), today, 'apple_health', { ...pm, today: { phase: 'luteal', irregular: false } });
+  assert.ok(!('cycleNote' in luteal), 'not yalnız adet öncesinde');
+  const noRow = buildRecoveryView(appleDaily(30, 52), nights(450), today, 'apple_health', { ...pm, today: null });
+  assert.ok(!('cycleNote' in noRow));
+  const irregular = buildRecoveryView(appleDaily(45, 52), nights(450), today, 'apple_health', { ...pm, today: { phase: null, irregular: true } });
+  assert.deepEqual(irregular.cycleNote, { kind: 'irregular' });
+  const owner = buildRecoveryView(daily(30, 52), nights(450), today);
+  assert.ok(!('cycleNote' in owner), 'sahibinin görünümünde döngü alanı yok');
+});

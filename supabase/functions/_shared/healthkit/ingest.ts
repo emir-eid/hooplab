@@ -9,7 +9,7 @@ export const SOURCE = 'apple_health';
 
 /** İlk yüklemede telefon en çok bu kadar gün geriye gider (Google senkronunun BACKFILL_DAYS'iyle aynı). */
 export const MAX_DAYS_BACK = 90;
-export const LIMITS = { days: 92, sleep: 400, workouts: 500, hourlyEnergy: 240 } as const;
+export const LIMITS = { days: 92, sleep: 400, workouts: 500, hourlyEnergy: 240, cycle: 92 } as const;
 /** İsteğe bağlı gövde anahtarları (liste olmayanlar). */
 const OTHER_KEYS = ['window'] as const;
 /** Gövde sınırı (bayt); yukarıdaki üst sınırlarla dolu bir istek ~400 KB. */
@@ -46,6 +46,8 @@ const MAX_SESSION_MS = 24 * 3600 * 1000;
 const ID_RE = /^[A-Za-z0-9._:-]{1,200}$/;
 const TYPE_RE = /^[A-Za-z0-9_]{1,60}$/;
 const DATE_RE = /^\d{4}-\d{2}-\d{2}$/;
+/** Döngü evreleri (rules/dongu.json → dongu-evre; veritabanı CHECK'iyle aynı). */
+export const CYCLE_PHASES = ['adet', 'folikuler', 'luteal', 'adet_oncesi'] as const;
 
 export type Row = Record<string, string | number | boolean | null>;
 
@@ -54,6 +56,8 @@ export interface IngestRows {
   sleep: Row[];
   exercise: Row[];
   hourlyEnergy: Row[];
+  /** Döngü günleri (karar 0061 sıra 5): yalnız gün, döngü günü, evre, düzensiz bayrağı; ham adet kaydı yok. */
+  cycle: Row[];
 }
 
 /**
@@ -247,7 +251,23 @@ export function parseIngestBody(body: unknown, now: Date): ParseResult {
     };
   });
 
+  const cycle = list(c, body, 'cycle').map((d, i): Row => {
+    const path = `cycle[${i}]`;
+    for (const key of Object.keys(d)) if (!['localDate', 'cycleDay', 'phase', 'irregular'].includes(key)) c.fail(`${path}.${key}`);
+    const phase = d.phase === undefined || d.phase === null ? null : (CYCLE_PHASES as readonly unknown[]).includes(d.phase) ? (d.phase as string) : c.fail(`${path}.phase`);
+    const irregular = c.bool(d, 'irregular', path) ?? false;
+    // Düzensiz döngüde evre hesaplanmaz (dongu-duzensiz).
+    if (irregular && phase !== null) c.fail(`${path}.phase`);
+    return {
+      local_date: c.date(d, 'localDate', path),
+      cycle_day: c.num(d, 'cycleDay', path, [1, 400, true], true),
+      phase,
+      irregular,
+    };
+  });
+
   duplicates(c, daily, 'local_date', 'days');
+  duplicates(c, cycle, 'local_date', 'cycle');
   duplicates(c, sleep, 'source_id', 'sleep');
   duplicates(c, exercise, 'source_id', 'workouts');
   duplicates(c, hourlyEnergy, 'hour_start', 'hourlyEnergy');
@@ -263,24 +283,31 @@ export function parseIngestBody(body: unknown, now: Date): ParseResult {
     outside(sleep, 'sleep');
     outside(exercise, 'workouts');
     outside(hourlyEnergy, 'hourlyEnergy');
+    outside(cycle, 'cycle');
   }
 
   if (c.issues.length > 0) return { ok: false, issues: c.issues };
-  return { ok: true, rows: { daily, sleep, exercise, hourlyEnergy }, window };
+  return { ok: true, rows: { daily, sleep, exercise, hourlyEnergy, cycle }, window };
 }
 
 export interface IngestStore {
   /** Kullanıcının profilindeki veri kaynağı; satır yoksa null. */
   dataSource(userId: string): Promise<string | null>;
-  upsert(table: 'health_daily' | 'sleep_sessions' | 'exercise_sessions' | 'health_hourly_energy', onConflict: string, rows: Row[]): Promise<void>;
-  /** Penceredeki Apple satırlarının anahtarları (yalnız bu kullanıcı, yalnız apple_health). */
+  /** Profilde döngü takibi açık mı (kadın ve cycle_tracking)? Kapalıysa döngü satırı yazılmaz. */
+  cycleEnabled(userId: string): Promise<boolean>;
+  upsert(
+    table: 'health_daily' | 'sleep_sessions' | 'exercise_sessions' | 'health_hourly_energy' | 'cycle_days',
+    onConflict: string,
+    rows: Row[],
+  ): Promise<void>;
+  /** Penceredeki Apple satırlarının anahtarları (yalnız bu kullanıcı, yalnız apple_health; cycle_days zaten yalnız Apple). */
   keysInWindow(table: ReplaceTable, key: ReplaceKey, userId: string, window: ReplaceWindow): Promise<string[]>;
   /** Verilen anahtarlı Apple satırlarını siler (yalnız bu kullanıcı, yalnız apple_health). */
   deleteKeys(table: ReplaceTable, key: ReplaceKey, userId: string, keys: string[]): Promise<void>;
 }
 
-export type ReplaceTable = 'sleep_sessions' | 'exercise_sessions' | 'health_hourly_energy';
-export type ReplaceKey = 'source_id' | 'hour_start';
+export type ReplaceTable = 'sleep_sessions' | 'exercise_sessions' | 'health_hourly_energy' | 'cycle_days';
+export type ReplaceKey = 'source_id' | 'hour_start' | 'local_date';
 
 /** Zaman damgası anahtarları veritabanından farklı biçimde dönebilir; kıyas ISO UTC'de yapılır. */
 function normalizeKey(key: ReplaceKey, v: string): string {
@@ -306,6 +333,11 @@ export async function runIngest(input: { userId: string; body: unknown; now: Dat
   if (rows.sleep.length) await store.upsert('sleep_sessions', 'user_id,source_id', withUser(rows.sleep));
   if (rows.exercise.length) await store.upsert('exercise_sessions', 'user_id,source_id', withUser(rows.exercise));
   if (rows.hourlyEnergy.length) await store.upsert('health_hourly_energy', 'user_id,hour_start', withUser(rows.hourlyEnergy));
+  // Döngü: yalnız takip açıkken. Kapalıysa telefonun (eski önbellekle) gönderdiği satır yazılmaz, hata da sayılmaz;
+  // veritabanı bekçisi aynı kuralı ikinci kez uygular, takip kapanınca satırları tetikleyici siler.
+  const cycleOn = rows.cycle.length > 0 || window ? await store.cycleEnabled(input.userId) : false;
+  const cycleRows = cycleOn ? rows.cycle : [];
+  if (cycleRows.length) await store.upsert('cycle_days', 'user_id,local_date', withUser(cycleRows));
 
   let deleted = 0;
   if (window) {
@@ -313,6 +345,7 @@ export async function runIngest(input: { userId: string; body: unknown; now: Dat
       ['sleep_sessions', 'source_id', rows.sleep],
       ['exercise_sessions', 'source_id', rows.exercise],
       ['health_hourly_energy', 'hour_start', rows.hourlyEnergy],
+      ...(cycleOn ? [['cycle_days', 'local_date', cycleRows] as [ReplaceTable, ReplaceKey, Row[]]] : []),
     ];
     for (const [table, key, sent] of replace) {
       const keep = new Set(sent.map((r) => normalizeKey(key, r[key] as string)));
@@ -330,6 +363,7 @@ export async function runIngest(input: { userId: string; body: unknown; now: Dat
         sleep: rows.sleep.length,
         exercise: rows.exercise.length,
         hourlyEnergy: rows.hourlyEnergy.length,
+        cycle: cycleRows.length,
       },
       deleted,
     },

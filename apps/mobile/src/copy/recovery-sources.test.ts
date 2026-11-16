@@ -2,7 +2,7 @@ import assert from 'node:assert/strict';
 import { existsSync, readFileSync } from 'node:fs';
 import { test } from 'node:test';
 
-import { recoverySources, recoverySourcesApple, recoverySourcesAppleFitness, recoverySourcesFitness } from './recovery-sources.ts';
+import { cycleSources, recoverySources, recoverySourcesApple, recoverySourcesAppleFitness, recoverySourcesFitness } from './recovery-sources.ts';
 
 const root = new URL('../../../../research/', import.meta.url);
 
@@ -37,4 +37,10 @@ test('fitness listeleri fitness profilindeki toparlanma kurallarının kaynaklar
     const expected = new Set(rules.rules.filter((r) => fits(r, source)).flatMap((r) => r.sources));
     assert.deepEqual(new Set(list.map((s) => s.id)), expected, source);
   }
+});
+
+test('döngü listesi döngü kurallarının kaynaklarıyla aynı (karar 0061 sıra 5)', () => {
+  const rules = JSON.parse(readFileSync(new URL('rules/dongu.json', root), 'utf8')) as { rules: { sources: string[] }[] };
+  assert.deepEqual(new Set(cycleSources.map((s) => s.id)), new Set(rules.rules.flatMap((r) => r.sources)));
+  for (const s of cycleSources) assert.ok(existsSync(new URL(`sources/${s.id}.md`, root)), s.id);
 });

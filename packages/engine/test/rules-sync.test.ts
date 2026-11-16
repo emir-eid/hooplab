@@ -70,6 +70,7 @@ import {
   wellnessItems,
   wellnessScale,
 } from '../src/index.ts';
+import { cycleIrregularRule, cycleNoteRule, cyclePhaseRule } from '../src/cycle.ts';
 
 const read = (rel: string) => readFileSync(new URL(rel, import.meta.url), 'utf8');
 
@@ -428,4 +429,45 @@ test('fitness gün tipi: maç bilgisi ve maç seansı gün tipini değiştirmez;
   assert.equal(e.inferDayType([{ kind: 'strength', durationMin: 120 }], {}), 'training', 'sahibinde 180 dk');
   assert.deepEqual(e.nutritionTargets('training', 80, 'fitness').carbsG, [240, 400]);
   assert.deepEqual(e.nutritionTargets('training', 80).carbsG, [400, 560]);
+});
+
+// Karar 0061 sıra 5: döngü kuralları motorla, evreler veritabanı CHECK'iyle aynı; üç kural da yalnız Apple · kadın profilinde.
+test('döngü: evre, not ve düzensiz kuralları motorla aynı', () => {
+  const evre = rule('dongu.json', 'dongu-evre').value as Record<string, unknown>;
+  const range = (r: { from: number; to: number }) => ({ from: r.from, to: r.to });
+  assert.equal(evre.estimate, cyclePhaseRule.estimate);
+  assert.deepEqual(evre.phases, [...cyclePhaseRule.phases]);
+  assert.equal(evre.onset_gap_days, cyclePhaseRule.onsetGapDays);
+  assert.deepEqual(evre.menstrual_days, range(cyclePhaseRule.menstrualDays));
+  assert.deepEqual(evre.forward_follicular_days, range(cyclePhaseRule.forwardFollicularDays));
+  assert.deepEqual(evre.luteal_days_before_next, range(cyclePhaseRule.lutealDaysBeforeNext));
+  assert.deepEqual(evre.premenstrual_days_before_next, range(cyclePhaseRule.premenstrualDaysBeforeNext));
+  assert.deepEqual(evre.regular_cycle_days, { ...cyclePhaseRule.regularCycleDays });
+  assert.equal(evre.min_cycles_for_backward_count, cyclePhaseRule.minCyclesForBackwardCount);
+  assert.equal(evre.history_cycles, cyclePhaseRule.historyCycles);
+  assert.equal(evre.expected_length, cyclePhaseRule.expectedLength);
+
+  const not = rule('dongu.json', 'dongu-notu').value as Record<string, unknown>;
+  assert.deepEqual(not.phases, [...cycleNoteRule.phases]);
+  assert.deepEqual(not.signals, [...cycleNoteRule.signals]);
+  assert.equal(not.changes_band, cycleNoteRule.changesBand);
+  assert.equal(not.changes_status, cycleNoteRule.changesStatus);
+  assert.equal(not.weaker_with_contraception, cycleNoteRule.weakerWithContraception);
+  assert.equal(not.training_advice, cycleNoteRule.trainingAdvice);
+
+  const duz = rule('dongu.json', 'dongu-duzensiz').value as Record<string, unknown>;
+  assert.equal(duz.cycle_days_above, cycleIrregularRule.cycleDaysAbove);
+  assert.equal(duz.history_cycles, cycleIrregularRule.historyCycles);
+  assert.equal(duz.healthkit_deviation_lookback_days, cycleIrregularRule.healthkitDeviationLookbackDays);
+  assert.deepEqual(duz.healthkit_deviations, [...cycleIrregularRule.healthkitDeviations]);
+  assert.equal(duz.action, cycleIrregularRule.action);
+  assert.equal(duz.comment, cycleIrregularRule.comment);
+
+  for (const id of ['dongu-evre', 'dongu-notu', 'dongu-duzensiz']) {
+    const r = rule('dongu.json', id) as Rule & { profile?: { source?: string[]; sex?: string[] } };
+    assert.deepEqual(r.profile, { source: ['apple_health'], sex: ['kadin'] }, `${id} profili`);
+  }
+  const check = /phase = any \(array\[([^\]]+)\]\)/.exec(migrations);
+  assert.ok(check, 'cycle_days evre CHECK kısıtı');
+  assert.deepEqual(check[1]!.split(',').map((x) => x.trim().replace(/'/g, '')), [...cyclePhaseRule.phases]);
 });

@@ -1,0 +1,59 @@
+{
+  "module": "dongu",
+  "rules": [
+    {
+      "id": "dongu-evre",
+      "profile": { "source": ["apple_health"], "sex": ["kadin"] },
+      "description": "Döngü günü ve kaba evre (tahmin): telefon HealthKit adet kayıtlarından takvim sayımıyla hesaplar. Adet başlangıcı: Sağlık'ta 'döngü başlangıcı' işaretli ya da önceki 7 günde akış kaydı olmayan akış günü. Döngü günü başlangıçtan ileri sayılır (başlangıç günü 1). Gün 1-7 adet; bir sonraki adetten geri sayımla −11 / −8 luteal, −7 / −1 adet öncesi; aradaki günler (yumurtlama dahil) foliküler. Bir sonraki adet tarihi son tam döngülerin uzunluğundan tahmin edilir; en az 2 tam döngü yoksa yalnız gün 1-7 adet ve 8-12 foliküler sayılır, sonrası evresiz. Beklenen uzunluk geçildiyse evre boş kalır.",
+      "value": {
+        "estimate": true,
+        "count": "takvim",
+        "phases": ["adet", "folikuler", "luteal", "adet_oncesi"],
+        "onset_gap_days": 7,
+        "menstrual_days": { "from": 1, "to": 7 },
+        "forward_follicular_days": { "from": 8, "to": 12 },
+        "luteal_days_before_next": { "from": -11, "to": -8 },
+        "premenstrual_days_before_next": { "from": -7, "to": -1 },
+        "regular_cycle_days": { "min": 21, "max": 35 },
+        "min_cycles_for_backward_count": 2,
+        "history_cycles": 3,
+        "expected_length": "median"
+      },
+      "applies_to": "Apple Health profili, cinsiyet kadın ve döngü takibi açık (profiles.cycle_tracking); buluta yalnız yerel gün, döngü günü ve evre gider (cycle_days)",
+      "sources": ["schmalenberger-2019", "elliottsale-2021"],
+      "notes": "Evre sınırları schmalenberger-2019 Tablo 2'den: ileri sayım (28 günlük döngü varsayımı) yalnız adet (gün 1-7) ve orta-geç foliküler (8-12) için güvenilir; yumurtlama (−15 / −12), erken-orta luteal (−11 / −8) ve adet öncesi (−7 / −1) bir sonraki adetten geri sayım ister. HoopLab dört kaba evre kullanır, yumurtlama penceresini foliküler içinde sayar (HRV notu yalnız adet öncesinde, schmalenberger-2019 en büyük farkı orada buldu). Adet başlangıcını ayırmak için 7 günlük boşluk adet evresinin uzunluğundan gelir (yöntem seçimi; lekelenme yeni döngü sayılmasın diye). Düzenli döngü 21-35 gün (elliottsale-2021); dışında kalan döngü uzunluk tahminine girmez, son döngülerden biri dışındaysa evre hesaplanmaz. En az 2 tam döngü şartı elliottsale-2021'in en az iki ay takvim izlemesi önerisinden; son 3 döngünün ortancası yöntem seçimidir (kaynak tek bir sonraki adet tarihini bilir, uygulama tahmin eder; bu yüzden evre 'tahmin'). Hormon ya da yumurtlama testi yok: elliottsale-2021'in tanımıyla bu 'doğal döngü' sayımıdır, eumenore doğrulanmış değildir. elliottsale-2021 uzman görüşü düzeyinde; evre sınırları için meta-analiz (schmalenberger-2019) dayanaktır, 21-35 gün tanımı jinekolojik tanımlardan gelir."
+    },
+    {
+      "id": "dongu-notu",
+      "profile": { "source": ["apple_health"], "sex": ["kadin"] },
+      "description": "Adet öncesi evrede 'HRV bandın altında' veya 'uyku nabzı bandın üstünde' işaretine 'döngüyle uyumlu olabilir' notu eklenir. Bant, eşik ve günün durumu değişmez. Hormonal korunma 'var' ise not daha zayıf dille yazılır. Döngüye göre antrenman veya beslenme önerisi yapılmaz.",
+      "value": {
+        "phases": ["adet_oncesi"],
+        "signals": ["hrv_low", "rhr_high"],
+        "changes_band": false,
+        "changes_status": false,
+        "weaker_with_contraception": true,
+        "training_advice": false
+      },
+      "applies_to": "Apple Health profili, kadın, döngü takibi açık; evre 'adet_oncesi' (dongu-evre) ve döngü düzensiz değil",
+      "sources": ["schmalenberger-2019", "dejager-2026", "heneghan-2026", "jasinski-2024", "mcnulty-2020", "elliottsale-2020", "sims-2023"],
+      "notes": "Vagal HRV foliküler → luteal düşer (schmalenberger-2019, d = −0,39), en çok adet öncesinde; giyilebilir cihazlarda fark %3-9 (dejager-2026). Büyük cihaz kohortlarında luteal evrede dinlenik nabız ~3 atım/dk yüksek, HRV ~%14 düşük (heneghan-2026); topluluk ortalamasında nabız en yüksek döngünün 26., RMSSD en düşük 27. gününde (jasinski-2024). İki kohortun yazarları cihaz üreticisi çalışanı (çıkar çatışması); evreler kullanıcı kaydından. Hormonal korunmada genlik küçülür (heneghan-2026, jasinski-2024; dejager-2026'da korunmada HRV düşük): not 'genelde daha az belirgin' diye zayıflar. Fark kişisel bandın genişliğiyle aynı büyüklükte olduğundan bant ve eşik kaydırılmaz, evreye özel bant için kanıt yok (karar 0061); not işaretin yalnız olası bir açıklamasıdır, başka bir sebebi (hastalık, yük, uyku) dışlamaz. Döngü evresine göre performans farkı önemsiz ve kanıt düşük (mcnulty-2020), hormonal korunmada da (elliottsale-2020): antrenman önerisi yok; sims-2023 kişisel izlemeyi önerir. Apple Watch'ta uyku nabzı ve SDNN'ye aktarım varsayımdır (çalışmalar Fitbit, WHOOP ve laboratuvar HRV'si)."
+    },
+    {
+      "id": "dongu-duzensiz",
+      "profile": { "source": ["apple_health"], "sex": ["kadin"] },
+      "description": "Son döngülerden biri 35 günden uzunsa, mevcut döngü 35. günü geçtiyse ya da Sağlık son 6 ayda döngü sapması (düzensiz, seyrek, uzamış adet, sürekli ara kanama) kaydettiyse evre ve not gösterilmez, yorum yapılmaz; 'kayıt eksik değilse bir hekime danış' notu gösterilir.",
+      "value": {
+        "cycle_days_above": 35,
+        "history_cycles": 3,
+        "healthkit_deviation_lookback_days": 182,
+        "healthkit_deviations": ["irregular", "infrequent", "prolonged", "persistent_intermenstrual_bleeding"],
+        "action": "hekime_yonlendir",
+        "comment": false
+      },
+      "applies_to": "Apple Health profili, kadın, döngü takibi açık",
+      "sources": ["williams-2025", "elliottsale-2021"],
+      "notes": "35 günden uzun döngü oligomenore sayılır (elliottsale-2021). Uzamış seyrek adet ve adetin kesilmesinde değerlendirme ve tanı hekim işidir (williams-2025); HoopLab teşhis koymaz, sebep (enerji yetersizliği vb.) söylemez, demir veya başka takviye önermez (CLAUDE.md §3, karar 0061). Takvimde kaydedilmemiş bir adet uzun döngü gibi görünebilir; not bu yüzden 'kayıt eksik değilse' diye yazılır. Sapma kayıtlarını Sağlık uygulaması üretir; 6 aylık geriye bakış yöntem seçimidir (eski bir sapma kaydı süresiz not üretmesin diye)."
+    }
+  ]
+}

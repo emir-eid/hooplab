@@ -80,6 +80,10 @@ export function buildCoachSnapshot(input: CoachInputs): CoachSnapshot {
   const r = input.recovery;
   if (r && !r.empty) {
     snapshot.status = { level: r.status.level, signals: [...r.status.signals] };
+    // Döngü (karar 0061 sıra 5): yalnız motorun notu; döngü günü ve evre gitmez. Sahibinde alan yok.
+    if (r.cycleNote) {
+      snapshot.cycle = r.cycleNote.kind === 'irregular' ? { note: 'irregular', weak: false } : { note: 'compatible', weak: r.cycleNote.weak };
+    }
     snapshot.hrv = bandMetric(r.hrv, today, L.hrvMs);
     snapshot.rhr = bandMetric(r.rhr, today, L.rhrBpm);
     const night = recentNight(r.sleep.lastNight, today);

@@ -132,7 +132,7 @@ export function buildRequest(input: CoachSnapshot, kb: Kb, options: SourceOption
     params: {
       model: coachModel,
       max_tokens: coachMaxTokens,
-      system: promptForKb(systemPrompt, kb, { statusTone: true }),
+      system: promptForKb(systemPrompt, kb, { statusTone: true, cycle: true }),
       thinking: { type: 'adaptive' },
       output_config: { effort: coachEffort },
       betas: [fallbackBeta],

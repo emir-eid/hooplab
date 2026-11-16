@@ -3,7 +3,9 @@ import assert from 'node:assert/strict';
 import { test } from 'node:test';
 
 import {
+  buildCycleRows,
   buildIngestBody,
+  MenstrualFlowValue,
   buildSleepSessions,
   CHUNK_DAYS,
   exerciseTypeFor,
@@ -11,6 +13,7 @@ import {
   SleepValue,
   syncWindows,
   type DayStats,
+  type FlowSampleIn,
   type LocalClock,
   type SleepSampleIn,
 } from './apple-aggregate.ts';
@@ -171,4 +174,29 @@ test('pencereler: en çok CHUNK_DAYS gün, eskiden yeniye, bugünde biter', () =
   assert.equal(w.length, 3);
   assert.ok(CHUNK_DAYS * 24 <= 240, 'saatlik enerji sınırına sığar');
   assert.deepEqual(syncWindows('2026-01-15', '2026-01-13'), [{ from: '2026-01-13', to: '2026-01-15' }]);
+});
+
+// Karar 0061 sıra 5: döngü satırları. Akış miktarı ve sapma kaydı gövdeye girmez; yalnız gün, döngü günü, evre.
+test('döngü: akış örneklerinden pencerenin günleri; "akış yok" sayılmaz; yerel gün; yalnız izinli alanlar', () => {
+  const flow: FlowSampleIn[] = ['2026-01-01', '2026-01-29', '2026-02-26', '2026-03-26'].flatMap((d) =>
+    [0, 1, 2].map((i) => ({ start: at(`${d}T08:00:00`), value: MenstrualFlowValue.medium, cycleStart: i === 0 })).map((f, i) => ({
+      ...f,
+      start: new Date(f.start.getTime() + i * 86_400_000),
+    })),
+  );
+  // "Akış yok" kaydı 10 Nis'te: yeni başlangıç sayılmamalı.
+  flow.push({ start: at('2026-04-10T08:00:00'), value: MenstrualFlowValue.none, cycleStart: false });
+  // Gece 01:00 yerel (UTC'de önceki gün): yerel güne yazılır.
+  const rows = buildCycleRows('2026-04-15', '2026-04-23', flow, [], clock);
+  assert.deepEqual(rows[0], { localDate: '2026-04-15', cycleDay: 21, phase: 'luteal' });
+  assert.deepEqual(rows.at(-1), { localDate: '2026-04-23', cycleDay: 29 });
+  assert.deepEqual(rows.find((r) => r.localDate === '2026-04-16'), { localDate: '2026-04-16', cycleDay: 22, phase: 'adet_oncesi' });
+  for (const r of rows) for (const key of Object.keys(r)) assert.ok(['localDate', 'cycleDay', 'phase', 'irregular'].includes(key));
+
+  const late = buildCycleRows('2026-04-15', '2026-04-15', [{ start: at('2026-03-26T01:00:00'), value: 2, cycleStart: false }], [], clock);
+  assert.equal(late[0]?.cycleDay, 21);
+
+  const deviated = buildCycleRows('2026-04-15', '2026-04-15', flow, [{ start: at('2026-02-01T09:00:00'), kind: 'irregular' }], clock);
+  assert.deepEqual(deviated, [{ localDate: '2026-04-15', cycleDay: 21, irregular: true }]);
+  assert.deepEqual(buildCycleRows('2026-04-15', '2026-04-20', [], [], clock), []);
 });

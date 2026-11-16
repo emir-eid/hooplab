@@ -16,6 +16,9 @@ import {
   type MetricReading,
   type RespirationReading,
   type SleepReading,
+  cycleNote,
+  type CycleDay,
+  type CycleNote,
 } from '@hooplab/engine';
 
 /** Grafikte gösterilen gün sayısı (maket: "21 gün"). Görsel seçim, eşik değil. */
@@ -77,6 +80,17 @@ export interface RecoveryView {
   chart: ChartDay[];
   /** Hiç cihaz verisi yok: Google Health bağlı değil veya henüz senkron olmadı. */
   empty: boolean;
+  /**
+   * Döngü notu (karar 0061 sıra 5; dongu-notu, dongu-duzensiz). Yalnız döngü takibi açık profilde ve not varken;
+   * durum ve bant değişmez. Sahibinin görünümünde alan hiç yoktur.
+   */
+  cycleNote?: CycleNote;
+}
+
+/** Döngü takibi açık profilde bugünün döngü satırı (yoksa null) ve hormonal korunma yanıtı. */
+export interface CycleInput {
+  today: Pick<CycleDay, 'phase' | 'irregular'> | null;
+  contraception: 'yok' | 'var' | 'belirtmek_istemiyorum' | null;
 }
 
 /** Şekerleme dışı uyku oturumlarını bitiş gününe göre toplar (bölünmüş gece tek gece sayılır). */
@@ -108,6 +122,7 @@ export function buildRecoveryView(
   sleepRows: readonly SleepRow[],
   today: string,
   source: DataSource = 'google_health',
+  cycle?: CycleInput,
 ): RecoveryView {
   const { hrv: hrvSeries, rhr: rhrSeries } = autonomicSeries(daily, source);
 
@@ -137,8 +152,10 @@ export function buildRecoveryView(
     today,
   );
 
+  const status = dayStatus(hrv, rhr, sleep, source);
+  const note = cycle ? cycleNote(cycle.today, status.signals, cycle.contraception) : null;
   return {
-    status: dayStatus(hrv, rhr, sleep, source),
+    status,
     hrv,
     rhr,
     sleep,
@@ -146,5 +163,6 @@ export function buildRecoveryView(
     signs,
     chart,
     empty: daily.length === 0 && sleepRows.length === 0,
+    ...(note ? { cycleNote: note } : {}),
   };
 }

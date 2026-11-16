@@ -74,3 +74,16 @@ test('bozuk değer gönderilmeden yakalanır; hatada yalnız alan yolu döner', 
   const broken = { ...s, nutrition: { ...s.nutrition!, meals: 2.5 } };
   assert.deepEqual(checkCoachSnapshot(broken), { ok: false, paths: ['snapshot.nutrition.meals'] });
 });
+
+// Karar 0061 sıra 5: koça yalnız motorun döngü notu gider (döngü günü ve evre gitmez); sahibinde alan yok.
+test('döngü notu: yalnız not türü ve korunma; şemadan geçer; sahibinde yok', () => {
+  assert.equal(buildCoachSnapshot(base()).cycle, undefined);
+  const input = base();
+  input.recovery = { ...input.recovery!, cycleNote: { kind: 'compatible', signals: ['hrv_low'], weak: true } };
+  const s = buildCoachSnapshot(input);
+  assert.deepEqual(s.cycle, { note: 'compatible', weak: true });
+  assert.deepEqual(checkCoachSnapshot(s), { ok: true });
+  input.recovery = { ...input.recovery, cycleNote: { kind: 'irregular' } };
+  assert.deepEqual(buildCoachSnapshot(input).cycle, { note: 'irregular', weak: false });
+  assert.ok(!JSON.stringify(buildCoachSnapshot(input)).includes('cycleDay'));
+});

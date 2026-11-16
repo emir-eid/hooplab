@@ -207,6 +207,17 @@ export interface TravelContext {
   eastDelayHint: boolean;
 }
 
+/**
+ * Döngü notu (karar 0061 sıra 5; rules/dongu.json): motorun notu, döngü günü ve evre değil. 'compatible': adet
+ * öncesinde HRV / uyku nabzı işareti döngüyle uyumlu olabilir; 'irregular': düzensiz döngü, yorum yok, hekim.
+ * Yalnız döngü kuralları profil tabanında varken kullanılır (snapshotForKb düşürür).
+ */
+export interface CycleContext {
+  note: 'compatible' | 'irregular';
+  /** Hormonal korunma: etki genelde daha küçük. */
+  weak: boolean;
+}
+
 export interface CoachSnapshot {
   version: typeof snapshotVersion;
   /** Sporcunun yerel günü (YYYY-MM-DD). Modele gitmez; kayıt anahtarıdır. */
@@ -214,6 +225,7 @@ export interface CoachSnapshot {
   matchDay: boolean;
   match?: MatchContext;
   travel?: TravelContext;
+  cycle?: CycleContext;
   status?: StatusMetric;
   hrv?: BandMetric;
   rhr?: BandMetric;
@@ -340,9 +352,18 @@ export function travelRuleIds(snapshot: CoachSnapshot): string[] {
   return ids;
 }
 
-/** Anlık değerlerin kullandığı kurallar: önce maç çevresi ve seyahatinkiler, sonra ölçüm sırasıyla, tekrarsız. */
+/** Döngü notunun kuralları (karar 0061 sıra 5). */
+export function cycleRuleIds(snapshot: CoachSnapshot): string[] {
+  const c = snapshot.cycle;
+  if (!c) return [];
+  return c.note === 'irregular' ? ['dongu-duzensiz'] : ['dongu-evre', 'dongu-notu'];
+}
+
+/** Anlık değerlerin kullandığı kurallar: önce maç çevresi, seyahat ve döngününkiler, sonra ölçüm sırasıyla, tekrarsız. */
 export function snapshotRuleIds(snapshot: CoachSnapshot, metrics: readonly MetricKey[] = presentMetrics(snapshot)): string[] {
-  return [...new Set([...matchRuleIds(snapshot), ...travelRuleIds(snapshot), ...metrics.flatMap((key) => metricRules[key])])];
+  return [
+    ...new Set([...matchRuleIds(snapshot), ...travelRuleIds(snapshot), ...cycleRuleIds(snapshot), ...metrics.flatMap((key) => metricRules[key])]),
+  ];
 }
 
 // --- Doğrulama ---
@@ -709,7 +730,7 @@ function parseTravel(c: Checker, value: unknown, path: string): TravelContext | 
 /** İstek gövdesindeki anlık değerleri doğrular. Hata varsa hepsini döndürür; kısmen geçerli veri kabul edilmez. */
 export function parseSnapshot(input: unknown): SnapshotResult {
   const c = new Checker();
-  const o = c.object(input, 'snapshot', ['version', 'date', 'matchDay', 'match', 'travel', ...metricKeys]);
+  const o = c.object(input, 'snapshot', ['version', 'date', 'matchDay', 'match', 'travel', 'cycle', ...metricKeys]);
   if (!o) return { ok: false, errors: c.errors };
 
   if (o.version !== snapshotVersion) c.fail('snapshot.version', `${snapshotVersion} olmalı`);
@@ -726,6 +747,16 @@ export function parseSnapshot(input: unknown): SnapshotResult {
   if (o.travel !== undefined) {
     const travel = parseTravel(c, o.travel, 'snapshot.travel');
     if (travel) snapshot.travel = travel;
+  }
+  if (o.cycle !== undefined) {
+    const cy = c.object(o.cycle, 'snapshot.cycle', ['note', 'weak']);
+    if (cy) {
+      const note = cy.note === 'compatible' || cy.note === 'irregular' ? cy.note : null;
+      if (note === null) c.fail('snapshot.cycle.note', "'compatible' ya da 'irregular' olmalı");
+      const weak = c.boolean(cy.weak, 'snapshot.cycle.weak');
+      if (note === 'irregular' && weak) c.fail('snapshot.cycle.weak', 'düzensiz notta korunma ayrımı yok');
+      if (note !== null) snapshot.cycle = { note, weak };
+    }
   }
   for (const key of metricKeys) {
     if (o[key] === undefined) continue;

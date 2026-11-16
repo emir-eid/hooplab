@@ -127,6 +127,14 @@ Bugünkü durum:
 - **Profil soruları:** `profiles.answered_at`; boşsa uygulama ilk girişte cinsiyeti, Apple profilinde ve kadın seçiliyken döngü takibini, döngü açıksa hormonal korunmayı sorar ("belirtmek istemiyorum" var). Bu ekleme öncesindeki hesaplar sorulmuş sayıldı: sahibine soru çıkmaz, cinsiyeti boş kalır. Yanıt Ben → Profil'den değişir. Google profilinde döngü sorulmaz (döngü verisi HealthKit'ten).
 - **Ertelenen:** adım, haftalık aktivite (WHO) ve kuvvet hacmi; seyahat dışındaki maç ekranlarının fitness karşılığı yok.
 
+## Ek (2026-11-16): sıra 5 döngü
+- **Kaynaklar:** B ve C bölümünden 9 kaynak eklendi (schmalenberger-2019, dejager-2026, heneghan-2026, jasinski-2024, elliottsale-2021, mcnulty-2020, elliottsale-2020, sims-2023, williams-2025); 13'ü bekletildi (ısı, demir, semptom, kuvvet, solunum, uyku-nabız), 3'ü reddedildi (alzueta-2022, alzueta-2024, niering-2024). Kurallar `rules/dongu.json`: `dongu-evre`, `dongu-notu`, `dongu-duzensiz`, üçü de yalnız Apple · kadın profilinde.
+- **Evre:** takvim sayımı, "tahmin". Adet başlangıcı Sağlık'ın başlangıç işareti ya da önceki 7 günde akış olmayan akış günü. Gün 1-7 adet; bir sonraki adetten geri sayımla −11 / −8 luteal, −7 / −1 adet öncesi (schmalenberger-2019 Tablo 2); aradakiler (yumurtlama dahil) foliküler. Beklenen gün son 3 döngünün ortancası; en az 2 tam döngü ve döngüler 21-35 gün (elliottsale-2021) değilse yalnız ileri sayım (1-7 adet, 8-12 foliküler).
+- **Not:** "geç luteal ve adet öncesi" kaba evrede tek evre: **adet öncesi** (−7 / −1, Schmalenberger'in adet öncesi evresi = geç luteal). Not yalnız `hrv_low` ya da `rhr_high` işareti varken; durum, bant ve öneri değişmez; korunma `var` ise zayıf dil. Uygulamada Bugün'de durum gerekçesinin altında "Döngü notu", yöntem sayfasında "Döngü" bölümü ve kaynakları.
+- **Düzensiz:** son 3 döngüden biri 35 günü aşarsa, mevcut döngü 35. günü geçerse ya da son 6 ayda Sağlık döngü sapması kaydı varsa evre hesaplanmaz; "kayıt eksik değilse hekime danış" notu (williams-2025). Takvim boşluğu yanlış pozitif verebilir; metin bunu söyler.
+- **Veri:** buluta yalnız `cycle_days` (gün, döngü günü, evre, düzensiz bayrağı). Satır yalnız döngü takibi açık Apple profiline yazılır (tetikleyici); takip kapanınca, cinsiyet ya da kaynak değişince satırlar silinir. Koça yalnız motorun notu (`cycle: { note, weak }`) gider; döngü günü gitmez. Koç istemine yalnız döngü kuralları tabanda varken bir satır eklenir; sahibinin istemi ve tabanı bayt bayt aynı.
+- **Cihazda denenmedi:** HealthKit adet / sapma okuması yalnız birim testleriyle; gerçek kayıtla ilk deneme sıra 6'da.
+
 ## Kaynaklar (teknik olgular)
 - https://github.com/kingstinct/react-native-healthkit · https://www.npmjs.com/package/@kingstinct/react-native-healthkit
 - https://developer.apple.com/documentation/healthkit/hkquantitytypeidentifier/heartratevariabilitysdnn

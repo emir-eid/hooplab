@@ -131,6 +131,8 @@ Tekrar yaşanabilecek hatalar ve önceden bilinen tuzaklar. Her madde: **ders**,
 
 - **[ölçüldü] Tarayıcı paneli 404 durum kodlu sayfaya gezinmeyi hata sayar (`ERR_INVALID_RESPONSE`, boş sayfa);** GitHub Pages'te tek sayfa uygulamanın derin bağlantısı tam da böyle (404.html gövdesi uygulamayı açar) ve gerçek tarayıcılar gövdeyi gösterir. Panelde derin bağlantı `fetch` ile denetlenir (durum 404, gövde uygulamanın `index.html`'i), gezinme uygulamanın içinden denenir. Kanıt: 2026-10-17 portfolyo demosu. Bekçi: yok (yöntem).
 
+- **[ölçüldü] Yerel `db reset` sonrası web önizlemesi "Failed to fetch" / boş veri gösterebilir:** tarayıcının localStorage'ında silinmiş kullanıcının oturumu kalır. localStorage temizlenip sentetik kullanıcıyla yeniden giriş yapılır. Kanıt: 2026-11-16 döngü notu denetimi. Bekçi: yok (yöntem).
+
 ## Google Health / veri
 
 - **[kaynaklı] Fitbit Web API 30 Ekim 2026'da kapanıyor** ([Google Health API bülteni](https://developers.google.com/health/newsletters)). Kullanılmaz. Yerine Google Health API v4.

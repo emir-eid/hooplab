@@ -29,6 +29,22 @@ const statusToneLine =
 export interface FitnessPromptOptions {
   /** İstem günün durumunu anlatıyor mu (günlük ve haftalık özet)? */
   statusTone?: boolean;
+  /** İstem günlük anlık değerleri (döngü bloğu dahil) yorumluyor mu (günlük özet)? */
+  cycle?: boolean;
+}
+
+/**
+ * Döngü takibi açık profilde günlük özet istemine eklenen satır (karar 0061 sıra 5; dongu-notu, dongu-duzensiz),
+ * "Teşhis koyma" satırından hemen sonra. Sahibinin tabanında döngü kuralı yok: istem değişmez.
+ */
+export const cycleLine =
+  '- Belgede döngü bloğu varsa: döngüyle uyumlu olabilir notunu en fazla bir cümleyle, "tahmin" diyerek ve kaynaklı aktar; durumu, bandı ya da öneriyi döngüye göre değiştirme, döngüye göre antrenman, beslenme veya takviye önerme. Döngü düzensizse döngü hakkında yorum yapma, sebep söyleme; yalnız kayıt eksik değilse hekime danışmasını söyle.';
+
+function insertAfterDiagnosis(prompt: string, line: string): string {
+  const lines = prompt.split('\n');
+  const at = lines.findIndex((l) => l.startsWith('- Teşhis koyma'));
+  if (at < 0) throw new Error('döngü istemi: satırın yeri bulunamadı');
+  return [...lines.slice(0, at + 1), line, ...lines.slice(at + 1)].join('\n');
 }
 
 /** Fitness sürümü; her istemde en az kimlik cümlesi ya da uygulama tanımı değişmeli. */
@@ -53,7 +69,8 @@ export function fitnessPrompt(prompt: string, options: FitnessPromptOptions = {}
 
 /** Tabana göre istem: sahibinde (ve fitness olmayan her profilde) verilen istem değişmeden döner. */
 export function promptForKb(prompt: string, kb: Kb, options: FitnessPromptOptions = {}): string {
-  return isFitnessKb(kb) ? fitnessPrompt(prompt, options) : prompt;
+  const base = isFitnessKb(kb) ? fitnessPrompt(prompt, options) : prompt;
+  return options.cycle && hasRule(kb, 'dongu-notu') ? insertAfterDiagnosis(base, cycleLine) : base;
 }
 
 /**
@@ -68,5 +85,10 @@ export function snapshotForKb(snapshot: CoachSnapshot, kb: Kb): CoachSnapshot {
     out = { ...rest, matchDay: false };
   }
   if (!hasRule(kb, 'yuk-artis-notu') && out.load?.spike) out = { ...out, load: { ...out.load, spike: false } };
+  // Döngü notu yalnız döngü kuralları tabanda varken (Apple · kadın); sahibinde ve diğer profillerde düşer.
+  if (out.cycle !== undefined && !hasRule(kb, out.cycle.note === 'irregular' ? 'dongu-duzensiz' : 'dongu-notu')) {
+    const { cycle: _cycle, ...rest } = out;
+    out = rest;
+  }
   return out;
 }
