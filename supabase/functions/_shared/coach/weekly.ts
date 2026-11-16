@@ -29,7 +29,8 @@ import {
   type DocumentParam,
   type NumbersBlock,
 } from './documents.ts';
-import { isAppleKb, profileRuleId, selectForRules, type Kb } from './kb.ts';
+import { hasRule, isAppleKb, profileRuleId, selectForRules, type Kb } from './kb.ts';
+import { promptForKb } from './profile-prompt.ts';
 import { rangePositions, type DayLevel } from './snapshot.ts';
 import {
   isCompletedWeek,
@@ -164,7 +165,7 @@ export function weeklyBlocks(s: WeeklySnapshot, kb: Kb): NumbersBlock[] {
     add('load', text);
     if (l.ratio !== null) {
       let ratio = `Alıştığın seviyeye göre oran, pazar günü (tahmin, yalnız bağlam, sakatlık tahmini değil): ${formatDecimal(l.ratio)}×.`;
-      if (l.spike) ratio += ` Oran ${formatDecimal(ruleNumber(kb, 'yuk-artis-notu', 'ratio_min'))} veya üstünde: yük alıştığın seviyenin belirgin üstünde.`;
+      if (l.spike && hasRule(kb, 'yuk-artis-notu')) ratio += ` Oran ${formatDecimal(ruleNumber(kb, 'yuk-artis-notu', 'ratio_min'))} veya üstünde: yük alıştığın seviyenin belirgin üstünde.`;
       add('load', ratio, true, 'load.ratio');
     }
   }
@@ -189,7 +190,10 @@ export function weeklyBlocks(s: WeeklySnapshot, kb: Kb): NumbersBlock[] {
       if (n.noTarget > 0) text += ` ${n.noTarget} gün sabah kilosu olmadığı için gram hedefi yok.`;
       add('nutrition', text, true);
     }
-    if (n.matchDays > 0 || n.sweatTests > 0) {
+    // Fitness'ta maç takvimi yok (karar 0061 sıra 4): maç günü sayısı yazılmaz.
+    if (!hasRule(kb, 'mac-gunu')) {
+      if (n.sweatTests > 0) add('nutrition', `Hafta içinde ${n.sweatTests} ter testi.`, false, 'nutrition.days');
+    } else if (n.matchDays > 0 || n.sweatTests > 0) {
       add('nutrition', `Hafta içinde ${n.matchDays} maç günü işaretli, ${n.sweatTests} ter testi.`, false, 'nutrition.days');
     }
   }
@@ -238,7 +242,7 @@ export function buildWeeklyRequest(s: WeeklySnapshot, kb: Kb): { params: Anthrop
     params: {
       model: coachModel,
       max_tokens: coachMaxTokens,
-      system: weeklySystemPrompt,
+      system: promptForKb(weeklySystemPrompt, kb, { statusTone: true }),
       thinking: { type: 'adaptive' },
       output_config: { effort: coachEffort },
       betas: [fallbackBeta],

@@ -98,3 +98,16 @@ test('maç çevresi: takvimde bugün, dün ya da yarın maç; dün maç seansı 
   // 180 dakika ve üstü antrenman dünü / yarını maç olsa da yoğun
   assert.equal(buildNutritionView(today, [], [{ kind: 'team_practice', durationMin: 190 }], null, [], [], [match(at(-1))]).dayType, 'high');
 });
+
+test('fitness: maç takvimi ve maç seansı gün tipini değiştirmez; karbonhidrat fitness aralığından (karar 0061 sıra 4)', () => {
+  const match = [{ date: addIsoDays(today, 1), startTime: '19:00', venue: 'home' as const }];
+  const v = buildNutritionView(today, [{ local_date: today, weight_kg: 80 }], [{ kind: 'strength', durationMin: 60 }], null, [], [], match, [], 'fitness');
+  assert.equal(v.matchDay, false);
+  assert.equal(v.matches.tomorrow, null);
+  assert.equal(v.dayType, 'training');
+  assert.deepEqual(v.targets.carbsG, [240, 400]);
+  const owner = buildNutritionView(today, [{ local_date: today, weight_kg: 80 }], [{ kind: 'strength', durationMin: 60 }], null, [], [], match);
+  assert.equal(owner.dayType, 'match', 'sahibinde yarın maç → maç çevresi');
+  const stale = buildNutritionView(today, [], [], 'match', [], [], [], [], 'fitness');
+  assert.equal(stale.dayType, 'rest', 'eski maç düzeltmesi fitness\'ta sayılmaz');
+});

@@ -39,6 +39,7 @@ import {
   type WeeklyEnergy,
   type WeeklyLoadReading,
   type WeeklyWeight,
+  type Sport,
   type WellnessAnswers,
 } from '@hooplab/engine';
 
@@ -165,7 +166,14 @@ export interface WeeklyReportView {
 const emptyParts = (): LoadParts => ({ game: 0, court: 0, gym: 0, light: 0 });
 
 /** `source`: profilin veri kaynağı (karar 0061); verilmezse sahibinin profili (Google Health). */
-export function buildWeeklyReportView(rows: WeeklyRows, weekStart: string, today: string, source: DataSource = 'google_health'): WeeklyReportView {
+/** `sport`: profilin sporu (karar 0061 sıra 4); fitness'ta yük artış notu ve maç günü yok. Verilmezse basketbol. */
+export function buildWeeklyReportView(
+  rows: WeeklyRows,
+  weekStart: string,
+  today: string,
+  source: DataSource = 'google_health',
+  sport: Sport = 'basketbol',
+): WeeklyReportView {
   const phase = weekPhase(weekStart, today);
   if (phase === 'future') throw new Error(`hafta henüz gelmedi: ${weekStart}`);
   const weekEnd = weekEndOf(weekStart);
@@ -181,7 +189,7 @@ export function buildWeeklyReportView(rows: WeeklyRows, weekStart: string, today
     sessionRows.map((s) => ({ date: s.local_date, rpe: s.rpe, durationMin: s.duration_min })),
     weekStart,
     today,
-    historyStart ? { historyStart } : {},
+    { ...(historyStart ? { historyStart } : {}), ...(sport === 'fitness' ? { sport } : {}) },
   );
   const known = new Set(reading.days.map((d) => d.date));
   const weekSessions = sessionRows.filter((s) => inWeek(s.local_date));
@@ -243,6 +251,7 @@ export function buildWeeklyReportView(rows: WeeklyRows, weekStart: string, today
       rows.fluids,
       rows.matches,
       sessionRows.filter((s) => s.local_date === addIsoDays(date, -1)),
+      sport,
     ),
   );
   const withMeals = nutritionDays.filter((n) => n.meals.length > 0);

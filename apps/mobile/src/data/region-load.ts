@@ -7,6 +7,7 @@ import { fetchPainHistory, type Result } from '@/data/daily-log';
 import { painEntries } from '@/data/pain-map';
 import type { PainHistory } from '@/data/pain-history';
 import { buildRegionLoadView, regionFrom, type RegionLoadView, type RegionSessionRow } from '@/data/region-load-view';
+import { fetchSport } from '@/data/profile';
 import { demoStore } from '@/demo/demo-mode';
 import { supabase } from '@/lib/supabase';
 
@@ -23,7 +24,8 @@ export async function fetchRegionLoad(today: string, now: Date): Promise<Result<
   if (demo) return demo.fetchRegionLoad(today, now);
   if (!supabase) return { ok: false, message: offline };
   const yesterday = addIsoDays(today, -1);
-  const [rows, first, pain] = await Promise.all([
+  const [sport, rows, first, pain] = await Promise.all([
+    fetchSport(),
     supabase
       .from('training_sessions')
       .select('local_date, rpe, duration_min, kind, content_tags, started_at')
@@ -41,6 +43,7 @@ export async function fetchRegionLoad(today: string, now: Date): Promise<Result<
       now,
       painToday: painReadings(pain.value, today),
       painYesterday: painReadings(pain.value, yesterday),
+      sport,
     }),
   };
 }

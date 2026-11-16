@@ -12,6 +12,7 @@ import {
   type MetricReading,
   type RecoverySignal,
   type SleepReading,
+  type Sport,
 } from '@hooplab/engine';
 
 import type { RecoveryView } from '@/data/recovery-view';
@@ -145,8 +146,9 @@ export const matchDayAdvice = 'Maç günü: ısınmaya zaman ayır, karbonhidrat
  * Bugün için tek öneri. Kural: bant içinde planlanan yoğunluk, dışında düşük yoğunluk (vesterinen-2016).
  * Maç günü yoğunluk önerilmez, maça hazırlık dili kullanılır (karar 0032, 0036); durumun kendisi değişmez.
  */
-export function statusAdvice(v: RecoveryView, matchDay = false): string | null {
+export function statusAdvice(v: RecoveryView, matchDay = false, sport: Sport = 'basketbol'): string | null {
   const sleepShort = v.status.signals.includes('sleep_short');
+  if (sport === 'fitness') return fitnessStatusAdvice(v, sleepShort);
   if (matchDay) {
     const care = v.status.level === 'recover' ? ' Belirti varsa sağlık ekibine danış.' : '';
     return `${matchDayAdvice}${care}${sleepShort ? ' Bu gece uykuyu öne çek.' : ''}`;
@@ -158,6 +160,24 @@ export function statusAdvice(v: RecoveryView, matchDay = false): string | null {
       return `Bugün yüksek yoğunluğu azalt; düşük yoğunluklu işe (şut, mobilite) ağırlık ver.${sleepShort ? ' Bu gece uykuyu öne çek.' : ''}`;
     case 'recover':
       return 'Yüksek yoğunluk yerine hafif seans ya da dinlenme. Belirtiler sürerse sağlık ekibine danış.';
+    case 'insufficient':
+      return sleepShort ? `Son ${shortSleep.rollingNights} gecenin uyku ortalaması ${shortSleep.minHours} saatin altında; bu gece uykuyu öne çek.` : null;
+  }
+}
+
+/**
+ * Fitness profili (gunun-durumu-dil-fitness, karar 0061 sıra 4): durum bir antrenman talimatı değil, izleme özeti.
+ * HRV'ye göre yönlendirilen antrenman rekreasyonel bireyde planlı antrenmandan üstün bulunmadı; öneri temkinli.
+ */
+function fitnessStatusAdvice(v: RecoveryView, sleepShort: boolean): string | null {
+  const sleep = sleepShort ? ' Bu gece uykuyu öne çek.' : '';
+  switch (v.status.level) {
+    case 'ready':
+      return 'Planladığın antrenmanı yapabilirsin; kendini nasıl hissettiğine göre ayarla.';
+    case 'caution':
+      return `İşaretler olağandan farklı; kendini yorgun hissediyorsan bugün yoğunluğu biraz azaltabilirsin.${sleep}`;
+    case 'recover':
+      return 'İki işaret birlikte olağandan farklı; hafif bir gün ya da dinlenme iyi gelebilir. Belirtiler sürerse doktora danış.';
     case 'insufficient':
       return sleepShort ? `Son ${shortSleep.rollingNights} gecenin uyku ortalaması ${shortSleep.minHours} saatin altında; bu gece uykuyu öne çek.` : null;
   }

@@ -6,7 +6,7 @@
 // koçun cümlesi ekrandaki sayıyla çelişmesin. Eşikler ve pencere uzunlukları istemciden değil, kanıt tabanındaki
 // kural değerlerinden (research/rules → kb-data.ts) okunur.
 
-import { isAppleKb, profileRuleId, type Kb, type KbRuleValue, type KbSource } from './kb.ts';
+import { hasRule, isAppleKb, profileRuleId, type Kb, type KbRuleValue, type KbSource } from './kb.ts';
 import {
   presentMetrics,
   type BandMetric,
@@ -72,7 +72,9 @@ export class MissingRuleValueError extends Error {
   }
 }
 
-function ruleValue(kb: Kb, ruleId: string, key: string): KbRuleValue {
+// Profil sürümü olan kuralda (karar 0061) profile düşen üye okunur; sahibinde ana kural.
+function ruleValue(kb: Kb, baseId: string, key: string): KbRuleValue {
+  const ruleId = profileRuleId(kb, baseId);
   const value = kb.rules.find((r) => r.id === ruleId)?.value;
   if (typeof value !== 'object' || value === null || Array.isArray(value)) throw new MissingRuleValueError(ruleId, key);
   const v = (value as { readonly [key: string]: KbRuleValue })[key];
@@ -410,6 +412,8 @@ function briefText(m: MatchBrief): string {
  * kanıt tabanındaki kural değerinden (mac-sonrasi), başlama saatine göre seçilir. Eşik değil, grup ortalaması.
  */
 function matchDayText(snapshot: CoachSnapshot, kb: Kb): string {
+  // Fitness'ta maç takvimi yok (karar 0061 sıra 4); maç kuralları tabanda olmadığı için maç cümlesi kurulmaz.
+  if (!hasRule(kb, 'mac-gunu')) return 'Gün: bu profilde maç ve maç çevresi izlenmez.';
   const m = snapshot.match;
   if (!m) return snapshot.matchDay ? 'Maç günü: bugün maç var.' : 'Maç günü: bugün maç işaretlenmedi.';
   const parts: string[] = [];

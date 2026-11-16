@@ -3,6 +3,7 @@
   "rules": [
     {
       "id": "seans-rpe-olcek",
+      "profile": { "sport": ["basketbol"] },
       "description": "Seans RPE: değiştirilmiş CR-10, 0-10 tam sayı; sözel çapalar 0, 1, 2, 3, 4, 5, 7 ve 10'da.",
       "value": { "min": 0, "max": 10, "step": 1, "anchors": [0, 1, 2, 3, 4, 5, 7, 10], "unit": "RPE" },
       "applies_to": "her seans bittikten sonra, tüm seans için tek puan",
@@ -51,6 +52,7 @@
     },
     {
       "id": "yuk-artis-notu",
+      "profile": { "sport": ["basketbol"] },
       "description": "Oran 1,5 veya üstündeyse bilgi notu: 'Bu hafta yük alıştığın seviyenin belirgin üstünde.' Tahmin olarak etiketlenir; sakatlık tahmini değildir. Düşük oran için not veya renk yok.",
       "value": { "ratio_min": 1.5, "label": "tahmin" },
       "applies_to": "yuk-orani hesaplanabildiğinde, bugün",
@@ -64,6 +66,26 @@
       "applies_to": "son 7 gün ilk kayıttan sonraysa; SD 0 ise (her gün aynı yük) hesaplanmaz",
       "sources": ["foster-1998", "haddad-2017"],
       "notes": "Foster eşikleri sporcuya özgü buldu, evrensel değer vermedi; sık anılan '2'nin üstü' eşiği doğrulanmış bir kaynakta bulunamadı, kullanılmaz. SD türü kaynaklarda yazmıyor; örneklem SD'si (n − 1) seçildi. Kişisel geçmişe göre yorum ileride, haftalar biriktikçe."
+    },
+    {
+      "id": "seans-rpe-olcek-fitness",
+      "variant_of": "seans-rpe-olcek",
+      "profile": { "sport": ["fitness"] },
+      "description": "Seans RPE: değiştirilmiş CR-10, 0-10 tam sayı; sözel çapalar 0, 1, 2, 3, 4, 5, 7 ve 10'da.",
+      "value": { "min": 0, "max": 10, "step": 1, "anchors": [0, 1, 2, 3, 4, 5, 7, 10], "unit": "RPE" },
+      "applies_to": "her seans bittikten sonra, tüm seans için tek puan",
+      "sources": ["foster-2001", "haddad-2017", "lea-2022", "day-2004"],
+      "notes": "Ölçek sporcu sürümüyle aynı. Kuvvet antrenmanında RPE yoğunluk ve fizyolojik zorlanmayla güçlü ilişkili (lea-2022, meta-analiz, r = 0,88) ve seans RPE'si kuvvet antrenmanında tutarlı (day-2004, ICC 0,88): fitness profilinde kuvvet seansları da aynı ölçekle puanlanır."
+    },
+    {
+      "id": "yuk-artis-notu-fitness",
+      "variant_of": "yuk-artis-notu",
+      "profile": { "sport": ["fitness"] },
+      "description": "Fitness profilinde 'Bu hafta yük alıştığın seviyenin belirgin üstünde' notu gösterilmez. Yük ve yük oranı yine hesaplanır ve gösterilir; yalnız not ve renk çıkmaz.",
+      "value": { "shown": false },
+      "applies_to": "yuk-orani hesaplanabildiğinde, fitness profili",
+      "sources": ["buist-2007", "nielsen-2014", "impellizzeri-2020"],
+      "notes": "Sabit bir haftalık artış kuralı rekreasyonel bireyde sakatlığı önlemedi (buist-2007, randomize çalışma, acemi koşucular) ve artış eşiğinin genel sakatlıkla ilişkisi gösterilemedi (nielsen-2014). Oran eşiklerinin dayandığı akut / kronik oran yönteminin kendisi tartışmalı (impellizzeri-2020). Sporcu sürümündeki 1,5 takım sporlarından geliyor; fitness'a aktarılmadı."
     }
   ]
 }

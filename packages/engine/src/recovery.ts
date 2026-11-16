@@ -201,6 +201,9 @@ export const dayStatusRuleApple = {
 /** Profilin veri kaynağı (karar 0061; veritabanında profiles.data_source). */
 export type DataSource = 'google_health' | 'apple_health';
 
+/** Profilin sporu (karar 0061); kurallar spor sürümüne göre seçilir, varsayılan sahibinin profili (basketbol). */
+export type Sport = 'basketbol' | 'fitness';
+
 /**
  * Kaynağa göre toparlanma kuralları. Bant yöntemi (toparlanma-bant, ln) ikisinde aynı; değişen ölçüler ve günün
  * durumu. Apple HRV'si (gecelik SDNN) "tahmin" olarak gösterilir (hrv-olcu-apple).

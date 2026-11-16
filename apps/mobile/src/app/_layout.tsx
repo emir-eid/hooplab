@@ -11,6 +11,7 @@ import { useEffect } from 'react';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 
 import { SessionProvider, useSession } from '@/auth/session';
+import { fetchProfile, useProfile } from '@/data/profile';
 import { useDemoScenario } from '@/demo/demo-mode';
 import { useAppleHealthSync } from '@/health/use-apple-sync';
 import { useNotifications } from '@/notifications/use-notifications';
@@ -37,6 +38,13 @@ function RootNavigator() {
   const { session, ready: sessionReady } = useSession();
   const demo = useDemoScenario();
   const signedIn = session !== null || demo !== null;
+  // İlk giriş profil soruları (karar 0061 sıra 4c): yalnız açıkça yanıtlanmamış profilde; demo ve sahibinde hiç çıkmaz.
+  const profile = useProfile();
+  const userId = session?.user.id ?? null;
+  useEffect(() => {
+    if (userId && demo === null) void fetchProfile();
+  }, [userId, demo]);
+  const needsProfile = session !== null && demo === null && !profile.answered;
   const [fontsLoaded, fontError] = useFonts(fontMap);
   // Font yüklenemezse uygulama sistem fontuyla açılır; hata geliştirmede görünsün.
   const loaded = ready && sessionReady && (fontsLoaded || fontError !== null);
@@ -73,8 +81,9 @@ function RootNavigator() {
     <ThemeProvider value={navigationTheme}>
       <StatusBar style={palette.statusBar} />
       <Stack screenOptions={{ headerShown: false, contentStyle: { backgroundColor: palette.bg } }}>
-        <Stack.Protected guard={signedIn}>
+        <Stack.Protected guard={signedIn && !needsProfile}>
           <Stack.Screen name="(tabs)" />
+          <Stack.Screen name="profile" options={{ presentation: 'modal' }} />
           <Stack.Screen
             name="add"
             options={{
@@ -117,6 +126,9 @@ function RootNavigator() {
               contentStyle: { backgroundColor: palette.bg },
             }}
           />
+        </Stack.Protected>
+        <Stack.Protected guard={needsProfile}>
+          <Stack.Screen name="profile-setup" />
         </Stack.Protected>
         <Stack.Protected guard={!signedIn}>
           <Stack.Screen name="sign-in" />

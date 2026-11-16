@@ -11,7 +11,8 @@ import type Anthropic from 'npm:@anthropic-ai/sdk@0.128.0';
 import { auditResponse, salvageAudit, salvageOptions, statusSentence, type AuditResult, type ResponseBlock, type ResponseCitation, type SalvageOptions } from './audit.ts';
 import { dailyAttemptLimit, routingNotes, type DailyResponse, type RoutingNote } from './contract.ts';
 import { dailyDocuments } from './documents.ts';
-import { profileRuleId, selectForRules, withoutAppNumbers, type Kb } from './kb.ts';
+import { isFitnessKb, profileRuleId, selectForRules, withoutAppNumbers, type Kb } from './kb.ts';
+import { promptForKb, snapshotForKb } from './profile-prompt.ts';
 import { attentionMetrics, parseSnapshot, presentMetrics, snapshotRuleIds, type CoachSnapshot } from './snapshot.ts';
 
 export const coachModel = 'claude-sonnet-5-5';
@@ -112,13 +113,18 @@ export interface SourceOptions {
  */
 export const coachSourceOptions: SourceOptions = { selection: 'attention' };
 
-export function buildRequest(snapshot: CoachSnapshot, kb: Kb, options: SourceOptions = coachSourceOptions): {
+export function buildRequest(input: CoachSnapshot, kb: Kb, options: SourceOptions = coachSourceOptions): {
   params: Anthropic.Beta.Messages.MessageCreateParamsNonStreaming;
   layout: ReturnType<typeof dailyDocuments>['layout'];
 } {
+  // Profilde olmayan alanlar (fitness: maç, yük artış notu) düşer; sahibinde aynı nesne (karar 0061 sıra 4).
+  const snapshot = snapshotForKb(input, kb);
   const metrics = options.selection === 'attention' ? attentionMetrics(snapshot) : presentMetrics(snapshot);
   // Ölçümün kuralı profilin sürümüne çevrilir (karar 0061); sahibinde kimlikler aynı kalır.
-  const selected = selectForRules(kb, snapshotRuleIds(snapshot, metrics).map((id) => profileRuleId(kb, id))).sources;
+  const ruleIds = snapshotRuleIds(snapshot, metrics).map((id) => profileRuleId(kb, id));
+  // Fitness'ta durum dili kuralı ve kaynağı da gider (gunun-durumu-dil-fitness); sahibinin tabanında bu kural yok.
+  if (metrics.includes('status') && isFitnessKb(kb)) ruleIds.push('gunun-durumu-dil-fitness');
+  const selected = selectForRules(kb, ruleIds).sources;
   const sources = options.appNumbers === false ? selected.map(withoutAppNumbers) : selected;
   const { documents, layout } = dailyDocuments(snapshot, kb, sources);
   return {
@@ -126,7 +132,7 @@ export function buildRequest(snapshot: CoachSnapshot, kb: Kb, options: SourceOpt
     params: {
       model: coachModel,
       max_tokens: coachMaxTokens,
-      system: systemPrompt,
+      system: promptForKb(systemPrompt, kb, { statusTone: true }),
       thinking: { type: 'adaptive' },
       output_config: { effort: coachEffort },
       betas: [fallbackBeta],

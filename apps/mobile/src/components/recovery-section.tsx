@@ -39,7 +39,7 @@ import {
   type ValueRow,
 } from "@/copy/recovery";
 import { explainerFor, type ExplainerId } from "@/copy/explainers";
-import { useDataSource } from "@/data/profile";
+import { useDataSource, useSport } from "@/data/profile";
 import {
   illnessSignLine,
   illnessSignsCauses,
@@ -63,9 +63,10 @@ const openMethod = () => router.push("/recovery-method");
 export function RecoveryState({ view, matchDay = false }: { view: RecoveryView; matchDay?: boolean }) {
   const palette = usePalette();
   const source = useDataSource();
+  const sport = useSport();
   const state = levelStates[view.status.level];
   const chips = statusChips(view, source);
-  const advice = statusAdvice(view, matchDay);
+  const advice = statusAdvice(view, matchDay, sport);
   const label = view.empty ? "Veri bekleniyor" : levelLabels[view.status.level];
 
   return (

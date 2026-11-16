@@ -8,9 +8,10 @@
 // tür ve RPE kullanıcıdan. O güne elle girilmiş bir kayıt varsa ona bağlanabilir veya oturum "Seans değil" olur.
 
 import {
-  contentTags,
-  defaultContentTags,
+  contentTagsBySport,
+  defaultContentTagsBySport,
   durationLimits,
+  sessionKindsBySport,
   rpeScale,
   sessionLoad,
   sweatTest,
@@ -18,7 +19,7 @@ import {
 } from '@hooplab/engine';
 import { layout, radius, size, spacing } from '@hooplab/theme';
 import { router, useLocalSearchParams } from 'expo-router';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { ActivityIndicator, Pressable, StyleSheet, View } from 'react-native';
 
 import { Chip, ChipSet } from '@/components/chip';
@@ -29,7 +30,8 @@ import { Stepper } from '@/components/stepper';
 import { Text } from '@/components/text';
 import { TextFieldRow } from '@/components/text-field';
 import { fluidTargetText, sweatGainNote, sweatLossNote, sweatLossText } from '@/copy/nutrition';
-import { contentTagLabels, rpeLabel, sessionKindLabels, sessionKinds, type SessionKind } from '@/copy/labels';
+import { contentTagLabels, rpeLabel, sessionKindLabels, type SessionKind } from '@/copy/labels';
+import { useSport } from '@/data/profile';
 import {
   dismissExercise,
   fetchExerciseToTag,
@@ -61,6 +63,12 @@ export default function SessionNewScreen() {
   const exerciseId = typeof params.exercise === 'string' && params.exercise !== '' ? params.exercise : null;
 
   const [now] = useState(() => new Date());
+  // Fitness'ta takım antrenmanı, maç ve şut yok; içerikte yalnız kuvvet etiketleri (karar 0061 sıra 4).
+  const sport = useSport();
+  const sportRef = useRef(sport);
+  sportRef.current = sport;
+  const kinds = sessionKindsBySport[sport];
+  const tagOptions = contentTagsBySport[sport];
   const [dayOffset, setDayOffset] = useState<0 | -1>(0);
   const [kind, setKind] = useState<SessionKind | null>(null);
   const [tags, setTags] = useState<readonly ContentTag[]>([]);
@@ -99,12 +107,14 @@ export default function SessionNewScreen() {
 
   /** Tür değişince içerik türün hazır etiketlerine döner. */
   function chooseKind(next: SessionKind | null) {
-    setKind(next);
-    setTags(next ? defaultContentTags[next] : []);
+    const s = sportRef.current;
+    const allowed = next !== null && sessionKindsBySport[s].includes(next) ? next : null;
+    setKind(allowed);
+    setTags(allowed ? defaultContentTagsBySport[s][allowed] : []);
   }
 
   function toggleTag(tag: ContentTag) {
-    setTags((current) => (current.includes(tag) ? current.filter((t) => t !== tag) : contentTags.filter((t) => t === tag || current.includes(t))));
+    setTags((current) => (current.includes(tag) ? current.filter((t) => t !== tag) : tagOptions.filter((t) => t === tag || current.includes(t))));
   }
 
   // Ter testi: alanlar sayıya çevrilir; ön ve son kilo zorunlu, sıvı boşsa 0, idrar boşsa girilmemiş.
@@ -269,7 +279,7 @@ export default function SessionNewScreen() {
 
         <FormBlock title="Tür">
           <ChipSet label="Seans türü">
-            {sessionKinds.map((k) => (
+            {kinds.map((k) => (
               <Chip key={k} label={sessionKindLabels[k]} selected={kind === k} onPress={() => chooseKind(k)} />
             ))}
           </ChipSet>
@@ -278,7 +288,7 @@ export default function SessionNewScreen() {
         {kind !== null ? (
           <FormBlock title="İçerik" note="türe göre seçili">
             <ChipSet>
-              {contentTags.map((t) => (
+              {tagOptions.map((t) => (
                 <Chip key={t} label={contentTagLabels[t]} role="checkbox" selected={tags.includes(t)} onPress={() => toggleTag(t)} />
               ))}
             </ChipSet>

@@ -61,3 +61,19 @@ export const recoverySourcesApple: readonly SourceRef[] = [
   ref('miller-2020', 'Gece solunumunda olağandan sapma'),
   ref('nicolo-2020', 'Solunumu etkileyen etkenler'),
 ];
+
+/**
+ * Fitness profili (karar 0061 sıra 4): uyku kuralının kaynağı genel yetişkin konsensüsü (uyku-kisa-fitness) ve durum
+ * dili temkinli (gunun-durumu-dil-fitness). Kısa uykunun durumdaki yeri günün durumu kuralından (walsh-2021) kalır.
+ */
+function fitnessList(list: readonly SourceRef[]): SourceRef[] {
+  return [
+    ...list.map((s) => (s.id === 'walsh-2021' ? { ...s, use: 'Kısa uykunun günün durumuna katılması' } : s)),
+    ref('watson-2015', `Yetişkinde gecede en az ${shortSleep.minHours} saat`),
+    ref('hirshkowitz-2015', 'Yetişkin uyku süresi aralığı'),
+    ref('medellin-ruiz-2020', 'HRV rehberli antrenman planlıdan üstün değil: temkinli dil'),
+  ];
+}
+
+export const recoverySourcesFitness: readonly SourceRef[] = fitnessList(recoverySources);
+export const recoverySourcesAppleFitness: readonly SourceRef[] = fitnessList(recoverySourcesApple);

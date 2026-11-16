@@ -3,6 +3,7 @@
   "rules": [
     {
       "id": "bolge-icerik-etiketleri",
+      "profile": { "sport": ["basketbol"] },
       "description": "Seans içerik etiketleri: sıçrama / iniş, yön değiştirme / ani duruş, sprint, alt vücut kuvvet, üst vücut kuvvet. Seans RPE'si fizyolojik yükü, etiketler hangi dokuların mekanik olarak çalıştığını işaretler. Türe göre hazır seçili gelir; kullanıcı düzeltir.",
       "value": {
         "tags": ["jump", "cod", "sprint", "lower_strength", "upper_strength"],
@@ -22,6 +23,7 @@
     },
     {
       "id": "bolge-esleme",
+      "profile": { "sport": ["basketbol"] },
       "description": "Etiket → bölge eşlemesi (nitel, katsayısız). Sıçrama / iniş: patellar tendon, Aşil. Yön değiştirme / ani duruş: quadriceps, adduktor. Sprint: hamstring, baldır, Aşil. Alt vücut kuvvet: quadriceps, hamstring, kalça. Üst vücut kuvvet: omuz. Ayak bileği ve bel modelde yok; yalnız ağrı haritasında.",
       "value": {
         "jump": ["patellar_tendon", "achilles"],
@@ -70,6 +72,26 @@
       "applies_to": "ağrı haritası (sabah check-in) ve bölge yükü; bölge ve taraf bazında",
       "sources": ["silbernagel-2007", "seidler-2025"],
       "notes": "Model tendinopati rehabilitasyonunda kullanılıyor: etkinlik sırası ve sonrası ağrı 0-10 ölçekte 5'e kadar çıkabilir, ertesi sabah azalmış olmalı (seidler-2025 tam metni; ilk kaynak silbernagel-2007). HoopLab yalnız sabah ağrısını kaydettiği için model sabah değerine uyarlanır; bu uyarlama doğrulanmadı. Not tanı değildir; şiddetli, ani başlayan veya şişlikle gelen ağrıda doktora yönlendirilir (CLAUDE.md §3)."
+    },
+    {
+      "id": "bolge-icerik-etiketleri-fitness",
+      "variant_of": "bolge-icerik-etiketleri",
+      "profile": { "sport": ["fitness"] },
+      "description": "Fitness profilinde seans içerik etiketleri: alt vücut kuvvet, üst vücut kuvvet. Sıçrama / iniş, yön değiştirme / ani duruş ve sprint etiketleri yok. Kuvvet seansında ikisi hazır seçili gelir; kullanıcı düzeltir.",
+      "value": { "tags": ["lower_strength", "upper_strength"], "defaults_by_kind": { "conditioning": [], "strength": ["lower_strength", "upper_strength"], "mobility": [], "rehab": [] } },
+      "applies_to": "her seans kaydı; etiketsiz eski seanslar türün hazır etiketleriyle sayılır ve bu ekranda belirtilir",
+      "sources": ["vanrenterghem-2017", "kalkhoven-2021"],
+      "notes": "Fizyolojik ve biyomekanik yük ayrı yollardır (vanrenterghem-2017); RPE doku yükünü göstermez (kalkhoven-2021). Sıçrama, yön değiştirme ve sprint eşlemelerinin kaynakları basketbol, voleybol ve futbol (bolge-esleme); fitness'a aktarılmadı. Hazır seçimler bir arayüz varsayılanıdır, eşik değildir."
+    },
+    {
+      "id": "bolge-esleme-fitness",
+      "variant_of": "bolge-esleme",
+      "profile": { "sport": ["fitness"] },
+      "description": "Fitness profilinde etiket → bölge eşlemesi (nitel, katsayısız): alt vücut kuvvet: quadriceps, hamstring, kalça; üst vücut kuvvet: omuz. Ayak bileği ve bel modelde yok; yalnız ağrı haritasında.",
+      "value": { "lower_strength": ["quadriceps", "hamstring", "hip"], "upper_strength": ["shoulder"], "not_modeled": ["ankle", "lower_back"] },
+      "applies_to": "bölge yükü ve toparlanma penceresi hesabı, fitness profili",
+      "sources": ["vanrenterghem-2017", "kalkhoven-2021"],
+      "notes": "Kuvvet etiketleri sporcu sürümündekiyle aynı anatomik eşlemedir; bir eşik değil, hangi dokuların çalıştığını işaretler (vanrenterghem-2017, kalkhoven-2021). Toparlanma süresinin kaynakları bolge-toparlanma-penceresi'nde. Sıçrama, yön değiştirme ve sprint eşlemeleri basketbola ve takım sporlarına özgü kaynaklardan geldiği için fitness'ta yok."
     }
   ]
 }

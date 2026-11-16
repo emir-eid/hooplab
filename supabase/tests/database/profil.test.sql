@@ -4,7 +4,7 @@
 begin;
 create extension if not exists pgtap with schema extensions;
 
-select plan(26);
+select plan(29);
 
 -- Yetki haritası
 select ok(
@@ -18,6 +18,10 @@ select ok(
   and has_column_privilege('authenticated', 'public.profiles', 'cycle_tracking', 'update')
   and has_column_privilege('authenticated', 'public.profiles', 'hormonal_contraception', 'update'),
   'authenticated cinsiyet, döngü takibi ve korunma alanlarını güncelleyebilir'
+);
+select ok(
+  has_column_privilege('authenticated', 'public.profiles', 'answered_at', 'update'),
+  'authenticated profil sorularının yanıtlandığını kaydedebilir (karar 0061 sıra 4c)'
 );
 select ok(
   not has_column_privilege('authenticated', 'public.profiles', 'data_source', 'update')
@@ -167,9 +171,17 @@ select results_eq(
   $$ values (null::text, false, null::text, 'apple_health'::text, 'fitness'::text) $$,
   'A''nın güncellemesi B''nin profiline dokunmadı; B yalnız kendini görür'
 );
+select ok(
+  (select answered_at is null from public.profiles),
+  'yeni hesabın profil soruları sorulmamış başlar (ilk girişte gösterilir)'
+);
 select lives_ok(
-  $$ update public.profiles set sex = 'kadin', cycle_tracking = true, hormonal_contraception = 'belirtmek_istemiyorum' $$,
-  'B döngü alanlarını kaydeder'
+  $$ update public.profiles set sex = 'kadin', cycle_tracking = true, hormonal_contraception = 'belirtmek_istemiyorum', answered_at = now() $$,
+  'B döngü alanlarını ve yanıtladığını kaydeder'
+);
+select ok(
+  (select answered_at is not null from public.profiles),
+  'B''nin yanıtı kayıtlı'
 );
 select results_eq(
   $$ select h.user_id::text, h.source from public.health_daily h $$,

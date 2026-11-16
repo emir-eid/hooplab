@@ -18,6 +18,8 @@ begin
   insert into auth.identities (provider_id, user_id, identity_data, provider, last_sign_in_at, created_at, updated_at)
   values (v_id::text, v_id, jsonb_build_object('sub', v_id::text, 'email', 'demo@hooplab.test', 'email_verified', true),
           'email', now(), now(), now());
+  -- Sahibinin hesabı gibi: profil soruları sorulmuş sayılır (karar 0061 sıra 4c). Apple kullanıcısına sorulur.
+  update public.profiles set answered_at = now() where user_id = v_id;
 end;
 $$;
 

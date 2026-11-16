@@ -4,12 +4,13 @@ import assert from 'node:assert/strict';
 import { readdirSync, readFileSync } from 'node:fs';
 import { test } from 'node:test';
 
-import { appleExplainers, explainerFor, explainers, isExplainerId, type Explainer } from './explainers.ts';
+import { appleExplainers, explainerFor, explainers, fitnessExplainers, isExplainerId, type Explainer } from './explainers.ts';
 
 /** İki profilin açıklamaları birlikte (karar 0061): Apple sürümleri aynı denetimlerden geçer. */
 const all: [string, Explainer][] = [
   ...(Object.entries(explainers) as [string, Explainer][]),
   ...(Object.entries(appleExplainers) as [string, Explainer][]).map(([id, e]): [string, Explainer] => [`${id} (apple)`, e]),
+  ...(Object.entries(fitnessExplainers) as [string, Explainer][]).map(([id, e]): [string, Explainer] => [`${id} (fitness)`, e]),
 ];
 
 const root = new URL('../../../../research/', import.meta.url);
@@ -77,4 +78,17 @@ test('isExplainerId yalnız bilinen kimlikleri kabul eder', () => {
   assert.equal(isExplainerId('monotony'), true);
   assert.equal(isExplainerId('toString'), false);
   assert.equal(isExplainerId(undefined), false);
+});
+
+test('fitness açıklamaları -fitness kurallarına dayanır; basketbol, maç ve yük notu geçmez (karar 0061 sıra 4)', () => {
+  for (const [id, e] of Object.entries(fitnessExplainers) as [string, Explainer][]) {
+    const text = [e.hint, e.goal ?? '', e.what, ...e.read, e.reference, e.limits ?? ''].join(' ');
+    assert.ok(!/basketbol|NBA|takım sporcu|maç/i.test(text), `${id}: ${text.match(/basketbol|NBA|takım sporcu|maç/i)?.[0]}`);
+    assert.ok(e.rules.some((r) => r.endsWith('-fitness')), `${id}: fitness kuralı yok`);
+    assert.equal(e.title, explainers[id as keyof typeof fitnessExplainers].title, id);
+  }
+  assert.equal(explainerFor('sleep'), explainers.sleep);
+  assert.equal(explainerFor('sleep', 'google_health', 'fitness'), fitnessExplainers.sleep);
+  assert.equal(explainerFor('hrv', 'apple_health', 'fitness'), appleExplainers.hrv, 'spor sürümü yoksa kaynak sürümü');
+  assert.equal(explainerFor('hrv', 'google_health', 'fitness'), explainers.hrv);
 });

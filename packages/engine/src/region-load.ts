@@ -3,7 +3,7 @@
 // Tarihler "YYYY-AA-GG" sporcunun yerel takvim günleri (karar 0015).
 
 import { bodySpots, spotKey, type BodyRegion, type BodySide } from './body-regions.ts';
-import { addIsoDays } from './recovery.ts';
+import { addIsoDays, type Sport } from './recovery.ts';
 import { sessionLoad } from './session-load.ts';
 import type { LoadSession } from './training-load.ts';
 
@@ -33,6 +33,33 @@ export const tagRegions: Readonly<Record<ContentTag, readonly BodyRegion[]>> = {
   sprint: ['hamstring', 'calf', 'achilles'],
   lower_strength: ['quadriceps', 'hamstring', 'hip'],
   upper_strength: ['shoulder'],
+};
+
+/**
+ * rules/bolge.json → bolge-icerik-etiketleri-fitness ve bolge-esleme-fitness (karar 0061 sıra 4): fitness'ta yalnız
+ * kuvvet etiketleri; sıçrama, yön değiştirme ve sprint eşlemeleri basketbola ve takım sporlarına özgü, kapalı.
+ * Fitness'ta takım antrenmanı, maç ve şut türleri yok.
+ */
+export const sessionKindsBySport: Readonly<Record<Sport, readonly SessionKind[]>> = {
+  basketbol: sessionKinds,
+  fitness: ['strength', 'conditioning', 'mobility', 'rehab'],
+};
+export const contentTagsBySport: Readonly<Record<Sport, readonly ContentTag[]>> = {
+  basketbol: contentTags,
+  fitness: ['lower_strength', 'upper_strength'],
+};
+export const defaultContentTagsFitness: Readonly<Record<SessionKind, readonly ContentTag[]>> = {
+  team_practice: [],
+  game: [],
+  shooting: [],
+  conditioning: [],
+  strength: ['lower_strength', 'upper_strength'],
+  mobility: [],
+  rehab: [],
+};
+export const defaultContentTagsBySport: Readonly<Record<Sport, Readonly<Record<SessionKind, readonly ContentTag[]>>>> = {
+  basketbol: defaultContentTags,
+  fitness: defaultContentTagsFitness,
 };
 
 /** rules/bolge.json → bolge-esleme: yalnız ağrı haritasında; kaynaklı bir eşleme yok. */
@@ -82,14 +109,18 @@ export interface RegionSession extends LoadSession {
   startedAt?: string | null;
 }
 
-export function sessionTags(session: Pick<RegionSession, 'kind' | 'tags'>): { tags: readonly ContentTag[]; defaulted: boolean } {
-  if (session.tags !== null) return { tags: session.tags, defaulted: false };
-  return { tags: defaultContentTags[session.kind] ?? [], defaulted: true };
+export function sessionTags(
+  session: Pick<RegionSession, 'kind' | 'tags'>,
+  sport: Sport = 'basketbol',
+): { tags: readonly ContentTag[]; defaulted: boolean } {
+  const allowed = contentTagsBySport[sport];
+  if (session.tags !== null) return { tags: sport === 'basketbol' ? session.tags : session.tags.filter((t) => allowed.includes(t)), defaulted: false };
+  return { tags: defaultContentTagsBySport[sport][session.kind] ?? [], defaulted: true };
 }
 
-/** Seansın çalıştırdığı bölgeler (etiketlerin bölgelerinin birleşimi). */
-export function sessionRegions(session: Pick<RegionSession, 'kind' | 'tags'>): ReadonlySet<BodyRegion> {
-  return new Set(sessionTags(session).tags.flatMap((t) => tagRegions[t] ?? []));
+/** Seansın çalıştırdığı bölgeler (etiketlerin bölgelerinin birleşimi). Fitness'ta yalnız kuvvet etiketleri sayılır. */
+export function sessionRegions(session: Pick<RegionSession, 'kind' | 'tags'>, sport: Sport = 'basketbol'): ReadonlySet<BodyRegion> {
+  return new Set(sessionTags(session, sport).tags.flatMap((t) => tagRegions[t] ?? []));
 }
 
 export interface RegionLoad {
@@ -132,9 +163,9 @@ function daysBetween(from: string, to: string): number {
 const isValid = (s: RegionSession) => isIsoDate(s.date) && sessionLoad(s.rpe, s.durationMin) !== null;
 
 /** Verilen gün bu bölgeyi çalıştıran seanslar. */
-export function regionsLoadedOn(sessions: readonly RegionSession[], date: string): ReadonlySet<BodyRegion> {
+export function regionsLoadedOn(sessions: readonly RegionSession[], date: string, sport: Sport = 'basketbol'): ReadonlySet<BodyRegion> {
   const out = new Set<BodyRegion>();
-  for (const s of sessions) if (s.date === date && isValid(s)) for (const r of sessionRegions(s)) out.add(r);
+  for (const s of sessions) if (s.date === date && isValid(s)) for (const r of sessionRegions(s, sport)) out.add(r);
   return out;
 }
 
@@ -148,7 +179,7 @@ function endHoursAgo(s: RegionSession, now: Date): number | null {
 export function readRegionLoad(
   sessions: readonly RegionSession[],
   today: string,
-  opts: { historyStart?: string; now?: Date } = {},
+  opts: { historyStart?: string; now?: Date; sport?: Sport } = {},
 ): RegionLoadReading {
   if (!isIsoDate(today)) throw new Error(`geçersiz gün: ${today}`);
   const valid = sessions.filter((s) => isValid(s) && s.date <= today);
@@ -161,7 +192,7 @@ export function readRegionLoad(
   for (const region of modeledRegions) byRegion.set(region, { day: new Map(), sessions: [] });
   for (const s of valid) {
     const load = sessionLoad(s.rpe, s.durationMin)!;
-    for (const region of sessionRegions(s)) {
+    for (const region of sessionRegions(s, opts.sport)) {
       const entry = byRegion.get(region);
       if (!entry) continue;
       entry.day.set(s.date, (entry.day.get(s.date) ?? 0) + load);

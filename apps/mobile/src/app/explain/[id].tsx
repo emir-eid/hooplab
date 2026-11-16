@@ -10,7 +10,7 @@ import { explainerContext } from '@/components/info-button';
 import { GroupFooter, GroupLabel, ListGroup, ListRow } from '@/components/list';
 import { Text } from '@/components/text';
 import { basisLabels, explainerFor, explainers, isExplainerId, medicalNote, type Explainer } from '@/copy/explainers';
-import { useDataSource } from '@/data/profile';
+import { useDataSource, useSport } from '@/data/profile';
 import { sources } from '@/copy/sources';
 import { usePalette } from '@/theme/appearance';
 
@@ -25,6 +25,7 @@ export default function ExplainScreen() {
   const insets = useSafeAreaInsets();
   const { id } = useLocalSearchParams<{ id: string }>();
   const source = useDataSource();
+  const sport = useSport();
 
   if (!isExplainerId(id)) {
     return (
@@ -36,8 +37,8 @@ export default function ExplainScreen() {
     );
   }
 
-  // Apple profilinde ölçü ve kurallar farklı olan açıklamalar (karar 0061); sahibininki değişmez.
-  const e: Explainer = explainerFor(id, source);
+  // Apple ve fitness profilinde ölçü, kural ve kaynakları farklı olan açıklamalar (karar 0061); sahibininki değişmez.
+  const e: Explainer = explainerFor(id, source, sport);
   const estimate = e.basis === 'estimate';
   const { value, rows } = explainerContext(id);
 

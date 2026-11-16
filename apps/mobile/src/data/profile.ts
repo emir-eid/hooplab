@@ -2,10 +2,11 @@
 // (giriş / çıkış) yeniden okunur. Demo modunda ve profil okunamazken sahibinin profili (Google Health) kullanılır.
 // Ekranlar kaynağa göre metin ve sütun seçer; sahibinin hesabında hiçbir şey değişmez.
 
-import type { DataSource } from '@hooplab/engine';
+import type { DataSource, Sport } from '@hooplab/engine';
 import { useEffect, useSyncExternalStore } from 'react';
 
-import { defaultProfile, toProfile, type Profile } from '@/data/profile-row';
+import type { Result } from '@/data/daily-log';
+import { defaultProfile, profileUpdate, toProfile, type Profile, type ProfileAnswers } from '@/data/profile-row';
 import { demoStore, useDemoScenario } from '@/demo/demo-mode';
 import { supabase } from '@/lib/supabase';
 
@@ -28,7 +29,11 @@ supabase?.auth.onAuthStateChange((_event, session) => {
 
 async function load(userId: string): Promise<Profile> {
   if (!supabase) return defaultProfile;
-  const { data, error } = await supabase.from('profiles').select('data_source, sport').eq('user_id', userId).maybeSingle();
+  const { data, error } = await supabase
+    .from('profiles')
+    .select('data_source, sport, sex, cycle_tracking, hormonal_contraception, answered_at')
+    .eq('user_id', userId)
+    .maybeSingle();
   // Okunamadıysa önbelleğe yazılmaz (sonraki çağrı yeniden dener); bu çağrı sahibinin profiliyle devam eder.
   if (error) return defaultProfile;
   const profile = toProfile(data);
@@ -50,6 +55,11 @@ export async function fetchProfile(): Promise<Profile> {
 
 export async function fetchDataSource(): Promise<DataSource> {
   return (await fetchProfile()).dataSource;
+}
+
+/** Profilin sporu (karar 0061 sıra 4); demo ve okuma hatasında sahibinin sporu (basketbol). */
+export async function fetchSport(): Promise<Sport> {
+  return (await fetchProfile()).sport;
 }
 
 function subscribe(listener: () => void) {
@@ -77,4 +87,25 @@ export function useProfile(): Profile {
 
 export function useDataSource(): DataSource {
   return useProfile().dataSource;
+}
+
+export function useSport(): Sport {
+  return useProfile().sport;
+}
+
+/**
+ * İlk giriş soruları ve Ben → Profil (karar 0061 sıra 4c): yanıtı kendi satırına yazar ve önbelleği yeniler. Veri
+ * kaynağı ve spor yazılamaz (sütun yetkisi). Demo modunda yazılmaz.
+ */
+export async function saveProfileAnswers(answers: ProfileAnswers): Promise<Result<null>> {
+  if (demoStore() || !supabase) return { ok: false, message: 'Demo modunda profil değiştirilemez.' };
+  const { data } = await supabase.auth.getSession();
+  const userId = data.session?.user.id;
+  if (!userId) return { ok: false, message: 'Oturum yok; yeniden giriş yap.' };
+  const { error } = await supabase.from('profiles').update(profileUpdate(answers, new Date().toISOString())).eq('user_id', userId);
+  if (error) return { ok: false, message: 'Kaydedilemedi. Bağlantını kontrol edip yeniden dene.' };
+  cache = null;
+  pending = null;
+  await fetchProfile();
+  return { ok: true, value: null };
 }

@@ -3,7 +3,7 @@
 // Tarihler "YYYY-AA-GG" sporcunun yerel takvim günleri; saat dilimi çağıranın işidir (karar 0015).
 // İlk kayıttan önceki günler bilinmiyor sayılır (0 sayılmaz); ilk kayıttan sonra seans olmayan gün 0 yüktür.
 
-import { addIsoDays } from './recovery.ts';
+import { addIsoDays, type Sport } from './recovery.ts';
 import { sessionLoad } from './session-load.ts';
 
 /** rules/yuk.json → yuk-haftalik */
@@ -17,6 +17,9 @@ export const loadRatioRule = { minHistoryDays: 28 } as const;
 
 /** rules/yuk.json → yuk-artis-notu */
 export const loadSpikeRule = { ratioMin: 1.5 } as const;
+
+/** rules/yuk.json → yuk-artis-notu-fitness (karar 0061 sıra 4): fitness'ta not yok; oran yine hesaplanır. */
+export const loadSpikeBySport: Readonly<Record<Sport, typeof loadSpikeRule | null>> = { basketbol: loadSpikeRule, fitness: null };
 
 /** rules/yuk.json → yuk-monotonluk */
 export const monotonyRule = { windowDays: 7 } as const;
@@ -120,8 +123,9 @@ export function ewma(loads: readonly number[], n: number): number | null {
 export function readTrainingLoad(
   sessions: readonly LoadSession[],
   today: string,
-  opts: { historyStart?: string } = {},
+  opts: { historyStart?: string; sport?: Sport } = {},
 ): TrainingLoadReading {
+  const spikeRule = loadSpikeBySport[opts.sport ?? 'basketbol'];
   if (!isIsoDate(today)) throw new Error(`geçersiz gün: ${today}`);
   const valid = sessions.filter((s) => isIsoDate(s.date) && s.date <= today && sessionLoad(s.rpe, s.durationMin) !== null);
   const asOf = valid.some((s) => s.date === today) ? today : addIsoDays(today, -1);
@@ -188,7 +192,7 @@ export function readTrainingLoad(
     acute,
     chronic,
     ratio,
-    spike: ratio !== null && ratio >= loadSpikeRule.ratioMin,
+    spike: ratio !== null && spikeRule !== null && ratio >= spikeRule.ratioMin,
     monotony,
     strain,
     daily: days.slice(-loadWeek.days * loadWeek.averageWeeks),

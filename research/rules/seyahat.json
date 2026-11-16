@@ -3,6 +3,7 @@
   "rules": [
     {
       "id": "seyahat-yorgunlugu",
+      "profile": { "sport": ["basketbol"] },
       "description": "Seyahat günü (saat farkı olsun olmasın): seyahat yorgunluğu yönden ve saat farkından bağımsızdır. Bugün'de yolculuk günü notu: sıvı ve yemeği önceden planla, fırsat oldukça kısa uyku, uyku borcunu yolculukta kapatmaya çalışma, kafein yatmadan en az 6 saat önce kesilir, alkol yok. Saat farkı olmayan uçuşlarda takım sporcularında performans göstergeleri belirgin düşmüyor, ama uyanıklık, ruh hali ve yorgunluk algısı kötüleşiyor. Eşik yok; günün durumu değişmez.",
       "value": { "caffeine_before_sleep_hours": 6, "alcohol": false },
       "applies_to": "kullanıcının seyahat kaydettiği gidiş ve dönüş günleri",
@@ -24,6 +25,16 @@
       "applies_to": "saat farkı 3 saat veya daha fazla olan seyahat",
       "sources": ["janse-van-rensburg-2021", "fowler-2017", "roach-2019"],
       "notes": "Varışta düşük-orta yoğunluk ve kafein zamanlaması konsensüsün metin tablosundan (janse-van-rensburg-2021, Tablo 3). 72 saat: antrenmanlı erkeklerde 8 saat dilimi doğu yolculuğu (fowler-2017, yalnız özet; basketbola özgü değil). Uçuş öncesi kaydırma anlatı derlemesinden (roach-2019, metin); melatonin dozları uygulamada verilmez, melatonin anılırsa hekim ve doping uyarısıyla (takviye-doping-riski)."
+    },
+    {
+      "id": "seyahat-yorgunlugu-fitness",
+      "variant_of": "seyahat-yorgunlugu",
+      "profile": { "sport": ["fitness"] },
+      "description": "Seyahat günü (saat farkı olsun olmasın): seyahat yorgunluğu yönden ve saat farkından bağımsızdır. Bugün'de yolculuk günü notu: sıvı ve yemeği önceden planla, fırsat oldukça kısa uyku, uyku borcunu yolculukta kapatmaya çalışma, kafein yatmadan en az 6 saat önce kesilir, alkol yok. Eşik yok; günün durumu değişmez.",
+      "value": { "caffeine_before_sleep_hours": 6, "alcohol": false },
+      "applies_to": "kullanıcının seyahat kaydettiği gidiş ve dönüş günleri",
+      "sources": ["janse-van-rensburg-2021", "janse-van-rensburg-2020"],
+      "notes": "Sporcu sürümüyle aynı öneriler (janse-van-rensburg-2021, uzman konsensüsü; janse-van-rensburg-2020: müdahale çalışması yok, öneriler uzman uzlaşısı). Takım sporcularına ve elit sporculara ait performans cümlesi (roberts-2019) fitness profilinde yok."
     }
   ]
 }

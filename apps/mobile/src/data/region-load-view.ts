@@ -15,6 +15,7 @@ import {
   type RegionLoadReading,
   type RegionSession,
   type SessionKind,
+  type Sport,
 } from '@hooplab/engine';
 
 /** En uzun pencere (kas, 3 gün) + kıyas penceresi (28 gün): bundan eski seans sonucu değiştirmez. */
@@ -64,19 +65,23 @@ export function buildRegionLoadView(
     /** O sabahın ağrı haritası (0'dan büyük değerler); check-in yoksa null. */
     painToday: readonly PainReading[] | null;
     painYesterday: readonly PainReading[] | null;
+    /** Fitness'ta yalnız kuvvet etiketleri bölge yükler (bolge-esleme-fitness); yoksa sahibinin sporu. */
+    sport?: Sport;
   },
 ): RegionLoadView {
   const sessions = toRegionSessions(rows);
+  const fitness = opts.sport === 'fitness' ? { sport: opts.sport } : {};
   const reading = readRegionLoad(sessions, today, {
     ...(opts.earliest ? { historyStart: opts.earliest } : {}),
     now: opts.now,
+    ...fitness,
   });
   const longest = Math.max(...reading.regions.map((r) => r.windowDays));
   const windowStart = addIsoDays(today, -(longest - 1));
   const yesterday = addIsoDays(today, -1);
   return {
     reading,
-    notes: painNotes(opts.painToday, opts.painYesterday, regionsLoadedOn(sessions, yesterday)),
+    notes: painNotes(opts.painToday, opts.painYesterday, regionsLoadedOn(sessions, yesterday, opts.sport)),
     checkinToday: opts.painToday !== null,
     defaultedSessions: rows.filter((r) => r.content_tags === null && r.local_date >= windowStart && r.local_date <= today).length,
     anyRecovering: reading.regions.some((r) => r.recovering),

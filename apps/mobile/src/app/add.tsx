@@ -7,11 +7,14 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { ListGroup, ListRow } from '@/components/list';
 import { Text } from '@/components/text';
+import { useSport } from '@/data/profile';
 import { usePalette } from '@/theme/appearance';
 
 export default function AddScreen() {
   const palette = usePalette();
   const insets = useSafeAreaInsets();
+  // Fitness'ta maç takvimi yok (karar 0061 sıra 4); seyahat kaydı kalır.
+  const fitness = useSport() === 'fitness';
   return (
     <View style={[styles.root, { backgroundColor: palette.bg, paddingBottom: Math.max(insets.bottom, spacing[4]) }]}>
       <Text variant="title3" accessibilityRole="header" style={styles.title}>
@@ -22,7 +25,7 @@ export default function AddScreen() {
         <ListRow label="Seans kaydı" value="30 sn" onPress={() => router.replace('/session-new')} />
         <ListRow label="Öğün" value="15 sn" onPress={() => router.replace('/meal-new')} />
         <ListRow label="Su" value="2 sn" onPress={() => router.replace('/water')} />
-        <ListRow label="Maç" value="Takvim" onPress={() => router.replace('/match-edit')} />
+        {fitness ? null : <ListRow label="Maç" value="Takvim" onPress={() => router.replace('/match-edit')} />}
         <ListRow label="Seyahat" value="Takvim" onPress={() => router.replace('/trip-edit')} />
       </ListGroup>
     </View>

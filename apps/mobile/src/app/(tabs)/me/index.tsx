@@ -9,7 +9,8 @@ import { PageHeader } from '@/components/page-header';
 import { Screen } from '@/components/screen';
 import { fetchSyncStatus } from '@/data/google-health';
 import { describeConnection } from '@/data/google-health-status';
-import { useDataSource } from '@/data/profile';
+import { useDataSource, useProfile } from '@/data/profile';
+import { profileSummary } from '@/copy/profile';
 import { appleSyncSupported, syncAppleHealth } from '@/health/apple-sync';
 import { describeAppleSync } from '@/health/apple-sync-status';
 import { useAppleSyncState } from '@/health/use-apple-sync';
@@ -40,6 +41,8 @@ function MeScreen({ demo }: { demo: DemoScenario | null }) {
   // Apple Health profilinde Google Health bağlantısı yok (karar 0061); satır ve durum sorgusu gösterilmez.
   const source = useDataSource();
   const google = source === 'google_health';
+  // Profil soruları (karar 0061 sıra 4c): cinsiyet, döngü takibi, korunma; sonradan buradan değişir.
+  const profile = useProfile();
 
   useFocusEffect(
     useCallback(() => {
@@ -100,6 +103,7 @@ function MeScreen({ demo }: { demo: DemoScenario | null }) {
             <ListRow label="Demo sporcuyu göster" onPress={() => startDemo()} />
           </ListGroup>
           <ListGroup label="Hesap" footer={session?.user.email}>
+            <ListRow label="Profil" value={profileSummary(profile)} onPress={() => router.push('/profile')} />
             <ListRow label="Çıkış yap" onPress={confirmSignOut} />
           </ListGroup>
         </>

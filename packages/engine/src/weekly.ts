@@ -3,7 +3,7 @@
 // gün gün okunur; burada yalnız hafta sınırları, toplamlar, ortalamalar ve sayımlar var.
 // Tarihler "YYYY-AA-GG" sporcunun yerel takvim günleri; saat dilimi çağıranın işidir (karar 0015).
 
-import { addIsoDays, type DayValue } from './recovery.ts';
+import { addIsoDays, type DayValue, type Sport } from './recovery.ts';
 import { wellnessItems, type WellnessItem } from './scales.ts';
 import { dailyLoads, loadWeek, readTrainingLoad, type LoadSession, type TrainingLoadReading } from './training-load.ts';
 import { checkinBaseline, isCompleteWellness, readCheckin, wellnessTotal, type CheckinDay } from './wellness.ts';
@@ -63,7 +63,7 @@ export function elapsedDates(weekStart: string, today: string): string[] {
 export function readCompletedWeekLoad(
   sessions: readonly LoadSession[],
   weekStart: string,
-  opts: { historyStart?: string } = {},
+  opts: { historyStart?: string; sport?: Sport } = {},
 ): TrainingLoadReading {
   const end = weekEndOf(weekStart);
   const until = sessions.filter((s) => s.date <= end);
@@ -98,7 +98,7 @@ export function readWeeklyLoad(
   sessions: readonly LoadSession[],
   weekStart: string,
   today: string,
-  opts: { historyStart?: string } = {},
+  opts: { historyStart?: string; sport?: Sport } = {},
 ): WeeklyLoadReading {
   const phase = weekPhase(weekStart, today);
   if (phase === 'future') throw new Error(`hafta henüz gelmedi: ${weekStart}`);

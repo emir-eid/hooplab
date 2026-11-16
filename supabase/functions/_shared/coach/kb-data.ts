@@ -327,6 +327,25 @@ export const kbSources: readonly KbSource[] = [
     "summary": "## Ne söylüyor (kendi cümlelerimizle)\n\n- Katılımcılar 24 standart öğünün karbonhidratını tahmin etti; gerçek değer tartıyla hesaplandı.\n- Karbonhidrat ortanca %28 eksik tahmin edildi; karbonhidratı yüksek öğünlerde eksik tahmin daha büyüktü (%34).\n- Tahmin tekrarlandıkça hata belirgin azaldı; yazarlar düzenli alıştırma öneriyor.\n\n## Uygulamada kullanılan sayılar\n\n| Değer | Birim | Bağlam / koşul |\n|---|---|---|\n| ≈ %28 | eksik tahmin (karbonhidrat) | Açıklamada: göz kararı tahmin eğitimli kişide bile belirgin eksik kalıyor; eşik olarak kullanılmaz |\n\n## Sınırlılıklar\n\n- Diyabet popülasyonu, sporcuya aktarım varsayım; laboratuvar öğünleri.\n- Yazarların bir kısmı diyabet teknolojisi şirketleriyle çalışıyor (çıkar beyanı var).\n- Yalnız özet okundu."
   },
   {
+    "id": "buist-2007",
+    "title": "No effect of a graded training program on the number of running-related injuries in novice runners: a randomized controlled trial",
+    "authors": [
+      "Buist I",
+      "Bredeweg SW",
+      "van Mechelen W",
+      "Lemmink KA",
+      "Pepping GJ",
+      "Diercks RL"
+    ],
+    "year": 2007,
+    "type": "rct",
+    "doi": "10.1177/0363546507307505",
+    "pmid": "17940147",
+    "journal": "American Journal of Sports Medicine",
+    "population": "Acemi koşucular, n=532; 6,7 km'lik rekreasyonel koşuya hazırlık",
+    "summary": "## Ne söylüyor (kendi cümlelerimizle)\n\n- Haftalık artışı %10 kuralına göre sınırlayan 13 haftalık kademeli program, standart 8 haftalık programla karşılaştırıldı.\n- Koşu sakatlığı sıklığı iki grupta neredeyse aynıydı (%20,8 ve %20,3); kademeli program sakatlığı önlemedi.\n\n## Uygulamada kullanılan sayılar\n\n| Değer | Birim | Bağlam / koşul |\n|---|---|---|\n| %20,8 / %20,3 | sakatlık sıklığı | Sabit artış kuralı rekreasyonel bireyde doğrulanmadı; fitness profilinde yük artış notu gösterilmez (`yuk-artis-notu-fitness`) |\n\n## Sınırlılıklar\n\n- Yalnız acemi koşucular ve koşu; kuvvet antrenmanına doğrudan aktarılamaz.\n- Çevrimiçi 2007, baskı 2008 (Crossref yılı 2007).\n- Sayılar özetten okundu."
+  },
+  {
     "id": "burger-2024",
     "title": "Athlete Monitoring Systems in Elite Men's Basketball: Challenges, Recommendations, and Future Perspectives",
     "authors": [
@@ -536,6 +555,23 @@ export const kbSources: readonly KbSource[] = [
     "journal": "Sports Medicine",
     "population": "Basketbolcular, sezon içi (derleme; çoğu çalışma basketbol ve takım sporları)",
     "summary": "## Ne söylüyor (kendi cümlelerimizle)\n\n- Sezon içinde toparlanmanın en çok kanıta dayanan dört bileşeni uyku, karbonhidrat, protein ve sıvı.\n- Basketbolcu için günde 5-7 g/kg karbonhidrat öneriliyor. Takım sporlarında orta ile çok yüksek yükte aralık 5-12 g/kg; alt uç orta yük ve az süre alan oyuncu, üst uç çok yoğun yük ve çok dakika oynayan oyuncu için.\n- İki maç arasında 8 saatten az varsa 4 saat boyunca saatte 1,0-1,2 g/kg karbonhidrat öneriliyor.\n- Protein günde 1,2-2,0 g/kg; her 4-5 saatte bir, öğün başına yaklaşık 0,31 g/kg.\n- Ter kaybı biliniyorsa ve iki seans arası kısaysa, kaybedilen her 1 kg için 1,0-1,5 L sıvı; 24 saat veya daha uzun ara varsa öğünlerle birlikte istendiği kadar içmek yeterli.\n\n## Uygulamada kullanılan sayılar\n\n| Değer | Birim | Bağlam / koşul |\n|---|---|---|\n| 5-7 | g/kg/gün karbonhidrat | Antrenman günü (basketbol) |\n| 1,2-2,0 | g/kg/gün protein | Her gün |\n| 0,31 (≈ 0,3) | g/kg öğün başına protein | 4-5 saatte bir |\n| 1,0-1,5 | L sıvı / kg kayıp | Ter testinden sonra, sonraki seansa kısa süre varsa |\n\n## Sınırlılıklar\n\n- Anlatı derlemesi (kanıt düzeyi 4). Sayılar ortak bildirgeye (thomas-2016) ve takım sporu çalışmalarına dayanıyor.\n- Sekiz yazardan beşi Gatorade Sports Science Institute (PepsiCo) çalışanı; sıvı ve karbonhidrat konusunda çıkar çatışması olabilir.\n- Tam metin okundu (açık erişim, CC BY)."
+  },
+  {
+    "id": "day-2004",
+    "title": "Monitoring exercise intensity during resistance training using the session RPE scale",
+    "authors": [
+      "Day ML",
+      "McGuigan MR",
+      "Brice G",
+      "Foster C"
+    ],
+    "year": 2004,
+    "type": "cross-sectional",
+    "doi": "10.1519/R-13113.1",
+    "pmid": "15142026",
+    "journal": "Journal of Strength and Conditioning Research",
+    "population": "Genç yetişkinler, n=19 (9 erkek, 10 kadın); yüksek, orta ve düşük yoğunlukta kuvvet antrenmanı, her biri iki kez",
+    "summary": "## Ne söylüyor (kendi cümlelerimizle)\n\n- Seanstan 30 dakika sonra verilen tek puan (seans RPE) kuvvet antrenmanının yoğunluğunu ayırt etti: yüksek yoğunluklu seans, orta ve düşük yoğunluklu seanstan daha zor puanlandı.\n- Az tekrarla ağır yük, çok tekrarla hafif yükten daha zor algılandı.\n- Aynı seans tekrarlandığında seans RPE tutarlıydı (ICC 0,88).\n\n## Uygulamada kullanılan sayılar\n\n| Değer | Birim | Bağlam / koşul |\n|---|---|---|\n| 0,88 | ICC | Kuvvet antrenmanında seans RPE'sinin güvenilirliği; fitness profilinde `seans-rpe-olcek-fitness` |\n\n## Sınırlılıklar\n\n- Küçük örneklem; tek set ve beş hareketlik laboratuvar protokolü.\n- Sayılar özetten okundu."
   },
   {
     "id": "ding-2026",
@@ -1067,6 +1103,39 @@ export const kbSources: readonly KbSource[] = [
     "summary": "## Ne söylüyor (kendi cümlelerimizle)\n\n- Fitbit'in gece SpO2'si referansa göre ortalama yaklaşık 2 puan yüksek okudu.\n- Referansla uyumu zayıf, geceden geceye değişimi izleme gücü düşük bulundu.\n- Yazarlar bilekliğin uykuda üstüne yatılmasının ölçümü bozabileceğini belirtiyor.\n\n## Uygulamada kullanılan sayılar\n\nDoğrudan eşik alınmadı. Gece SpO2 notunun tek geceye değil son 3 gecenin 2'sine bakmasının ve \"cihaz ölçümü, tıbbi oksimetre değil\" uyarısının dayanağı.\n\n## Sınırlılıklar\n\n- SpO2 yalnız KOAH hastalarında analiz edildi; sağlıklı kişide uykuda doğruluk bilinmiyor. Küçük örneklem."
   },
   {
+    "id": "hirshkowitz-2015",
+    "title": "National Sleep Foundation's sleep time duration recommendations: methodology and results summary",
+    "authors": [
+      "Hirshkowitz M",
+      "Whiton K",
+      "Albert SM",
+      "Alessi C",
+      "Bruni O",
+      "DonCarlos L",
+      "Hazen N",
+      "Herman J",
+      "Katz ES",
+      "Kheirandish-Gozal L",
+      "Neubauer DN",
+      "O'Donnell AE",
+      "Ohayon M",
+      "Peever J",
+      "Rawding R",
+      "Sachdeva RC",
+      "Setters B",
+      "Vitiello MV",
+      "Ware JC",
+      "Adams Hillard PJ"
+    ],
+    "year": 2015,
+    "type": "consensus",
+    "doi": "10.1016/j.sleh.2014.12.010",
+    "pmid": "29073412",
+    "journal": "Sleep Health",
+    "population": "Sağlıklı, uyku bozukluğu olmayan bireyler, yaşam boyu (18 üyeli uzman paneli, RAND/UCLA yöntemi)",
+    "summary": "## Ne söylüyor (kendi cümlelerimizle)\n\n- Uzman paneli yaş gruplarına göre uygun uyku süresini belirledi: genç yetişkin ve yetişkinde 7-9 saat, yaşlılarda 7-8 saat.\n- Uyku ihtiyacı kişiden kişiye değişir; aralığın dışı uygun olabilir, ama aralıktan çok uzak süreler nadirdir ve sağlık sorununun işareti olabilir ya da sağlığa zarar verebilir.\n\n## Uygulamada kullanılan sayılar\n\n| Değer | Birim | Bağlam / koşul |\n|---|---|---|\n| 7-9 | saat / gece | Yetişkin aralığı; alt ucu `uyku-kisa-fitness`'teki 7 saati destekler |\n\n## Sınırlılıklar\n\n- Sağlıklı genel nüfus; sporcuya özgü değil.\n- Sayılar özetten okundu."
+  },
+  {
     "id": "hirten-2021",
     "title": "Use of Physiological Data From a Wearable Device to Identify SARS-CoV-2 Infection and Symptoms and Predict COVID-19 Diagnosis: Observational Study",
     "authors": [
@@ -1403,6 +1472,24 @@ export const kbSources: readonly KbSource[] = [
     "summary": "## Ne söylüyor (kendi cümlelerimizle)\n\n- Sağlıklı genç erkeklerde gece ortalama oksijen doygunluğu alçakta yaklaşık %96.\n- Orta yükseklikte belirgin düşüyor: yaklaşık 1.600 m'de %94, 2.600 m'de %90-91; ikinci gece biraz düzeliyor.\n\n## Uygulamada kullanılan sayılar\n\nDoğrudan eşik alınmadı. Gece SpO2 notunun olası nedenler arasında yüksekliği saymasının dayanağı; genç sağlıklı erkekte alçakta gece ortalamasının notun mutlak alt sınırının üstünde kaldığını da gösteriyor.\n\n## Sınırlılıklar\n\n- Yalnız özet okundu. Yalnız erkekler, kısa süreli (birkaç gün) yükseklik."
   },
   {
+    "id": "lea-2022",
+    "title": "Convergent Validity of Ratings of Perceived Exertion During Resistance Exercise in Healthy Participants: A Systematic Review and Meta-Analysis",
+    "authors": [
+      "Lea JWD",
+      "O'Driscoll JM",
+      "Hulbert S",
+      "Scales J",
+      "Wiles JD"
+    ],
+    "year": 2022,
+    "type": "meta-analysis",
+    "doi": "10.1186/s40798-021-00386-8",
+    "pmid": "35000021",
+    "journal": "Sports Medicine - Open",
+    "population": "Sağlıklı katılımcılar, her yaş; 118 çalışma nitel sentezde, 75 çalışma (99 grup) meta-analizde",
+    "summary": "## Ne söylüyor (kendi cümlelerimizle)\n\n- Kuvvet antrenmanında algılanan zorluk puanı (RPE), yoğunluk ve fizyolojik zorlanma ölçüleriyle (yük, nabız, laktat, tansiyon, kas elektriği) güçlü ilişkili.\n- Ortalama geçerlilik katsayısı büyük (r = 0,88; %95 GA 0,84-0,91), aerobik egzersizde görülenle aynı düzeyde ya da daha yüksek.\n- Cinsiyet, yaş, antrenman durumu ve kullanılan RPE ölçeği sonucu anlamlı değiştirmedi; çalışmalar arası farklılık çok büyük.\n- RPE kuvvet antrenmanını planlamak ve izlemek için kolay bir yol olabilir.\n\n## Uygulamada kullanılan sayılar\n\n| Değer | Birim | Bağlam / koşul |\n|---|---|---|\n| 0,88 | r | Kuvvet antrenmanında RPE'nin geçerliliği; fitness profilinde seans RPE'sinin dayanağı (`seans-rpe-olcek-fitness`) |\n\n## Sınırlılıklar\n\n- Çalışmalar arası heterojenlik çok yüksek (I² %96,1).\n- Çoğunlukla set sonrası RPE'yi inceliyor; tüm seans için tek puanın (seans RPE) güvenilirliği day-2004'te.\n- Sayılar özetten okundu."
+  },
+  {
     "id": "leota-2022",
     "title": "Eastward Jet Lag is Associated with Impaired Performance and Game Outcome in the National Basketball Association",
     "authors": [
@@ -1646,6 +1733,22 @@ export const kbSources: readonly KbSource[] = [
     "summary": "## Ne söylüyor (kendi cümlelerimizle)\n\n- Maçlar arası 5, 7 ve 9 günlük döngülerde sıçrama performansı, algılanan yorgunluk, genel iyi oluş ve kas ağrısı izlendi; antrenman yükü seans RPE yöntemiyle ölçüldü.\n- Maçtan sonraki 48 saatte sıçrama değerleri, yorgunluk algısı, iyi oluş ve kas ağrısı belirgin biçimde kötüleşti.\n- Sıçrama değişkenlerinin çoğu yaklaşık 4 günde başlangıç düzeyine döndü; uygun antrenmanla algısal ölçümlerin de 4 gün içinde toparlanabildiği görüldü.\n- Öznel iyi oluş maddeleri maç yüküne günler içinde tepki veriyor; yani günlük takipte anlamlı sinyal taşıyor.\n\n## Uygulamada kullanılan sayılar\n\nBu çalışmadan doğrudan sayı alınmadı (ölçek aralığı `zhang-2026`'dan). \"Maçtan sonra yaklaşık 48 saat bozulma, yaklaşık 4 günde toparlanma\" gözlemi Faz 2'deki toparlanma yorumları için aday; kural yazılmadan önce tam metin ve basketbol kaynaklarıyla karşılaştırılacak.\n\n## Sınırlılıklar\n\n- Rugby ligi (temaslı); basketbolun yük profili farklı.\n- Küçük örneklem (n=12), tek takım.\n- Yalnız özet okundu."
   },
   {
+    "id": "medellin-ruiz-2020",
+    "title": "Effectiveness of Training Prescription Guided by Heart Rate Variability Versus Predefined Training for Physiological and Aerobic Performance Improvements: A Systematic Review and Meta-Analysis",
+    "authors": [
+      "Medellín Ruiz JP",
+      "Rubio-Arias JÁ",
+      "Clemente-Suarez VJ",
+      "Ramos-Campo DJ"
+    ],
+    "year": 2020,
+    "type": "meta-analysis",
+    "doi": "10.3390/app10238532",
+    "journal": "Applied Sciences",
+    "population": "Sağlıklı bireyler (antrenmansız, fiziksel olarak aktif ve iyi antrenmanlı); 8 randomize kontrollü çalışma",
+    "summary": "## Ne söylüyor (kendi cümlelerimizle)\n\n- HRV'ye göre yönlendirilen antrenman, dayanıklılık ölçülerini (VO2max, aerobik güç, eşik hızları) kendi içinde iyileştirdi.\n- Ama önceden planlanmış antrenmanla karşılaştırıldığında hiçbir ölçüde anlamlı üstünlük göstermedi.\n\n## Uygulamada kullanılan sayılar\n\nDoğrudan sayı alınmadı. Fitness profilinde günün durumunun bir antrenman reçetesi gibi değil, temkinli bir izleme özeti olarak yazılmasının dayanağı (`gunun-durumu-dil-fitness`).\n\n## Sınırlılıklar\n\n- Yalnız 8 çalışma ve dayanıklılık sonuçları; kuvvet antrenmanı yok.\n- PubMed'de dizinli değil; DOI Crossref'te doğrulandı.\n- Özetten okundu."
+  },
+  {
     "id": "mesas-2023",
     "title": "Is daytime napping an effective strategy to improve sport-related cognitive and physical performance and reduce fatigue? A systematic review and meta-analysis of randomised controlled trials",
     "authors": [
@@ -1874,6 +1977,25 @@ export const kbSources: readonly KbSource[] = [
     "journal": "Sensors",
     "population": "Sağlık, iş ve spor alanlarında solunum hızı izleme üzerine literatür (derleme)",
     "summary": "## Ne söylüyor (kendi cümlelerimizle)\n\n- Solunum hızı temel bir yaşamsal bulgu; hastalıkların yanı sıra duygusal stres, bilişsel yük, sıcak, soğuk, fiziksel efor ve egzersize bağlı yorgunluk gibi pek çok etkene duyarlı.\n- Bu etkenlere duyarlılığı diğer yaşamsal bulguların çoğundan yüksek, ama sporda hala rutin izlenmiyor.\n- Derleme, sporda ve sağlıkta solunum izlemenin amaçlarını ve uygun ölçüm yöntemlerini topluyor.\n\n## Uygulamada kullanılan sayılar\n\nDoğrudan sayı alınmadı. Kaynak, solunumdaki bir artışın tek bir nedene (ör. hastalık) bağlanamayacağının dayanağı: not, olası nedenleri sayar ve tanı koymaz.\n\n## Sınırlılıklar\n\n- Anlatı derlemesi (kanıt düzeyi 4); sistematik bir tarama değil.\n- Gece bileklik ölçümüne özgü değil; çoğunlukla egzersiz sırasındaki solunumu ele alıyor.\n- Yalnız özet okundu."
+  },
+  {
+    "id": "nielsen-2014",
+    "title": "Excessive progression in weekly running distance and risk of running-related injuries: an association which varies according to type of injury",
+    "authors": [
+      "Nielsen RO",
+      "Parner ET",
+      "Nohr EA",
+      "Sørensen H",
+      "Lind M",
+      "Rasmussen S"
+    ],
+    "year": 2014,
+    "type": "cohort",
+    "doi": "10.2519/jospt.2014.5164",
+    "pmid": "25155475",
+    "journal": "Journal of Orthopaedic and Sports Physical Therapy",
+    "population": "Sağlıklı acemi koşucular, n=874, 1 yıl izlem (GPS saatli)",
+    "summary": "## Ne söylüyor (kendi cümlelerimizle)\n\n- Haftalık mesafe artışına göre üç grup (%10'un altı, %10-30, %30'un üstü) arasında genel koşu sakatlığı oranı anlamlı farklı değildi.\n- Yalnız mesafeye bağlı sakatlık türlerinde, %30'un üstünde artıranlarda oran daha yüksek eğilimdeydi, ama anlamlılık sınırında (HR 1,59; %95 GA 0,96-2,66).\n- Yazarlar sonucun keşif amaçlı olduğunu, artış kuralını doğrulamak için deneysel çalışma gerektiğini belirtiyor.\n\n## Uygulamada kullanılan sayılar\n\n| Değer | Birim | Bağlam / koşul |\n|---|---|---|\n| HR 1,59 (0,96-2,66) | tehlike oranı | Artış eşiğinin genel sakatlıkla ilişkisi gösterilemedi; fitness profilinde yük artış notu gösterilmez (`yuk-artis-notu-fitness`) |\n\n## Sınırlılıklar\n\n- Yalnız acemi koşucular, keşif amaçlı kohort.\n- Sayılar özetten okundu."
   },
   {
     "id": "nuuttila-2022",
@@ -2512,6 +2634,34 @@ export const kbSources: readonly KbSource[] = [
     "summary": "## Ne söylüyor (kendi cümlelerimizle)\n\n- Elit sporcularda alışkanlık haline gelmiş kısa uyku (gecede 7 saatten az) ve parçalı uyku yaygın.\n- Bir ya da daha fazla uykusuz gece performansı düşürür; 1-3 gecelik kısmi uyku kısıtlamasının etkisi daha belirsiz.\n- Genel nüfusta alışkanlık olarak 7 saatten az uyumak solunum yolu enfeksiyonuna yatkınlığı artırıyor.\n- Herkese aynı süreyi (ör. 7-9 saat) önermek yerine sporcunun kendi uyku ihtiyacını gözeten kişisel bir yaklaşım öneriliyor.\n\n## Uygulamada kullanılan sayılar\n\n| Değer | Birim | Bağlam / koşul |\n|---|---|---|\n| 7 gecelik ortalama uyku < 7 saat → \"kısa\" | saat | Alışkanlık düzeyinde kısa uyku; tek gece değil ortalama okunur. Kişisel uyku ihtiyacı ileride check-in'deki uyku kalitesiyle birlikte değerlendirilir |\n\n## Sınırlılıklar\n\n- Uzman konsensüsü; 7 saat eşiği sporcuya özgü bir deneyden değil, alışkanlık tanımından ve genel nüfus verisinden geliyor.\n- Yazarlardan biri Fitbit dahil şirketlere danışmanlık yapmış.\n- Yalnız özet okundu."
   },
   {
+    "id": "watson-2015",
+    "title": "Recommended Amount of Sleep for a Healthy Adult: A Joint Consensus Statement of the American Academy of Sleep Medicine and Sleep Research Society",
+    "authors": [
+      "Watson NF",
+      "Badr MS",
+      "Belenky G",
+      "Bliwise DL",
+      "Buxton OM",
+      "Buysse D",
+      "Dinges DF",
+      "Gangwisch J",
+      "Grandner MA",
+      "Kushida C",
+      "Malhotra RK",
+      "Martin JL",
+      "Patel SR",
+      "Quan SF",
+      "Tasali E"
+    ],
+    "year": 2015,
+    "type": "consensus",
+    "doi": "10.5665/sleep.4716",
+    "pmid": "26039963",
+    "journal": "Sleep",
+    "population": "Sağlıklı yetişkinler, 18-60 yaş (15 uzmanlık paneli, değiştirilmiş RAND yöntemi)",
+    "summary": "## Ne söylüyor (kendi cümlelerimizle)\n\n- Yetişkinlerin sağlık için düzenli olarak gecede 7 saat ya da daha fazla uyuması öneriliyor.\n- Düzenli olarak 7 saatin altında uyumak kilo artışı, diyabet, yüksek tansiyon, kalp hastalığı ve depresyon gibi olumsuz sonuçlarla, ayrıca bağışıklıkta zayıflama, ağrıda artış ve performans düşüşüyle ilişkili.\n- 9 saatin üstü genç yetişkinler, uyku borcunu kapatanlar ve hastalar için uygun olabilir; diğerlerinde risk belirsiz.\n- Uyku süresinden kaygı duyan kişinin hekime danışması öneriliyor.\n\n## Uygulamada kullanılan sayılar\n\n| Değer | Birim | Bağlam / koşul |\n|---|---|---|\n| 7 | saat / gece | Yetişkinde düzenli uyku için alt sınır; fitness profilinde `uyku-kisa-fitness` |\n\n## Sınırlılıklar\n\n- Genel yetişkin nüfusu için; sporcuya özgü değil (fitness profilinde aranan da bu).\n- Kişisel uyku ihtiyacını ölçmüyor; alt sınır olarak kullanılır.\n- Sayılar PMC'deki tam metinden okundu (PMC4434546)."
+  },
+  {
     "id": "weiss-2017",
     "title": "The Relationship Between Training Load and Injury in Men's Professional Basketball",
     "authors": [
@@ -2738,7 +2888,42 @@ export const kbRules: readonly KbRule[] = [
       "panagiotakis-2017",
       "bache-mathiesen-2024",
       "sprague-2018"
-    ]
+    ],
+    "profile": {
+      "sport": [
+        "basketbol"
+      ]
+    }
+  },
+  {
+    "id": "bolge-esleme-fitness",
+    "module": "kas-tendon",
+    "description": "Fitness profilinde etiket → bölge eşlemesi (nitel, katsayısız): alt vücut kuvvet: quadriceps, hamstring, kalça; üst vücut kuvvet: omuz. Ayak bileği ve bel modelde yok; yalnız ağrı haritasında.",
+    "value": {
+      "lower_strength": [
+        "quadriceps",
+        "hamstring",
+        "hip"
+      ],
+      "upper_strength": [
+        "shoulder"
+      ],
+      "not_modeled": [
+        "ankle",
+        "lower_back"
+      ]
+    },
+    "appliesTo": "bölge yükü ve toparlanma penceresi hesabı, fitness profili",
+    "notes": "Kuvvet etiketleri sporcu sürümündekiyle aynı anatomik eşlemedir; bir eşik değil, hangi dokuların çalıştığını işaretler (vanrenterghem-2017, kalkhoven-2021). Toparlanma süresinin kaynakları bolge-toparlanma-penceresi'nde. Sıçrama, yön değiştirme ve sprint eşlemeleri basketbola ve takım sporlarına özgü kaynaklardan geldiği için fitness'ta yok.",
+    "sources": [
+      "vanrenterghem-2017",
+      "kalkhoven-2021"
+    ],
+    "profile": {
+      "sport": [
+        "fitness"
+      ]
+    }
   },
   {
     "id": "bolge-icerik-etiketleri",
@@ -2781,7 +2966,43 @@ export const kbRules: readonly KbRule[] = [
     "sources": [
       "vanrenterghem-2017",
       "kalkhoven-2021"
-    ]
+    ],
+    "profile": {
+      "sport": [
+        "basketbol"
+      ]
+    }
+  },
+  {
+    "id": "bolge-icerik-etiketleri-fitness",
+    "module": "kas-tendon",
+    "description": "Fitness profilinde seans içerik etiketleri: alt vücut kuvvet, üst vücut kuvvet. Sıçrama / iniş, yön değiştirme / ani duruş ve sprint etiketleri yok. Kuvvet seansında ikisi hazır seçili gelir; kullanıcı düzeltir.",
+    "value": {
+      "tags": [
+        "lower_strength",
+        "upper_strength"
+      ],
+      "defaults_by_kind": {
+        "conditioning": [],
+        "strength": [
+          "lower_strength",
+          "upper_strength"
+        ],
+        "mobility": [],
+        "rehab": []
+      }
+    },
+    "appliesTo": "her seans kaydı; etiketsiz eski seanslar türün hazır etiketleriyle sayılır ve bu ekranda belirtilir",
+    "notes": "Fizyolojik ve biyomekanik yük ayrı yollardır (vanrenterghem-2017); RPE doku yükünü göstermez (kalkhoven-2021). Sıçrama, yön değiştirme ve sprint eşlemelerinin kaynakları basketbol, voleybol ve futbol (bolge-esleme); fitness'a aktarılmadı. Hazır seçimler bir arayüz varsayılanıdır, eşik değildir.",
+    "sources": [
+      "vanrenterghem-2017",
+      "kalkhoven-2021"
+    ],
+    "profile": {
+      "sport": [
+        "fitness"
+      ]
+    }
   },
   {
     "id": "bolge-toparlanma-penceresi",
@@ -3105,6 +3326,25 @@ export const kbRules: readonly KbRule[] = [
     }
   },
   {
+    "id": "gunun-durumu-dil-fitness",
+    "module": "toparlanma",
+    "description": "Fitness profilinde günün durumu bir antrenman talimatı değil, izleme özeti olarak yazılır: durum adları (Hazır, Kontrollü, Toparlan) ve eşikler aynı kalır; öneri cümleleri antrenmanı değiştirmeyi buyurmaz, kendini nasıl hissettiğine göre ayarlamayı önerir.",
+    "value": {
+      "tone": "temkinli",
+      "thresholds_changed": false
+    },
+    "appliesTo": "Bugün ekranındaki günün durumu önerisi ve koçun durum cümlesi, fitness profili",
+    "notes": "HRV'ye göre yönlendirilen antrenman sağlıklı ve rekreasyonel bireylerde önceden planlanmış antrenmana üstünlük göstermedi (medellin-ruiz-2020, 8 randomize çalışma). Bu yüzden fitness profilinde durum, antrenmanı değiştirme talimatı gibi sunulmaz. Durum mantığı kaynağa göre seçilen gunun-durumu / gunun-durumu-apple kuralından gelir; bu kural yalnız dili belirler.",
+    "sources": [
+      "medellin-ruiz-2020"
+    ],
+    "profile": {
+      "sport": [
+        "fitness"
+      ]
+    }
+  },
+  {
     "id": "hastalik-isareti-yonlendirme",
     "module": "hastalik-isaretleri",
     "description": "Gece işaretlerinden (solunum, nabız, SpO2, cilt sıcaklığı) biri çıktığında uygulama ve koç yalnız sabit metinle yönlendirir: ateş ya da ateşli hissetme, titreme, olağandışı halsizlik, yaygın kas ağrısı, nefes darlığı, göğüs ağrısı, istirahatte çarpıntı ya da baş dönmesi varsa ya da antrenman yapacak kadar iyi hissetmiyorsa antrenmana çıkmadan doktora başvurması; belirti yoksa sonraki gecelere bakması. İşaretler hastalık teşhisi koymaz, yük önerisi değiştirmez.",
@@ -3253,7 +3493,44 @@ export const kbRules: readonly KbRule[] = [
       "kerksick-2018",
       "thomas-2016",
       "collins-2021"
-    ]
+    ],
+    "profile": {
+      "sport": [
+        "basketbol"
+      ]
+    }
+  },
+  {
+    "id": "karbonhidrat-gun-tipi-fitness",
+    "module": "beslenme",
+    "description": "Fitness profilinde günlük karbonhidrat hedefi gün tipine göre (g/kg/gün, sabah kilosuyla): dinlenme 3-5, antrenman 3-5, yoğun 5-8. Maç çevresi gün tipi yok. Gün tipi kayıtlardan, bu sırayla: seansların toplam süresi 120 dakika veya üstüyse yoğun; seans varsa antrenman; yoksa dinlenme. Kullanıcı gün tipini değiştirebilir.",
+    "value": {
+      "rest": [
+        3,
+        5
+      ],
+      "training": [
+        3,
+        5
+      ],
+      "high": [
+        5,
+        8
+      ],
+      "high_when_minutes_at_least": 120,
+      "weight_days": 7,
+      "unit": "g/kg/gün"
+    },
+    "appliesTo": "her gün; kilo son 7 günün sabah kilosu ortalamasından (yoksa son ölçüm)",
+    "notes": "Genel bir fitness programındaki kişi (ör. günde 30-40 dakika, haftada 3 kez) karbonhidrat ihtiyacını normal beslenmeyle karşılar: 3-5 g/kg/gün (kerksick-2018, tam metin); bu yüzden antrenman günü dinlenme günüyle aynı aralıkta. Günde 2-3 saat yoğun antrenmanda 5-8 g/kg/gün (kerksick-2018); 120 dakika bu aralığın alt ucu. Sporcu sürümündeki 5-7 (basketbol derlemesi), maç çevresi 6-8 ve yoğun 8-10 fitness'a aktarılmadı. Hedef bir rehber aralık, eşik ya da uyarı değil.",
+    "sources": [
+      "kerksick-2018"
+    ],
+    "profile": {
+      "sport": [
+        "fitness"
+      ]
+    }
   },
   {
     "id": "kilo-artisi-notu",
@@ -3303,7 +3580,12 @@ export const kbRules: readonly KbRule[] = [
       "osterberg-2009",
       "doeven-2018",
       "collins-2021"
-    ]
+    ],
+    "profile": {
+      "sport": [
+        "basketbol"
+      ]
+    }
   },
   {
     "id": "mac-gunu-sekerleme",
@@ -3325,7 +3607,12 @@ export const kbRules: readonly KbRule[] = [
     "sources": [
       "mesas-2023",
       "janse-van-rensburg-2021"
-    ]
+    ],
+    "profile": {
+      "sport": [
+        "basketbol"
+      ]
+    }
   },
   {
     "id": "mac-oncesi-gun",
@@ -3341,7 +3628,12 @@ export const kbRules: readonly KbRule[] = [
       "collins-2021",
       "juliff-2015",
       "walsh-2021"
-    ]
+    ],
+    "profile": {
+      "sport": [
+        "basketbol"
+      ]
+    }
   },
   {
     "id": "mac-oncesi-ogun",
@@ -3371,7 +3663,12 @@ export const kbRules: readonly KbRule[] = [
       "collins-2021",
       "williams-2015",
       "gentle-2014"
-    ]
+    ],
+    "profile": {
+      "sport": [
+        "basketbol"
+      ]
+    }
   },
   {
     "id": "mac-sonrasi",
@@ -3404,7 +3701,12 @@ export const kbRules: readonly KbRule[] = [
       "pernigoni-2024",
       "collins-2021",
       "doeven-2018"
-    ]
+    ],
+    "profile": {
+      "sport": [
+        "basketbol"
+      ]
+    }
   },
   {
     "id": "nabiz-olcu",
@@ -3532,7 +3834,46 @@ export const kbRules: readonly KbRule[] = [
     "sources": [
       "foster-2001",
       "haddad-2017"
-    ]
+    ],
+    "profile": {
+      "sport": [
+        "basketbol"
+      ]
+    }
+  },
+  {
+    "id": "seans-rpe-olcek-fitness",
+    "module": "yuk",
+    "description": "Seans RPE: değiştirilmiş CR-10, 0-10 tam sayı; sözel çapalar 0, 1, 2, 3, 4, 5, 7 ve 10'da.",
+    "value": {
+      "min": 0,
+      "max": 10,
+      "step": 1,
+      "anchors": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        7,
+        10
+      ],
+      "unit": "RPE"
+    },
+    "appliesTo": "her seans bittikten sonra, tüm seans için tek puan",
+    "notes": "Ölçek sporcu sürümüyle aynı. Kuvvet antrenmanında RPE yoğunluk ve fizyolojik zorlanmayla güçlü ilişkili (lea-2022, meta-analiz, r = 0,88) ve seans RPE'si kuvvet antrenmanında tutarlı (day-2004, ICC 0,88): fitness profilinde kuvvet seansları da aynı ölçekle puanlanır.",
+    "sources": [
+      "foster-2001",
+      "haddad-2017",
+      "lea-2022",
+      "day-2004"
+    ],
+    "profile": {
+      "sport": [
+        "fitness"
+      ]
+    }
   },
   {
     "id": "seans-yuku",
@@ -3564,7 +3905,32 @@ export const kbRules: readonly KbRule[] = [
       "janse-van-rensburg-2021",
       "janse-van-rensburg-2020",
       "roberts-2019"
-    ]
+    ],
+    "profile": {
+      "sport": [
+        "basketbol"
+      ]
+    }
+  },
+  {
+    "id": "seyahat-yorgunlugu-fitness",
+    "module": "seyahat",
+    "description": "Seyahat günü (saat farkı olsun olmasın): seyahat yorgunluğu yönden ve saat farkından bağımsızdır. Bugün'de yolculuk günü notu: sıvı ve yemeği önceden planla, fırsat oldukça kısa uyku, uyku borcunu yolculukta kapatmaya çalışma, kafein yatmadan en az 6 saat önce kesilir, alkol yok. Eşik yok; günün durumu değişmez.",
+    "value": {
+      "caffeine_before_sleep_hours": 6,
+      "alcohol": false
+    },
+    "appliesTo": "kullanıcının seyahat kaydettiği gidiş ve dönüş günleri",
+    "notes": "Sporcu sürümüyle aynı öneriler (janse-van-rensburg-2021, uzman konsensüsü; janse-van-rensburg-2020: müdahale çalışması yok, öneriler uzman uzlaşısı). Takım sporcularına ve elit sporculara ait performans cümlesi (roberts-2019) fitness profilinde yok.",
+    "sources": [
+      "janse-van-rensburg-2021",
+      "janse-van-rensburg-2020"
+    ],
+    "profile": {
+      "sport": [
+        "fitness"
+      ]
+    }
   },
   {
     "id": "sivi-alim-kaydi",
@@ -3668,7 +4034,30 @@ export const kbRules: readonly KbRule[] = [
       "liu-2026",
       "xie-2026",
       "zhang-2026b"
-    ]
+    ],
+    "profile": {
+      "sport": [
+        "basketbol"
+      ]
+    }
+  },
+  {
+    "id": "takviye-kanit-fitness",
+    "module": "takviye",
+    "description": "Koç takviye sorularını yalnız kanıtı güçlü takviyelerin kaynaklarına dayanarak yanıtlar (PRODUCT modül 7, karar 0038). Performansa doğrudan katkısı için iyi kanıtı olanlar belirli senaryolarda kafein, kreatin monohidrat, nitrat, sodyum bikarbonat ve olasılıkla beta-alanin; doz ve zamanlama yalnız kaynakta yazdığı gibi aktarılır, uygulama kişiye doz hesaplamaz. Kaynağı olmayan takviyede koç 'kaynak yok' der.",
+    "appliesTo": "koçta takviye sorusu (soru sınıfı supplement)",
+    "notes": "IOC uzlaşısı (maughan-2018) genel çerçeve; kreatin için ISSN tutum bildirgesi (kreider-2017), kafein için ISSN tutum bildirgesi (guest-2021). Basketbolculardaki (liu-2026) ve takım sporlarındaki (xie-2026) kafein çalışmaları fitness profilinde kullanılmaz. Kafein egzersiz sonrası uykuyu kötüleştirebilir, algılanan toparlanmayı değiştirmiyor (zhang-2026b). Nitrat, bikarbonat ve beta-alanin için ayrı kaynak yok; koç 'kaynak yok' der.",
+    "sources": [
+      "maughan-2018",
+      "kreider-2017",
+      "guest-2021",
+      "zhang-2026b"
+    ],
+    "profile": {
+      "sport": [
+        "fitness"
+      ]
+    }
   },
   {
     "id": "ter-orani",
@@ -3747,7 +4136,33 @@ export const kbRules: readonly KbRule[] = [
     "notes": "walsh-2021 sporcularda alışkanlık haline gelmiş kısa uykuyu gecede 7 saatten az olarak tanımlıyor ve herkese aynı süreyi önermek yerine kişisel ihtiyacı öneriyor. Kişisel uyku ihtiyacı henüz ölçülmüyor; 7 saat bu yüzden alt sınır olarak kullanılır. Tek gece değil ortalama okunur.",
     "sources": [
       "walsh-2021"
-    ]
+    ],
+    "profile": {
+      "sport": [
+        "basketbol"
+      ]
+    }
+  },
+  {
+    "id": "uyku-kisa-fitness",
+    "module": "toparlanma",
+    "description": "Son 7 gecenin ortalama uyku süresi (uykuda geçen dakika, şekerlemeler hariç) 7 saatin altındaysa uyku 'kısa'.",
+    "value": {
+      "min_hours": 7,
+      "rolling_nights": 7,
+      "unit": "saat"
+    },
+    "appliesTo": "Google Health uyku oturumları (sleep_sessions.minutes_asleep, şekerleme olmayanlar; bitiş gününe göre)",
+    "notes": "Fitness profilinde sporcuya özgü kaynak yerine genel yetişkin konsensüsü: yetişkinde düzenli olarak gecede 7 saat ve üstü (watson-2015, 18-60 yaş, tam metin); yetişkin aralığı 7-9 saat (hirshkowitz-2015). Değer sporcu sürümüyle aynı (7 saat, 7 gecelik ortalama). Kişisel uyku ihtiyacı ölçülmediği için 7 saat alt sınır olarak kullanılır.",
+    "sources": [
+      "watson-2015",
+      "hirshkowitz-2015"
+    ],
+    "profile": {
+      "sport": [
+        "fitness"
+      ]
+    }
   },
   {
     "id": "yuk-artis-notu",
@@ -3770,7 +4185,32 @@ export const kbRules: readonly KbRule[] = [
       "ferioli-2020",
       "impellizzeri-2020",
       "impellizzeri-2021"
-    ]
+    ],
+    "profile": {
+      "sport": [
+        "basketbol"
+      ]
+    }
+  },
+  {
+    "id": "yuk-artis-notu-fitness",
+    "module": "yuk",
+    "description": "Fitness profilinde 'Bu hafta yük alıştığın seviyenin belirgin üstünde' notu gösterilmez. Yük ve yük oranı yine hesaplanır ve gösterilir; yalnız not ve renk çıkmaz.",
+    "value": {
+      "shown": false
+    },
+    "appliesTo": "yuk-orani hesaplanabildiğinde, fitness profili",
+    "notes": "Sabit bir haftalık artış kuralı rekreasyonel bireyde sakatlığı önlemedi (buist-2007, randomize çalışma, acemi koşucular) ve artış eşiğinin genel sakatlıkla ilişkisi gösterilemedi (nielsen-2014). Oran eşiklerinin dayandığı akut / kronik oran yönteminin kendisi tartışmalı (impellizzeri-2020). Sporcu sürümündeki 1,5 takım sporlarından geliyor; fitness'a aktarılmadı.",
+    "sources": [
+      "buist-2007",
+      "nielsen-2014",
+      "impellizzeri-2020"
+    ],
+    "profile": {
+      "sport": [
+        "fitness"
+      ]
+    }
   },
   {
     "id": "yuk-ewma",

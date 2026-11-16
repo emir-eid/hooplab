@@ -1,7 +1,7 @@
 // Antrenman yükü görünümü: seans satırlarından motorun okumasına ve grafiğe (karar 0025, rules/yuk.json).
 // Saf modül; sorgu training-load.ts'te. Sayıları motor hesaplar, burada yalnız satırlar seriye çevrilir.
 
-import { addIsoDays, dailyLoads, loadWeek, readTrainingLoad, sessionLoad, type TrainingLoadReading } from '@hooplab/engine';
+import { addIsoDays, dailyLoads, loadWeek, readTrainingLoad, sessionLoad, type Sport, type TrainingLoadReading } from '@hooplab/engine';
 import { loadGroups, type LoadGroup } from '@hooplab/theme';
 
 import type { SessionKind } from '../copy/labels.ts';
@@ -74,14 +74,16 @@ export interface TrainingLoadView {
 export function buildTrainingLoadView(
   rows: readonly LoadSessionRow[],
   today: string,
-  opts: { earliest: string | null; untagged: readonly UntaggedExercise[] },
+  opts: { earliest: string | null; untagged: readonly UntaggedExercise[]; sport?: Sport },
 ): TrainingLoadView {
   const from = loadFrom(today);
   const sessions = rows
     .filter((r) => r.local_date >= from && r.local_date <= today)
     .map((r) => ({ date: r.local_date, rpe: r.rpe, durationMin: r.duration_min }));
   const historyStart = opts.earliest !== null && opts.earliest < from ? from : undefined;
-  const reading = readTrainingLoad(sessions, today, historyStart ? { historyStart } : {});
+  // Fitness'ta yük artış notu yok (yuk-artis-notu-fitness); sahibinde seçenek verilmez, okuma aynı.
+  const sport = opts.sport && opts.sport !== 'basketbol' ? { sport: opts.sport } : {};
+  const reading = readTrainingLoad(sessions, today, historyStart ? { historyStart, ...sport } : sport);
 
   const chartFrom = addIsoDays(today, -(loadChartDays - 1));
   const acuteFrom = addIsoDays(reading.asOf, -(loadWeek.days - 1));

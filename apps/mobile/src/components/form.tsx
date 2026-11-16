@@ -12,24 +12,29 @@ import { PrimaryButton } from '@/components/primary-button';
 import { Text } from '@/components/text';
 import { usePalette } from '@/theme/appearance';
 
-/** Form başlığı: tutamaç, başlık, kapat düğmesi, altında kısa açıklama. */
-export function FormHeader({ title, subtitle }: { title: string; subtitle?: string }) {
+/**
+ * Form başlığı: tutamaç, başlık, kapat düğmesi, altında kısa açıklama. `closable={false}`: modal olmayan, kapatılacak
+ * yeri olmayan ekran (ilk giriş profil soruları); tutamaç ve kapat düğmesi çizilmez.
+ */
+export function FormHeader({ title, subtitle, closable = true }: { title: string; subtitle?: string; closable?: boolean }) {
   const palette = usePalette();
   return (
     <View>
-      <View style={[styles.grabber, { backgroundColor: palette.dot }]} />
+      {closable ? <View style={[styles.grabber, { backgroundColor: palette.dot }]} /> : null}
       <View style={styles.head}>
         <Text variant="title2" accessibilityRole="header">
           {title}
         </Text>
-        <Pressable
-          onPress={() => router.back()}
-          accessibilityRole="button"
-          accessibilityLabel="Kapat"
-          hitSlop={spacing[2]}
-          style={({ pressed }) => [styles.close, { backgroundColor: palette.cardMuted }, pressed && styles.pressed]}>
-          <Icon name="close" color={palette.inkSecondary} size={size.iconSmall} strokeWidth={2.2} />
-        </Pressable>
+        {closable ? (
+          <Pressable
+            onPress={() => router.back()}
+            accessibilityRole="button"
+            accessibilityLabel="Kapat"
+            hitSlop={spacing[2]}
+            style={({ pressed }) => [styles.close, { backgroundColor: palette.cardMuted }, pressed && styles.pressed]}>
+            <Icon name="close" color={palette.inkSecondary} size={size.iconSmall} strokeWidth={2.2} />
+          </Pressable>
+        ) : null}
       </View>
       {subtitle ? (
         <Text variant="subhead" tone="inkSecondary" style={styles.subtitle}>

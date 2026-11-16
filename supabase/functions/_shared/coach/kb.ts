@@ -77,19 +77,36 @@ export function forProfile(kb: Kb, profile: KbProfile): Kb {
   };
 }
 
+/** Profil sürümlerinin kimlik ekleri (research/rules: `variant_of`); her profile ailenin tam bir üyesi düşer. */
+const VARIANT_SUFFIXES = ['apple', 'fitness'] as const;
+
 /**
  * Profil sürümü olan kurallar (karar 0061): taban kullanıcının profiline göre süzüldüğü için ana kural yoksa
- * `-apple` sürümü kullanılır. Sahibinin tabanında ana kural vardır; kimlikler ve dolayısıyla istem değişmez.
+ * profile düşen sürüm (`-apple`, `-fitness`) kullanılır. Sahibinin tabanında ana kural vardır; kimlikler ve
+ * dolayısıyla istem değişmez.
  */
 export function profileRuleId(kb: Kb, baseId: string): string {
   if (kb.rules.some((r) => r.id === baseId)) return baseId;
-  const apple = `${baseId}-apple`;
-  return kb.rules.some((r) => r.id === apple) ? apple : baseId;
+  for (const suffix of VARIANT_SUFFIXES) {
+    const id = `${baseId}-${suffix}`;
+    if (kb.rules.some((r) => r.id === id)) return id;
+  }
+  return baseId;
 }
 
 /** Süzülmüş taban Apple Health profiline mi ait (HRV ölçüsü SDNN, tahmin)? */
 export function isAppleKb(kb: Kb): boolean {
   return profileRuleId(kb, 'hrv-olcu') === 'hrv-olcu-apple';
+}
+
+/** Süzülmüş taban fitness profiline mi ait (maç ve yük artış notu yok; karar 0061 sıra 4)? */
+export function isFitnessKb(kb: Kb): boolean {
+  return profileRuleId(kb, 'uyku-kisa') === 'uyku-kisa-fitness';
+}
+
+/** Kural tabanda var mı (profil süzmesinden sonra; ör. maç kuralları yalnız basketbol profilinde)? */
+export function hasRule(kb: Kb, ruleId: string): boolean {
+  return kb.rules.some((r) => r.id === ruleId);
 }
 
 export interface Kb {

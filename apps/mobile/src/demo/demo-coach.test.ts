@@ -126,8 +126,8 @@ test('demo özeti maç günü: her senaryoda hazırlık dili, denetçiden geçer
 });
 
 test('kartın maç ve seyahat kaynakları: kanıt tabanında yalnız mac.json ve seyahat.json kurallarına bağlı olanlar', () => {
-  const travelRules = new Set(['seyahat-yorgunlugu', 'jet-lag-uyum', 'jet-lag-varis']);
-  const isMatch = (id: string) => id.startsWith('mac-') || travelRules.has(id);
+  // Profil sürümleri de (seyahat-yorgunlugu-fitness, karar 0061 sıra 4) maç ve seyahat ailesinde sayılır.
+  const isMatch = (id: string) => id.startsWith('mac-') || id.startsWith('seyahat-') || id.startsWith('jet-lag-');
   const others = new Set(kbRules.filter((r) => !isMatch(r.id)).flatMap((r) => r.sources));
   const mac = new Set(kbRules.filter((r) => isMatch(r.id)).flatMap((r) => r.sources));
   assert.deepEqual([...matchDayOnlySources].sort(), [...mac].filter((id) => !others.has(id)).sort());

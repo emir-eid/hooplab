@@ -17,6 +17,7 @@ import {
   type DayValue,
   type Match,
   type MatchesAround,
+  type Sport,
   type Meal,
   type MealItem,
   type MealSlot,
@@ -140,15 +141,19 @@ export function buildNutritionView(
   fluidRows: readonly FluidRow[] = [],
   matchList: readonly Match[] = [],
   yesterdaySessions: readonly { kind: SessionKind }[] = [],
+  sport: Sport = 'basketbol',
 ): NutritionView {
   const weights = toWeightSeries(weightRows).filter((w) => w.date >= weightFrom(today) && w.date <= today);
-  const matches = matchesAround(today, matchList);
+  // Fitness'ta maç takvimi ve maç çevresi yok (karar 0061 sıra 4): maç kaydı gün tipini de koçu da etkilemez.
+  const fitness = sport === 'fitness';
+  const matches = matchesAround(today, fitness ? [] : matchList);
   const matchDay = matches.today !== null;
-  const aroundMatch = matches.yesterday !== null || matches.tomorrow !== null || yesterdaySessions.some((s) => matchDayRule.kinds.includes(s.kind));
-  const inferred = inferDayType(todaySessions, { today: matchDay, adjacent: aroundMatch });
-  const dayType = override ?? inferred;
+  const aroundMatch =
+    !fitness && (matches.yesterday !== null || matches.tomorrow !== null || yesterdaySessions.some((s) => matchDayRule.kinds.includes(s.kind)));
+  const inferred = inferDayType(todaySessions, { today: matchDay, adjacent: aroundMatch }, sport);
+  const dayType = fitness && override === 'match' ? inferred : (override ?? inferred);
   const weight = targetWeight(weights, today);
-  const targets = nutritionTargets(dayType, weight?.kg ?? null);
+  const targets = nutritionTargets(dayType, weight?.kg ?? null, sport);
   const meals = toMeals(mealRows).filter((m) => m.localDate === today);
   const fluids = toFluids(fluidRows, today);
   return {

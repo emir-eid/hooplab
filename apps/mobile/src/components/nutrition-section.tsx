@@ -2,7 +2,7 @@
 // (packages/engine), metinler copy/nutrition'dan; burada yalnız yerleşim. Hedef rehber aralık, kayıtlı alım tahmin.
 // Renk yalnız kategori (karbonhidrat / protein / su); risk rengi ve uyarı yok.
 
-import { dayTypes, sweatTest, type DayType } from '@hooplab/engine';
+import { nutritionBySport, sweatTest, type DayType } from '@hooplab/engine';
 import { layout, radius, size, spacing, withAlpha, type Nutrient } from '@hooplab/theme';
 import { router } from 'expo-router';
 import { useState } from 'react';
@@ -41,6 +41,7 @@ import {
 } from '@/copy/nutrition';
 import type { TrainingSession } from '@/data/daily-log';
 import type { NutritionView } from '@/data/nutrition-view';
+import { useSport } from '@/data/profile';
 import { usePalette } from '@/theme/appearance';
 
 function SectionHead({ title, explain }: { title: string; explain: 'nutrition' | 'sweatTest' }) {
@@ -143,6 +144,8 @@ interface NutritionSectionProps {
 
 /** Halkalar (karbonhidrat, protein, su), hızlı ekleme, gün tipi; katlanır öğün listesi ve sabah kilosu. */
 export function NutritionSection({ view, onDayType, onDeleteMeal, sweatFluidL }: NutritionSectionProps) {
+  // Fitness'ta maç çevresi gün tipi yok (karbonhidrat-gun-tipi-fitness, karar 0061 sıra 4).
+  const dayTypes = nutritionBySport[useSport()].dayTypes;
   const palette = usePalette();
   const [open, setOpen] = useState(false);
   const t = view.targets;

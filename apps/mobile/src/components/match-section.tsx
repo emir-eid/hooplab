@@ -41,11 +41,14 @@ export function TravelCard({ reading }: { reading: TravelReading | null }) {
   return <NoteCard icon="plane" title={note.title} explainer="travel" lines={note.lines} />;
 }
 
-/** Takvime giden satır; sıradaki maç (bugünden sonra) yanında yazar. */
-export function MatchCalendarRow({ next }: { next: Match | null }) {
+/**
+ * Takvime giden satır; sıradaki maç (bugünden sonra) yanında yazar. `travelOnly`: fitness profilinde maç takvimi yok
+ * (karar 0061 sıra 4), satır yalnız seyahatlere götürür.
+ */
+export function MatchCalendarRow({ next, travelOnly = false }: { next: Match | null; travelOnly?: boolean }) {
   const palette = usePalette();
-  const meta = next ? matchMeta(next) : '';
-  const label = next ? `Sıradaki maç: ${formatShortDate(next.date)}${meta ? ` · ${meta}` : ''}` : 'Maç ve seyahat';
+  const meta = next && !travelOnly ? matchMeta(next) : '';
+  const label = travelOnly ? 'Seyahat' : next ? `Sıradaki maç: ${formatShortDate(next.date)}${meta ? ` · ${meta}` : ''}` : 'Maç ve seyahat';
   return (
     <Pressable
       onPress={() => router.push('/matches')}

@@ -5,7 +5,7 @@
 import type { AuditSentence } from '../../../../supabase/functions/_shared/coach/audit.ts';
 import { dailyAttemptLimit, weeklyAttemptLimit, type RoutingNote } from '../../../../supabase/functions/_shared/coach/contract.ts';
 import { metricKeys, type MetricKey } from '../../../../supabase/functions/_shared/coach/snapshot.ts';
-import type { DataSource } from '@hooplab/engine';
+import type { DataSource, Sport } from '@hooplab/engine';
 
 import { explainerFor, explainers, type ExplainerId } from './explainers.ts';
 import { illnessSignsFooter, illnessSignsTitle } from './illness-signs.ts';
@@ -106,8 +106,9 @@ export function basisTarget(blockId: string): BasisTarget {
 }
 
 /** Blok kimliğinin dayanaklar listesindeki adı. */
-export function basisLabel(blockId: string, source: DataSource = 'google_health'): string {
-  if (blockId === 'day') return 'Maç takvimi';
+export function basisLabel(blockId: string, source: DataSource = 'google_health', sport: Sport = 'basketbol'): string {
+  // Fitness'ta gün bloğu maç takvimi değil (karar 0061 sıra 4).
+  if (blockId === 'day') return sport === 'fitness' ? 'Gün' : 'Maç takvimi';
   if (blockId === 'travel') return explainers.travel.title;
   const target = basisTarget(blockId);
   if (!target) return 'Günün sayıları';

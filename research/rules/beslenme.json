@@ -3,6 +3,7 @@
   "rules": [
     {
       "id": "karbonhidrat-gun-tipi",
+      "profile": { "sport": ["basketbol"] },
       "description": "Günlük karbonhidrat hedefi gün tipine göre (g/kg/gün, sabah kilosuyla): dinlenme 3-5, antrenman 5-7, maç çevresi 6-8, yoğun 8-10. Gün tipi kayıtlardan, bu sırayla: bugün maç varsa (maç takviminde ya da 'Bugün maç var' işaretiyle, ya da maç seansı kaydı; mac-gunu) maç çevresi; seansların toplam süresi 180 dakika veya üstüyse yoğun; dün maç vardıysa ya da yarın maç varsa (mac-oncesi-gun, mac-sonrasi) maç çevresi; seans varsa antrenman; yoksa dinlenme. Kullanıcı gün tipini değiştirebilir.",
       "value": { "rest": [3, 5], "training": [5, 7], "match": [6, 8], "high": [8, 10], "high_when_minutes_at_least": 180, "match_when_kind": ["game"], "match_day_offsets": [-1, 0, 1], "weight_days": 7, "unit": "g/kg/gün" },
       "applies_to": "her gün; kilo son 7 günün sabah kilosu ortalamasından (yoksa son ölçüm)",
@@ -40,6 +41,16 @@
       "applies_to": "beslenme hedefi sayfası ve açıklaması",
       "sources": ["mountjoy-2023", "ackerman-2023", "capling-2017"],
       "notes": "IOC 2023 konsensüsü REDs'i egzersiz harcamasına göre yetersiz enerji alımının sonuçları olarak tanımlıyor; tanı klinik bir araçla (CAT2) klinisyen tarafından konuyor (mountjoy-2023). Enerji yeterliliği için alım, egzersiz harcaması ve yağsız kütle gerekir; IOC alt grubu bunların ölçümünün araştırmada bile standart olmadığını yazıyor (ackerman-2023). Sporcuların bildirdiği enerji alımı ortalama %19 eksik (capling-2017). Öğün kaydı eklendiğinde (karar 0030) yeniden değerlendirildi: uyarı ve alıma dayalı not yine yok. Konsensüsün tam metnine erişilemedi; eşik kullanılmadı. CLAUDE.md §3 tıbbi sınır: tanı yok."
+    },
+    {
+      "id": "karbonhidrat-gun-tipi-fitness",
+      "variant_of": "karbonhidrat-gun-tipi",
+      "profile": { "sport": ["fitness"] },
+      "description": "Fitness profilinde günlük karbonhidrat hedefi gün tipine göre (g/kg/gün, sabah kilosuyla): dinlenme 3-5, antrenman 3-5, yoğun 5-8. Maç çevresi gün tipi yok. Gün tipi kayıtlardan, bu sırayla: seansların toplam süresi 120 dakika veya üstüyse yoğun; seans varsa antrenman; yoksa dinlenme. Kullanıcı gün tipini değiştirebilir.",
+      "value": { "rest": [3, 5], "training": [3, 5], "high": [5, 8], "high_when_minutes_at_least": 120, "weight_days": 7, "unit": "g/kg/gün" },
+      "applies_to": "her gün; kilo son 7 günün sabah kilosu ortalamasından (yoksa son ölçüm)",
+      "sources": ["kerksick-2018"],
+      "notes": "Genel bir fitness programındaki kişi (ör. günde 30-40 dakika, haftada 3 kez) karbonhidrat ihtiyacını normal beslenmeyle karşılar: 3-5 g/kg/gün (kerksick-2018, tam metin); bu yüzden antrenman günü dinlenme günüyle aynı aralıkta. Günde 2-3 saat yoğun antrenmanda 5-8 g/kg/gün (kerksick-2018); 120 dakika bu aralığın alt ucu. Sporcu sürümündeki 5-7 (basketbol derlemesi), maç çevresi 6-8 ve yoğun 8-10 fitness'a aktarılmadı. Hedef bir rehber aralık, eşik ya da uyarı değil."
     }
   ]
 }

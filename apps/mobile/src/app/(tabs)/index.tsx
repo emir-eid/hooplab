@@ -71,6 +71,7 @@ import type { RecoveryView } from '@/data/recovery-view';
 import { fetchTrainingLoad } from '@/data/training-load';
 import type { TrainingLoadView } from '@/data/training-load-view';
 import type { DemoScenario } from '@/demo/demo-data';
+import { useSport } from '@/data/profile';
 import { useDemoScenario } from '@/demo/demo-mode';
 import { usePalette } from '@/theme/appearance';
 import { formatDayHeader } from '@/utils/format-date';
@@ -92,6 +93,8 @@ export default function TodayRoute() {
 }
 
 function TodayScreen({ demo }: { demo: DemoScenario | null }) {
+  // Fitness'ta maç takvimi, maç işareti ve maç çevresi yok (karar 0061 sıra 4); demo sahibinin profili.
+  const fitness = useSport() === 'fitness';
   const palette = usePalette();
   const [log, setLog] = useState<TodayLog | null>(null);
   const [error, setError] = useState<string | null>(null);
@@ -252,9 +255,9 @@ function TodayScreen({ demo }: { demo: DemoScenario | null }) {
       {demo ? <DemoBar scenario={demo} /> : null}
 
       {recovery ? <RecoveryState view={recovery} matchDay={nutrition?.matchDay ?? false} /> : null}
-      {nutrition ? <MatchDayToggle matchDay={nutrition.matchDay} onChange={(m) => void changeMatchDay(m)} /> : null}
-      {nutrition ? <MatchCalendarRow next={nextMatch} /> : null}
-      {nutrition ? <MatchCard around={nutrition.matches} weightKg={nutrition.weight?.kg ?? null} /> : null}
+      {nutrition && !fitness ? <MatchDayToggle matchDay={nutrition.matchDay} onChange={(m) => void changeMatchDay(m)} /> : null}
+      {nutrition ? <MatchCalendarRow next={nextMatch} travelOnly={fitness} /> : null}
+      {nutrition && !fitness ? <MatchCard around={nutrition.matches} weightKg={nutrition.weight?.kg ?? null} /> : null}
       <TravelCard reading={travel} />
       {recoveryError ? (
         <Text variant="footnoteMedium" style={[styles.error, { color: palette.statusInk.red }]} accessibilityRole="alert">

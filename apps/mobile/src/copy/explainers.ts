@@ -4,6 +4,8 @@
 
 import {
   carbTargets,
+  carbTargetsFitness,
+  highDayRuleFitness,
   checkinBaseline,
   energyRule,
   energyRuleApple,
@@ -39,6 +41,7 @@ import {
   wellnessScale,
   wellnessTotalRange,
   type DataSource,
+  type Sport,
 } from '@hooplab/engine';
 
 import { formatDecimal, weeks } from './recovery.ts';
@@ -573,8 +576,107 @@ export const appleExplainers = {
   },
 } as const satisfies Partial<Record<ExplainerId, Explainer>>;
 
-/** Profilin kaynağına göre açıklama; varsayılan sahibinin profili (Google Health). */
-export function explainerFor(id: ExplainerId, source: DataSource = 'google_health'): Explainer {
+/**
+ * Fitness profilinin açıklamaları (karar 0061 sıra 4): -fitness kurallarına ve onların kaynaklarına bağlı. Basketbol ve
+ * takım sporu cümleleri, maç ve yük artış notu yok. Sahibinin (basketbol) açıklamaları değişmez.
+ */
+const base = explainers;
+export const fitnessExplainers = {
+  sleep: {
+    ...base.sleep,
+    reference: `${shortSleep.minHours} saat, yetişkinler için uyku uzman konsensüsünün düzenli olarak her gece önerdiği en az süre; başka bir uzman paneli de yetişkinde ${shortSleep.minHours} saatle başlayan bir aralığı uygun buluyor. Uyku ihtiyacı kişiden kişiye değişir; seninki henüz ölçülmüyor, bu yüzden ${shortSleep.minHours} saat alt sınır olarak kullanılıyor.`,
+    rules: ['uyku-kisa-fitness'],
+    sources: ['watson-2015', 'hirshkowitz-2015'],
+  },
+  sessionLoad: {
+    ...base.sessionLoad,
+    read: [
+      'Örnek: RPE 6 ile 90 dakikalık antrenman 540 AU eder.',
+      'Sayı yalnız kendi seanslarınla karşılaştırılınca anlamlı.',
+      'RPE seans bittikten sonra, seansın tamamı için tek puan olarak verilir.',
+    ],
+    reference:
+      'Seans RPE yöntemi. Kuvvet antrenmanında da zorluk puanı yoğunluk ve fizyolojik zorlanmayla güçlü ilişkili bulunmuş; seanstan sonra verilen tek puan aynı seans tekrarlandığında tutarlı.',
+    rules: ['seans-rpe-olcek-fitness', 'seans-yuku'],
+    sources: ['foster-2001', 'haddad-2017', 'lea-2022', 'day-2004'],
+  },
+  ratio: {
+    ...base.ratio,
+    goal: 'Bağlam: son günlerde alıştığından ne kadar fazla ya da az yüklendiğin. Eşik ve not yok.',
+    read: [
+      `İki ortalama karşılaştırılır: ${loadEwma.acuteN} günlük ve ${loadEwma.chronicN} günlük. İkisinde de yakın günler daha ağır sayılır (üstel ağırlıklı ortalama).`,
+      'Bu profilde "alıştığından belirgin fazla" notu çıkmaz; oran yalnız bağlam.',
+    ],
+    reference:
+      'Haftalık artışı sabit bir kuralla sınırlamak acemi koşucularda sakatlığı azaltmadı; artışın büyüklüğüyle sakatlık arasında da açık bir ilişki gösterilemedi. Oran yönteminin kendisi de eleştiriliyor. Bu yüzden not, renk ve "güvenli bölge" yok.',
+    rules: ['yuk-ewma', 'yuk-orani', 'yuk-artis-notu-fitness'],
+    sources: ['murray-2017', 'williams-2017', 'buist-2007', 'nielsen-2014', 'impellizzeri-2020'],
+  },
+  regionLoad: {
+    ...base.regionLoad,
+    what: `Bir bölgenin son ${regionDays[0]}-${regionDays[1]} günde hangi seanslarla, ne kadar çalıştığı. Seansa işaretlediğin içerik (alt / üst vücut kuvvet) o içeriğin çalıştırdığı bölgelere eşlenir. Bölge yükü, o bölgeyi çalıştıran seansların yükleri toplamıdır (AU).`,
+    read: [
+      'Eşleme: alt vücut kuvvet → quadriceps, hamstring ve kalça; üst vücut kuvvet → omuz.',
+      'Seans yükü bölgeler arasında bölünmez: alt ve üst vücut çalışan bir seansın yükünün tamamı her iki gruba yazılır. Bu dokuya binen yük değil, o bölgeyi çalıştıran seansların yüküdür.',
+      `Yanındaki "olağan", kendi son ${regionComparison.days} gününde aynı uzunluktaki pencerelerin ortalaması. Eşik ve renk yok; yüksek değer risk demek değil.`,
+      'İçerik girmediğin kuvvet seansları alt ve üst vücut birlikte sayılır; ekranda kaç seans olduğu yazar.',
+    ],
+    reference:
+      'Fizyolojik yük (ne kadar zorlandın) ile mekanik yük (hangi doku ne kadar çalıştı) ayrı şeyler; RPE × dakika ikincisini göstermez, bu yüzden içerik ayrıca işaretlenir. Kuvvet etiketleri anatomik bir eşleme; sıçrama, yön değiştirme ve sprint eşlemeleri takım sporlarından geldiği için bu profilde yok.',
+    limits: 'Doku yükünü ölçmez; doğrulanmış bir ölçüm değil. Ayak bileği ve bel için kaynaklı bir eşleme yok; ikisi yalnız ağrı haritasında.',
+    rules: ['bolge-icerik-etiketleri-fitness', 'bolge-esleme-fitness', 'bolge-yuku'],
+    sources: ['vanrenterghem-2017', 'kalkhoven-2021'],
+  },
+  nutrition: {
+    ...base.nutrition,
+    read: [
+      `Gün tipi kayıtlarından çıkar: seans yoksa dinlenme, seans varsa antrenman (ikisinde de ${carbTargetsFitness.rest[0]}-${carbTargetsFitness.rest[1]} g/kg karbonhidrat), toplam ${highDayRuleFitness.minutesAtLeast / 60} saat ve üstü seans varsa yoğun (${carbTargetsFitness.high[0]}-${carbTargetsFitness.high[1]}). Çiplere dokunarak değiştirebilirsin; kayıtlardan çıkan tipe dokunmak düzeltmeyi kaldırır.`,
+      ...base.nutrition.read.slice(1),
+    ],
+    reference: `Karbonhidrat aralıkları uluslararası spor beslenmesi derneğinin (ISSN) derlemesinden: genel bir fitness programı normal beslenmeyle karşılanır, günde birkaç saat yoğun antrenmanda ihtiyaç artar. Protein aralığı ISSN'nin protein bildirgesiyle uyumlu; ${dec(proteinTarget.noAddedGainAbove)} g/kg bir meta-analizden. REDs tanımı IOC 2023 konsensüsünden. Öğün kaydının yöntemi: tek ve doğrulanmış bir besin veritabanı kullanıcı girişli veritabanlarından daha geçerli bulundu; kayıt hatası sporcularla yapılan bir sistematik derlemeden. Su için kişisel plan önerisi ACSM ve NATA sıvı bildirgelerinden.`,
+    limits:
+      'Sabah kilosu girilmezse hedef yalnız g/kg olarak gösterilir. Besin listesi ABD verisi; Türk yemeklerine yaklaşık eşlenir, tarif ve pişirme yağı hesaba girmez. Kayıtlı alımdan düşük enerji yeterliliği hesaplanmaz. Takviye önerisi yok. Kişisel bir plan için diyetisyene danış.',
+    rules: ['karbonhidrat-gun-tipi-fitness', 'protein-gunluk', 'ogun-besin-listesi', 'alim-hedef-kiyasi', 'enerji-yeterliligi', 'sivi-alim-kaydi'],
+    sources: [
+      'kerksick-2018',
+      'davis-2022',
+      'thomas-2016',
+      'jager-2017',
+      'morton-2018',
+      'fukagawa-2022',
+      'morello-2025',
+      'gibson-2016',
+      'capling-2017',
+      'buck-2022',
+      'mountjoy-2023',
+      'ackerman-2023',
+      'sawka-2007',
+      'mcdermott-2017',
+    ],
+  },
+  travel: {
+    ...base.travel,
+    read: [
+      'Seyahat yorgunluğu yönden ve saat farkından bağımsız: uzun yolculuk, kabin havası, uykusuzluk.',
+      base.travel.read[1],
+      `Uyum tahmini kaba bir kural: iç saat batıya gidişte günde yaklaşık ${jetLagRule.hoursPerDay.west} saat, doğuya gidişte günde yaklaşık ${jetLagRule.hoursPerDay.east} saat uyar. Doğuya uyum daha zor.`,
+      ...base.travel.read.slice(3),
+    ],
+    reference:
+      'Seyahat yorgunluğu ve jet lag yönetimi uluslararası bir uzman konsensüsünden; uyum hızı oradaki kaba kural. Aynı grubun sistematik derlemesi kanıtın az ve düşük kaliteli olduğunu, seyahat yorgunluğu için hiç müdahale çalışması olmadığını buldu: öneriler uzman uzlaşısı. Doğuya uyumun daha zor olduğu küçük bir izleme çalışmasından; ışık ve uçuş öncesi kaydırma bir uzman derlemesinden.',
+    limits:
+      'Uyum günleri bir ortalama tahmin; kronotip ve kişiye göre çok değişir, ölçülmez. Şehir saklanmaz, yalnız saat farkı; yaz saati değişimi hesaba katılmaz.',
+    rules: ['seyahat-yorgunlugu-fitness', 'jet-lag-uyum', 'jet-lag-varis'],
+    sources: ['janse-van-rensburg-2021', 'janse-van-rensburg-2020', 'fowler-2017', 'roach-2019'],
+  },
+} as const satisfies Partial<Record<ExplainerId, Explainer>>;
+
+/**
+ * Profilin kaynağına ve sporuna göre açıklama; varsayılan sahibinin profili (Google Health · basketbol). Spor sürümü
+ * olan açıklamada (fitness) o, yoksa kaynak sürümü (Apple), yoksa ortak açıklama.
+ */
+export function explainerFor(id: ExplainerId, source: DataSource = 'google_health', sport: Sport = 'basketbol'): Explainer {
+  if (sport === 'fitness' && Object.hasOwn(fitnessExplainers, id)) return fitnessExplainers[id as keyof typeof fitnessExplainers];
   if (source === 'apple_health' && Object.hasOwn(appleExplainers, id)) return appleExplainers[id as keyof typeof appleExplainers];
   return explainers[id];
 }

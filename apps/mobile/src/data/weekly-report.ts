@@ -7,7 +7,7 @@ import type { Result } from '@/data/daily-log';
 import type { EnergyDayRow } from '@/data/energy-view';
 import { toMatches, type MatchRow } from '@/data/match-view';
 import type { FluidRow, MealRow, WeightRow } from '@/data/nutrition-view';
-import { fetchDataSource } from '@/data/profile';
+import { fetchDataSource, fetchSport } from '@/data/profile';
 import { autonomicColumns, type HealthDailyRow, type SleepRow } from '@/data/recovery-view';
 import {
   buildWeeklyReportView,
@@ -29,7 +29,7 @@ export async function fetchWeeklyReport(weekStart: string, today: string): Promi
   if (!supabase) return { ok: false, message: offline };
   const r = weeklyRanges(weekStart);
   const end = r.end < today ? r.end : today;
-  const source = await fetchDataSource();
+  const [source, sport] = await Promise.all([fetchDataSource(), fetchSport()]);
   // Sütunlar kaynağa göre (karar 0061); string olarak tutulur, sorgu tipi satır tipinden gelir.
   const dailyColumns: string = `local_date, ${autonomicColumns(source)}, respiratory_rate_bpm, spo2_avg_pct, skin_temp_nightly_c, skin_temp_baseline_c, calories_kcal`;
   const first = (table: string) => supabase!.from(table).select('local_date').order('local_date', { ascending: true }).limit(1).maybeSingle();
@@ -83,7 +83,7 @@ export async function fetchWeeklyReport(weekStart: string, today: string): Promi
   return {
     ok: true,
     value: {
-      view: buildWeeklyReportView(rows, weekStart, today, source),
+      view: buildWeeklyReportView(rows, weekStart, today, source, sport),
       firstWeek: firstWeekOf([date(firstSession), date(firstHealth), date(firstCheckin)]),
     },
   };

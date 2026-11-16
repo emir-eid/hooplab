@@ -389,3 +389,43 @@ test('yakılan enerji kuralla aynı (karar 0043)', () => {
   assert.equal(apple.in_day_status, false);
   assert.equal(apple.compared_with_intake, false);
 });
+
+// Karar 0061 sıra 4: spor sürümleri. Motorun fitness sabitleri -fitness kurallarıyla aynı; sahibininkiler değişmedi.
+test('fitness sürümleri: karbonhidrat, yük notu, etiketler, bölge eşlemesi ve uyku kuralla aynı', async () => {
+  const e = await import('../src/index.ts');
+  const carbs = rule('beslenme.json', 'karbonhidrat-gun-tipi-fitness').value;
+  assert.deepEqual(carbs.rest, e.carbTargetsFitness.rest);
+  assert.deepEqual(carbs.training, e.carbTargetsFitness.training);
+  assert.deepEqual(carbs.high, e.carbTargetsFitness.high);
+  assert.equal(carbs.high_when_minutes_at_least, e.highDayRuleFitness.minutesAtLeast);
+  assert.equal('match' in carbs, false);
+  assert.deepEqual([...e.fitnessDayTypes], ['rest', 'training', 'high']);
+
+  assert.equal(rule('yuk.json', 'yuk-artis-notu-fitness').value.shown, false);
+  assert.equal(e.loadSpikeBySport.fitness, null);
+  assert.equal(e.loadSpikeBySport.basketbol, e.loadSpikeRule);
+
+  const tags = rule('bolge.json', 'bolge-icerik-etiketleri-fitness').value;
+  assert.deepEqual(tags.tags, [...e.contentTagsBySport.fitness]);
+  for (const [kind, list] of Object.entries(tags.defaults_by_kind as Record<string, string[]>)) {
+    assert.deepEqual(list, [...e.defaultContentTagsFitness[kind as keyof typeof e.defaultContentTagsFitness]], kind);
+    assert.ok(e.sessionKindsBySport.fitness.includes(kind as never), kind);
+  }
+  const map = rule('bolge.json', 'bolge-esleme-fitness').value;
+  for (const tag of e.contentTagsBySport.fitness) assert.deepEqual(map[tag], [...e.tagRegions[tag]], tag);
+
+  const sleep = rule('toparlanma.json', 'uyku-kisa-fitness').value;
+  assert.equal(sleep.min_hours, e.shortSleep.minHours);
+  assert.equal(sleep.rolling_nights, e.shortSleep.rollingNights);
+});
+
+test('fitness gün tipi: maç bilgisi ve maç seansı gün tipini değiştirmez; 120 dk yoğun', async () => {
+  const e = await import('../src/index.ts');
+  assert.equal(e.inferDayType([{ kind: 'game', durationMin: 60 }], { today: true }, 'fitness'), 'training');
+  assert.equal(e.inferDayType([], { adjacent: true }, 'fitness'), 'rest');
+  assert.equal(e.inferDayType([{ kind: 'strength', durationMin: 120 }], {}, 'fitness'), 'high');
+  assert.equal(e.inferDayType([{ kind: 'strength', durationMin: 119 }], {}, 'fitness'), 'training');
+  assert.equal(e.inferDayType([{ kind: 'strength', durationMin: 120 }], {}), 'training', 'sahibinde 180 dk');
+  assert.deepEqual(e.nutritionTargets('training', 80, 'fitness').carbsG, [240, 400]);
+  assert.deepEqual(e.nutritionTargets('training', 80).carbsG, [400, 560]);
+});

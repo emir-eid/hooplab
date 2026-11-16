@@ -7,14 +7,16 @@ import { Card } from '@/components/card';
 import { PageHeader } from '@/components/page-header';
 import { Screen } from '@/components/screen';
 import { Text } from '@/components/text';
-import { recoverySources, recoverySourcesApple } from '@/copy/recovery-sources';
-import { useDataSource } from '@/data/profile';
+import { recoverySources, recoverySourcesApple, recoverySourcesAppleFitness, recoverySourcesFitness } from '@/copy/recovery-sources';
+import { useDataSource, useSport } from '@/data/profile';
 
 const sd = String(recoveryBand.sdMultiplier).replace('.', ',');
 
 export default function RecoveryMethodScreen() {
   // Apple Health profilinde ölçüler ve günün durumunun dayanağı farklı (karar 0061); sahibinin ekranı değişmez.
   const apple = useDataSource() === 'apple_health';
+  const fitness = useSport() === 'fitness';
+  const list = apple ? (fitness ? recoverySourcesAppleFitness : recoverySourcesApple) : fitness ? recoverySourcesFitness : recoverySources;
   return (
     <Screen>
       <PageHeader title="Nasıl hesaplanıyor?" backLabel="Bugün" />
@@ -90,15 +92,20 @@ export default function RecoveryMethodScreen() {
         </Text>
       </Card>
       <GroupFooter>
-        Çalışmalarda test edilen kural yalnız HRV'dir: bant içinde planlanan yoğunluk, dışında düşük yoğunluk. Nabız ve
-        uykuyla birleşim HoopLab'in seçimidir; doğrulanmış bir hazır olma skoru değildir. Kaynaklar çoğunlukla dayanıklılık
-        sporcularından ve sabah ölçümünden; basketbola ve gece bileklik ölçümüne aktarım bir varsayımdır.
+        {`Çalışmalarda test edilen kural yalnız HRV'dir: bant içinde planlanan yoğunluk, dışında düşük yoğunluk. Nabız ve uykuyla birleşim HoopLab'in seçimidir; doğrulanmış bir hazır olma skoru değildir. Kaynaklar çoğunlukla dayanıklılık sporcularından ve sabah ölçümünden; ${fitness ? 'düzenli antrenman yapan yetişkine' : 'basketbola'} ve gece bileklik ölçümüne aktarım bir varsayımdır.`}
       </GroupFooter>
         </>
       )}
+      {fitness ? (
+        <GroupFooter>
+          Bu profilde günün durumu bir antrenman talimatı değil, izleme özetidir: HRV'ye göre yönlendirilen antrenman
+          düzenli antrenman yapan sağlıklı kişilerde önceden planlanmış antrenmandan üstün bulunmadı. Öneriler bu yüzden
+          temkinli; kendini nasıl hissettiğine göre ayarla.
+        </GroupFooter>
+      ) : null}
 
       <ListGroup label="Kaynaklar">
-        {(apple ? recoverySourcesApple : recoverySources).map((s) => (
+        {list.map((s) => (
           <ListRow key={s.id} label={s.cite} detail={`${s.kind} · ${s.use}`} />
         ))}
       </ListGroup>

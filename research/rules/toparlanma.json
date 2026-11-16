@@ -37,6 +37,7 @@
     },
     {
       "id": "uyku-kisa",
+      "profile": { "sport": ["basketbol"] },
       "description": "Son 7 gecenin ortalama uyku süresi (uykuda geçen dakika, şekerlemeler hariç) 7 saatin altındaysa uyku 'kısa'.",
       "value": { "min_hours": 7, "rolling_nights": 7, "unit": "saat" },
       "applies_to": "Google Health uyku oturumları (sleep_sessions.minutes_asleep, şekerleme olmayanlar; bitiş gününe göre)",
@@ -107,6 +108,25 @@
       "applies_to": "Apple Health profilinde Bugün ekranındaki 'Bugünün durumu'; tanı değil, izleme özeti",
       "sources": ["vesterinen-2016", "plews-2013", "buchheit-2014", "altini-2021", "walsh-2021", "miller-2022", "ogrady-2024", "dobbs-2019"],
       "notes": "Fitbit sürümündeki (gunun-durumu) mantık, ölçülerin güvenilirliğine göre yer değiştirir. Apple Watch HRV'sinin bireysel hatası büyük (ogrady-2024 ~%29; miller-2022 ICC 0,67; dobbs-2019), uyku nabzı ise doğru (miller-2022 ICC 0,96; ogrady-2024 ~%6): bu yüzden durumun dayanağı uyku nabzıdır, HRV tek başına yalnız not olur. En ağır durum yine iki otonom işaret aynı yönü gösterdiğinde (plews-2013, buchheit-2014). Nabzın tek başına zayıf bir yorgunluk göstergesi olduğu bilinir (Fitbit sürümünün notu); Apple'da tek başına yükselmesi yalnız 'Kontrollü'ye götürür, 'Toparlan'a değil; asıl alkol ve hastalıkta belirgin yükselir (altini-2021). HRV'ye dayalı karar kuralı (vesterinen-2016) Apple'da uygulanmaz, çünkü ölçüm hatası bandın genişliğiyle aynı büyüklükte olabilir. Uyku kısalığı (walsh-2021) yalnız 'Kontrollü'ye katkı verir. Bu birleşim HoopLab'in sentezidir, doğrulanmış bir hazır olma skoru değildir (karar 0061)."
+    },
+    {
+      "id": "uyku-kisa-fitness",
+      "variant_of": "uyku-kisa",
+      "profile": { "sport": ["fitness"] },
+      "description": "Son 7 gecenin ortalama uyku süresi (uykuda geçen dakika, şekerlemeler hariç) 7 saatin altındaysa uyku 'kısa'.",
+      "value": { "min_hours": 7, "rolling_nights": 7, "unit": "saat" },
+      "applies_to": "Google Health uyku oturumları (sleep_sessions.minutes_asleep, şekerleme olmayanlar; bitiş gününe göre)",
+      "sources": ["watson-2015", "hirshkowitz-2015"],
+      "notes": "Fitness profilinde sporcuya özgü kaynak yerine genel yetişkin konsensüsü: yetişkinde düzenli olarak gecede 7 saat ve üstü (watson-2015, 18-60 yaş, tam metin); yetişkin aralığı 7-9 saat (hirshkowitz-2015). Değer sporcu sürümüyle aynı (7 saat, 7 gecelik ortalama). Kişisel uyku ihtiyacı ölçülmediği için 7 saat alt sınır olarak kullanılır."
+    },
+    {
+      "id": "gunun-durumu-dil-fitness",
+      "profile": { "sport": ["fitness"] },
+      "description": "Fitness profilinde günün durumu bir antrenman talimatı değil, izleme özeti olarak yazılır: durum adları (Hazır, Kontrollü, Toparlan) ve eşikler aynı kalır; öneri cümleleri antrenmanı değiştirmeyi buyurmaz, kendini nasıl hissettiğine göre ayarlamayı önerir.",
+      "value": { "tone": "temkinli", "thresholds_changed": false },
+      "applies_to": "Bugün ekranındaki günün durumu önerisi ve koçun durum cümlesi, fitness profili",
+      "sources": ["medellin-ruiz-2020"],
+      "notes": "HRV'ye göre yönlendirilen antrenman sağlıklı ve rekreasyonel bireylerde önceden planlanmış antrenmana üstünlük göstermedi (medellin-ruiz-2020, 8 randomize çalışma). Bu yüzden fitness profilinde durum, antrenmanı değiştirme talimatı gibi sunulmaz. Durum mantığı kaynağa göre seçilen gunun-durumu / gunun-durumu-apple kuralından gelir; bu kural yalnız dili belirler."
     }
   ]
 }

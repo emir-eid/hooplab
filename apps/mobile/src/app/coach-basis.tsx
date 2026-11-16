@@ -12,7 +12,7 @@ import { GroupFooter, GroupLabel, ListGroup, ListRow } from '@/components/list';
 import { Text } from '@/components/text';
 import { basisLabel, basisTarget, coachBadge } from '@/copy/coach';
 import { medicalNote } from '@/copy/explainers';
-import { useDataSource } from '@/data/profile';
+import { useDataSource, useSport } from '@/data/profile';
 import { sources } from '@/copy/sources';
 import { usePalette } from '@/theme/appearance';
 
@@ -20,6 +20,7 @@ export default function CoachBasisScreen() {
   const palette = usePalette();
   const insets = useSafeAreaInsets();
   const source = useDataSource();
+  const sport = useSport();
   const { sentences, only, numbersLabel } = coachBasis();
   // Rozet numarası özetteki alıntılı cümlelerin sırası; sayfada aynı numara görünür.
   let n = 0;
@@ -71,7 +72,7 @@ export default function CoachBasisScreen() {
                   return (
                     <ListRow
                       key={`n-${id}`}
-                      label={basisLabel(id, source)}
+                      label={basisLabel(id, source, sport)}
                       detail={numbersLabel}
                       {...(target ? { onPress: () => openTarget(target) } : {})}
                     />

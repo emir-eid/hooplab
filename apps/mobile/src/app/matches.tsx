@@ -16,6 +16,7 @@ import { matchCalendarFooter, matchMeta, matchRowLabel } from '@/copy/match';
 import { offsetLabel, tripCalendarFooter, tripRowLabel } from '@/copy/travel';
 import { matchDaysAhead, matchListPastDays } from '@/data/match-view';
 import { fetchMatches } from '@/data/matches';
+import { useSport } from '@/data/profile';
 import { tripDaysAhead, tripLookbackDays } from '@/data/trip-view';
 import { fetchTrips } from '@/data/trips';
 import { usePalette } from '@/theme/appearance';
@@ -27,11 +28,14 @@ export default function MatchesScreen() {
   const [matches, setMatches] = useState<Match[] | null>(null);
   const [trips, setTrips] = useState<Trip[] | null>(null);
   const [error, setError] = useState<string | null>(null);
+  // Fitness'ta maç takvimi yok (karar 0061 sıra 4); Takvim yalnız seyahatleri gösterir.
+  const fitness = useSport() === 'fitness';
 
   useFocusEffect(
     useCallback(() => {
       let cancelled = false;
-      void fetchMatches(addIsoDays(today, -matchListPastDays), addIsoDays(today, matchDaysAhead)).then((r) => {
+      if (!fitness)
+        void fetchMatches(addIsoDays(today, -matchListPastDays), addIsoDays(today, matchDaysAhead)).then((r) => {
         if (cancelled) return;
         if (r.ok) {
           setMatches(r.value);
@@ -46,7 +50,7 @@ export default function MatchesScreen() {
       return () => {
         cancelled = true;
       };
-    }, [today]),
+    }, [today, fitness]),
   );
 
   const tomorrow = addIsoDays(today, 1);
@@ -58,7 +62,7 @@ export default function MatchesScreen() {
           {error}
         </Text>
       ) : null}
-      {matches ? (
+      {matches && !fitness ? (
         <ListGroup label="Maçlar" footer={matchCalendarFooter}>
           {matches.length === 0 ? <ListRow label="Takvimde maç yok" /> : null}
           {matches.map((m) => (

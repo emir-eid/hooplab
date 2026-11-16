@@ -21,6 +21,7 @@ import {
 import { coachEffort, coachMaxTokens, coachModel, errorCode, fallbackBeta, isPlausibleDate, type MessagesApi } from './daily.ts';
 import { numbersBlocks, numbersDocument, sourceDocument, type DocumentEntry, type DocumentParam } from './documents.ts';
 import { fullKb, type Kb } from './kb.ts';
+import { promptForKb, snapshotForKb } from './profile-prompt.ts';
 import { parseSnapshot, type CoachSnapshot } from './snapshot.ts';
 
 export { askDailyLimit, questionCategories, questionLength, type AskResponse, type QuestionCategory };
@@ -55,11 +56,11 @@ const classifierSchema = {
   additionalProperties: false,
 } as const;
 
-export function classifierRequest(question: string): Anthropic.Beta.Messages.MessageCreateParamsNonStreaming {
+export function classifierRequest(question: string, kb?: Kb): Anthropic.Beta.Messages.MessageCreateParamsNonStreaming {
   return {
     model: classifierModel,
     max_tokens: classifierMaxTokens,
-    system: classifierPrompt,
+    system: kb ? promptForKb(classifierPrompt, kb) : classifierPrompt,
     output_config: { effort: 'low', format: { type: 'json_schema', schema: classifierSchema } },
     messages: [{ role: 'user', content: `<soru>\n${question}\n</soru>` }],
   };
@@ -117,7 +118,7 @@ export function buildAskRequest(
 
   const documents: DocumentParam[] = [...sourceDocs];
   if (snapshot) {
-    const blocks = numbersBlocks(snapshot, kb);
+    const blocks = numbersBlocks(snapshotForKb(snapshot, kb), kb);
     documents.push(numbersDocument(blocks));
     layout.push({ kind: 'numbers', blocks });
   }
@@ -126,7 +127,7 @@ export function buildAskRequest(
     params: {
       model: coachModel,
       max_tokens: coachMaxTokens,
-      system: askSystemPrompt,
+      system: promptForKb(askSystemPrompt, kb),
       thinking: { type: 'adaptive' },
       output_config: { effort: coachEffort },
       betas: [fallbackBeta],
@@ -246,7 +247,7 @@ export async function runAsk(input: AskInput, deps: { store: AskStore; messages:
   // 1. Sınıf
   let classifierMessage: Anthropic.Beta.Messages.BetaMessage;
   try {
-    classifierMessage = await deps.messages.create(classifierRequest(question), askTimeouts.classifier);
+    classifierMessage = await deps.messages.create(classifierRequest(question, deps.kb), askTimeouts.classifier);
   } catch (error) {
     return failed(null, errorCode(error));
   }

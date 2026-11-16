@@ -32,6 +32,7 @@ import {
   type NutritionView,
   type WeightRow,
 } from '@/data/nutrition-view';
+import { fetchSport } from '@/data/profile';
 import { demoStore } from '@/demo/demo-mode';
 import { supabase } from '@/lib/supabase';
 
@@ -44,7 +45,8 @@ export async function fetchNutrition(today: string): Promise<Result<NutritionVie
   if (demo) return demo.fetchNutrition(today);
   if (!supabase) return { ok: false, message: offline };
   const around = aroundRange(today);
-  const [weights, override, sessions, meals, fluids, match] = await Promise.all([
+  const [sport, weights, override, sessions, meals, fluids, match] = await Promise.all([
+    fetchSport(),
     supabase.from('body_weights').select('local_date, weight_kg').gte('local_date', weightFrom(today)).lte('local_date', today),
     supabase.from('day_types').select('day_type').eq('local_date', today).maybeSingle(),
     supabase.from('training_sessions').select('local_date, kind, duration_min').gte('local_date', addIsoDays(today, -1)).lte('local_date', today),
@@ -66,6 +68,7 @@ export async function fetchNutrition(today: string): Promise<Result<NutritionVie
       (fluids.data ?? []) as FluidRow[],
       toMatches((match.data ?? []) as MatchRow[]),
       on(addIsoDays(today, -1)),
+      sport,
     ),
   };
 }

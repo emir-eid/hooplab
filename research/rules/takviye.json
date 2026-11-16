@@ -3,6 +3,7 @@
   "rules": [
     {
       "id": "takviye-kanit",
+      "profile": { "sport": ["basketbol"] },
       "description": "Koç takviye sorularını yalnız kanıtı güçlü takviyelerin kaynaklarına dayanarak yanıtlar (PRODUCT modül 7, karar 0038). Performansa doğrudan katkısı için iyi kanıtı olanlar belirli senaryolarda kafein, kreatin monohidrat, nitrat, sodyum bikarbonat ve olasılıkla beta-alanin; doz ve zamanlama yalnız kaynakta yazdığı gibi aktarılır, uygulama kişiye doz hesaplamaz. Kaynağı olmayan takviyede koç 'kaynak yok' der.",
       "applies_to": "koçta takviye sorusu (soru sınıfı supplement)",
       "sources": ["maughan-2018", "kreider-2017", "guest-2021", "liu-2026", "xie-2026", "zhang-2026b"],
@@ -14,6 +15,15 @@
       "applies_to": "koçta takviye sorusu (soru sınıfı supplement)",
       "sources": ["maughan-2018"],
       "notes": "Uyarının metni copy/coach-ask.ts dopingWarning; WADA yasaklılar listesi her yıl güncellenir, metin listeyi saymaz, listeye yönlendirir."
+    },
+    {
+      "id": "takviye-kanit-fitness",
+      "variant_of": "takviye-kanit",
+      "profile": { "sport": ["fitness"] },
+      "description": "Koç takviye sorularını yalnız kanıtı güçlü takviyelerin kaynaklarına dayanarak yanıtlar (PRODUCT modül 7, karar 0038). Performansa doğrudan katkısı için iyi kanıtı olanlar belirli senaryolarda kafein, kreatin monohidrat, nitrat, sodyum bikarbonat ve olasılıkla beta-alanin; doz ve zamanlama yalnız kaynakta yazdığı gibi aktarılır, uygulama kişiye doz hesaplamaz. Kaynağı olmayan takviyede koç 'kaynak yok' der.",
+      "applies_to": "koçta takviye sorusu (soru sınıfı supplement)",
+      "sources": ["maughan-2018", "kreider-2017", "guest-2021", "zhang-2026b"],
+      "notes": "IOC uzlaşısı (maughan-2018) genel çerçeve; kreatin için ISSN tutum bildirgesi (kreider-2017), kafein için ISSN tutum bildirgesi (guest-2021). Basketbolculardaki (liu-2026) ve takım sporlarındaki (xie-2026) kafein çalışmaları fitness profilinde kullanılmaz. Kafein egzersiz sonrası uykuyu kötüleştirebilir, algılanan toparlanmayı değiştirmiyor (zhang-2026b). Nitrat, bikarbonat ve beta-alanin için ayrı kaynak yok; koç 'kaynak yok' der."
     }
   ]
 }

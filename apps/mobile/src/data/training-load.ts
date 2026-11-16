@@ -5,6 +5,7 @@ import { addIsoDays } from '@hooplab/engine';
 
 import { fetchPendingExercises, type Result } from '@/data/daily-log';
 import { buildTrainingLoadView, loadChartDays, loadFrom, type LoadSessionRow, type TrainingLoadView } from '@/data/training-load-view';
+import { fetchSport } from '@/data/profile';
 import { demoStore } from '@/demo/demo-mode';
 import { supabase } from '@/lib/supabase';
 
@@ -14,7 +15,8 @@ export async function fetchTrainingLoad(today: string): Promise<Result<TrainingL
   const demo = demoStore();
   if (demo) return demo.fetchTrainingLoad(today);
   if (!supabase) return { ok: false, message: offline };
-  const [rows, first, pending] = await Promise.all([
+  const [sport, rows, first, pending] = await Promise.all([
+    fetchSport(),
     supabase
       .from('training_sessions')
       .select('local_date, rpe, duration_min, kind')
@@ -27,6 +29,6 @@ export async function fetchTrainingLoad(today: string): Promise<Result<TrainingL
   const earliest = (first.data as { local_date: string } | null)?.local_date ?? null;
   return {
     ok: true,
-    value: buildTrainingLoadView(rows.data as LoadSessionRow[], today, { earliest, untagged: pending.value }),
+    value: buildTrainingLoadView(rows.data as LoadSessionRow[], today, { earliest, untagged: pending.value, sport }),
   };
 }

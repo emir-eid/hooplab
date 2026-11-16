@@ -19,7 +19,7 @@ import {
   stepCheckinTime,
   type NotificationPrefs,
 } from '@/data/notification-prefs';
-import { useDataSource } from '@/data/profile';
+import { useDataSource, useSport } from '@/data/profile';
 import { useDemoScenario } from '@/demo/demo-mode';
 import {
   ensureNotificationPermission,
@@ -36,6 +36,8 @@ export default function NotificationsScreen() {
   const palette = usePalette();
   // Senkron hatırlatması yalnız Google Health bağlantısı için (karar 0061: Apple profilinde gizli).
   const google = useDataSource() === 'google_health';
+  // Fitness'ta maç takvimi yok (karar 0061 sıra 4); maç sabahı hatırlatması gösterilmez.
+  const fitness = useSport() === 'fitness';
   const demo = useDemoScenario();
   const [prefs, setPrefs] = useState<NotificationPrefs>(defaultNotificationPrefs);
   const [permission, setPermission] = useState<PermissionState>('undetermined');
@@ -151,18 +153,20 @@ export default function NotificationsScreen() {
         {prefs.checkin.enabled ? timeRow('checkin') : null}
       </ListGroup>
 
-      <ListGroup
-        label="Maç sabahı"
-        footer="Maç takvimindeki günlerde seçtiğin saatte; maç saatini ve öğün, sıvı notlarının Bugün'de olduğunu hatırlatır."
-      >
-        <ListRow
-          label="Hatırlat"
-          accessory={toggle('Maç sabahı hatırlatması', prefs.match.enabled, (v) =>
-            void update({ ...prefs, match: { ...prefs.match, enabled: v } }, v),
-          )}
-        />
-        {prefs.match.enabled ? timeRow('match') : null}
-      </ListGroup>
+      {fitness ? null : (
+        <ListGroup
+          label="Maç sabahı"
+          footer="Maç takvimindeki günlerde seçtiğin saatte; maç saatini ve öğün, sıvı notlarının Bugün'de olduğunu hatırlatır."
+        >
+          <ListRow
+            label="Hatırlat"
+            accessory={toggle('Maç sabahı hatırlatması', prefs.match.enabled, (v) =>
+              void update({ ...prefs, match: { ...prefs.match, enabled: v } }, v),
+            )}
+          />
+          {prefs.match.enabled ? timeRow('match') : null}
+        </ListGroup>
+      )}
 
       {google ? (
         <ListGroup
