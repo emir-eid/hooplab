@@ -1,10 +1,12 @@
 // Oturum durumu: saklanan oturum okunana kadar `ready` false kalır (açılış ekranı açık tutulur,
-// giriş ekranı yanıp sönmez). Tek kullanıcı: kayıt akışı yok, hesap Supabase panosunda açılır.
+// giriş ekranı yanıp sönmez). Kayıt akışı yok: hesabı sahibi açar (karar 0061 sıra 6); davetli geçici şifreyle girer
+// ve ilk girişte kendi şifresini koyar (auth/password.ts).
 
 import type { Session } from '@supabase/supabase-js';
 import { createContext, use, useEffect, useState, type ReactNode } from 'react';
 
 import { describeAuthError } from '@/auth/auth-errors';
+import { describePasswordError } from '@/auth/password';
 import { supabase } from '@/lib/supabase';
 
 interface SessionContextValue {
@@ -13,6 +15,8 @@ interface SessionContextValue {
   /** Başarılıysa null, değilse kullanıcıya gösterilecek Türkçe hata. */
   signIn: (email: string, password: string) => Promise<string | null>;
   signOut: () => Promise<void>;
+  /** Şifreyi değiştirir ve geçici şifre bayrağını kaldırır; başarılıysa null, değilse Türkçe hata. */
+  changePassword: (password: string) => Promise<string | null>;
 }
 
 const SessionContext = createContext<SessionContextValue | null>(null);
@@ -46,6 +50,12 @@ export function SessionProvider({ children }: { children: ReactNode }) {
       if (!supabase) return describeAuthError(null);
       const { error } = await supabase.auth.signInWithPassword({ email: email.trim(), password });
       return error ? describeAuthError(error) : null;
+    },
+    changePassword: async (password) => {
+      if (!supabase) return describePasswordError(null);
+      // Şifre ve bayrak tek istekte değişir; oturum USER_UPDATED olayıyla yenilenir ve ekran kendiliğinden kapanır.
+      const { error } = await supabase.auth.updateUser({ password, data: { must_change_password: false } });
+      return error ? describePasswordError(error) : null;
     },
     signOut: async () => {
       // Sunucu ulaşılamasa da yerel oturum silinir; kullanıcı çıkış yapmış görünür ve öyle olur.

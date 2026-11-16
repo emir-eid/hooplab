@@ -12,6 +12,9 @@ import { supabase } from '@/lib/supabase';
 
 let cache: { userId: string; profile: Profile } | null = null;
 let pending: { userId: string; promise: Promise<Profile> } | null = null;
+// Bu kullanıcı için okuma bitti mi (başarılı ya da hatalı)? Açılış ekranı ve kapılar (rıza, şifre, sorular) buna
+// kadar bekler; böylece davetliye ekranlar yanlış sırayla görünmez. Hatada sahibinin profiliyle devam edilir.
+let settledFor: string | null = null;
 const listeners = new Set<() => void>();
 
 function emit() {
@@ -25,19 +28,33 @@ supabase?.auth.onAuthStateChange((_event, session) => {
     cache = null;
     emit();
   }
+  if (settledFor !== null && settledFor !== id) {
+    settledFor = null;
+    emit();
+  }
 });
+
+function invalidate() {
+  cache = null;
+  pending = null;
+}
 
 async function load(userId: string): Promise<Profile> {
   if (!supabase) return defaultProfile;
   const { data, error } = await supabase
     .from('profiles')
-    .select('data_source, sport, sex, cycle_tracking, hormonal_contraception, answered_at')
+    .select('data_source, sport, sex, cycle_tracking, hormonal_contraception, answered_at, consented_at')
     .eq('user_id', userId)
     .maybeSingle();
   // Okunamadıysa önbelleğe yazılmaz (sonraki çağrı yeniden dener); bu çağrı sahibinin profiliyle devam eder.
-  if (error) return defaultProfile;
+  if (error) {
+    settledFor = userId;
+    emit();
+    return defaultProfile;
+  }
   const profile = toProfile(data);
   cache = { userId, profile };
+  settledFor = userId;
   emit();
   return profile;
 }
@@ -85,6 +102,17 @@ export function useProfile(): Profile {
   return demo ? defaultProfile : profile;
 }
 
+/** Bu kullanıcının profil okuması bitti mi (başarılı ya da hatalı)? Oturum yoksa ya da demodaysa hemen evet. */
+export function useProfileSettled(userId: string | null): boolean {
+  const settled = useSyncExternalStore(
+    subscribe,
+    () => settledFor,
+    () => settledFor,
+  );
+  const demo = useDemoScenario();
+  return demo !== null || userId === null || settled === userId;
+}
+
 export function useDataSource(): DataSource {
   return useProfile().dataSource;
 }
@@ -104,8 +132,26 @@ export async function saveProfileAnswers(answers: ProfileAnswers): Promise<Resul
   if (!userId) return { ok: false, message: 'Oturum yok; yeniden giriş yap.' };
   const { error } = await supabase.from('profiles').update(profileUpdate(answers, new Date().toISOString())).eq('user_id', userId);
   if (error) return { ok: false, message: 'Kaydedilemedi. Bağlantını kontrol edip yeniden dene.' };
-  cache = null;
-  pending = null;
+  invalidate();
+  await fetchProfile();
+  return { ok: true, value: null };
+}
+
+/**
+ * Rıza ekranı (karar 0061 sıra 6): onayı ve onaylanan metnin sürümünü kendi satırına yazar, profili yeniden okur.
+ * Onaydan önce uygulamanın geri kalanı, Apple senkronu ve bildirim kaydı açılmaz.
+ */
+export async function saveConsent(version: string): Promise<Result<null>> {
+  if (demoStore() || !supabase) return { ok: false, message: 'Demo modunda rıza kaydedilmez.' };
+  const { data } = await supabase.auth.getSession();
+  const userId = data.session?.user.id;
+  if (!userId) return { ok: false, message: 'Oturum yok; yeniden giriş yap.' };
+  const { error } = await supabase
+    .from('profiles')
+    .update({ consented_at: new Date().toISOString(), consent_version: version })
+    .eq('user_id', userId);
+  if (error) return { ok: false, message: 'Kaydedilemedi. Bağlantını kontrol edip yeniden dene.' };
+  invalidate();
   await fetchProfile();
   return { ok: true, value: null };
 }

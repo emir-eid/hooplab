@@ -4,7 +4,7 @@
 begin;
 create extension if not exists pgtap with schema extensions;
 
-select plan(29);
+select plan(34);
 
 -- Yetki haritası
 select ok(
@@ -22,6 +22,11 @@ select ok(
 select ok(
   has_column_privilege('authenticated', 'public.profiles', 'answered_at', 'update'),
   'authenticated profil sorularının yanıtlandığını kaydedebilir (karar 0061 sıra 4c)'
+);
+select ok(
+  has_column_privilege('authenticated', 'public.profiles', 'consented_at', 'update')
+  and has_column_privilege('authenticated', 'public.profiles', 'consent_version', 'update'),
+  'authenticated rızasını kaydedebilir (karar 0061 sıra 6)'
 );
 select ok(
   not has_column_privilege('authenticated', 'public.profiles', 'data_source', 'update')
@@ -174,6 +179,24 @@ select results_eq(
 select ok(
   (select answered_at is null from public.profiles),
   'yeni hesabın profil soruları sorulmamış başlar (ilk girişte gösterilir)'
+);
+select ok(
+  (select consented_at is null and consent_version is null from public.profiles),
+  'yeni hesabın rızası boş başlar (ilk girişte rıza ekranı gösterilir)'
+);
+select throws_ok(
+  $$ update public.profiles set consented_at = now() $$,
+  '23514', null,
+  'rıza anı sürümsüz kaydedilemez'
+);
+select lives_ok(
+  $$ update public.profiles set consented_at = now(), consent_version = 'test-1' $$,
+  'B rızasını sürümüyle kaydeder'
+);
+select results_eq(
+  $$ select consent_version from public.profiles where user_id = '11111111-1111-4111-8111-111111111111' $$,
+  $$ select null::text where false $$,
+  'B, A''nın rıza satırını göremez'
 );
 select lives_ok(
   $$ update public.profiles set sex = 'kadin', cycle_tracking = true, hormonal_contraception = 'belirtmek_istemiyorum', answered_at = now() $$,

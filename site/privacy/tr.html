@@ -1,25 +1,30 @@
 <p class="note">Son güncelleme: {{updated}}</p>
 
-<p>HoopLab, bir sporcunun kendisi için yaptığı özel bir iPhone uygulamasıdır. Tek kullanıcısı vardır, o da sahibidir; yeni kayıt kapalıdır. Bu sayfa uygulamanın veriyle ne yaptığını anlatır; sahibinin izniyle Google'dan okunan veri de buna dahildir. Kaynak kodu açıktır, buradaki her cümle <a href="{{repo}}">repoda</a> denetlenebilir.</p>
+<p>HoopLab, bir sporcunun kendisi için yaptığı özel bir iPhone uygulamasıdır. İki kullanıcısı olabilir: sahibi ve onun davet ettiği bir kişi. Yeni kayıt kapalıdır, uygulama genel olarak yayımlanmaz. Bu sayfa uygulamanın veriyle ne yaptığını anlatır; sahibinin izniyle Google'dan, davetlinin izniyle Apple Sağlık'tan okunan veri de buna dahildir. Kaynak kodu açıktır, buradaki her cümle <a href="{{repo}}">repoda</a> denetlenebilir.</p>
 
-<h2>Google'dan okunan veri</h2>
+<h2>Google'dan okunan veri (sahibi)</h2>
 <p>Uygulamanın sunucusu, sahibinin onayıyla Google Health API'den dört salt okuma izniyle veri okur: aktivite ve fitness, sağlık ölçümleri, uyku ve ayarlar. Bunlar kalp atış hızı değişkenliği, dinlenik ve uyku nabzı, kan oksijeni, solunum hızı, cilt sıcaklığı, adım, mesafe, kalori ve aktif dakika gibi günlük özetler ile uyku ve egzersiz oturumlarıdır. Uygulama Google'a hiçbir şey yazmaz ve gün boyu ham nabız akışını indirmez.</p>
 
+<h2>Apple Sağlık'tan okunan veri (davetli)</h2>
+<p>Davetli kullanıcının iPhone'undaki uygulama, kullanıcının iOS'ta verdiği izinle Apple Sağlık'tan (HealthKit) okur: kalp atış hızı değişkenliği, dinlenik nabız ve nabız örnekleri, uyku evreleri, solunum hızı, aktif ve bazal enerji, adım, yürüme ve koşu mesafesi ve antrenmanlar. Kullanıcı Döngü Takibi'ni açarsa adet kayıtları ve döngü sapmaları da okunur. Günlük değerler telefonda hesaplanır; sunucuya ham örnekler değil yalnız günlük ve gecelik özetler, uyku ve antrenman oturumları ve saatlik enerji gider. Adet kayıtları telefondan çıkmaz, sunucuya yalnız döngü günü ve tahmini evre gider. Uygulama Apple Sağlık'a hiçbir şey yazmaz. HealthKit verisi reklamda kullanılmaz, iCloud'a yazılmaz, satılmaz.</p>
+
 <h2>Veri nasıl kullanılır</h2>
-<p>Veri yalnız sahibine kendi sayılarını uygulamada göstermek için kullanılır: kendi olağanıyla karşılaştırılır, her eşik bilimsel bir kaynağa bağlıdır. İsteğe bağlı AI koç, uygulamanın önceden hesapladığı sayıları açıklar.</p>
+<p>Veri yalnız kullanıcıya kendi sayılarını uygulamada göstermek için kullanılır: kendi olağanıyla karşılaştırılır, her eşik bilimsel bir kaynağa bağlıdır. İsteğe bağlı AI koç, uygulamanın önceden hesapladığı sayıları açıklar. Uygulama tıbbi bir cihaz değildir, teşhis koymaz.</p>
 
 <h2>Nerede saklanır, kime gider</h2>
 <ul>
-  <li><strong>Supabase</strong> (veritabanı ve sunucu fonksiyonları, Frankfurt, AB) veriyi saklar. Satır düzeyinde güvenlik yalnız sahibinin hesabının kendi satırlarını okumasına izin verir.</li>
-  <li><strong>Anthropic</strong> (Claude API), sahibi AI koçtan özet ya da yanıt istediğinde uygulamanın hesapladığı sayıları alır (ör. "kalp atış hızı değişkenliği olağan aralığının altında"). Ad, e-posta, doğum tarihi ve ham zaman serisi gitmez. Anthropic API verisini varsayılan olarak model eğitiminde kullanmaz.</li>
-  <li>Hiçbir veri satılmaz, reklam için kullanılmaz, başka kimseyle paylaşılmaz. Sahibi haftalık PDF'i dışa aktarıp seçtiği birine (ör. fizyoterapistine) gönderebilir.</li>
+  <li><strong>Supabase</strong> (veritabanı ve sunucu fonksiyonları, Frankfurt, AB) veriyi saklar. Satır düzeyinde güvenlik her hesabın yalnız kendi satırlarını okumasına izin verir: iki kullanıcı birbirinin verisini göremez.</li>
+  <li><strong>Uygulamanın sahibi</strong> veritabanını yönetir; bu yüzden davetlinin verisini teknik olarak görebilir. Davetli bunu ilk girişte açık rıza ekranında okuyup onaylar; onaylamazsa hiçbir veri okunmaz ya da gönderilmez.</li>
+  <li><strong>Anthropic</strong> (Claude API), kullanıcı AI koçtan özet ya da yanıt istediğinde uygulamanın hesapladığı sayıları alır (ör. "kalp atış hızı değişkenliği olağan aralığının altında"). Ad, e-posta, doğum tarihi ve ham zaman serisi gitmez. Anthropic API verisini varsayılan olarak model eğitiminde kullanmaz.</li>
+  <li><strong>Expo</strong> (bildirim iletimi), kullanıcı hatırlatmaları açarsa bildirimin başlığını ve metnini iPhone'a iletir; bu metinlerde sağlık değeri yoktur.</li>
+  <li>Hiçbir veri satılmaz, reklam için kullanılmaz, başka kimseyle paylaşılmaz. Kullanıcı haftalık PDF'i dışa aktarıp seçtiği birine (ör. fizyoterapistine) gönderebilir.</li>
 </ul>
 
 <h2>Google API Hizmetleri Kullanıcı Verisi Politikası</h2>
 <p>HoopLab'in Google API'lerinden aldığı bilgiyi kullanması ve aktarması, Sınırlı Kullanım (Limited Use) şartları dahil <a href="https://developers.google.com/terms/api-services-user-data-policy">Google API Hizmetleri Kullanıcı Verisi Politikası</a>'na uyar. Google kullanıcı verisi yalnız yukarıdaki özellikler için kullanılır; genel AI ya da makine öğrenmesi modellerini geliştirmek, iyileştirmek veya eğitmek için kullanılmaz; güvenlik, yasal zorunluluk ya da sahibinin açık onayı dışında insanlar tarafından okunmaz.</p>
 
 <h2>Saklama ve silme</h2>
-<p>Veri sahibi silene kadar saklanır. Uygulamada Google bağlantısını kesmek (Ben, Google Health, Bağlantıyı kes) izni Google'da iptal eder ve saklanan token'ı siler; erişim Google Hesabı'nın güvenlik ayarlarından da kaldırılabilir. Anthropic API'ye giden istekler Anthropic tarafından varsayılan olarak 30 gün içinde silinir.</p>
+<p>Veri, kullanıcı silinmesini isteyene kadar saklanır. Davetli, hesabının ve tüm verisinin silinmesini uygulamanın sahibinden ister; hesap silinince bütün satırları da silinir. Apple Sağlık izni iPhone'da Ayarlar, Sağlık, Veri Erişimi bölümünden istendiği zaman kapatılabilir. Uygulamada Google bağlantısını kesmek (Ben, Google Health, Bağlantıyı kes) izni Google'da iptal eder ve saklanan token'ı siler; erişim Google Hesabı'nın güvenlik ayarlarından da kaldırılabilir. Anthropic API'ye giden istekler Anthropic tarafından varsayılan olarak 30 gün içinde silinir.</p>
 
 <h2>İletişim</h2>
 <p>Bu sayfayla ilgili sorular için <a href="{{repo}}/issues">GitHub reposunda</a> bir konu (issue) açılabilir.</p>

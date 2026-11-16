@@ -16,6 +16,11 @@ export function supabaseIngestStore(db: SupabaseClient): IngestStore {
       if (error) throw dbError('profiles', error);
       return (data?.data_source as string | undefined) ?? null;
     },
+    async consented(userId) {
+      const { data, error } = await db.from('profiles').select('consented_at').eq('user_id', userId).maybeSingle();
+      if (error) throw dbError('profiles', error);
+      return data?.consented_at != null;
+    },
     async cycleEnabled(userId) {
       const { data, error } = await db.from('profiles').select('sex, cycle_tracking').eq('user_id', userId).maybeSingle();
       if (error) throw dbError('profiles', error);

@@ -18,12 +18,15 @@ begin
   insert into auth.identities (provider_id, user_id, identity_data, provider, last_sign_in_at, created_at, updated_at)
   values (v_id::text, v_id, jsonb_build_object('sub', v_id::text, 'email', 'demo@hooplab.test', 'email_verified', true),
           'email', now(), now(), now());
-  -- Sahibinin hesabı gibi: profil soruları sorulmuş sayılır (karar 0061 sıra 4c). Apple kullanıcısına sorulur.
-  update public.profiles set answered_at = now() where user_id = v_id;
+  -- Sahibinin hesabı gibi: profil soruları sorulmuş, rıza verilmiş sayılır (karar 0061 sıra 4c ve 6). Apple
+  -- kullanıcısına ikisi de sorulur.
+  update public.profiles set answered_at = now(), consented_at = now(), consent_version = 'sahip' where user_id = v_id;
 end;
 $$;
 
 -- İkinci sentetik kullanıcı (karar 0061): Apple Health · fitness profili. Giriş: apple@hooplab.test / hooplab-yerel-apple.
+-- Davetli gibi açılır (sıra 6): rıza boş, geçici şifre bayrağı açık; ilk girişte rıza → şifre → profil soruları.
+-- Şifre ekranında değiştirilen şifre `npm run db:reset` ile eski haline döner.
 -- 35 gecelik uydurma SDNN, uyku nabzı ve uyku; son 7 gecede SDNN düşük, uyku nabzı aralığında (Apple'da HRV tek başına
 -- not olur, durum "Hazır" kalır). Değerler gerçek bir kişiden değildir.
 do $$
@@ -39,7 +42,7 @@ begin
   ) values (
     '00000000-0000-0000-0000-000000000000', v_id, 'authenticated', 'authenticated', 'apple@hooplab.test',
     extensions.crypt('hooplab-yerel-apple', extensions.gen_salt('bf')), now(),
-    '{"provider": "email", "providers": ["email"]}', '{}', now(), now(),
+    '{"provider": "email", "providers": ["email"]}', '{"must_change_password": true}', now(), now(),
     '', '', '', ''
   );
   insert into auth.identities (provider_id, user_id, identity_data, provider, last_sign_in_at, created_at, updated_at)

@@ -45,11 +45,12 @@ function validBody() {
   };
 }
 
-function memoryStore(dataSource: string | null, existing: Record<string, string[]> = {}, cycleEnabled = false) {
+function memoryStore(dataSource: string | null, existing: Record<string, string[]> = {}, cycleEnabled = false, consented = true) {
   const writes: { table: string; onConflict: string; rows: Row[] }[] = [];
   const deletes: { table: string; key: string; keys: string[] }[] = [];
   const store: IngestStore = {
     dataSource: async () => dataSource,
+    consented: async () => consented,
     cycleEnabled: async () => cycleEnabled,
     upsert: async (table, onConflict, rows) => {
       writes.push({ table, onConflict, rows: structuredClone(rows) });
@@ -169,6 +170,14 @@ test('profil kapısı: yalnız apple_health yükler; sahibinin profili ve profil
     assert.deepEqual(result, { httpStatus: 403, body: { error: 'wrong_profile' } });
     assert.equal(writes.length, 0);
   }
+});
+
+test('rıza kapısı: rıza vermemiş Apple hesabı 403, hiçbir şey yazılmaz ve silinmez (karar 0061 sıra 6)', async () => {
+  const { store, writes, deletes } = memoryStore('apple_health', { sleep_sessions: ['eski'] }, true, false);
+  const result = await runIngest({ userId: USER, body: validBody(), now: NOW }, store);
+  assert.deepEqual(result, { httpStatus: 403, body: { error: 'no_consent' } });
+  assert.equal(writes.length, 0);
+  assert.equal(deletes.length, 0);
 });
 
 test('Apple profili: dört tabloya user_id ile, doğru çakışma anahtarıyla yazılır', async () => {

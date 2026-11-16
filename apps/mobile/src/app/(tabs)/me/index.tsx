@@ -1,5 +1,6 @@
 import type { ThemePreference } from '@hooplab/theme';
 import { router, useFocusEffect } from 'expo-router';
+import * as WebBrowser from 'expo-web-browser';
 import { useCallback, useState } from 'react';
 import { Alert, Platform } from 'react-native';
 
@@ -10,6 +11,7 @@ import { Screen } from '@/components/screen';
 import { fetchSyncStatus } from '@/data/google-health';
 import { describeConnection } from '@/data/google-health-status';
 import { useDataSource, useProfile } from '@/data/profile';
+import { privacyUrl } from '@/copy/consent';
 import { profileSummary } from '@/copy/profile';
 import { appleSyncSupported, syncAppleHealth } from '@/health/apple-sync';
 import { describeAppleSync } from '@/health/apple-sync-status';
@@ -26,6 +28,12 @@ const themeLabels: Record<ThemePreference, string> = {
   light: 'Açık',
   dark: 'Koyu',
 };
+
+// Davetli için silme yolu (karar 0061 sıra 6): talep üzerine, hesabı açan siler; sahibinde yalnız saklama yeri.
+const privacyFooters = {
+  owner: "Veriler Supabase'te (Frankfurt, AB) saklanır.",
+  invited: "Veriler Supabase'te (Frankfurt, AB) saklanır. Hesabının ve tüm verinin silinmesini istediğinde uygulamanın sahibine yaz.",
+} as const;
 
 // Demo açılıp kapanınca ekran baştan kurulur ve Google Health özeti yeniden okunur.
 export default function MeRoute() {
@@ -104,7 +112,11 @@ function MeScreen({ demo }: { demo: DemoScenario | null }) {
           </ListGroup>
           <ListGroup label="Hesap" footer={session?.user.email}>
             <ListRow label="Profil" value={profileSummary(profile)} onPress={() => router.push('/profile')} />
+            <ListRow label="Şifreyi değiştir" onPress={() => router.push('/password')} />
             <ListRow label="Çıkış yap" onPress={confirmSignOut} />
+          </ListGroup>
+          <ListGroup label="Gizlilik" footer={google ? privacyFooters.owner : privacyFooters.invited}>
+            <ListRow label="Gizlilik politikası" onPress={() => void WebBrowser.openBrowserAsync(privacyUrl)} />
           </ListGroup>
         </>
       )}

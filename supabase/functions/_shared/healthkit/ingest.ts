@@ -293,6 +293,8 @@ export function parseIngestBody(body: unknown, now: Date): ParseResult {
 export interface IngestStore {
   /** Kullanıcının profilindeki veri kaynağı; satır yoksa null. */
   dataSource(userId: string): Promise<string | null>;
+  /** Kullanıcı rıza ekranını onayladı mı (karar 0061 sıra 6)? Onaylamadıysa hiçbir şey yazılmaz. */
+  consented(userId: string): Promise<boolean>;
   /** Profilde döngü takibi açık mı (kadın ve cycle_tracking)? Kapalıysa döngü satırı yazılmaz. */
   cycleEnabled(userId: string): Promise<boolean>;
   upsert(
@@ -323,6 +325,8 @@ export interface IngestResult {
 export async function runIngest(input: { userId: string; body: unknown; now: Date }, store: IngestStore): Promise<IngestResult> {
   const source = await store.dataSource(input.userId);
   if (source !== SOURCE) return { httpStatus: 403, body: { error: 'wrong_profile' } };
+  // Rıza uygulamada da kapıdır (senkron rızadan önce başlamaz); sunucu aynı kuralı ikinci kez uygular.
+  if (!(await store.consented(input.userId))) return { httpStatus: 403, body: { error: 'no_consent' } };
 
   const parsed = parseIngestBody(input.body, input.now);
   if (!parsed.ok) return { httpStatus: 400, body: { error: 'invalid_body', issues: parsed.issues } };

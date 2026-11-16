@@ -10,8 +10,9 @@ import { StatusBar } from 'expo-status-bar';
 import { useEffect } from 'react';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 
+import { mustChangePassword } from '@/auth/password';
 import { SessionProvider, useSession } from '@/auth/session';
-import { fetchProfile, useProfile } from '@/data/profile';
+import { fetchProfile, useProfile, useProfileSettled } from '@/data/profile';
 import { useDemoScenario } from '@/demo/demo-mode';
 import { useAppleHealthSync } from '@/health/use-apple-sync';
 import { useNotifications } from '@/notifications/use-notifications';
@@ -44,10 +45,17 @@ function RootNavigator() {
   useEffect(() => {
     if (userId && demo === null) void fetchProfile();
   }, [userId, demo]);
-  const needsProfile = session !== null && demo === null && !profile.answered;
+  // Sıra (karar 0061 sıra 6): rıza → geçici şifre yerine kendi şifren → profil soruları. Sahibinde hiçbiri çıkmaz.
+  const real = session !== null && demo === null;
+  const needsConsent = real && !profile.consented;
+  const needsPassword = real && !needsConsent && mustChangePassword(session?.user);
+  const needsProfile = real && !needsConsent && !needsPassword && !profile.answered;
+  const gated = needsConsent || needsPassword || needsProfile;
   const [fontsLoaded, fontError] = useFonts(fontMap);
   // Font yüklenemezse uygulama sistem fontuyla açılır; hata geliştirmede görünsün.
-  const loaded = ready && sessionReady && (fontsLoaded || fontError !== null);
+  // Gerçek oturumda profil okuması bitene kadar açılış ekranı açık kalır (rıza ve şifre kapıları doğru sırayla açılsın).
+  const profileSettled = useProfileSettled(demo === null ? userId : null);
+  const loaded = ready && sessionReady && profileSettled && (fontsLoaded || fontError !== null);
 
   useEffect(() => {
     if (fontError) console.warn('Fontlar yüklenemedi:', fontError);
@@ -58,9 +66,11 @@ function RootNavigator() {
   }, [loaded]);
 
   // Yerel bildirimler (karar 0045): plan yenileme ve bildirime dokununca açılan ekran.
-  useNotifications(session !== null && demo === null, loaded);
+  // Rıza onaylanmadan bildirim kaydı ve Apple senkronu başlamaz (profil bilinene kadar sahibinin profili sayılır;
+  // davetlinin profili Apple olduğundan senkron zaten profil okunmadan başlamaz).
+  useNotifications(real && profile.consented, loaded);
   // Apple Health senkronu (karar 0061): yalnız apple_health profilinde ve iPhone'da; sahibinde hiçbir şey yapmaz.
-  useAppleHealthSync(session !== null && demo === null && loaded);
+  useAppleHealthSync(real && profile.consented && loaded);
 
   if (!loaded) return null;
 
@@ -81,9 +91,10 @@ function RootNavigator() {
     <ThemeProvider value={navigationTheme}>
       <StatusBar style={palette.statusBar} />
       <Stack screenOptions={{ headerShown: false, contentStyle: { backgroundColor: palette.bg } }}>
-        <Stack.Protected guard={signedIn && !needsProfile}>
+        <Stack.Protected guard={signedIn && !gated}>
           <Stack.Screen name="(tabs)" />
           <Stack.Screen name="profile" options={{ presentation: 'modal' }} />
+          <Stack.Screen name="password" options={{ presentation: 'modal' }} />
           <Stack.Screen
             name="add"
             options={{
@@ -126,6 +137,12 @@ function RootNavigator() {
               contentStyle: { backgroundColor: palette.bg },
             }}
           />
+        </Stack.Protected>
+        <Stack.Protected guard={needsConsent}>
+          <Stack.Screen name="consent" />
+        </Stack.Protected>
+        <Stack.Protected guard={needsPassword}>
+          <Stack.Screen name="password-setup" />
         </Stack.Protected>
         <Stack.Protected guard={needsProfile}>
           <Stack.Screen name="profile-setup" />

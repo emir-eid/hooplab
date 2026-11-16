@@ -21,6 +21,14 @@ test('ilk giriş soruları yalnız açıkça boş answered_at ile açılır (kar
   assert.equal(toProfile({}).answered, true);
 });
 
+test('rıza ekranı yalnız açıkça boş consented_at ile açılır (karar 0061 sıra 6)', () => {
+  assert.equal(toProfile({ consented_at: null }).consented, false);
+  assert.equal(toProfile({ consented_at: '2026-11-16T23:00:00Z' }).consented, true);
+  // Sahibi ve okunamayan profil kilitlenmez.
+  assert.equal(toProfile({}).consented, true);
+  assert.equal(toProfile(null).consented, true);
+});
+
 test('döngü ve korunma yalnız kadın profilinde okunur ve yazılır', () => {
   assert.deepEqual(toProfile({ sex: 'erkek', cycle_tracking: true, hormonal_contraception: 'var' }), { ...defaultProfile, sex: 'erkek' });
   const f = toProfile({ sex: 'kadin', cycle_tracking: true, hormonal_contraception: 'belirtmek_istemiyorum' });

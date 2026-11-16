@@ -19,6 +19,8 @@ export interface Profile {
   contraception: Contraception | null;
   /** İlk giriş soruları yanıtlandı ya da geçildi mi? Okunamazsa evet sayılır: kimse soru ekranında kilitlenmez. */
   answered: boolean;
+  /** Rıza ekranı onaylandı mı (karar 0061 sıra 6)? Sahibi ve okunamayan profil evet sayılır; yeni hesap hayır. */
+  consented: boolean;
 }
 
 /** Sahibinin profili; profil okunamazken ve demo modunda da bu kullanılır. */
@@ -29,6 +31,7 @@ export const defaultProfile: Profile = {
   cycleTracking: false,
   contraception: null,
   answered: true,
+  consented: true,
 };
 
 export interface ProfileRow {
@@ -38,6 +41,7 @@ export interface ProfileRow {
   cycle_tracking?: unknown;
   hormonal_contraception?: unknown;
   answered_at?: unknown;
+  consented_at?: unknown;
 }
 
 const contraceptions: readonly Contraception[] = ['yok', 'var', 'belirtmek_istemiyorum'];
@@ -53,6 +57,8 @@ export function toProfile(row: ProfileRow | null | undefined): Profile {
     contraception: female && contraceptions.includes(row?.hormonal_contraception as Contraception) ? (row!.hormonal_contraception as Contraception) : null,
     // Yalnız satırda açıkça boş (null) yazıyorsa sorulmamış; sütun yoksa ya da satır yoksa sorulmuş sayılır.
     answered: row?.answered_at !== null,
+    // Aynı kural: yalnız açıkça boş consented_at rıza ekranını açar.
+    consented: row?.consented_at !== null,
   };
 }
 

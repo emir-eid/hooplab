@@ -28,7 +28,7 @@ if (callback && !/^https:\/\/[a-z0-9-]+\.supabase\.co\/functions\/v1\/ghealth-ca
   throw new Error('GHEALTH_CALLBACK_URL bir Supabase ghealth-callback adresi olmalı');
 }
 /** Gizlilik sayfasının "son güncelleme" tarihi; metin değişince elle güncellenir. */
-const PRIVACY_UPDATED = { en: 'October 19, 2026', tr: '19 Ekim 2026' };
+const PRIVACY_UPDATED = { en: 'November 16, 2026', tr: '16 Kasım 2026' };
 const privacyPath = { en: '/privacy/', tr: '/tr/gizlilik/' };
 if (!/^(\/[A-Za-z0-9_-]+)*$/.test(base)) throw new Error(`SITE_BASE geçersiz: ${base}`);
 

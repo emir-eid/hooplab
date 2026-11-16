@@ -68,7 +68,7 @@ export default function SignInScreen() {
         ) : supabaseConfig.ok ? (
           <>
             <Text variant="bodyCompact" tone="inkSecondary" style={styles.lead}>
-              Supabase projende açtığın hesapla giriş yap.{' '}
+              E-posta ve şifrenle giriş yap.{' '}
               {/* Web'de (PWA) oturum tarayıcının localStorage'ında, şifresiz (lib/supabase.ts). */}
               {Platform.OS === 'web'
                 ? 'Oturum bu tarayıcıda saklanır; ortak bir cihazda işin bitince çıkış yap.'
