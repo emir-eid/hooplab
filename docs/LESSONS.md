@@ -63,6 +63,7 @@ Tekrar yaşanabilecek hatalar ve önceden bilinen tuzaklar. Her madde: **ders**,
 
 ## Git ve süreç
 
+- **[doğrulanacak] Masaüstü uygulamasında 1M pencereli oturum ~411 bin token'da otomatik özetlendi** (2026-11-16; doküman varsayılanı ~967 bin; ayarlarda düşüren değer yok). Kullanıcı ayarına `CLAUDE_CODE_AUTO_COMPACT_WINDOW=1000000` eklendi (`~/.claude/settings.json` `env`); `CLAUDE_AUTOCOMPACT_PCT_OVERRIDE` yalnız düşürür. Sonraki uzun oturumda özetlemenin hangi token'da olduğu oturum kaydındaki `compactMetadata.preTokens`'tan okunur; değişmediyse değişken Windows kullanıcı ortamına taşınır. Bekçi: yok.
 - **[ölçüldü] Yeni makinede global git e-postası kişisel adres olabilir (2026-10-19, laptop).** Repo yerel `user.email` ayarı klonla gelmez; ilk commit'ten önce SETUP §2'deki noreply ayarı yapılır, `git log -1 --format=%ae` ile bakılır. Bekçi: pre-commit kimliği denetlemiyor; geçmiş taraması e-posta denylist'teyse yakalar.
 - **[ölçüldü] `.gitattributes` `eol=lf` olsa da çalışma kopyasında eski checkout'lardan CRLF dosyalar kalabiliyor (2026-10-09: 113 dosya).** Betikle (`
 ` arayan Python / sed) düzenlenince eşleşme sessizce tutmuyor; bir alan eklenmedi, tip denetimi yakaladı. Önce `git ls-files --eol` ile `w/crlf` dosyalar LF'ye çevrilir (blob değişmez, `git status`'taki zaman damgası farkı commit'e girmez). Bekçi: yok (yöntem).
