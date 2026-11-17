@@ -4,9 +4,9 @@ Bu klasördeki aşağıdaki skill'ler kaynak repolarından **değiştirilmeden**
 
 | Skill | Kaynak | Commit | Lisans |
 |---|---|---|---|
-| `animate-expo` | https://github.com/emilkowalski/skills (`skills/animate-expo`) | `e8a175de22ae1e49370fc144c1f3bb9aeedf988d` | MIT |
-| `apple-design` | https://github.com/emilkowalski/skills (`skills/apple-design`) | `e8a175de22ae1e49370fc144c1f3bb9aeedf988d` | MIT |
-| `review-animations` | https://github.com/emilkowalski/skills (`skills/review-animations`) | `715c1807e08c497cfd1dc4feb450a2a3300ef2a9` | MIT |
+| `animate-expo` | https://github.com/emilkowalski/skills (`skills/animate-expo`) | `0f2e23b32bb1265e84cff8d3e75785fec953fb1b` | MIT |
+| `apple-design` | https://github.com/emilkowalski/skills (`skills/apple-design`) | `0f2e23b32bb1265e84cff8d3e75785fec953fb1b` | MIT |
+| `review-animations` | https://github.com/emilkowalski/skills (`skills/review-animations`) | `0f2e23b32bb1265e84cff8d3e75785fec953fb1b` | MIT |
 | `react-native-best-practices` | https://github.com/software-mansion-labs/skills (`skills/react-native-best-practices`) | `43cde80af628d103647c13bde07975d0b21b8419` | MIT (SKILL.md `license: MIT` beyanı ve marketplace kaydı; repo kökünde LICENSE dosyası yok) |
 
 Kendi skill'lerimiz: `ac`, `rep`, `kapat`.
@@ -18,6 +18,8 @@ Plugin olarak yüklenenler (dosyaları bu repoda değil, `.claude/settings.json`
 `react-native-best-practices/references/enable-worklets-bundle-mode/` belgesi, internetten `curl` ile indirilen yamaların uygulanmasını önerir. HoopLab bu özelliği kullanmaz. Açılması gerekirse önce karar kaydı (docs/decisions) gerekir.
 
 `react-native-best-practices/references/on-device-ai/SKILL.md` (2026-11-09 güncellemesinden beri) ayrı bir skill'in `npx skills add` ile kurulmasını önerir. HoopLab cihaz içi AI kullanmaz; komut çalıştırılmaz, gerekirse önce karar kaydı.
+
+`animate-expo`, `apple-design` ve `review-animations` (2026-11-17 güncellemesinden beri) kaynak repodaki `choreograph` ve `animation-performance` skill'lerine göreli bağlantı verir. Bu skill'ler HoopLab'e kopyalanmadı; bağlantılar burada açılmaz, değer gerekirse skill'in kendi tablosu ve `STANDARDS.md` kullanılır.
 
 ## Lisans metinleri
 

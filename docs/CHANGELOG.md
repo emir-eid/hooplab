@@ -97,6 +97,7 @@ Uygulamaya veya altyapıya görünür değişiklikler. Biçim: [Keep a Changelog
 - Altın test saat dilimi (2026-11-15): `golden.test.ts` saat dilimini kendisi sabitliyor (`Etc/GMT-3`); demo verisinin saatlik enerjisi yerel saate bağlı olduğundan test CI'da (UTC) 3 saat kayıp düşüyordu (`b39c5da`'dan beri). Anlık görüntü ve uygulama kodu değişmedi.
 
 ### Değişti
+- Kopyalanan skill'ler (2026-11-17): `animate-expo`, `apple-design`, `review-animations` emilkowalski/skills `0f2e23b3` sürümüne güncellendi (değiştirilmeden; expo-haptics tam adları, `cancelAnimation`, süre istisnaları); THIRD_PARTY_NOTICES.
 - Kurulum denetimi (2026-11-17): `setup:check` "Giriş hesabın" birden çok kullanıcıyı sahibi ve davetliler olarak gösterir (karar 0061); eski "tek kullanıcılı uygulama" metni kalktı.
 - Supabase CLI 3.1.0 (2026-11-17; 3.0.0'dan): yalnız `package.json` ve kilit. Yerelde `/functions/v1` ağ geçidi artık CORS başlığı eklemiyor; fonksiyonlar `withSupabase` ile CORS'u kendisi yanıtladığından etkilenmez. Bulut `setup:check` 16/16, yerel 10/10, pgTAP 297/297, `db advisors --remote` yalnız bilinen uyarı.
 - Expo SDK 58 yamaları (2026-11-07): `expo` 58.0.23, `react-native` 0.88.1, `expo-router` 58.0.30 ve 11 Expo modülünün yaması; `@expo/require-utils` kök `overrides` ile 58.0.4'te (58.0.5 Node 24.22'de web geliştirme sunucusunu çökertiyor). `expo-doctor` 20/20.

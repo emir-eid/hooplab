@@ -1,9 +1,9 @@
-# 2026-11-17 14:18 — Supabase CLI ve bakım
+# 2026-11-17 14:18 — Supabase CLI, bakım ve skill güncellemesi
 
 - **Faz:** 4
 - **Durum:** açık (/rep)
 - **Model / efor:** Opus 5.5
-- **Commit'ler:** `3ec39d8` (Blok 1), Blok 2 commit'i
+- **Commit'ler:** `3ec39d8` (Blok 1), `8195d38` (Blok 2), Blok 3 commit'i
 
 ## Blok 1 — Supabase CLI 3.1.0 (14:18)
 
@@ -45,8 +45,27 @@ STATE "Sıradaki işler" 2: `setup:check` "Giriş hesabın" metnini davetliye g�
 ### Öğrenilenler
 - yok (bir kez görüldü; pazartesi tekrar ederse LESSONS'a)
 
+## Blok 3 — kopyalanan skill'lerin güncellenmesi (14:42)
+
+### Amaç
+STATE "Sıradaki işler" 2 (denetim 2026-11-17 bulgusu): emilkowalski/skills `0f2e23b3` (2026-11-13) farkını okuyup üç kopyalanmış skill'i güncellemek.
+
+### Yapılanlar
+- Kaynak commit "Fix wrong APIs and cross-skill contradictions" okundu; üç klasördeki fark yalnız metin: `Haptics.ImpactFeedbackStyle` / `NotificationFeedbackType` tam adları, sürükleme başında `cancelAnimation`, basma geri bildirimi spring yerine timing, 300 ms sınırına modal / drawer / sheet / toast istisnası, Motion `bounce: 0` eşlemesi. Komut, indirme veya kurulum önerisi yok.
+- Bizdeki kopyaların kaynağın `0f2e23b3~1` haliyle aynı olduğu doğrulandı (yalnız satır sonu farkı; yerel değişiklik yok). `review-animations` için ara commit `f1090bec` (2026-11-02) kayıtlı `715c1807`'den (2026-11-09) eski.
+- `animate-expo`, `apple-design`, `review-animations` `0f2e23b3`'ten değiştirilmeden kopyalandı (5 dosya, +33 / -41); [THIRD_PARTY_NOTICES.md](../../.claude/skills/THIRD_PARTY_NOTICES.md) commit satırları ve not: yeni metin kaynak repodaki `choreograph` / `animation-performance` skill'lerine göreli bağlantı veriyor, bunlar kopyalanmadı. `react-native-best-practices` güncel (`43cde80a`).
+- `npm run check` yeşil.
+
+### Kararlar
+- yok (kopyalama kuralı değişmedi: değiştirilmeden kopya)
+
+### Sorunlar ve hatalar
+- yok
+
+### Öğrenilenler
+- yok
+
 ## Açık kalanlar
-- emilkowalski/skills `0f2e23b3` farkı: üç kopyalanmış skill güncellensin mi (denetim 2026-11-17).
 - Haftalık denetim 2026-11-23 pazartesi kendiliğinden çalışıyor mu (çalışmazsa görev saati / makine durumu).
 - Supabase CLI 3.2.0 çıktı (2026-11-16); bir sonraki bakımda bakılır.
 
