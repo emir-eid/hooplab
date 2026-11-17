@@ -1,7 +1,14 @@
 import assert from 'node:assert/strict';
 import { test } from 'node:test';
 
-import { createUserBody, generateTempPassword, readInviteEmail, writeInvitePassword } from './invite-lib.mjs';
+import {
+  createUserBody,
+  generateTempPassword,
+  readInviteEmail,
+  readInvitePassword,
+  resetPasswordBody,
+  writeInvitePassword,
+} from './invite-lib.mjs';
 
 const OPS = `# ops
 
@@ -43,5 +50,19 @@ test('yeni kullanıcı doğrulanmış ve şifre değiştirmesi zorunlu', () => {
     password: 'p',
     email_confirm: true,
     user_metadata: { must_change_password: true },
+  });
+});
+
+test('elle yazılan geçici şifre yalnız davetli bölümünden okunur; yer tutucu ve kısa değer reddedilir', () => {
+  assert.equal(readInvitePassword(OPS), null);
+  assert.equal(readInvitePassword(writeInvitePassword(OPS, 'Ornek-Sifre-123')), 'Ornek-Sifre-123');
+  assert.equal(readInvitePassword(writeInvitePassword(OPS, 'kisa')), null);
+  assert.equal(readInvitePassword('# ops\n- Geçici şifre: Ornek-Sifre-123\n'), null);
+});
+
+test('şifre sıfırlama gövdesi meta veriyi korur ve değiştirme zorunluluğunu açık tutar', () => {
+  assert.deepEqual(resetPasswordBody('Ornek-Sifre-123', { must_change_password: false, x: 1 }), {
+    password: 'Ornek-Sifre-123',
+    user_metadata: { must_change_password: true, x: 1 },
   });
 });

@@ -25,6 +25,26 @@ export function writeInvitePassword(ops, password) {
   return ops.slice(0, start) + section.replace(PASSWORD_LINE, `- Geçici şifre: ${password}`);
 }
 
+/**
+ * Davetli bölümündeki geçici şifre (kullanıcı elle yazmış olabilir); boş, yer tutucu "(...)" ya da Supabase'in
+ * en kısa şifresinden (6) kısaysa null. Değer hiçbir yere basılmaz.
+ */
+export function readInvitePassword(ops) {
+  const start = ops.indexOf(SECTION);
+  if (start < 0) return null;
+  const value = PASSWORD_LINE.exec(ops.slice(start))?.[1]?.trim() ?? '';
+  if (!value || /^\(.*\)$/.test(value) || value.length < 6) return null;
+  return value;
+}
+
+/**
+ * Admin API şifre güncelleme gövdesi: yalnız davetli henüz kendi şifresini koymadıysa (bayrak açık) kullanılır;
+ * var olan meta veri korunur, ilk girişte şifre değiştirme zorunluluğu açık kalır.
+ */
+export function resetPasswordBody(password, userMetadata = {}) {
+  return { password, user_metadata: { ...userMetadata, must_change_password: true } };
+}
+
 // Karıştırılabilen karakterler (0/O, 1/l/I) yok: şifre elle iletilecek.
 const ALPHABET = 'abcdefghijkmnpqrstuvwxyzABCDEFGHJKLMNPQRSTUVWXYZ23456789';
 

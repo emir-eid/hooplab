@@ -1,9 +1,9 @@
-# 2026-11-17 14:18 — Supabase CLI, bakım ve skill güncellemesi
+# 2026-11-17 14:18 — Supabase CLI, bakım, skill güncellemesi ve davet şifresi
 
 - **Faz:** 4
 - **Durum:** açık (/rep)
 - **Model / efor:** Opus 5.5
-- **Commit'ler:** `3ec39d8` (Blok 1), `8195d38` (Blok 2), Blok 3 commit'i
+- **Commit'ler:** `3ec39d8` (Blok 1), `8195d38` (Blok 2), `034c968` (Blok 3), Blok 4 commit'i
 
 ## Blok 1 — Supabase CLI 3.1.0 (14:18)
 
@@ -58,6 +58,26 @@ STATE "Sıradaki işler" 2 (denetim 2026-11-17 bulgusu): emilkowalski/skills `0f
 
 ### Kararlar
 - yok (kopyalama kuralı değişmedi: değiştirilmeden kopya)
+
+### Sorunlar ve hatalar
+- yok
+
+### Öğrenilenler
+- yok
+
+## Blok 4 — davetli şifresi elle belirlenen değerle (15:21)
+
+### Amaç
+Kullanıcı davetliyi App Store Connect'te Developer rolüyle ekledi (davet gitti) ve `private/ops.md`'deki geçici şifreyi kendi seçtiği değerle değiştirdi; buluttaki davetli hesabının şifresi bu değere çekilecek.
+
+### Yapılanlar
+- [invite-user.mjs](../../tools/admin/invite-user.mjs) `--set-password` kipi: e-postayla hesabı bulur, `ops.md` "Geçici şifre" satırını okur (boş, yer tutucu, 6 karakterden kısa → durur), yalnız `must_change_password` hala açıksa Admin API `PUT /auth/v1/admin/users/<id>` ile şifreyi koyar; meta veri korunur, bayrak açık kalır ve yanıtta denetlenir. Hiçbir değer basılmaz.
+- [invite-lib.mjs](../../tools/admin/invite-lib.mjs) `readInvitePassword`, `resetPasswordBody`; testler [invite-lib.test.mjs](../../tools/admin/invite-lib.test.mjs) 6/6; `npm run check` yeşil.
+- Bulut: önce `--check` (hesap açık, yönetici erişimi çalışıyor), sonra `--set-password`: şifre değiştirildi, ilk girişte değiştirme zorunlu: evet. Şifreyle giriş Claude tarafından denenmedi (gerçek hesap); ilk girişi davetli yapar.
+- Kullanıcının sorusu (yeni hesapta ne sorulur) koddan yanıtlandı: cihaz / kaynak ve spor sorulmaz (hesap açılırken Apple Sağlık · fitness atanır); cinsiyet, kadınsa döngü takibi ve hormonal korunma sorulur; boy, kilo, yaş sorulmaz (kilo isteğe bağlı, gram hedefleri için kullanıcı girer).
+
+### Kararlar
+- yok ([0061](../decisions/0061-profil-kaynak-spor-cinsiyet.md) eki gerekmedi: geçici şifre + zorunlu değişiklik kararı aynı, yalnız değeri kullanıcı seçti)
 
 ### Sorunlar ve hatalar
 - yok
