@@ -1,9 +1,9 @@
-# 2026-11-17 14:18 — Supabase CLI bakımı
+# 2026-11-17 14:18 — Supabase CLI ve bakım
 
 - **Faz:** 4
 - **Durum:** açık (/rep)
 - **Model / efor:** Opus 5.5
-- **Commit'ler:** Blok 1 commit'i
+- **Commit'ler:** `3ec39d8` (Blok 1), Blok 2 commit'i
 
 ## Blok 1 — Supabase CLI 3.1.0 (14:18)
 
@@ -26,9 +26,28 @@ STATE "Sıradaki işler" 2: Supabase CLI'ı 3.0.0'dan 3.1.0'a yükseltmek ve `se
 ### Öğrenilenler
 - LESSONS Supabase: 3.1.0'da yerel `/functions/v1` CORS'u fonksiyona bıraktı; `withSupabase` dışı fonksiyon tarayıcıdan düşer.
 
+## Blok 2 — setup:check davetli metni ve kaçan denetim (14:34)
+
+### Amaç
+STATE "Sıradaki işler" 2: `setup:check` "Giriş hesabın" metnini davetliye göre düzeltmek; 2026-11-16 haftalık denetiminin neden rapor bırakmadığına bakmak.
+
+### Yapılanlar
+- [setup-lib.mjs](../../tools/setup/setup-lib.mjs): birden çok kullanıcıda "N kullanıcı (sen ve N-1 davetli; davet tools/admin/invite-user.mjs ile)"; eski "tek kullanıcılı uygulama; fazlası gerekmez" kalktı. Test [setup-lib.test.mjs](../../tools/setup/setup-lib.test.mjs) (1 ve 2 kullanıcı); kurulum testleri 34/34, `npm run check` yeşil.
+- Zamanlanmış görev `hooplab-haftalik-denetim`: açık, `lastRunAt` 2026-11-16 09:12 (tetiklenmiş), ama görevin çalıştırma listesinde o güne oturum yok (son çalıştırma 2026-11-09). Tetikleme olmuş, oturum açılmamış; kesin sebep kayıtlardan çıkmıyor (uygulama kapalı / uyku olasılığı).
+- Görev elle çalıştırıldı (Run now): [denetim 2026-11-17](../audits/2026-11-17.md), sarı, 5 düşük bulgu. CI, bekçiler, Dependabot temiz. Bulgulardan yeni olan: emilkowalski/skills'te `animate-expo`, `apple-design`, `review-animations` klasörlerine dokunan `0f2e23b3` (2026-11-13); kopyalama yapılmadı.
+
+### Kararlar
+- yok
+
+### Sorunlar ve hatalar
+- Denetim bu bloğun commit edilmemiş değişikliğini bulgu olarak yazdı (beklenen; bu commit'le kapanır).
+
+### Öğrenilenler
+- yok (bir kez görüldü; pazartesi tekrar ederse LESSONS'a)
+
 ## Açık kalanlar
-- `setup:check` "Giriş hesabın" maddesi "2 kullanıcı (tek kullanıcılı uygulama; fazlası gerekmez)" diyor; davetliden sonra metin güncel değil.
-- 2026-11-16 haftalık denetimi rapor bırakmadı (`docs/audits/` en yenisi 2026-11-09).
+- emilkowalski/skills `0f2e23b3` farkı: üç kopyalanmış skill güncellensin mi (denetim 2026-11-17).
+- Haftalık denetim 2026-11-23 pazartesi kendiliğinden çalışıyor mu (çalışmazsa görev saati / makine durumu).
 - Supabase CLI 3.2.0 çıktı (2026-11-16); bir sonraki bakımda bakılır.
 
 ## Sıradaki adım

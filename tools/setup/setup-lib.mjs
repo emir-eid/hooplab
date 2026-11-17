@@ -475,7 +475,13 @@ export function evaluate(f) {
       'Supabase panosu → Authentication → Users → Add user → Create new user; e-posta ve şifreni gir, "Auto Confirm User" işaretli.',
     );
   } else {
-    add('owner', 'Giriş hesabın', 'ok', f.userCount === 1 ? '1 kullanıcı' : `${f.userCount} kullanıcı (tek kullanıcılı uygulama; fazlası gerekmez)`);
+    // Karar 0061: sahibine ek olarak davetli hesaplar olabilir (tools/admin/invite-user.mjs).
+    add(
+      'owner',
+      'Giriş hesabın',
+      'ok',
+      f.userCount === 1 ? '1 kullanıcı' : `${f.userCount} kullanıcı (sen ve ${f.userCount - 1} davetli; davet tools/admin/invite-user.mjs ile)`,
+    );
   }
 
   return items;

@@ -171,6 +171,15 @@ test('yeni kayıt açıksa ve kullanıcı yoksa ikisi de kullanıcının adımı
   assert.equal(status(items, 'owner'), 'manual');
 });
 
+test('birden çok kullanıcı davetli sayılır (karar 0061)', () => {
+  const one = evaluate(healthyRemote()).find((i) => i.id === 'owner');
+  assert.equal(one.status, 'ok');
+  assert.equal(one.detail, '1 kullanıcı');
+  const two = evaluate(healthyRemote({ userCount: 2 })).find((i) => i.id === 'owner');
+  assert.equal(two.status, 'ok');
+  assert.match(two.detail, /^2 kullanıcı \(sen ve 1 davetli/);
+});
+
 test('zamanlayıcı yoksa veya kapalıysa kullanıcıya bırakılır', () => {
   assert.equal(status(evaluate(healthyRemote({ cronActive: null })), 'cron-job'), 'manual');
   assert.equal(status(evaluate(healthyRemote({ cronActive: false })), 'cron-job'), 'manual');
