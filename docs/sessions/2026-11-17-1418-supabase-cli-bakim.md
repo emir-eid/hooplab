@@ -1,9 +1,9 @@
 # 2026-11-17 14:18 — Supabase CLI, bakım, skill güncellemesi ve davet şifresi
 
 - **Faz:** 4
-- **Durum:** açık (/rep)
+- **Durum:** kapandı (/kapat, 2026-11-17 15:30)
 - **Model / efor:** Opus 5.5
-- **Commit'ler:** `3ec39d8` (Blok 1), `8195d38` (Blok 2), `034c968` (Blok 3), Blok 4 commit'i
+- **Commit'ler:** `3ec39d8` (Blok 1), `8195d38` (Blok 2), `034c968` (Blok 3), `48af695` (Blok 4), kapanış commit'i
 
 ## Blok 1 — Supabase CLI 3.1.0 (14:18)
 
@@ -86,6 +86,7 @@ Kullanıcı davetliyi App Store Connect'te Developer rolüyle ekledi (davet gitt
 - yok
 
 ## Açık kalanlar
+- Davetli: daveti kabul edince TestFlight dahili gruba alınması ve e-posta + şifrenin iletilmesi (kullanıcı); ilk girişte rıza / şifre / profil ve ilk Apple yüklemesi sunucuda salt okuma sorgularıyla denetlenir.
 - Haftalık denetim 2026-11-23 pazartesi kendiliğinden çalışıyor mu (çalışmazsa görev saati / makine durumu).
 - Supabase CLI 3.2.0 çıktı (2026-11-16); bir sonraki bakımda bakılır.
 
