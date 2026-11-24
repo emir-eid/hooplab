@@ -7,7 +7,7 @@ Bu klasördeki aşağıdaki skill'ler kaynak repolarından **değiştirilmeden**
 | `animate-expo` | https://github.com/emilkowalski/skills (`skills/animate-expo`) | `0f2e23b32bb1265e84cff8d3e75785fec953fb1b` | MIT |
 | `apple-design` | https://github.com/emilkowalski/skills (`skills/apple-design`) | `0f2e23b32bb1265e84cff8d3e75785fec953fb1b` | MIT |
 | `review-animations` | https://github.com/emilkowalski/skills (`skills/review-animations`) | `0f2e23b32bb1265e84cff8d3e75785fec953fb1b` | MIT |
-| `react-native-best-practices` | https://github.com/software-mansion-labs/skills (`skills/react-native-best-practices`) | `43cde80af628d103647c13bde07975d0b21b8419` | MIT (SKILL.md `license: MIT` beyanı ve marketplace kaydı; repo kökünde LICENSE dosyası yok) |
+| `react-native-best-practices` | https://github.com/software-mansion-labs/skills (`skills/react-native-best-practices`) | `c8b363de4d580361a6f477184d43d742ae8b2f46` | MIT (SKILL.md `license: MIT` beyanı ve marketplace kaydı; repo kökünde LICENSE dosyası yok) |
 
 Kendi skill'lerimiz: `ac`, `rep`, `kapat`.
 

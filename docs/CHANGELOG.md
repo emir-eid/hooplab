@@ -98,6 +98,7 @@ Uygulamaya veya altyapıya görünür değişiklikler. Biçim: [Keep a Changelog
 
 ### Değişti
 - Davet aracı (2026-11-17): `tools/admin/invite-user.mjs --set-password` `private/ops.md`'ye elle yazılan geçici şifreyi davetli hesabına koyar (yalnız davetli kendi şifresini koymadıysa; ilk girişte değiştirme zorunlu kalır). Davetlinin şifresi bununla değiştirildi.
+- Kopyalanan skill (2026-11-24): `react-native-best-practices` software-mansion-labs/skills `c8b363de` sürümüne güncellendi (değiştirilmeden; Worklets iyi uygulamaları sayfası, kapanış kopyalama açıklaması, Bundle Mode'da Expo Babel ayarı); THIRD_PARTY_NOTICES.
 - Kopyalanan skill'ler (2026-11-17): `animate-expo`, `apple-design`, `review-animations` emilkowalski/skills `0f2e23b3` sürümüne güncellendi (değiştirilmeden; expo-haptics tam adları, `cancelAnimation`, süre istisnaları); THIRD_PARTY_NOTICES.
 - Kurulum denetimi (2026-11-17): `setup:check` "Giriş hesabın" birden çok kullanıcıyı sahibi ve davetliler olarak gösterir (karar 0061); eski "tek kullanıcılı uygulama" metni kalktı.
 - Supabase CLI 3.3.0 (2026-11-24; 3.1.0'dan): yalnız `package.json` ve kilit. Kırıcı değişiklikler (3.2.0'da Postgres 13 reddi, 3.3.0'da `--stack-id` ve Swift tip üretimi) bizi etkilemiyor; yerel yığın 3.3.0'ın ağ geçidi düzeltmesi için yeniden başlatıldı. Bulut `setup:check` 16/16, yerel 10/10, pgTAP 297/297, e2e 7/7, `config validate` geçerli, `db advisors --remote` yalnız bilinen uyarı.
