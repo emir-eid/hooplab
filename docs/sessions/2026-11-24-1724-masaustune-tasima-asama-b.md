@@ -1,9 +1,9 @@
 # 2026-11-24 17:07 — Masaüstüne taşıma, Aşama B
 
 - **Faz:** 4
-- **Durum:** açık (/rep)
+- **Durum:** kapandı (/kapat, 2026-11-24 17:40)
 - **Model / efor:** Opus 5.5
-- **Commit'ler:** rep commit'i
+- **Commit'ler:** `9ec13f5` (rep), kapanış commit'i
 
 ## Blok 1 — laptop'tan masaüstüne taşıma, masaüstü tarafı (17:24)
 
